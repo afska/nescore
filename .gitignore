@@ -24,3 +24,6 @@ yarn-error.log*
 
 # ide
 *.sublime-workspace
+
+# app
+public/rom.nes
