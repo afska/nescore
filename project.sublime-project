@@ -3,7 +3,7 @@
 		{
 			"follow_symlinks": true,
 			"path": ".",
-			"folder_exclude_patterns": [".*", "node_modules"],
+			"folder_exclude_patterns": [".*", "node_modules", "gui"],
 			"file_exclude_patterns": [".*", "*.sublime-workspace", "*.log"]
 		}
 	],
