@@ -5,9 +5,7 @@ chai.Should();
 
 describe("GameCartridge", () => {
 	it("can read the header", () => {
-		const buffer = fs.readFileSync("public/rom.nes");
-		const bytes = new Uint8Array(buffer);
-
+		const bytes = fs.readFileSync("public/rom.nes");
 		new GameCartridge(bytes).header.should.eql("NES");
 	});
 });

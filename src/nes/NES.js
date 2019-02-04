@@ -1,9 +1,10 @@
+import { Buffer } from "buffer";
 import GameCartridge from "./GameCartridge";
 
 export default async () => {
-	const rom = await fetch("rom.nes");
-	const buffer = await rom.arrayBuffer();
-	const bytes = new Uint8Array(buffer);
+	const response = await fetch("rom.nes");
+	const arrayBuffer = await response.arrayBuffer();
+	const bytes = Buffer.from(arrayBuffer);
 
 	window.bytes = bytes;
 
