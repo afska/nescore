@@ -1,3 +1,5 @@
+import GameCartridge from "./GameCartridge";
+
 export default async () => {
 	const rom = await fetch("rom.nes");
 	const buffer = await rom.arrayBuffer();
@@ -5,9 +7,5 @@ export default async () => {
 
 	window.bytes = bytes;
 
-	const header = Array.from(bytes.slice(0, 3))
-		.map((it) => String.fromCharCode(it))
-		.join("");
-
-	return header;
+	console.log(new GameCartridge(bytes).header);
 };
