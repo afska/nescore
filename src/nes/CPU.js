@@ -1,9 +1,12 @@
 export default class CPU {
-	constructor() {
-		this.registers = {
-			X: 0,
-			Y: 0,
-			A: 0
-		};
-	}
+  constructor() {
+    this.isRunning = false;
+    this.pc = null;
+
+    this.registers = {
+      x: 0,
+      y: 0,
+      a: 0
+    };
+  }
 }
