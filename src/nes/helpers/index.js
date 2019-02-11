@@ -1,1 +1,3 @@
-export createCollection from "./createCollection";
+import createCollection from "./createCollection";
+
+export { createCollection };

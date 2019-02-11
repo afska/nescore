@@ -6,7 +6,7 @@ import _ from "lodash";
  * - `{ ...item, id: INTEGER }` as values
  */
 export default (items) => {
-  _(items)
+  return _(items)
     .map((item, i) => {
       return { ...item, id: i };
     })
