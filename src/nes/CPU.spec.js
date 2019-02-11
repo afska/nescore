@@ -2,7 +2,7 @@ import CPU from "./CPU";
 import _ from "lodash";
 const should = require("chai").Should();
 
-const registersOf = (cpu) => _.mapValues(cpu.registers, (it) => it.value);
+const registersOf = (cpu) => _.mapValues(cpu.registers, (reg) => reg.value);
 
 describe("CPU", () => {
   it("initializes all variables", () => {
