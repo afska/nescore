@@ -1,5 +1,6 @@
 import { Register8Bit, Register16Bit } from "./registers";
 
+/** The Center Process Unit. It runs programs. */
 export default class CPU {
   constructor() {
     this.isRunning = false;
