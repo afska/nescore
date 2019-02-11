@@ -1,8 +1,7 @@
 export default class Register {
   constructor(TypedArray, initialValue) {
     this.bytes = new TypedArray(1);
-    this.initialValue = initialValue;
-    this.reset();
+    this.value = this.initialValue = initialValue;
   }
 
   reset() {
