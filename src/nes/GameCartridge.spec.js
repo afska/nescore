@@ -5,6 +5,6 @@ const should = require("chai").Should();
 describe("GameCartridge", () => {
   it("can read the header", () => {
     const bytes = fs.readFileSync("public/rom.nes");
-    new GameCartridge(bytes).nesConstant.should.eql("NES");
+    new GameCartridge(bytes).nesConstant.should.equal("NES");
   });
 });

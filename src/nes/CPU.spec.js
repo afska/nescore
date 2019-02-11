@@ -9,8 +9,8 @@ describe("CPU", () => {
     const cpu = new CPU();
 
     cpu.isRunning.should.not.ok;
-    cpu.pc.value.should.eql(0);
-    cpu.sp.value.should.eql(0xff);
+    cpu.pc.value.should.equal(0);
+    cpu.sp.value.should.equal(0xff);
     registersOf(cpu).should.eql({
       x: 0,
       y: 0,
