@@ -5,32 +5,31 @@ const should = require("chai").Should();
 
 describe("instructions", () => {
   describe("data", () => {
+    let cpu = null;
+
+    beforeEach(() => {
+      cpu = new CPU();
+    });
+
     describe("LDA", () => {
-      // TODO: Integrate `signedByte` with `Register`?
-
       it("with positive value", () => {
-        const cpu = new CPU();
-
-        instructions.LDA.execute(cpu, signedByte.toByte(5));
+        instructions.LDA.execute(cpu, 5);
         cpu.registers.a.value.should.eql(5);
         cpu.flags.z.should.eql(false);
         cpu.flags.n.should.eql(false);
       });
 
       it("with negative value", () => {
-        const cpu = new CPU();
-
-        instructions.LDA.execute(cpu, signedByte.toByte(-5));
-        signedByte.toNumber(cpu.registers.a.value).should.eql(-5);
+        const value = signedByte.toByte(-5);
+        instructions.LDA.execute(cpu, value);
+        cpu.registers.a.value.should.eql(value);
         cpu.flags.z.should.eql(false);
         cpu.flags.n.should.eql(true);
       });
 
       it("with zero value", () => {
-        const cpu = new CPU();
-
-        instructions.LDA.execute(cpu, signedByte.toByte(0));
-        signedByte.toNumber(cpu.registers.a.value).should.eql(0);
+        instructions.LDA.execute(cpu, 0);
+        cpu.registers.a.value.should.eql(0);
         cpu.flags.z.should.eql(true);
         cpu.flags.n.should.eql(false);
       });
