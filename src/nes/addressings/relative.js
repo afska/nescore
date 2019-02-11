@@ -1,13 +1,9 @@
 /**
  * "Relative" addressing mode.
  *
- * The parameter is a relative offset from the following instruction.
- * Values <= 127 are positive, and the ones between [128, 255] are negative.
- *
- * Positive values are: {value}
- * Negative values are: -(256 - {value})
+ * The parameter is a signed relative offset from the following instruction.
  */
 export default {
-  name: "relative",
+  name: "RELATIVE",
   size: 1
 };

@@ -1,6 +1,7 @@
+import data from "./data";
 import { createCollection } from "../helpers";
 
-export default createCollection([]);
+export default createCollection([...data]);
 
 // TODO: Instructions
 // arithmetic
@@ -32,7 +33,7 @@ export default createCollection([]);
 //   CLD
 //   CLI
 //   CLV
-//   LDA
+//   LDA ✓
 //   LDX
 //   LDY
 //   PHA

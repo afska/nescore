@@ -1,3 +1,4 @@
 import createCollection from "./createCollection";
+import signedByte from "./signedByte";
 
-export { createCollection };
+export { createCollection, signedByte };
