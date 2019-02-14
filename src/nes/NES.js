@@ -1,12 +1,22 @@
-import { Buffer } from "buffer";
+import CPU from "./CPU";
 import GameCartridge from "./GameCartridge";
 
-export default async () => {
-  const response = await fetch("rom.nes");
-  const arrayBuffer = await response.arrayBuffer();
-  const bytes = Buffer.from(arrayBuffer);
+/* The NES Emulator. */
+export default class NES {
+	constructor() {
+		this.cpu = new CPU();
+		this.cartridge = null;
+	}
 
-  window.cartridge = new GameCartridge(bytes);
+	/** Loads a `rom` as the current cartridge. */
+	load(rom) {
+		this.cartridge = new GameCartridge(rom);
+		this.cpu.load(this.cartridge.prgROM);
+	}
 
-  console.log(window.cartridge.nesConstant);
-};
+	/** Unloads the current cartridge. */
+	reset() {
+		this.cpu.reset();
+		this.cartridge = null;
+	}
+}
