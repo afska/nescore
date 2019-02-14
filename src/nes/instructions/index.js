@@ -1,7 +1,8 @@
+import logical from "./logical";
 import data from "./data";
 import { createCollection } from "../helpers";
 
-export default createCollection([...data]);
+export default createCollection([...logical, ...data]);
 
 // TODO: Instructions
 // arithmetic
@@ -17,7 +18,7 @@ export default createCollection([...data]);
 //   ROR
 
 // logical
-//   AND
+//   AND ✓
 //   EOR
 //   LSR
 //   ORA
