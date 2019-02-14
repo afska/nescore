@@ -34,8 +34,8 @@ export default createCollection([...data]);
 //   CLI
 //   CLV
 //   LDA ✓
-//   LDX
-//   LDY
+//   LDX ✓
+//   LDY ✓
 //   PHA
 //   PHP
 //   PLA
