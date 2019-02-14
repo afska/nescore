@@ -52,9 +52,9 @@ const instructions = () => [
 	},
 
 	/**
-	 * Load Y Register
+	 * Load X Register
 	 *
-	 * Loads `value` into Y, setting the Z (zero) and N (negative) flags.
+	 * Loads `value` into X, setting the Z (zero) and N (negative) flags.
 	 */
 	{
 		name: "LDX",
