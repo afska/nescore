@@ -7,7 +7,7 @@ const instructions = () => [
 	 * Clears the C (carry) flag.
 	 */
 	{
-		name: "CLC",
+		id: "CLC",
 		execute: CL_("c")
 	},
 
@@ -17,7 +17,7 @@ const instructions = () => [
 	 * Clears the D (decimal mode) flag.
 	 */
 	{
-		name: "CLD",
+		id: "CLD",
 		execute: CL_("d")
 	},
 
@@ -27,7 +27,7 @@ const instructions = () => [
 	 * Clears the I (interrupt disable) flag.
 	 */
 	{
-		name: "CLI",
+		id: "CLI",
 		execute: CL_("i")
 	},
 
@@ -37,7 +37,7 @@ const instructions = () => [
 	 * Clears the V (overflow) flag.
 	 */
 	{
-		name: "CLV",
+		id: "CLV",
 		execute: CL_("v")
 	},
 
@@ -47,7 +47,7 @@ const instructions = () => [
 	 * Loads `value` into A, setting the Z (zero) and N (negative) flags.
 	 */
 	{
-		name: "LDA",
+		id: "LDA",
 		execute: LD_("a")
 	},
 
@@ -57,7 +57,7 @@ const instructions = () => [
 	 * Loads `value` into X, setting the Z (zero) and N (negative) flags.
 	 */
 	{
-		name: "LDX",
+		id: "LDX",
 		execute: LD_("x")
 	},
 
@@ -67,7 +67,7 @@ const instructions = () => [
 	 * Loads `value` into Y, setting the Z (zero) and N (negative) flags.
 	 */
 	{
-		name: "LDY",
+		id: "LDY",
 		execute: LD_("y")
 	}
 ];

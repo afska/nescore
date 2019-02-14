@@ -2,15 +2,11 @@ import _ from "lodash";
 
 /**
  * Creates an object from `items` with:
- * - `item.name` as keys
- * - `{ ...item, id: INTEGER }` as values
+ * - `item.id` as keys
+ * - `item` as values
  */
 export default (items) => {
-  return _(items)
-    .map((item, i) => {
-      return { ...item, id: i };
-    })
-    .reduce((acum, elem) => {
-      return { ...acum, [elem.name]: elem };
-    }, {});
+	return items.reduce((acum, elem) => {
+		return { ...acum, [elem.id]: elem };
+	}, {});
 };
