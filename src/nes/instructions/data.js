@@ -1,3 +1,5 @@
+import { signedByte } from "../helpers";
+
 const instructions = () => [
 	/**
 	 * Clear Carry Flag
@@ -80,7 +82,7 @@ const LD_ = (register) => {
 	return (cpu, value) => {
 		cpu.registers[register].value = value;
 		if (value === 0) cpu.flags.z = true;
-		if (value & 0b10000000) cpu.flags.n = true;
+		if (signedByte.isNegative(value)) cpu.flags.n = true;
 	};
 };
 

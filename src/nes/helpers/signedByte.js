@@ -8,11 +8,15 @@ const LIMIT = SIZE / 2 - 1;
  * Negative values are: -(SIZE - {value})
  */
 export default {
-  toNumber(byte) {
-    return byte < LIMIT ? byte : -(SIZE - byte);
-  },
+	isNegative(byte) {
+		return byte & 0b10000000;
+	},
 
-  toByte(number) {
-    return number < 0 ? number + SIZE : number;
-  }
+	toNumber(byte) {
+		return byte < LIMIT ? byte : -(SIZE - byte);
+	},
+
+	toByte(number) {
+		return number < 0 ? number + SIZE : number;
+	}
 };
