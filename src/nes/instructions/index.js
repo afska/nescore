@@ -29,10 +29,10 @@ export default createCollection([...data]);
 //   CPY
 
 // data
-//   CLC
-//   CLD
-//   CLI
-//   CLV
+//   CLC ✓
+//   CLD ✓
+//   CLI ✓
+//   CLV ✓
 //   LDA ✓
 //   LDX ✓
 //   LDY ✓

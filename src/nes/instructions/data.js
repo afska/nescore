@@ -1,12 +1,44 @@
-const LD_ = (register) => {
-	return (cpu, value) => {
-		cpu.registers[register].value = value;
-		if (value === 0) cpu.flags.z = true;
-		if (value & 0b10000000) cpu.flags.n = true;
-	};
-};
+const instructions = () => [
+	/**
+	 * Clear Carry Flag
+	 *
+	 * Clears the C (carry) flag.
+	 */
+	{
+		name: "CLC",
+		execute: CL_("c")
+	},
 
-export default [
+	/**
+	 * Clear Decimal Mode
+	 *
+	 * Clears the D (decimal mode) flag.
+	 */
+	{
+		name: "CLD",
+		execute: CL_("d")
+	},
+
+	/**
+	 * Clear Interrupt Disable
+	 *
+	 * Clears the I (interrupt disable) flag.
+	 */
+	{
+		name: "CLI",
+		execute: CL_("i")
+	},
+
+	/**
+	 * Clear Overflow Flag
+	 *
+	 * Clears the V (overflow) flag.
+	 */
+	{
+		name: "CLV",
+		execute: CL_("v")
+	},
+
 	/**
 	 * Load Accumulator
 	 *
@@ -37,3 +69,19 @@ export default [
 		execute: LD_("y")
 	}
 ];
+
+const CL_ = (flag) => {
+	return (cpu) => {
+		cpu.flags[flag] = false;
+	};
+};
+
+const LD_ = (register) => {
+	return (cpu, value) => {
+		cpu.registers[register].value = value;
+		if (value === 0) cpu.flags.z = true;
+		if (value & 0b10000000) cpu.flags.n = true;
+	};
+};
+
+export default instructions();

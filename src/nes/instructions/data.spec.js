@@ -12,19 +12,34 @@ describe("instructions", () => {
 		});
 
 		[
+			{ instruction: "CLC", flag: "c" },
+			{ instruction: "CLD", flag: "d" },
+			{ instruction: "CLI", flag: "i" },
+			{ instruction: "CLV", flag: "v" }
+		].forEach(({ instruction, flag }) => {
+			describe(instruction, () => {
+				it("clears the flag", () => {
+					cpu.flags[flag] = true;
+					instructions[instruction].execute(cpu);
+					cpu.flags[flag].should.equal(false);
+				});
+			});
+		});
+
+		[
 			{ instruction: "LDA", register: "a" },
 			{ instruction: "LDX", register: "x" },
 			{ instruction: "LDY", register: "y" }
 		].forEach(({ instruction, register }) => {
 			describe(instruction, () => {
-				it("with positive value", () => {
+				it("works with positive value", () => {
 					instructions[instruction].execute(cpu, 5);
 					cpu.registers[register].value.should.equal(5);
 					cpu.flags.z.should.equal(false);
 					cpu.flags.n.should.equal(false);
 				});
 
-				it("with negative value", () => {
+				it("works with negative value", () => {
 					const value = signedByte.toByte(-5);
 					instructions[instruction].execute(cpu, value);
 					cpu.registers[register].value.should.equal(value);
@@ -32,7 +47,7 @@ describe("instructions", () => {
 					cpu.flags.n.should.equal(true);
 				});
 
-				it("with zero value", () => {
+				it("works with zero value", () => {
 					instructions[instruction].execute(cpu, 0);
 					cpu.registers[register].value.should.equal(0);
 					cpu.flags.z.should.equal(true);
