@@ -1,5 +1,6 @@
-import MemoryOwner from "./MemoryOwner";
-import Memory from "./Memory";
+import WithMemory from "./WithMemory";
+import MemoryChunk from "./MemoryChunk";
 import RAM from "./RAM";
+import MemoryMap from "./MemoryMap";
 
-export { MemoryOwner, Memory, RAM };
+export { WithMemory, RAM, MemoryMap };

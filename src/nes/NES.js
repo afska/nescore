@@ -1,24 +1,31 @@
 import CPU from "./CPU";
-import { RAM } from "./memory";
+import { MemoryMap } from "./memory";
 import GameCartridge from "./GameCartridge";
-import ExecutionContext from "./ExecutionContext";
+import { WithContext, ExecutionContext } from "./ExecutionContext";
 
 /* The NES Emulator. */
 export default class NES {
 	constructor() {
+		WithContext.apply(this);
+
 		this.cpu = new CPU();
 		this.ram = new RAM();
+		this.memoryMap = new MemoryMap();
 	}
 
 	/** Loads a `rom` as the current cartridge. */
 	load(rom) {
-		this.cpu.load(
+		this.loadContext(
 			new ExecutionContext({
 				cpu: this.cpu,
 				ram: this.ram,
+				memoryMap: this.memoryMap,
 				cartridge: new GameCartridge(rom)
 			})
 		);
+
+		this.cpu.loadContext(this.context);
+		this.memoryMap.loadContext(this.context);
 	}
 
 	/** Executes a step in the emulation. */
@@ -28,10 +35,7 @@ export default class NES {
 
 	/** Unloads the current cartridge. */
 	unload() {
-		this.cpu.unload();
-	}
-
-	get context() {
-		return this.cpu.context;
+		this.unloadContext();
+		this.cpu.unloadContext();
 	}
 }

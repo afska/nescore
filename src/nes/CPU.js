@@ -1,3 +1,4 @@
+import { WithContext } from "./context";
 import { Register8Bit, Register16Bit, FlagsRegister } from "./registers";
 import operations from "./operations";
 
@@ -6,7 +7,7 @@ const INITIAL_FLAGS = 0b00000100;
 /** The Center Process Unit. It runs programs. */
 export default class CPU {
 	constructor() {
-		this.context = null;
+		WithContext.apply(this);
 
 		// TODO: Make program counter absolute instead of relative to the prgROM?
 		this.pc = new Register16Bit(0); // program counter
@@ -20,16 +21,9 @@ export default class CPU {
 		};
 	}
 
-	/** Loads an execution `context`. */
-	load(context) {
-		this.context = context;
-		this.flags.load(INITIAL_FLAGS);
-	}
-
 	/** Executes the next operation. */
 	step() {
-		if (!this.context)
-			throw new Error("No program was loaded. Use the `load` method first!");
+		this.requireContext();
 
 		const opcode = this.context.cartridge.pgrROM[this.pc.value];
 		this.pc.value++;
@@ -54,9 +48,13 @@ export default class CPU {
 		operation.instruction.execute(this, parameter);
 	}
 
-	/** Unloads the current context. */
-	unload() {
-		this.context = null;
+	/** When a context is loaded. */
+	onLoad(context) {
+		this.flags.load(INITIAL_FLAGS);
+	}
+
+	/** When the current context is unloaded. */
+	onUnload() {
 		// TODO: Reset registers and flags
 	}
 }
