@@ -67,8 +67,24 @@ const instructions = () => [
 	{
 		id: "LDY",
 		execute: LD_("y")
+	},
+
+	/**
+	 * Set Interrupt Disable
+	 *
+	 * Sets the I (interrupt disable) flag.
+	 */
+	{
+		id: "SEI",
+		execute: SE_("i")
 	}
 ];
+
+const SE_ = (flag) => {
+	return (cpu) => {
+		cpu.flags[flag] = true;
+	};
+};
 
 const CL_ = (flag) => {
 	return (cpu) => {

@@ -55,5 +55,15 @@ describe("instructions", () => {
 				});
 			});
 		});
+
+		[{ instruction: "SEI", flag: "i" }].forEach(({ instruction, flag }) => {
+			describe(instruction, () => {
+				it("sets the flag", () => {
+					cpu.flags[flag] = false;
+					instructions[instruction].execute(cpu);
+					cpu.flags[flag].should.equal(true);
+				});
+			});
+		});
 	});
 });
