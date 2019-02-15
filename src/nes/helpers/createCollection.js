@@ -1,5 +1,3 @@
-import _ from "lodash";
-
 /**
  * Creates an object from `items` with:
  * - `item.id` as keys

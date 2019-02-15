@@ -1,4 +1,5 @@
 import { Register8Bit, Register16Bit } from "./registers";
+import { signedByte } from "./helpers";
 
 /** The Center Process Unit. It runs programs. */
 export default class CPU {
@@ -21,7 +22,12 @@ export default class CPU {
 			d: false, // decimal mode
 			i: false, // interrupt disable
 			z: false, // zero
-			c: false // carry
+			c: false, // carry
+
+			updateZeroAndNegative(value) {
+				if (signedByte.isZero(value)) this.z = true;
+				if (signedByte.isNegative(value)) this.n = true;
+			}
 		};
 	}
 

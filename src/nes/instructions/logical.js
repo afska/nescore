@@ -1,5 +1,3 @@
-import { signedByte } from "../helpers";
-
 const instructions = () => [
 	/**
 	 * Logical AND
@@ -10,9 +8,9 @@ const instructions = () => [
 	{
 		id: "AND",
 		execute: (cpu, value) => {
-			cpu.registers.a.value &= value;
-			if (value === 0) cpu.flags.z = true;
-			if (signedByte.isNegative(value)) cpu.flags.n = true;
+			const result = cpu.registers.a.value & value;
+			cpu.registers.a.value = result;
+			cpu.flags.updateZeroAndNegative(result);
 		}
 	}
 ];

@@ -11,12 +11,12 @@ describe("CPU", () => {
 		should.not.exist(cpu.currentProgram);
 		cpu.pc.value.should.equal(0);
 		cpu.sp.value.should.equal(0xff);
-		registersOf(cpu).should.eql({
+		registersOf(cpu).should.include({
 			x: 0,
 			y: 0,
 			a: 0
 		});
-		cpu.flags.should.eql({
+		cpu.flags.should.include({
 			n: false,
 			v: false,
 			b: false,
