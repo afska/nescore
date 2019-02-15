@@ -1,6 +1,5 @@
-import { Register8Bit, Register16Bit } from "./registers";
+import { Register8Bit, Register16Bit, FlagsRegister } from "./registers";
 import operations from "./operations";
-import { signedByte } from "./helpers";
 
 /** The Center Process Unit. It runs programs. */
 export default class CPU {
@@ -10,26 +9,12 @@ export default class CPU {
 		// TODO: Make program counter absolute instead of relative to the prgROM?
 		this.pc = new Register16Bit(0); // program counter
 		this.sp = new Register8Bit(0xff); // stack pointer
+		this.flags = new FlagsRegister();
 
 		this.registers = {
 			a: new Register8Bit(0), // accumulator
 			x: new Register8Bit(0), // index X
 			y: new Register8Bit(0) // index Y
-		};
-
-		this.flags = {
-			n: false, // negative
-			v: false, // overflow
-			b: false, // break command
-			d: false, // decimal mode
-			i: false, // interrupt disable
-			z: false, // zero
-			c: false, // carry
-
-			updateZeroAndNegative(value) {
-				if (signedByte.isZero(value)) this.z = true;
-				if (signedByte.isNegative(value)) this.n = true;
-			}
 		};
 	}
 
