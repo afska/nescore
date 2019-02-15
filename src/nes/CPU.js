@@ -1,6 +1,8 @@
 import { Register8Bit, Register16Bit, FlagsRegister } from "./registers";
 import operations from "./operations";
 
+const INITIAL_FLAGS = 0b00000100;
+
 /** The Center Process Unit. It runs programs. */
 export default class CPU {
 	constructor() {
@@ -21,6 +23,7 @@ export default class CPU {
 	/** Loads a `program`. */
 	load(program) {
 		this.currentProgram = program;
+		this.flags.load(INITIAL_FLAGS);
 	}
 
 	/** Executes a step in the emulation. */
@@ -49,7 +52,8 @@ export default class CPU {
 	}
 
 	/** Unloads the current program. */
-	reset() {
+	unload() {
 		this.currentProgram = null;
+		// TODO: Reset registers and flags
 	}
 }

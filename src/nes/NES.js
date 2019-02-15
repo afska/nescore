@@ -15,8 +15,8 @@ export default class NES {
 	}
 
 	/** Unloads the current cartridge. */
-	reset() {
-		this.cpu.reset();
+	unload() {
+		this.cpu.unload();
 		this.cartridge = null;
 	}
 }
