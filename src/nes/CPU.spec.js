@@ -8,7 +8,7 @@ describe("CPU", () => {
 	it("initializes all variables", () => {
 		const cpu = new CPU();
 
-		should.not.exist(cpu.currentProgram);
+		should.not.exist(cpu.context);
 		cpu.pc.value.should.equal(0);
 		cpu.sp.value.should.equal(0xff);
 		registersOf(cpu).should.include({

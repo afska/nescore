@@ -5,18 +5,24 @@ import GameCartridge from "./GameCartridge";
 export default class NES {
 	constructor() {
 		this.cpu = new CPU();
-		this.cartridge = null;
 	}
 
 	/** Loads a `rom` as the current cartridge. */
 	load(rom) {
-		this.cartridge = new GameCartridge(rom);
-		this.cpu.load(this.cartridge.prgROM);
+		this.cpu.load({ cpu: this.CPU, cartridge: new GameCartridge(rom) });
+	}
+
+	/** Executes a step in the emulation. */
+	step() {
+		this.cpu.step();
 	}
 
 	/** Unloads the current cartridge. */
 	unload() {
 		this.cpu.unload();
-		this.cartridge = null;
+	}
+
+	get context() {
+		return this.cpu.context;
 	}
 }

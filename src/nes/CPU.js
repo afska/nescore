@@ -6,7 +6,7 @@ const INITIAL_FLAGS = 0b00000100;
 /** The Center Process Unit. It runs programs. */
 export default class CPU {
 	constructor() {
-		this.currentProgram = null;
+		this.context = null;
 
 		// TODO: Make program counter absolute instead of relative to the prgROM?
 		this.pc = new Register16Bit(0); // program counter
@@ -20,18 +20,18 @@ export default class CPU {
 		};
 	}
 
-	/** Loads a `program`. */
-	load(program) {
-		this.currentProgram = program;
+	/** Loads an execution `context`. */
+	load(context) {
+		this.context = context;
 		this.flags.load(INITIAL_FLAGS);
 	}
 
-	/** Executes a step in the emulation. */
+	/** Executes the next operation. */
 	step() {
-		if (!this.currentProgram)
+		if (!this.context)
 			throw new Error("No program was loaded. Use the `load` method first!");
 
-		const opcode = this.currentProgram[this.pc.value];
+		const opcode = this.context.cartridge.pgrROM[this.pc.value];
 		this.pc.value++;
 
 		const operation = operations[opcode];
@@ -40,7 +40,10 @@ export default class CPU {
 
 		let parameter = null;
 		if (parameterSize > 0) {
-			parameter = this.currentProgram.readUIntLE(this.pc.value, parameterSize);
+			parameter = this.context.cartridge.pgrROM.readUIntLE(
+				this.pc.value,
+				parameterSize
+			);
 			this.pc.value += parameterSize;
 		}
 
@@ -51,9 +54,9 @@ export default class CPU {
 		operation.instruction.execute(this, parameter);
 	}
 
-	/** Unloads the current program. */
+	/** Unloads the current context. */
 	unload() {
-		this.currentProgram = null;
+		this.context = null;
 		// TODO: Reset registers and flags
 	}
 }
