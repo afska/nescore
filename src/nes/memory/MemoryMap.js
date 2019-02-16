@@ -19,8 +19,11 @@ export default class MemoryḾap {
 			context.ram,
 			new MemoryChunk(ramBytes, 0x0800),
 			new MemoryChunk(ramBytes, 0x1000),
-			new MemoryChunk(ramBytes, 0x1800)
-			// TODO: Add PPU
+			new MemoryChunk(ramBytes, 0x1800),
+			new MemoryChunk(new Uint8Array(0x0008), 0x2000), // PPU registers
+			new MemoryChunk(new Uint8Array(0x0018), 0x4000), // APU and I/O registers
+			new MemoryChunk(new Uint8Array(0x4018), 0x0008), // APU and I/O functionality that is normally disabled
+			context.cartridge
 		];
 	}
 
@@ -35,7 +38,7 @@ export default class MemoryḾap {
 	}
 
 	/** Returns the memory bytes. */
-	getMemory(address) {
+	getMemory(address, offset) {
 		this.requireContext();
 
 		for (let memoryOwner of this.memoryOwners) {

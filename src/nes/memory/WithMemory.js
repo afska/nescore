@@ -24,6 +24,6 @@ export default {
 	/** Ẁrites a `byte` to `address`. */
 	writeMemory(address, byte) {
 		const offset = address - this.getMemoryStartAddress();
-		this.getMemory(address).writeUInt8(byte, offset);
+		this.getMemory(address, offset).writeUInt8(byte, offset);
 	}
 };

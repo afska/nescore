@@ -1,4 +1,6 @@
-const NES_CONSTANT = "NES";
+import { WithMemory } from "../memory";
+
+const MAGIC_NUMBER = "NES";
 const KB = 1024;
 const HEADER_SIZE = 16;
 const TRAINER_SIZE = 512;
@@ -8,15 +10,27 @@ const CHR_ROM_PAGE_SIZE = 8 * KB;
 /** The game cartridge (a file in iNES format). */
 export default class GameCartridge {
 	constructor(bytes) {
+		WithMemory.apply(this);
+
 		this.bytes = bytes;
 
-		if (this.nesConstant !== NES_CONSTANT)
+		if (this.magicNumber !== MAGIC_NUMBER)
 			throw new Error("Invalid ROM format.");
+	}
+
+	/** Returns the starting memory address. */
+	getMemoryStartAddress() {
+		return 0x4020;
+	}
+
+	/** Returns the memory bytes. */
+	getMemory() {
+		return this.prgROM;
 	}
 
 	/** Returns the PRG ROM, which contains the game's code. */
 	get prgROM() {
-		return this.getBytes(this._programOffset, this._programSize);
+		return this._getBytes(this._programOffset, this._programSize);
 	}
 
 	/** Returns the CHR ROM, which contains static tilesets, or null. */
@@ -24,7 +38,7 @@ export default class GameCartridge {
 		const offset = this._programOffset + this._programSize;
 		const size = this.header.chrROMPages * CHR_ROM_PAGE_SIZE;
 
-		return size > 0 ? this.getBytes(offset, size) : null;
+		return size > 0 ? this._getBytes(offset, size) : null;
 	}
 
 	/** Returns the header data. */
@@ -42,14 +56,13 @@ export default class GameCartridge {
 	}
 
 	/** Returns the first 3 ASCII bytes of the header. It should return "NES". */
-	get nesConstant() {
-		return Array.from(this.getBytes(0, 3))
+	get magicNumber() {
+		return Array.from(this._getBytes(0, 3))
 			.map((char) => String.fromCharCode(char))
 			.join("");
 	}
 
-	/** Returns `size` bytes from the `offset` of the ROM data. */
-	getBytes(offset, size) {
+	_getBytes(offset, size) {
 		return this.bytes.slice(offset, offset + size);
 	}
 
