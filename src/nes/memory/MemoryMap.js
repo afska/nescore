@@ -15,16 +15,22 @@ export default class MemoryḾap {
 	}
 
 	/** When a context is loaded. */
-	onLoad(context) {
+	onLoad({ cartridge }) {
 		const ram = new MemoryChunk(Buffer.alloc(RAM_SIZE));
+		const ramMirror = new MemoryMirror(ram, 0x0800, 0x1800);
+		const ppuRegisters = new MemoryChunk(Buffer.alloc(0x0008), 0x2000);
+		const ppuRegistersMirror = new MemoryMirror(ppuRegisters, 0x2008, 0x1ff8);
+		const apuAndIORegisters = new MemoryChunk(Buffer.alloc(0x0018), 0x4000);
+		const cpuTestModeRegisters = new MemoryChunk(Buffer.alloc(0x0008), 0x4018);
 
 		this.defineChunks([
-			ram, //                                           Internal RAM
-			new MemoryMirror(ram, 0x0800, 0x1800), //         Mirrors of RAM
-			new MemoryChunk(Buffer.alloc(0x2000), 0x2000), // PPU registers
-			new MemoryChunk(Buffer.alloc(0x0018), 0x4000), // APU and I/O registers
-			new MemoryChunk(Buffer.alloc(0x0008), 0x4018), // APU and I/O functionality that is normally disabled
-			context.cartridge
+			ram,
+			ramMirror,
+			ppuRegisters,
+			ppuRegistersMirror,
+			apuAndIORegisters,
+			cpuTestModeRegisters,
+			cartridge
 		]);
 	}
 
