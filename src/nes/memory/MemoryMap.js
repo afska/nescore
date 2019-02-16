@@ -1,6 +1,7 @@
 import WithMemory from "./WithMemory";
+import MemoryChunk from "./MemoryChunk";
 import { WithContext } from "../context";
-import MemoryChunk from "./WithMemory";
+import { Buffer } from "buffer";
 
 const KB = 1024;
 const RAM_SIZE = 2 * KB;
@@ -11,7 +12,7 @@ export default class MemoryḾap {
 		WithContext.apply(this);
 		WithMemory.apply(this);
 
-		this.ram = new MemoryChunk(RAM_SIZE);
+		this.ram = new MemoryChunk(Buffer.alloc(RAM_SIZE));
 		this.memoryOwners = [];
 	}
 
@@ -24,9 +25,9 @@ export default class MemoryḾap {
 			new MemoryChunk(ramBytes, 0x0800),
 			new MemoryChunk(ramBytes, 0x1000),
 			new MemoryChunk(ramBytes, 0x1800),
-			new MemoryChunk(new Uint8Array(0x0008), 0x2000), // PPU registers
-			new MemoryChunk(new Uint8Array(0x0018), 0x4000), // APU and I/O registers
-			new MemoryChunk(new Uint8Array(0x4018), 0x0008), // APU and I/O functionality that is normally disabled
+			new MemoryChunk(Buffer.alloc(0x0008), 0x2000), // PPU registers
+			new MemoryChunk(Buffer.alloc(0x0018), 0x4000), // APU and I/O registers
+			new MemoryChunk(Buffer.alloc(0x4018), 0x0008), // APU and I/O functionality that is normally disabled
 			context.cartridge
 		];
 	}

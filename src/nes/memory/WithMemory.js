@@ -8,7 +8,7 @@ const NOT_IMPLEMENTED = () => {
 export default {
 	/** Applies the mixin. */
 	apply(obj) {
-		_.assign(obj, _.omit(this, "apply"));
+		_.defaults(obj, _.omit(this, "apply"));
 	},
 
 	/** Returns the starting memory address. */
@@ -18,13 +18,13 @@ export default {
 	getMemory: NOT_IMPLEMENTED,
 
 	/** Reads a byte from `address`. */
-	readMemory(address) {
+	readAt(address) {
 		const offset = address - this.getMemoryStartAddress();
 		return this.getMemory(address).readUInt8(offset);
 	},
 
-	/** Ẁrites a `byte` to `address`. */
-	writeMemory(address, byte) {
+	/** Writes a `byte` to `address`. */
+	writeAt(address, byte) {
 		const offset = address - this.getMemoryStartAddress();
 		this.getMemory(address, offset).writeUInt8(byte, offset);
 	}

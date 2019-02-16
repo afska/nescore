@@ -3,6 +3,7 @@ import CPU from "../CPU";
 import { MemoryChunk } from "../memory";
 import { ExecutionContext } from "../context";
 import { signedByte } from "../helpers";
+import { Buffer } from "buffer";
 const should = require("chai").Should();
 
 const KB = 1024;
@@ -13,7 +14,7 @@ describe("instructions", () => {
 
 		beforeEach(() => {
 			cpu = new CPU();
-			memory = new MemoryChunk(64 * KB);
+			memory = new MemoryChunk(Buffer.alloc(64 * KB));
 			context = { cpu, memory };
 		});
 
@@ -71,5 +72,17 @@ describe("instructions", () => {
 				});
 			});
 		});
+
+		[{ instruction: "STA", register: "a" }].forEach(
+			({ instruction, register }) => {
+				describe(instruction, () => {
+					it("writes the byte into the memory address", () => {
+						cpu.registers[register].value = 123;
+						instructions[instruction].execute(context, 0x1349);
+						memory.readAt(0x1349).should.equal(123);
+					});
+				});
+			}
+		);
 	});
 });

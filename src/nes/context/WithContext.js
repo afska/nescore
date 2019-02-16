@@ -4,7 +4,7 @@ import _ from "lodash";
 export default {
 	/** Applies the mixin. */
 	apply(obj) {
-		_.assign(obj, _.omit(this, "apply"));
+		_.defaults(obj, _.omit(this, "apply"));
 	},
 
 	/** The current execution context. */

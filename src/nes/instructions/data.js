@@ -110,9 +110,9 @@ const LD_ = (register) => {
 };
 
 const ST_ = (register) => {
-	return ({ cpu }, address) => {
+	return ({ cpu, memory }, address) => {
 		const value = cpu.registers[register].value;
-		cpu.flags.updateZeroAndNegative(value);
+		memory.writeAt(address, value);
 	};
 };
 

@@ -25,7 +25,7 @@ export default class CPU {
 	step() {
 		this.requireContext();
 
-		const opcode = this.context.cartridge.pgrROM[this.pc.value];
+		const opcode = this.context.cartridge.prgROM[this.pc.value];
 		this.pc.value++;
 
 		const operation = operations[opcode];
@@ -34,7 +34,7 @@ export default class CPU {
 
 		let parameter = null;
 		if (parameterSize > 0) {
-			parameter = this.context.cartridge.pgrROM.readUIntLE(
+			parameter = this.context.cartridge.prgROM.readUIntLE(
 				this.pc.value,
 				parameterSize
 			);
