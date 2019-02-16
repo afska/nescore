@@ -24,11 +24,7 @@ describe("memory", () => {
 		});
 
 		it("can mirror read operations", () => {
-			chunk.writeAt(0, 110);
-			chunk.writeAt(1, 101);
-			chunk.writeAt(2, 115);
-			chunk.writeAt(3, 33);
-			chunk.writeAt(4, 33);
+			chunk.getMemory().write("nes!!");
 			[5, 6, 12, 3, 4]
 				.map((i) => mirror.readAt(i))
 				.map((c) => String.fromCharCode(c))
