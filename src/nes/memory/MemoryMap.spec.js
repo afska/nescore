@@ -1,4 +1,5 @@
 import { MemoryMap, MemoryChunk } from ".";
+import { Buffer } from "buffer";
 const should = require("chai").Should();
 
 const CARTRIDGE_START_ADDRESS = 0x4020;

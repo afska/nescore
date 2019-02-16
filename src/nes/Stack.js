@@ -22,7 +22,7 @@ export default class Stack {
 	}
 
 	/** Pops a value from the stack. */
-	pop(value) {
+	pop() {
 		this.requireContext();
 
 		this.context.cpu.sp.increment();
