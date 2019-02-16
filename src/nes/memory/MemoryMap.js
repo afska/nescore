@@ -8,7 +8,7 @@ const KB = 1024;
 const RAM_SIZE = 2 * KB;
 
 /** The whole system's memory. It handles absolute addresses. */
-export default class MemoryḾap {
+export default class MemoryMap {
 	constructor() {
 		WithContext.apply(this);
 		WithComposedMemory.apply(this);
