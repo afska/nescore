@@ -1,4 +1,4 @@
 import data from "./data";
-import { createCollection } from "../helpers";
+import _ from "lodash";
 
-export default createCollection([...data]);
+export default _.keyBy([...data], "id");

@@ -1,6 +1,5 @@
-import WithMemory from "./WithMemory";
 import MemoryChunk from "./MemoryChunk";
-import { WithContext } from "../context";
+import { WithContext } from "../helpers";
 import { Buffer } from "buffer";
 
 const KB = 1024;
@@ -10,17 +9,16 @@ const RAM_SIZE = 2 * KB;
 export default class MemoryḾap {
 	constructor() {
 		WithContext.apply(this);
-		WithMemory.apply(this);
 
 		this.ram = new MemoryChunk(Buffer.alloc(RAM_SIZE));
-		this.memoryOwners = [];
+		this.chunks = null;
 	}
 
 	/** When a context is loaded. */
 	onLoad(context) {
 		const ramBytes = this.ram.getMemory();
 
-		this.memoryOwners = [
+		this.chunks = [
 			this.ram,
 			new MemoryChunk(ramBytes, 0x0800),
 			new MemoryChunk(ramBytes, 0x1000),
@@ -34,23 +32,41 @@ export default class MemoryḾap {
 
 	/** When the current context is unloaded. */
 	onUnload() {
-		this.memoryOwners = [];
+		this.chunks = null;
 	}
 
-	/** Returns the starting memory address. */
-	getMemoryStartAddress() {
-		return 0x0000;
-	}
-
-	/** Returns the memory bytes. */
-	getMemory(address, offset) {
+	/** Reads a byte from `address`, using the correct `chunk`. */
+	readAt(address) {
 		this.requireContext();
 
-		for (let memoryOwner of this.memoryOwners) {
-			if (address >= memoryOwner.getMemoryStartAddress())
-				return memoryOwner.getMemory();
+		const chunk = this._getChunkFor(address);
+		const offset = this._toRelativeAddress(address, chunk);
+		return chunk.readAt(offset);
+	}
+
+	/** Writes a `byte` to `address`, using the correct `chunk`. */
+	writeAt(address, byte) {
+		this.requireContext();
+
+		const chunk = this._getChunkFor(address);
+		const offset = this._toRelativeAddress(address, chunk);
+		return chunk.writeAt(offset, byte);
+	}
+
+	_getChunkFor(address) {
+		this.requireContext();
+
+		for (let chunk of this.chunks) {
+			const { startAddress } = chunk;
+
+			if (address >= startAddress && address < startAddress + chunk.size)
+				return chunk;
 		}
 
-		return null;
+		throw new Error(`Unreachable address: 0x${address.toString(16)}.`);
+	}
+
+	_toRelativeAddress(address, chunk) {
+		return address - chunk.startAddress;
 	}
 }

@@ -18,11 +18,6 @@ export default class GameCartridge {
 			throw new Error("Invalid ROM format.");
 	}
 
-	/** Returns the starting memory address. */
-	getMemoryStartAddress() {
-		return 0x4020;
-	}
-
 	/** Returns the memory bytes. */
 	getMemory() {
 		return this.prgROM;

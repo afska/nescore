@@ -1,4 +1,4 @@
-import createCollection from "./createCollection";
+import WithContext from "./WithContext";
 import signedByte from "./signedByte";
 
-export { createCollection, signedByte };
+export { WithContext, signedByte };

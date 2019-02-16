@@ -1,7 +1,6 @@
 import instructions from ".";
 import CPU from "../CPU";
 import { MemoryChunk } from "../memory";
-import { ExecutionContext } from "../context";
 import { signedByte } from "../helpers";
 import { Buffer } from "buffer";
 const should = require("chai").Should();

@@ -11,7 +11,7 @@ const DEMO = async () => {
 	window.nes = new NES();
 
 	window.nes.load(bytes);
-	window.nes.step();
+	while (true) window.nes.step();
 };
 
 DEMO();

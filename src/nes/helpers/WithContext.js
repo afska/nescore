@@ -24,9 +24,6 @@ export default {
 
 	/** Asserts that a current context exists.. */
 	requireContext() {
-		if (!this.context)
-			throw new Error(
-				"Execution context not found. Use the `.load(...)` method first!"
-			);
+		if (!this.context) throw new Error("Execution context not found.");
 	}
 };

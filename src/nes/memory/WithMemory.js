@@ -1,9 +1,5 @@
 import _ from "lodash";
 
-const NOT_IMPLEMENTED = () => {
-	throw new Error("not_implemented");
-};
-
 /** A mixin for memory handling. */
 export default {
 	/** Applies the mixin. */
@@ -11,21 +7,18 @@ export default {
 		_.defaults(obj, _.omit(this, "apply"));
 	},
 
-	/** Returns the starting memory address. */
-	getMemoryStartAddress: NOT_IMPLEMENTED,
-
 	/** Returns the memory bytes. */
-	getMemory: NOT_IMPLEMENTED,
+	getMemory: () => {
+		throw new Error("not_implemented");
+	},
 
 	/** Reads a byte from `address`. */
 	readAt(address) {
-		const offset = address - this.getMemoryStartAddress();
-		return this.getMemory(address).readUInt8(offset);
+		return this.getMemory().readUInt8(address);
 	},
 
 	/** Writes a `byte` to `address`. */
 	writeAt(address, byte) {
-		const offset = address - this.getMemoryStartAddress();
-		this.getMemory(address, offset).writeUInt8(byte, offset);
+		this.getMemory().writeUInt8(byte, address);
 	}
 };

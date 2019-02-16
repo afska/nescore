@@ -1,4 +1,4 @@
-import { WithContext } from "./context";
+import { WithContext } from "./helpers";
 import { Register8Bit, Register16Bit, FlagsRegister } from "./registers";
 import operations from "./operations";
 
@@ -43,7 +43,7 @@ export default class CPU {
 
 		console.log(
 			`RUNNING *${operation.instruction.id}*`,
-			parameter ? `WITH PARAMETER *${parameter}*...` : "..."
+			parameter ? `WITH PARAMETER 0x${parameter.toString(16)}...` : "..."
 		);
 		operation.instruction.execute(this.context, parameter);
 	}

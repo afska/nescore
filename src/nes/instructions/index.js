@@ -1,8 +1,8 @@
 import logical from "./logical";
 import data from "./data";
-import { createCollection } from "../helpers";
+import _ from "lodash";
 
-export default createCollection([...logical, ...data]);
+export default _.keyBy([...logical, ...data], "id");
 
 // TODO: Instructions
 // arithmetic
