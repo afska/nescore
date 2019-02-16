@@ -31,9 +31,9 @@ export default {
 		if (!this.chunks) throw new Error("Undefined chunks.");
 
 		for (let chunk of this.chunks) {
-			const { startAddress } = chunk;
+			const startAddress = chunk.memoryStartAddress;
 
-			if (address >= startAddress && address < startAddress + chunk.size)
+			if (address >= startAddress && address < startAddress + chunk.memorySize)
 				return chunk;
 		}
 
@@ -41,6 +41,6 @@ export default {
 	},
 
 	_toRelativeAddress(address, chunk) {
-		return address - chunk.startAddress;
+		return address - chunk.memoryStartAddress;
 	}
 };
