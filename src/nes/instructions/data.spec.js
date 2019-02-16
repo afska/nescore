@@ -76,16 +76,18 @@ describe("instructions", () => {
 			});
 		});
 
-		[{ instruction: "STA", register: "a" }].forEach(
-			({ instruction, register }) => {
-				describe(instruction, () => {
-					it("writes the byte into the memory address", () => {
-						cpu.registers[register].value = 123;
-						instructions[instruction].execute(context, 0x1349);
-						memory.readAt(0x1349).should.equal(123);
-					});
+		[
+			{ instruction: "STA", register: "a" },
+			{ instruction: "STX", register: "x" },
+			{ instruction: "STY", register: "y" }
+		].forEach(({ instruction, register }) => {
+			describe(instruction, () => {
+				it("writes the byte into the memory address", () => {
+					cpu.registers[register].value = 123;
+					instructions[instruction].execute(context, 0x1349);
+					memory.readAt(0x1349).should.equal(123);
 				});
-			}
-		);
+			});
+		});
 	});
 });

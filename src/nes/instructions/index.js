@@ -46,8 +46,8 @@ export default _.keyBy([...logical, ...data], "id");
 //   SED ✓
 //   SEI ✓
 //   STA ✓
-//   STX
-//   STY
+//   STX ✓
+//   STY ✓
 //   TAX
 //   TAY
 //   TSX

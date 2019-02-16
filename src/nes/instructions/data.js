@@ -107,6 +107,26 @@ const instructions = () => [
 	{
 		id: "STA",
 		execute: ST_("a")
+	},
+
+	/**
+	 * Store X Register
+	 *
+	 * Stores the contents of X into `address`.
+	 */
+	{
+		id: "STX",
+		execute: ST_("x")
+	},
+
+	/**
+	 * Store Y Register
+	 *
+	 * Stores the contents of Y into `address`.
+	 */
+	{
+		id: "STY",
+		execute: ST_("y")
 	}
 ];
 
