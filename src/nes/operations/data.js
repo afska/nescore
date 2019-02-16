@@ -6,25 +6,25 @@ export default [
 		id: 0x18,
 		instruction: instructions.CLC,
 		cycles: 2,
-		addressing: addressings.NONE
+		addressing: addressings.IMPLICIT
 	},
 	{
 		id: 0xd8,
 		instruction: instructions.CLD,
 		cycles: 2,
-		addressing: addressings.NONE
+		addressing: addressings.IMPLICIT
 	},
 	{
 		id: 0x58,
 		instruction: instructions.CLI,
 		cycles: 2,
-		addressing: addressings.NONE
+		addressing: addressings.IMPLICIT
 	},
 	{
 		id: 0xb8,
 		instruction: instructions.CLV,
 		cycles: 2,
-		addressing: addressings.NONE
+		addressing: addressings.IMPLICIT
 	},
 	{
 		id: 0xa9,
@@ -36,7 +36,7 @@ export default [
 		id: 0x78,
 		instruction: instructions.SEI,
 		cycles: 2,
-		addressing: addressings.NONE
+		addressing: addressings.IMPLICIT
 	},
 	{
 		id: 0x8d,

@@ -1,7 +1,7 @@
 /**
- * "Immediate" addressing mode.
+ * "Absolute" addressing mode.
  *
- * The parameter is the actual value to use.
+ * The parameter is an absolute memory address.
  */
 export default {
 	id: "ABSOLUTE",
