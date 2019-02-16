@@ -1,6 +1,9 @@
 import WithMemory from "./WithMemory";
 
-/** A memory chunk that can store `bytes`. */
+/**
+ * A memory chunk that can store `bytes`.
+ * It's located at the `startAddress` of another memory structure.
+ */
 export default class MemoryChunk {
 	constructor(bytes, startAddress = 0x0000) {
 		WithMemory.apply(this);

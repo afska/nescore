@@ -1,6 +1,6 @@
 import _ from "lodash";
 
-/** A mixin for composed memory handling, with multiple chunks. */
+/** A mixin for composed memory handling, with multiple `chunks`. */
 export default {
 	/** Applies the mixin. */
 	apply(obj) {

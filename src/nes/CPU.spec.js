@@ -27,4 +27,6 @@ describe("CPU", () => {
 			c: false
 		});
 	});
+
+	// TODO: Test .step(...)
 });
