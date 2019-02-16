@@ -45,7 +45,7 @@ export default class CPU {
 			`RUNNING *${operation.instruction.id}*`,
 			parameter ? `WITH PARAMETER *${parameter}*...` : "..."
 		);
-		operation.instruction.execute(this, parameter);
+		operation.instruction.execute(this.context, parameter);
 	}
 
 	/** When a context is loaded. */

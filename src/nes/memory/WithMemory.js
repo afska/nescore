@@ -1,6 +1,8 @@
 import _ from "lodash";
 
-const NOT_IMPLEMENTED = () => throw new Error("not_implemented");
+const NOT_IMPLEMENTED = () => {
+	throw new Error("not_implemented");
+};
 
 /** A mixin for memory handling. */
 export default {
@@ -18,7 +20,7 @@ export default {
 	/** Reads a byte from `address`. */
 	readMemory(address) {
 		const offset = address - this.getMemoryStartAddress();
-		return this.getMemory(address).readUInt8(offset, size);
+		return this.getMemory(address).readUInt8(offset);
 	},
 
 	/** Ẁrites a `byte` to `address`. */

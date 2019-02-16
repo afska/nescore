@@ -2,21 +2,25 @@ import WithMemory from "./WithMemory";
 import { WithContext } from "../context";
 import MemoryChunk from "./WithMemory";
 
+const KB = 1024;
+const RAM_SIZE = 2 * KB;
+
 /** The whole system's memory. It handles absolute addresses. */
 export default class MemoryḾap {
 	constructor() {
 		WithContext.apply(this);
 		WithMemory.apply(this);
 
+		this.ram = new MemoryChunk(RAM_SIZE);
 		this.memoryOwners = [];
 	}
 
 	/** When a context is loaded. */
 	onLoad(context) {
-		const ramBytes = context.ram.getMemory();
+		const ramBytes = this.ram.getMemory();
 
 		this.memoryOwners = [
-			context.ram,
+			this.ram,
 			new MemoryChunk(ramBytes, 0x0800),
 			new MemoryChunk(ramBytes, 0x1000),
 			new MemoryChunk(ramBytes, 0x1800),

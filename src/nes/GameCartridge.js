@@ -1,4 +1,4 @@
-import { WithMemory } from "../memory";
+import { WithMemory } from "./memory";
 
 const MAGIC_NUMBER = "NES";
 const KB = 1024;

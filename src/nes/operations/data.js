@@ -37,5 +37,11 @@ export default [
 		instruction: instructions.SEI,
 		cycles: 2,
 		addressing: addressings.NONE
+	},
+	{
+		id: 0x8d,
+		instruction: instructions.STA,
+		cycles: 4,
+		addressing: addressings.ABSOLUTE
 	}
 ];

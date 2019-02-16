@@ -77,24 +77,41 @@ const instructions = () => [
 	{
 		id: "SEI",
 		execute: SE_("i")
+	},
+
+	/**
+	 * Store Accumulator
+	 *
+	 * Stores the contents of A into `address`.
+	 */
+	{
+		id: "STA",
+		execute: ST_("a")
 	}
 ];
 
 const SE_ = (flag) => {
-	return (cpu) => {
+	return ({ cpu }) => {
 		cpu.flags[flag] = true;
 	};
 };
 
 const CL_ = (flag) => {
-	return (cpu) => {
+	return ({ cpu }) => {
 		cpu.flags[flag] = false;
 	};
 };
 
 const LD_ = (register) => {
-	return (cpu, value) => {
+	return ({ cpu }, value) => {
 		cpu.registers[register].value = value;
+		cpu.flags.updateZeroAndNegative(value);
+	};
+};
+
+const ST_ = (register) => {
+	return ({ cpu }, address) => {
+		const value = cpu.registers[register].value;
 		cpu.flags.updateZeroAndNegative(value);
 	};
 };

@@ -45,7 +45,7 @@ export default createCollection([...logical, ...data]);
 //   SEC
 //   SED
 //   SEI ✓
-//   STA
+//   STA ✓
 //   STX
 //   STY
 //   TAX
