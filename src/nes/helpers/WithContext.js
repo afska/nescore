@@ -18,6 +18,8 @@ export default {
 
 	/** Unloads the current execution context. */
 	unloadContext() {
+		this.requireContext();
+
 		this.context = null;
 		if (this.onUnload) this.onUnload();
 	},

@@ -4,13 +4,40 @@ const should = require("chai").Should();
 describe("registers", () => {
 	describe("Register8Bit", () => {
 		it("allows initial values", () => {
-			new Register8Bit(5).value.should.equal(5);
+			const register = new Register8Bit(5);
+			register.value.should.equal(5);
+			register.value = 8;
+			register.value.should.equal(8);
+			register.reset();
+			register.value.should.equal(5);
 		});
 
-		it("handles overflow correctly", () => {
+		it("handles overflows and underflows correctly", () => {
 			const register = new Register8Bit(250);
+			register.lastWriteOk.should.ok;
 			register.value += 7;
 			register.value.should.equal(1);
+			register.lastWriteOk.should.not.ok;
+			register.value = 2;
+			register.lastWriteOk.should.ok;
+		});
+
+		it("can increment the value", () => {
+			const register = new Register8Bit(250);
+			register.increment();
+			register.value.should.equal(251);
+		});
+
+		it("can decrement the value", () => {
+			const register = new Register8Bit(250);
+			register.decrement();
+			register.value.should.equal(249);
+		});
+
+		it("can check overflows", () => {
+			const register = new Register8Bit(250);
+			register.value += 7;
+			(() => register.checkLastWrite("OVERFLOW")).should.throw("OVERFLOW");
 		});
 	});
 });

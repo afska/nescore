@@ -3,7 +3,7 @@ import { MemoryMap } from "./memory";
 import GameCartridge from "./GameCartridge";
 import { WithContext } from "./helpers";
 
-/* The NES Emulator. */
+/** The NES Emulator. */
 export default class NES {
 	constructor() {
 		WithContext.apply(this);

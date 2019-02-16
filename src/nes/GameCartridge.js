@@ -6,6 +6,8 @@ const HEADER_SIZE = 16;
 const TRAINER_SIZE = 512;
 const PRG_ROM_PAGE_SIZE = 16 * KB;
 const CHR_ROM_PAGE_SIZE = 8 * KB;
+const MEMORY_START_ADDRESS = 0x4020;
+const MEMORY_SIZE = 0xbfe0;
 
 /** The game cartridge (a file in iNES format). */
 export default class GameCartridge {
@@ -25,12 +27,12 @@ export default class GameCartridge {
 
 	/** Returns the first address in the memory map. */
 	get memoryStartAddress() {
-		return 0x4020;
+		return MEMORY_START_ADDRESS;
 	}
 
 	/** Returns the assigned size in the memory map. */
 	get memorySize() {
-		return 0xbfe0;
+		return MEMORY_SIZE;
 	}
 
 	/** Returns the PRG ROM, which contains the game's code. */
