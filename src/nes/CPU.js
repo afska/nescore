@@ -48,6 +48,20 @@ export default class CPU {
 		operation.instruction.execute(this.context, parameter);
 	}
 
+	// TODO: Tests these functions and move them to a Stack class?
+
+	/** Pushes a `value` into the stack. */
+	pushStack(value) {
+		this.context.memory.writeAt(this.stackAddress, value);
+		this.sp.value--;
+	}
+
+	/** Pops a value from the stack. */
+	popStack(value) {
+		this.sp.value++;
+		return this.context.memory.readAt(this.stackAddress);
+	}
+
 	/** When a context is loaded. */
 	onLoad(context) {
 		this.flags.load(INITIAL_FLAGS);
@@ -56,5 +70,10 @@ export default class CPU {
 	/** When the current context is unloaded. */
 	onUnload() {
 		// TODO: Reset registers and flags
+	}
+
+	/** Returns the current address of the stack. */
+	get stackAddress() {
+		return this.context.memory.stackStartAddress + this.sp.value;
 	}
 }

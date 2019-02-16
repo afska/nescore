@@ -16,6 +16,7 @@ export default _.keyBy([...logical, ...data], "id");
 //   INY
 //   ROL
 //   ROR
+//   SBC
 
 // logical
 //   AND ✓
@@ -41,7 +42,6 @@ export default _.keyBy([...logical, ...data], "id");
 //   PHP
 //   PLA
 //   PLP
-//   SBC
 //   SEC ✓
 //   SED ✓
 //   SEI ✓

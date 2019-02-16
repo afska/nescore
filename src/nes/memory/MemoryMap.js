@@ -38,4 +38,9 @@ export default class MemoryMap {
 	onUnload() {
 		this.defineChunks(null);
 	}
+
+	// TODO: Delegate in CPU/Stack
+	get stackStartAddress() {
+		return 0x100;
+	}
 }
