@@ -70,6 +70,26 @@ const instructions = () => [
 	},
 
 	/**
+	 * Set Carry Flag
+	 *
+	 * Sets the C (carry) flag.
+	 */
+	{
+		id: "SEC",
+		execute: SE_("c")
+	},
+
+	/**
+	 * Set Decimal Flag
+	 *
+	 * Sets the D (decimal) flag.
+	 */
+	{
+		id: "SED",
+		execute: SE_("d")
+	},
+
+	/**
 	 * Set Interrupt Disable
 	 *
 	 * Sets the I (interrupt disable) flag.

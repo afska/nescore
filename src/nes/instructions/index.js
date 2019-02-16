@@ -42,8 +42,8 @@ export default _.keyBy([...logical, ...data], "id");
 //   PLA
 //   PLP
 //   SBC
-//   SEC
-//   SED
+//   SEC ✓
+//   SED ✓
 //   SEI ✓
 //   STA ✓
 //   STX

@@ -62,7 +62,11 @@ describe("instructions", () => {
 			});
 		});
 
-		[{ instruction: "SEI", flag: "i" }].forEach(({ instruction, flag }) => {
+		[
+			{ instruction: "SEC", flag: "c" },
+			{ instruction: "SED", flag: "d" },
+			{ instruction: "SEI", flag: "i" }
+		].forEach(({ instruction, flag }) => {
 			describe(instruction, () => {
 				it("sets the flag", () => {
 					cpu.flags[flag] = false;
