@@ -3,6 +3,7 @@ import CPU from "../CPU";
 import { MemoryChunk } from "../memory";
 import { signedByte } from "../helpers";
 import { Buffer } from "buffer";
+import _ from "lodash";
 const should = require("chai").Should();
 
 const KB = 1024;
@@ -86,6 +87,47 @@ describe("instructions", () => {
 					cpu.registers[register].value = 123;
 					instructions[instruction].execute(context, 0x1349);
 					memory.readAt(0x1349).should.equal(123);
+				});
+			});
+		});
+
+		[
+			{
+				instruction: "TAX",
+				sourceRegister: "registers.a",
+				targetRegister: "registers.x"
+			},
+			{
+				instruction: "TAY",
+				sourceRegister: "registers.a",
+				targetRegister: "registers.y"
+			},
+			{
+				instruction: "TSX",
+				sourceRegister: "sp",
+				targetRegister: "registers.x"
+			},
+			{
+				instruction: "TXA",
+				sourceRegister: "registers.x",
+				targetRegister: "registers.a"
+			},
+			{
+				instruction: "TXS",
+				sourceRegister: "registers.x",
+				targetRegister: "sp"
+			},
+			{
+				instruction: "TYA",
+				sourceRegister: "registers.y",
+				targetRegister: "registers.a"
+			}
+		].forEach(({ instruction, sourceRegister, targetRegister }) => {
+			describe(instruction, () => {
+				it("transfers the content", () => {
+					_.set(cpu, `${sourceRegister}.value`, 123);
+					instructions[instruction].execute(context);
+					_.get(cpu, `${targetRegister}.value`).should.equal(123);
 				});
 			});
 		});

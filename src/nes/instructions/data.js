@@ -127,6 +127,66 @@ const instructions = () => [
 	{
 		id: "STY",
 		execute: ST_("y")
+	},
+
+	/**
+	 * Transfer Accumulator to X
+	 *
+	 * Copies A into X, setting the Z (zero) and N (negative) flags.
+	 */
+	{
+		id: "TAX",
+		execute: T__("a", "x")
+	},
+
+	/**
+	 * Transfer Accumulator to Y
+	 *
+	 * Copies A into Y, setting the Z (zero) and N (negative) flags.
+	 */
+	{
+		id: "TAY",
+		execute: T__("a", "y")
+	},
+
+	/**
+	 * Transfer Stack Pointer to X
+	 *
+	 * Copies SP into X, setting the Z (zero) and N (negative) flags.
+	 */
+	{
+		id: "TSX",
+		execute: ({ cpu }) => transfer(cpu, cpu.sp, cpu.registers.x)
+	},
+
+	/**
+	 * Transfer X to Accumulator
+	 *
+	 * Copies X into A, setting the Z (zero) and N (negative) flags.
+	 */
+	{
+		id: "TXA",
+		execute: T__("x", "a")
+	},
+
+	/**
+	 * Transfer X to Stack Pointer
+	 *
+	 * Copies X into SP, setting the Z (zero) and N (negative) flags.
+	 */
+	{
+		id: "TXS",
+		execute: ({ cpu }) => transfer(cpu, cpu.registers.x, cpu.sp)
+	},
+
+	/**
+	 * Transfer Y to Accumulator
+	 *
+	 * Copies Y into A, setting the Z (zero) and N (negative) flags.
+	 */
+	{
+		id: "TYA",
+		execute: T__("y", "a")
 	}
 ];
 
@@ -154,6 +214,18 @@ const ST_ = (register) => {
 		const value = cpu.registers[register].value;
 		memory.writeAt(address, value);
 	};
+};
+
+const T__ = (sourceRegister, targetRegister) => {
+	return ({ cpu }) => {
+		transfer(cpu, cpu.registers[sourceRegister], cpu.registers[targetRegister]);
+	};
+};
+
+const transfer = (cpu, sourceRegister, targetRegister) => {
+	const value = sourceRegister.value;
+	targetRegister.value = value;
+	cpu.flags.updateZeroAndNegative(value);
 };
 
 export default instructions();

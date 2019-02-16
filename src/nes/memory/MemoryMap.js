@@ -37,6 +37,5 @@ export default class MemoryMap {
 	/** When the current context is unloaded. */
 	onUnload() {
 		this.defineChunks(null);
-		this.chunks = null;
 	}
 }

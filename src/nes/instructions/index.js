@@ -48,12 +48,12 @@ export default _.keyBy([...logical, ...data], "id");
 //   STA ✓
 //   STX ✓
 //   STY ✓
-//   TAX
-//   TAY
-//   TSX
-//   TXA
-//   TXS
-//   TYA
+//   TAX ✓
+//   TAY ✓
+//   TSX ✓
+//   TXA ✓
+//   TXS ✓
+//   TYA ✓
 
 // branching
 //   BCC
