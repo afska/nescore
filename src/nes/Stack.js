@@ -10,8 +10,6 @@ export default class Stack {
 		WithContext.apply(this);
 	}
 
-	// TODO: Test these methods
-
 	/** Pushes a `value` into the stack. */
 	push(value) {
 		this.requireContext();
