@@ -1,10 +1,6 @@
-import WithMemory from "./WithMemory";
-
 /** A memory chunk that mirrors another `chunk`. */
 export default class MemoryMirror {
 	constructor(chunk, startAddress, size) {
-		WithMemory.apply(this);
-
 		this.chunk = chunk;
 		this.memoryStartAddress = startAddress;
 		this.memorySize = size;
