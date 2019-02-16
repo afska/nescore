@@ -8,7 +8,7 @@ export default {
 	},
 
 	/** Returns the memory bytes. */
-	getMemory: () => {
+	getMemory() {
 		throw new Error("not_implemented");
 	},
 

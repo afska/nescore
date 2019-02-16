@@ -23,6 +23,16 @@ export default class GameCartridge {
 		return this.prgROM;
 	}
 
+	/** Returns the first address in the memory map. */
+	get memoryStartAddress() {
+		return 0x4020;
+	}
+
+	/** Returns the assigned size in the memory map. */
+	get memorySize() {
+		return 0xbfe0;
+	}
+
 	/** Returns the PRG ROM, which contains the game's code. */
 	get prgROM() {
 		return this._getBytes(this._programOffset, this._programSize);

@@ -6,10 +6,11 @@ export default class MemoryChunk {
 		WithMemory.apply(this);
 
 		this.bytes = bytes;
-		this.startAddress = startAddress;
-		this.size = bytes.length;
+		this.memoryStartAddress = startAddress;
+		this.memorySize = bytes.length;
 	}
 
+	/** Returns the memory bytes. */
 	getMemory() {
 		return this.bytes;
 	}
