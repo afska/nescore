@@ -1,6 +1,5 @@
 import instructions from ".";
 import CPU from "../CPU";
-import { signedByte } from "../helpers";
 const should = require("chai").Should();
 
 describe("instructions", () => {

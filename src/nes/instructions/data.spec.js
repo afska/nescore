@@ -1,7 +1,7 @@
 import instructions from ".";
 import CPU from "../CPU";
 import { MemoryChunk } from "../memory";
-import { signedByte } from "../helpers";
+import { Byte } from "../helpers";
 import { Buffer } from "buffer";
 import _ from "lodash";
 const should = require("chai").Should();
@@ -40,22 +40,22 @@ describe("instructions", () => {
 			{ instruction: "LDY", register: "y" }
 		].forEach(({ instruction, register }) => {
 			describe(instruction, () => {
-				it("works with positive value", () => {
+				it("works with a positive value", () => {
 					instructions[instruction].execute(context, 5);
 					cpu.registers[register].value.should.equal(5);
 					cpu.flags.z.should.equal(false);
 					cpu.flags.n.should.equal(false);
 				});
 
-				it("works with negative value", () => {
-					const value = signedByte.toByte(-5);
+				it("works with a negative value", () => {
+					const value = Byte.toSignedByte(-5);
 					instructions[instruction].execute(context, value);
 					cpu.registers[register].value.should.equal(value);
 					cpu.flags.z.should.equal(false);
 					cpu.flags.n.should.equal(true);
 				});
 
-				it("works with zero value", () => {
+				it("works with a zero value", () => {
 					instructions[instruction].execute(context, 0);
 					cpu.registers[register].value.should.equal(0);
 					cpu.flags.z.should.equal(true);

@@ -1,4 +1,4 @@
-import { signedByte } from "../helpers";
+import { Byte } from "../helpers";
 
 /**
  * "Relative" addressing mode.
@@ -8,5 +8,5 @@ import { signedByte } from "../helpers";
 export default {
 	id: "RELATIVE",
 	parameterSize: 1,
-	getParameter: ({ cpu }, offset) => cpu.pc.value + signedByte.toNumber(offset)
+	getParameter: ({ cpu }, offset) => cpu.pc.value + Byte.toNumber(offset)
 };

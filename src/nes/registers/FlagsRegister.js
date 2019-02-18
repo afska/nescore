@@ -1,4 +1,4 @@
-import { signedByte } from "../helpers";
+import { Byte } from "../helpers";
 
 const N_BIT /* */ = 0b10000000;
 const V_BIT /* */ = 0b01000000;
@@ -24,8 +24,8 @@ export default class FlagsRegister {
 
 	/** Updates the Z and N flags depending on a `byte`. */
 	updateZeroAndNegative(byte) {
-		if (signedByte.isZero(byte)) this.z = true;
-		if (signedByte.isNegative(byte)) this.n = true;
+		if (Byte.isZero(byte)) this.z = true;
+		if (Byte.isNegative(byte)) this.n = true;
 	}
 
 	/** Deserializes a `byte` into the status flags. **/
