@@ -140,6 +140,30 @@ export default [
 		extraCycleIfPageCrossed: true
 	},
 	{
+		id: 0x48,
+		instruction: instructions.PHA,
+		cycles: 3,
+		addressing: addressings.IMPLICIT
+	},
+	{
+		id: 0x08,
+		instruction: instructions.PHP,
+		cycles: 3,
+		addressing: addressings.IMPLICIT
+	},
+	{
+		id: 0x68,
+		instruction: instructions.PLA,
+		cycles: 4,
+		addressing: addressings.IMPLICIT
+	},
+	{
+		id: 0x28,
+		instruction: instructions.PLP,
+		cycles: 4,
+		addressing: addressings.IMPLICIT
+	},
+	{
 		id: 0x78,
 		instruction: instructions.SEI,
 		cycles: 2,
