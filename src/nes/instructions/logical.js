@@ -7,7 +7,7 @@ const instructions = () => [
 	 */
 	{
 		id: "AND",
-		execute: (cpu, value) => {
+		execute: ({ cpu }, value) => {
 			const result = cpu.registers.a.value & value;
 			cpu.registers.a.value = result;
 			cpu.flags.updateZeroAndNegative(result);

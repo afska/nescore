@@ -1,19 +1,19 @@
 import instructions from ".";
-import CPU from "../CPU";
+import createTestContext from "../helpers/createTestContext";
 const should = require("chai").Should();
 
 describe("instructions", () => {
 	describe("logical", () => {
-		let cpu = null;
+		let cpu, context;
 
 		beforeEach(() => {
-			cpu = new CPU();
+			({ cpu, context } = createTestContext());
 		});
 
 		describe("AND", () => {
 			it("stores the right result", () => {
 				cpu.registers.a.value = 0b10100100;
-				instructions.AND.execute(cpu, 0b10000100);
+				instructions.AND.execute(context, 0b10000100);
 				cpu.registers.a.value.should.equal(0b10000100);
 				cpu.flags.z = false;
 				cpu.flags.n = true;
