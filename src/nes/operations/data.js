@@ -222,5 +222,41 @@ export default [
 		instruction: instructions.STA,
 		cycles: 6,
 		addressing: addressings.INDEXED_INDIRECT_Y
+	},
+	{
+		id: 0x86,
+		instruction: instructions.STX,
+		cycles: 3,
+		addressing: addressings.ZERO_PAGE
+	},
+	{
+		id: 0x96,
+		instruction: instructions.STX,
+		cycles: 4,
+		addressing: addressings.INDEXED_ZERO_PAGE_Y
+	},
+	{
+		id: 0x8e,
+		instruction: instructions.STX,
+		cycles: 4,
+		addressing: addressings.ABSOLUTE
+	},
+	{
+		id: 0x84,
+		instruction: instructions.STY,
+		cycles: 3,
+		addressing: addressings.ZERO_PAGE
+	},
+	{
+		id: 0x94,
+		instruction: instructions.STY,
+		cycles: 4,
+		addressing: addressings.INDEXED_ZERO_PAGE_X
+	},
+	{
+		id: 0x8c,
+		instruction: instructions.STY,
+		cycles: 4,
+		addressing: addressings.ABSOLUTE
 	}
 ];
