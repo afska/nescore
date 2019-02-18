@@ -2,7 +2,7 @@ const instructions = () => [
 	/**
 	 * Clear Carry Flag
 	 *
-	 * Clears the C (carry) flag.
+	 * Clears the C flag.
 	 */
 	{
 		id: "CLC",
@@ -12,7 +12,7 @@ const instructions = () => [
 	/**
 	 * Clear Decimal Mode
 	 *
-	 * Clears the D (decimal mode) flag.
+	 * Clears the D flag.
 	 */
 	{
 		id: "CLD",
@@ -22,7 +22,7 @@ const instructions = () => [
 	/**
 	 * Clear Interrupt Disable
 	 *
-	 * Clears the I (interrupt disable) flag.
+	 * Clears the I flag.
 	 */
 	{
 		id: "CLI",
@@ -32,7 +32,7 @@ const instructions = () => [
 	/**
 	 * Clear Overflow Flag
 	 *
-	 * Clears the V (overflow) flag.
+	 * Clears the V flag.
 	 */
 	{
 		id: "CLV",
@@ -42,7 +42,7 @@ const instructions = () => [
 	/**
 	 * Load Accumulator
 	 *
-	 * Loads `value` into A, setting the Z (zero) and N (negative) flags.
+	 * Loads `value` into A, updating the Z and N flags.
 	 */
 	{
 		id: "LDA",
@@ -52,7 +52,7 @@ const instructions = () => [
 	/**
 	 * Load X Register
 	 *
-	 * Loads `value` into X, setting the Z (zero) and N (negative) flags.
+	 * Loads `value` into X, updating the Z and N flags.
 	 */
 	{
 		id: "LDX",
@@ -62,7 +62,7 @@ const instructions = () => [
 	/**
 	 * Load Y Register
 	 *
-	 * Loads `value` into Y, setting the Z (zero) and N (negative) flags.
+	 * Loads `value` into Y, updating the Z and N flags.
 	 */
 	{
 		id: "LDY",
@@ -70,9 +70,55 @@ const instructions = () => [
 	},
 
 	/**
+	 * Push Accumulator
+	 *
+	 * Pushes A into the stack.
+	 */
+	{
+		id: "PHA",
+		execute: PH_((cpu) => cpu.registers.a.value)
+	},
+
+	/**
+	 * Push Processor Status
+	 *
+	 * Pushes the flags (as a byte) into the stack.
+	 */
+	{
+		id: "PHP",
+		execute: PH_((cpu) => cpu.flags.toByte())
+	},
+
+	/**
+	 * Pull Accumulator
+	 *
+	 * Pulls a byte from the stack into A, updating the Z and N flags.
+	 */
+	{
+		id: "PLA",
+		execute: ({ cpu }) => {
+			const value = cpu.stack.pop();
+			cpu.registers.a.value = value;
+			cpu.flags.updateZeroAndNegative(value);
+		}
+	},
+
+	/**
+	 * Pull Processor Status
+	 *
+	 * Pulls a byte from the stack into the flags.
+	 */
+	{
+		id: "PLP",
+		execute: ({ cpu }) => {
+			cpu.flags.load(cpu.stack.pop());
+		}
+	},
+
+	/**
 	 * Set Carry Flag
 	 *
-	 * Sets the C (carry) flag.
+	 * Sets the C flag.
 	 */
 	{
 		id: "SEC",
@@ -82,7 +128,7 @@ const instructions = () => [
 	/**
 	 * Set Decimal Flag
 	 *
-	 * Sets the D (decimal) flag.
+	 * Sets the D flag.
 	 */
 	{
 		id: "SED",
@@ -92,7 +138,7 @@ const instructions = () => [
 	/**
 	 * Set Interrupt Disable
 	 *
-	 * Sets the I (interrupt disable) flag.
+	 * Sets the I flag.
 	 */
 	{
 		id: "SEI",
@@ -132,61 +178,61 @@ const instructions = () => [
 	/**
 	 * Transfer Accumulator to X
 	 *
-	 * Copies A into X, setting the Z (zero) and N (negative) flags.
+	 * Copies A into X, updating the Z and N flags.
 	 */
 	{
 		id: "TAX",
-		execute: T__("a", "x")
+		execute: T__((cpu) => cpu.registers.a, (cpu) => cpu.registers.x)
 	},
 
 	/**
 	 * Transfer Accumulator to Y
 	 *
-	 * Copies A into Y, setting the Z (zero) and N (negative) flags.
+	 * Copies A into Y, updating the Z and N flags.
 	 */
 	{
 		id: "TAY",
-		execute: T__("a", "y")
+		execute: T__((cpu) => cpu.registers.a, (cpu) => cpu.registers.y)
 	},
 
 	/**
 	 * Transfer Stack Pointer to X
 	 *
-	 * Copies SP into X, setting the Z (zero) and N (negative) flags.
+	 * Copies SP into X, updating the Z and N flags.
 	 */
 	{
 		id: "TSX",
-		execute: ({ cpu }) => transfer(cpu, cpu.sp, cpu.registers.x)
+		execute: T__((cpu) => cpu.sp, (cpu) => cpu.registers.x)
 	},
 
 	/**
 	 * Transfer X to Accumulator
 	 *
-	 * Copies X into A, setting the Z (zero) and N (negative) flags.
+	 * Copies X into A, updating the Z and N flags.
 	 */
 	{
 		id: "TXA",
-		execute: T__("x", "a")
+		execute: T__((cpu) => cpu.registers.x, (cpu) => cpu.registers.a)
 	},
 
 	/**
 	 * Transfer X to Stack Pointer
 	 *
-	 * Copies X into SP, setting the Z (zero) and N (negative) flags.
+	 * Copies X into SP, updating the Z and N flags.
 	 */
 	{
 		id: "TXS",
-		execute: ({ cpu }) => transfer(cpu, cpu.registers.x, cpu.sp)
+		execute: T__((cpu) => cpu.registers.x, (cpu) => cpu.sp)
 	},
 
 	/**
 	 * Transfer Y to Accumulator
 	 *
-	 * Copies Y into A, setting the Z (zero) and N (negative) flags.
+	 * Copies Y into A, updating the Z and N flags.
 	 */
 	{
 		id: "TYA",
-		execute: T__("y", "a")
+		execute: T__((cpu) => cpu.registers.y, (cpu) => cpu.registers.a)
 	}
 ];
 
@@ -209,6 +255,12 @@ const LD_ = (register) => {
 	};
 };
 
+const PH_ = (getValue) => {
+	return ({ cpu }) => {
+		cpu.stack.push(getValue(cpu));
+	};
+};
+
 const ST_ = (register) => {
 	return ({ cpu, memory }, address) => {
 		const value = cpu.registers[register].value;
@@ -216,16 +268,12 @@ const ST_ = (register) => {
 	};
 };
 
-const T__ = (sourceRegister, targetRegister) => {
+const T__ = (getSourceRegister, getTargetRegister) => {
 	return ({ cpu }) => {
-		transfer(cpu, cpu.registers[sourceRegister], cpu.registers[targetRegister]);
+		const value = getSourceRegister(cpu).value;
+		getTargetRegister(cpu).value = value;
+		cpu.flags.updateZeroAndNegative(value);
 	};
-};
-
-const transfer = (cpu, sourceRegister, targetRegister) => {
-	const value = sourceRegister.value;
-	targetRegister.value = value;
-	cpu.flags.updateZeroAndNegative(value);
 };
 
 export default instructions();

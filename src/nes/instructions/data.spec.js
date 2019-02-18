@@ -16,6 +16,7 @@ describe("instructions", () => {
 			cpu = new CPU();
 			memory = new MemoryChunk(Buffer.alloc(64 * KB));
 			context = { cpu, memory };
+			cpu.loadContext(context);
 		});
 
 		[
@@ -59,6 +60,48 @@ describe("instructions", () => {
 					cpu.registers[register].value.should.equal(0);
 					cpu.flags.z.should.equal(true);
 					cpu.flags.n.should.equal(false);
+				});
+			});
+		});
+
+		describe("PHA", () => {
+			it("pushes the accumulator into the stack", () => {
+				cpu.registers.a.value = 88;
+				instructions.PHA.execute(context);
+				cpu.stack.pop().should.equal(88);
+			});
+		});
+
+		describe("PHP", () => {
+			it("pushes the flags into the stack", () => {
+				cpu.flags.c = true;
+				cpu.flags.v = true;
+				instructions.PHP.execute(context);
+				cpu.stack.pop().should.equal(0b01000101);
+			});
+		});
+
+		describe("PLA", () => {
+			it("sets the A register with a value from the stack", () => {
+				cpu.stack.push(76);
+				instructions.PLA.execute(context);
+				cpu.registers.a.value.should.equal(76);
+			});
+		});
+
+		describe("PLP", () => {
+			it("pushes the right value into the stack", () => {
+				cpu.stack.push(0b01000101);
+				instructions.PLP.execute(context);
+				cpu.flags.should.include({
+					n: false,
+					v: true,
+					b1: false,
+					b2: false,
+					d: false,
+					i: true,
+					z: false,
+					c: true
 				});
 			});
 		});

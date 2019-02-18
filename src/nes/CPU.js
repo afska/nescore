@@ -10,7 +10,7 @@ export default class CPU {
 	constructor() {
 		WithContext.apply(this);
 
-		// TODO: Make program counter absolute instead of relative to the prgROM?
+		// TODO: Make program counter absolute instead of relative to the prgROM!
 		this.pc = new Register16Bit(0); // program counter
 		this.sp = new Register8Bit(0xff); // stack pointer
 		this.flags = new FlagsRegister();

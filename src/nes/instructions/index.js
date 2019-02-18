@@ -38,10 +38,10 @@ export default _.keyBy([...logical, ...data], "id");
 //   LDA ✓
 //   LDX ✓
 //   LDY ✓
-//   PHA
-//   PHP
-//   PLA
-//   PLP
+//   PHA ✓
+//   PHP ✓
+//   PLA ✓
+//   PLP ✓
 //   SEC ✓
 //   SED ✓
 //   SEI ✓

@@ -19,7 +19,7 @@ export default class Stack {
 		this.context.cpu.sp.checkLastWrite(STACK_OVERFLOW);
 	}
 
-	/** Pops a value from the stack. */
+	/** Pulls a value from the stack. */
 	pop() {
 		this.requireContext();
 

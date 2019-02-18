@@ -9,6 +9,7 @@ const I_BIT /* */ = 0b00000100;
 const Z_BIT /* */ = 0b00000010;
 const C_BIT /* */ = 0b00000001;
 
+/** The processor status flags. **/
 export default class FlagsRegister {
 	constructor() {
 		this.n = false; // negative
@@ -21,11 +22,13 @@ export default class FlagsRegister {
 		this.c = false; // carry
 	}
 
+	/** Updates the Z and N flags depending on a `byte`. */
 	updateZeroAndNegative(byte) {
 		if (signedByte.isZero(byte)) this.z = true;
 		if (signedByte.isNegative(byte)) this.n = true;
 	}
 
+	/** Deserializes a `byte` into the status flags. **/
 	load(byte) {
 		this.n = !!(byte & N_BIT);
 		this.v = !!(byte & V_BIT);
@@ -39,6 +42,7 @@ export default class FlagsRegister {
 		return this;
 	}
 
+	/** Serializes the status flags into a byte. **/
 	toByte() {
 		return (
 			(this.n && N_BIT) |
