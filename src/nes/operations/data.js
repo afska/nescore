@@ -182,9 +182,45 @@ export default [
 		addressing: addressings.IMPLICIT
 	},
 	{
+		id: 0x85,
+		instruction: instructions.STA,
+		cycles: 3,
+		addressing: addressings.ZERO_PAGE
+	},
+	{
+		id: 0x95,
+		instruction: instructions.STA,
+		cycles: 4,
+		addressing: addressings.INDEXED_ZERO_PAGE_X
+	},
+	{
 		id: 0x8d,
 		instruction: instructions.STA,
 		cycles: 4,
 		addressing: addressings.ABSOLUTE
+	},
+	{
+		id: 0x9d,
+		instruction: instructions.STA,
+		cycles: 5,
+		addressing: addressings.INDEXED_ABSOLUTE_X
+	},
+	{
+		id: 0x99,
+		instruction: instructions.STA,
+		cycles: 5,
+		addressing: addressings.INDEXED_ABSOLUTE_Y
+	},
+	{
+		id: 0x81,
+		instruction: instructions.STA,
+		cycles: 6,
+		addressing: addressings.INDEXED_INDIRECT_X
+	},
+	{
+		id: 0x91,
+		instruction: instructions.STA,
+		cycles: 6,
+		addressing: addressings.INDEXED_INDIRECT_Y
 	}
 ];
