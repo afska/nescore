@@ -33,6 +33,51 @@ export default [
 		addressing: addressings.IMMEDIATE
 	},
 	{
+		id: 0xa5,
+		instruction: instructions.LDA,
+		cycles: 3,
+		addressing: addressings.ZERO_PAGE
+	},
+	{
+		id: 0xb5,
+		instruction: instructions.LDA,
+		cycles: 4,
+		addressing: addressings.INDEXED_ZERO_PAGE_X
+	},
+	{
+		id: 0xad,
+		instruction: instructions.LDA,
+		cycles: 4,
+		addressing: addressings.ABSOLUTE
+	},
+	{
+		id: 0xbd,
+		instruction: instructions.LDA,
+		cycles: 4,
+		addressing: addressings.INDEXED_ABSOLUTE_X,
+		extraCycleIfPageCrossed: true
+	},
+	{
+		id: 0xb9,
+		instruction: instructions.LDA,
+		cycles: 4,
+		addressing: addressings.INDEXED_ABSOLUTE_Y,
+		extraCycleIfPageCrossed: true
+	},
+	{
+		id: 0xa1,
+		instruction: instructions.LDA,
+		cycles: 6,
+		addressing: addressings.INDEXED_INDIRECT_X
+	},
+	{
+		id: 0xb1,
+		instruction: instructions.LDA,
+		cycles: 5,
+		addressing: addressings.INDEXED_INDIRECT_Y,
+		extraCycleIfPageCrossed: true
+	},
+	{
 		id: 0x78,
 		instruction: instructions.SEI,
 		cycles: 2,
