@@ -13,7 +13,7 @@ export default class CPU {
 		// TODO: Make program counter absolute instead of relative to the prgROM!
 		this.pc = new Register16Bit(0); // program counter
 		this.sp = new Register8Bit(0xff); // stack pointer
-		this.flags = new FlagsRegister();
+		this.flags = new FlagsRegister(INITIAL_FLAGS);
 
 		this.registers = {
 			a: new Register8Bit(0), // accumulator
@@ -26,7 +26,6 @@ export default class CPU {
 
 	/** When a context is loaded. */
 	onLoad(context) {
-		this.flags.load(INITIAL_FLAGS);
 		this.stack.loadContext(context);
 	}
 

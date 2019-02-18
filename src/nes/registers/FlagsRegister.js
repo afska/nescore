@@ -11,7 +11,7 @@ const C_BIT /* */ = 0b00000001;
 
 /** The processor status flags. **/
 export default class FlagsRegister {
-	constructor() {
+	constructor(initialValue = 0) {
 		this.n = false; // negative
 		this.v = false; // overflow
 		this.b1 = false; // break command (1)
@@ -20,6 +20,8 @@ export default class FlagsRegister {
 		this.i = false; // interrupt disable
 		this.z = false; // zero
 		this.c = false; // carry
+
+		this.load(initialValue);
 	}
 
 	/** Updates the Z and N flags depending on a `byte`. */

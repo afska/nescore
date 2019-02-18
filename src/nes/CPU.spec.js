@@ -22,7 +22,7 @@ describe("CPU", () => {
 			b1: false,
 			b2: false,
 			d: false,
-			i: false,
+			i: true,
 			z: false,
 			c: false
 		});
