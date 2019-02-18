@@ -109,6 +109,37 @@ export default [
 		extraCycleIfPageCrossed: true
 	},
 	{
+		id: 0xa0,
+		instruction: instructions.LDY,
+		cycles: 2,
+		addressing: addressings.IMMEDIATE
+	},
+	{
+		id: 0xa4,
+		instruction: instructions.LDY,
+		cycles: 3,
+		addressing: addressings.ZERO_PAGE
+	},
+	{
+		id: 0xb4,
+		instruction: instructions.LDY,
+		cycles: 4,
+		addressing: addressings.INDEXED_ZERO_PAGE_X
+	},
+	{
+		id: 0xac,
+		instruction: instructions.LDY,
+		cycles: 4,
+		addressing: addressings.ABSOLUTE
+	},
+	{
+		id: 0xbc,
+		instruction: instructions.LDY,
+		cycles: 4,
+		addressing: addressings.INDEXED_ABSOLUTE_X,
+		extraCycleIfPageCrossed: true
+	},
+	{
 		id: 0x78,
 		instruction: instructions.SEI,
 		cycles: 2,
