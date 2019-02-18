@@ -164,6 +164,18 @@ export default [
 		addressing: addressings.IMPLICIT
 	},
 	{
+		id: 0x38,
+		instruction: instructions.SEC,
+		cycles: 2,
+		addressing: addressings.IMPLICIT
+	},
+	{
+		id: 0xf8,
+		instruction: instructions.SED,
+		cycles: 2,
+		addressing: addressings.IMPLICIT
+	},
+	{
 		id: 0x78,
 		instruction: instructions.SEI,
 		cycles: 2,
