@@ -1,17 +1,13 @@
 import Stack from "./Stack";
-import { Register8Bit } from "./registers";
-import { MemoryMap } from "./memory";
+import createTestContext from "./helpers/createTestContext";
 const should = require("chai").Should();
 
 describe("Stack", () => {
 	let cpu, memory, stack;
 
 	beforeEach(() => {
-		cpu = { sp: new Register8Bit(0xff) };
-		memory = new MemoryMap();
-		memory.loadContext({});
-		stack = new Stack();
-		stack.loadContext({ cpu, memory });
+		({ cpu, memory } = createTestContext());
+		stack = new Stack().loadContext({ cpu, memory });
 	});
 
 	it("can push and pop values", () => {

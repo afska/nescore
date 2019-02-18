@@ -14,6 +14,7 @@ export default {
 	loadContext(context) {
 		this.context = context;
 		if (this.onLoad) this.onLoad(context);
+		return this;
 	},
 
 	/** Unloads the current execution context. */
@@ -22,6 +23,7 @@ export default {
 
 		this.context = null;
 		if (this.onUnload) this.onUnload();
+		return this;
 	},
 
 	/** Asserts that a current context exists.. */

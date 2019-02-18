@@ -1,22 +1,15 @@
 import instructions from ".";
-import CPU from "../CPU";
-import { MemoryChunk } from "../memory";
 import { Byte } from "../helpers";
-import { Buffer } from "buffer";
+import createTestContext from "../helpers/createTestContext";
 import _ from "lodash";
 const should = require("chai").Should();
-
-const KB = 1024;
 
 describe("instructions", () => {
 	describe("data", () => {
 		let cpu, memory, context;
 
 		beforeEach(() => {
-			cpu = new CPU();
-			memory = new MemoryChunk(Buffer.alloc(64 * KB));
-			context = { cpu, memory };
-			cpu.loadContext(context);
+			({ cpu, memory, context } = createTestContext());
 		});
 
 		[

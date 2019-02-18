@@ -14,8 +14,7 @@ describe("memory", () => {
 				Buffer.alloc(CARTRIDGE_SIZE),
 				CARTRIDGE_START_ADDRESS
 			);
-			memory = new MemoryMap();
-			memory.loadContext({ cartridge });
+			memory = new MemoryMap().loadContext({ cartridge });
 		});
 
 		it("can write in the right chunk", () => {
