@@ -5,5 +5,6 @@
  */
 export default {
 	id: "ABSOLUTE",
-	parameterSize: 2
+	parameterSize: 2,
+	getParameter: (context, address) => address
 };

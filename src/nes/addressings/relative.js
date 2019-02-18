@@ -1,3 +1,5 @@
+import { signedByte } from "../helpers";
+
 /**
  * "Relative" addressing mode.
  *
@@ -5,5 +7,6 @@
  */
 export default {
 	id: "RELATIVE",
-	parameterSize: 1
+	parameterSize: 1,
+	getParameter: ({ cpu }, offset) => cpu.pc.value + signedByte.toNumber(offset)
 };

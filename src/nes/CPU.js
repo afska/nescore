@@ -35,19 +35,19 @@ export default class CPU {
 		this.requireContext();
 
 		const opcode = this.context.cartridge.prgROM[this.pc.value];
-		this.pc.increment();
-
 		const operation = operations[opcode];
 		if (!operation) throw new Error(`Unknown opcode: 0x${opcode.toString(16)}`);
-		const parameterSize = operation.addressing.parameterSize;
+		this.pc.increment();
 
 		let parameter = null;
-		if (parameterSize > 0) {
+		const addressing = operation.addressing;
+		if (addressing.parameterSize > 0) {
 			parameter = this.context.cartridge.prgROM.readUIntLE(
 				this.pc.value,
-				parameterSize
+				addressing.parameterSize
 			);
-			this.pc.value += parameterSize;
+			this.pc.value += addressing.parameterSize;
+			parameter = addressing.getParameter(this.context, parameter);
 		}
 
 		console.log(
