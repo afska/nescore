@@ -258,5 +258,41 @@ export default [
 		instruction: instructions.STY,
 		cycles: 4,
 		addressing: addressings.ABSOLUTE
+	},
+	{
+		id: 0xaa,
+		instruction: instructions.TAX,
+		cycles: 2,
+		addressing: addressings.IMPLICIT
+	},
+	{
+		id: 0xa8,
+		instruction: instructions.TAY,
+		cycles: 2,
+		addressing: addressings.IMPLICIT
+	},
+	{
+		id: 0xba,
+		instruction: instructions.TSX,
+		cycles: 2,
+		addressing: addressings.IMPLICIT
+	},
+	{
+		id: 0x8a,
+		instruction: instructions.TXA,
+		cycles: 2,
+		addressing: addressings.IMPLICIT
+	},
+	{
+		id: 0x9a,
+		instruction: instructions.TXS,
+		cycles: 2,
+		addressing: addressings.IMPLICIT
+	},
+	{
+		id: 0x98,
+		instruction: instructions.TYA,
+		cycles: 2,
+		addressing: addressings.IMPLICIT
 	}
 ];
