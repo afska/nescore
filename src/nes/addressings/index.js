@@ -4,11 +4,11 @@ import absolute from "./absolute";
 import indexedAbsoluteX from "./indexedAbsoluteX";
 import indexedAbsoluteY from "./indexedAbsoluteY";
 import zeroPage from "./zeroPage";
-import indexedZeroPageX from "./indexedAbsoluteX";
-import indexedZeroPageY from "./indexedAbsoluteY";
+import indexedZeroPageX from "./indexedZeroPageX";
+import indexedZeroPageY from "./indexedZeroPageY";
 import indirect from "./indirect";
-import indexedIndirectX from "./indexedAbsoluteX";
-import indexedIndirectY from "./indexedAbsoluteY";
+import indexedIndirectX from "./indexedIndirectX";
+import indexedIndirectY from "./indexedIndirectY";
 import relative from "./relative";
 import _ from "lodash";
 
