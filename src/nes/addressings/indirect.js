@@ -3,7 +3,7 @@ import { Byte } from "../helpers";
 /**
  * "Indirect" addressing mode.
  *
- * The parameter is an absolute memory address to lookup another address.
+ * The parameter is an absolute memory address to look up another address.
  * The byte readed from memory gives the least significant byte of the final
  * address, and the following byte gives the most significant byte.
  */
