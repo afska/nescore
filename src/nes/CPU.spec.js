@@ -11,11 +11,6 @@ describe("CPU", () => {
 		should.not.exist(cpu.context);
 		cpu.pc.value.should.equal(0);
 		cpu.sp.value.should.equal(0xff);
-		registersOf(cpu).should.include({
-			x: 0,
-			y: 0,
-			a: 0
-		});
 		cpu.flags.should.include({
 			n: false,
 			v: false,
@@ -25,6 +20,13 @@ describe("CPU", () => {
 			i: true,
 			z: false,
 			c: false
+		});
+		cpu.cycles.should.equal(0);
+
+		registersOf(cpu).should.include({
+			x: 0,
+			y: 0,
+			a: 0
 		});
 	});
 

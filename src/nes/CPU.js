@@ -14,6 +14,7 @@ export default class CPU {
 		this.pc = new Register16Bit(0); // program counter
 		this.sp = new Register8Bit(0xff); // stack pointer
 		this.flags = new FlagsRegister(INITIAL_FLAGS);
+		this.cycles = 0;
 
 		this.registers = {
 			a: new Register8Bit(0), // accumulator
@@ -54,6 +55,7 @@ export default class CPU {
 			parameter ? `WITH PARAMETER 0x${parameter.toString(16)}...` : "..."
 		);
 		operation.instruction.execute(this.context, parameter);
+		this.cycles += operation.cycles;
 	}
 
 	/** When the current context is unloaded. */
@@ -61,6 +63,7 @@ export default class CPU {
 		this.pc.reset();
 		this.sp.reset();
 		this.flags.load(INITIAL_FLAGS);
+		this.cycles = 0;
 		this.registers.a.reset();
 		this.registers.x.reset();
 		this.registers.y.reset();
