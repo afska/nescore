@@ -24,12 +24,6 @@ export default class FlagsRegister {
 		this.load(initialValue);
 	}
 
-	/** Updates the Z and N flags depending on a `byte`. */
-	updateZeroAndNegative(byte) {
-		if (Byte.isZero(byte)) this.z = true;
-		if (Byte.isNegative(byte)) this.n = true;
-	}
-
 	/** Deserializes a `byte` into the status flags. **/
 	load(byte) {
 		this.n = !!(byte & N_BIT);
@@ -56,5 +50,21 @@ export default class FlagsRegister {
 			(this.z && Z_BIT) |
 			(this.c && C_BIT)
 		);
+	}
+
+	/** Updates the Z and N flags depending on a `byte`. */
+	updateZeroAndNegative(byte) {
+		this.updateZero(byte);
+		this.updateNegative(byte);
+	}
+
+	/** Updates the Z flag depending on a `byte`. */
+	updateZero(byte) {
+		if (byte === 0) this.z = true;
+	}
+
+	/** Updates the N flag depending on a `byte`. */
+	updateNegative(byte) {
+		if (Byte.isNegative(byte)) this.n = true;
 	}
 }

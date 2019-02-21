@@ -1,8 +1,9 @@
 import logical from "./logical";
+import checks from "./checks";
 import data from "./data";
 import _ from "lodash";
 
-export default _.keyBy([...logical, ...data], "id");
+export default _.keyBy([...logical, ...checks, ...data], "id");
 
 // TODO: Instructions
 // arithmetic
@@ -25,7 +26,7 @@ export default _.keyBy([...logical, ...data], "id");
 //   ORA ✓
 
 // checks
-//   BIT
+//   BIT ✓
 //   CMP
 //   CPX
 //   CPY

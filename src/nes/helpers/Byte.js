@@ -16,10 +16,6 @@ export default {
 		return number < 0 ? number + SIZE : number;
 	},
 
-	isZero(byte) {
-		return byte === 0;
-	},
-
 	isNegative(byte) {
 		return byte & 0b10000000;
 	},

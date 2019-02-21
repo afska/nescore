@@ -2,7 +2,7 @@ const instructions = () => [
 	/**
 	 * No Operation
 	 *
-	 * It causes no changes at all.
+	 * Causes no changes at all.
 	 */
 	{
 		id: "NOP",
