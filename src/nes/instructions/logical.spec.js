@@ -20,14 +20,6 @@ describe("instructions", () => {
 				negative: true
 			},
 			{
-				instruction: "ORA",
-				value1: 0b00100100,
-				value2: 0b00010100,
-				result: 0b00110100,
-				zero: false,
-				negative: false
-			},
-			{
 				instruction: "EOR",
 				value1: 0b00100100,
 				value2: 0b00010100,
@@ -41,6 +33,14 @@ describe("instructions", () => {
 				value2: 0b11111111,
 				result: 0b00000000,
 				zero: true,
+				negative: false
+			},
+			{
+				instruction: "ORA",
+				value1: 0b00100100,
+				value2: 0b00010100,
+				result: 0b00110100,
+				zero: false,
 				negative: false
 			}
 		].forEach(({ instruction, value1, value2, result, zero, negative }) => {
