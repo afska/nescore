@@ -10,13 +10,48 @@ describe("instructions", () => {
 			({ cpu, context } = createTestContext());
 		});
 
-		describe("AND", () => {
-			it("stores the right result", () => {
-				cpu.registers.a.value = 0b10100100;
-				instructions.AND.execute(context, 0b10000100);
-				cpu.registers.a.value.should.equal(0b10000100);
-				cpu.flags.z = false;
-				cpu.flags.n = true;
+		[
+			{
+				instruction: "AND",
+				value1: 0b10100100,
+				value2: 0b10000100,
+				result: 0b10000100,
+				zero: false,
+				negative: true
+			},
+			{
+				instruction: "ORA",
+				value1: 0b00100100,
+				value2: 0b00010100,
+				result: 0b00110100,
+				zero: false,
+				negative: false
+			},
+			{
+				instruction: "EOR",
+				value1: 0b00100100,
+				value2: 0b00010100,
+				result: 0b00110000,
+				zero: false,
+				negative: false
+			},
+			{
+				instruction: "EOR",
+				value1: 0b11111111,
+				value2: 0b11111111,
+				result: 0b00000000,
+				zero: true,
+				negative: false
+			}
+		].forEach(({ instruction, value1, value2, result, zero, negative }) => {
+			describe(instruction, () => {
+				it("stores the right result", () => {
+					cpu.registers.a.value = value1;
+					instructions[instruction].execute(context, value2);
+					cpu.registers.a.value.should.equal(result);
+					cpu.flags.z = zero;
+					cpu.flags.n = negative;
+				});
 			});
 		});
 	});

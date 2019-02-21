@@ -14,15 +14,15 @@ export default _.keyBy([...logical, ...data], "id");
 //   INC
 //   INX
 //   INY
+//   LSR
 //   ROL
 //   ROR
 //   SBC
 
 // logical
 //   AND ✓
-//   EOR
-//   LSR
-//   ORA
+//   EOR ✓
+//   ORA ✓
 
 // checks
 //   BIT
