@@ -29,9 +29,7 @@ describe("memory", () => {
 		});
 
 		it("throws an exception when the address is out of bounds", () => {
-			(() => chunk.writeAt(9, 123)).should.throw(
-				`The value of "offset" is out of range. It must be >= 0 and <= 4. Received 9`
-			);
+			(() => chunk.writeAt(9, 123)).should.throw("Invalid memory access at 0x9");
 		});
 	});
 });
