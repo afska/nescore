@@ -12,7 +12,7 @@ describe("addressings", () => {
 		context = createTestContext();
 	});
 
-	describe("getValue method", () => {
+	it("getValue method", () => {
 		context.memory.writeAt(0xfe9d, 123);
 		const addressingMock = { getAddress: () => 0xfe9d, getValue };
 		addressingMock.getValue(context).should.equal(123);
@@ -20,7 +20,9 @@ describe("addressings", () => {
 
 	describe("immediate", () => {
 		it("returns the same value", () => {
-			addressings.IMMEDIATE.getAddress(context, 120).should.equal(null);
+			(() => addressings.IMMEDIATE.getAddress(context, 120)).should.throw(
+				"An instruction with IMMEDIATE addressing mode should have `needsValue: true`"
+			);
 			addressings.IMMEDIATE.getValue(context, 120).should.equal(120);
 		});
 	});
