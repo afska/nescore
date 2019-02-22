@@ -34,28 +34,14 @@ export default class CPU {
 	step() {
 		this.requireContext();
 
-		const opcode = this.context.cartridge.prgROM[this.pc.value];
-		const operation = operations[opcode];
-		if (!operation) throw new Error(`Unknown opcode: 0x${opcode.toString(16)}`);
-		this.pc.increment();
-
-		let parameter = null;
-		const addressing = operation.addressing;
-		if (addressing.parameterSize > 0) {
-			parameter = this.context.cartridge.prgROM.readUIntLE(
-				this.pc.value,
-				addressing.parameterSize
-			);
-			this.pc.value += addressing.parameterSize;
-			parameter = operation.instruction.needsValue
-				? addressing.getValue(this.context, parameter)
-				: addressing.getAddress(this.context, parameter);
-		}
+		const operation = this._readOperation();
+		const parameter = this._readParameter(operation);
 
 		console.log(
 			`RUNNING *${operation.instruction.id}*`,
 			parameter ? `WITH PARAMETER 0x${parameter.toString(16)}...` : "..."
 		);
+
 		operation.instruction.execute(this.context, parameter);
 		this.cycles += operation.cycles;
 	}
@@ -70,5 +56,27 @@ export default class CPU {
 		this.registers.x.reset();
 		this.registers.y.reset();
 		this.stack.unloadContext();
+	}
+
+	_readOperation() {
+		const opcode = this.context.cartridge.prgROM[this.pc.value];
+		const operation = operations[opcode];
+		if (!operation) throw new Error(`Unknown opcode: 0x${opcode.toString(16)}`);
+		this.pc.increment();
+		return operation;
+	}
+
+	_readParameter({ instruction, addressing }) {
+		if (addressing.parameterSize === 0) return null;
+
+		const parameter = this.context.cartridge.prgROM.readUIntLE(
+			this.pc.value,
+			addressing.parameterSize
+		);
+		this.pc.value += addressing.parameterSize;
+
+		return instruction.needsValue
+			? addressing.getValue(this.context, parameter)
+			: addressing.getAddress(this.context, parameter);
 	}
 }
