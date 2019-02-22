@@ -27,7 +27,7 @@ export default _.keyBy([...logical, ...checks, ...data], "id");
 
 // checks
 //   BIT ✓
-//   CMP
+//   CMP ✓
 //   CPX
 //   CPY
 

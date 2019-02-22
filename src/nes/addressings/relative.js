@@ -1,4 +1,5 @@
 import { Byte } from "../helpers";
+import getValue from "./_getValue";
 
 /**
  * "Relative" addressing mode.
@@ -8,5 +9,6 @@ import { Byte } from "../helpers";
 export default {
 	id: "RELATIVE",
 	parameterSize: 1,
-	getParameter: ({ cpu }, offset) => cpu.pc.value + Byte.toNumber(offset)
+	getAddress: ({ cpu }, offset) => cpu.pc.value + Byte.toNumber(offset),
+	getValue
 };

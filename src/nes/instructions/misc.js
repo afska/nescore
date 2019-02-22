@@ -6,6 +6,7 @@ const instructions = () => [
 	 */
 	{
 		id: "NOP",
+		needsValue: false,
 		execute: (context) => {}
 	}
 ];

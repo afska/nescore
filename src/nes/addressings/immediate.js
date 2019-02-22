@@ -6,5 +6,6 @@
 export default {
 	id: "IMMEDIATE",
 	parameterSize: 1,
-	getParameter: (context, value) => value
+	getAddress: (context) => null,
+	getValue: (context, value) => value
 };

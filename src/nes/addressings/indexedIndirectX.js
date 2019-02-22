@@ -1,4 +1,5 @@
 import indirect from "./indirect";
+import getValue from "./_getValue";
 
 /**
  * "Indexed indirect" addressing mode.
@@ -9,10 +10,11 @@ import indirect from "./indirect";
 export default {
 	id: "INDEXED_INDIRECT_X",
 	parameterSize: 1,
-	getParameter: (context, address) => {
-		return indirect.getParameter(
+	getAddress: (context, address) => {
+		return indirect.getAddress(
 			context,
 			address + context.cpu.registers.x.value
 		);
-	}
+	},
+	getValue
 };

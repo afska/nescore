@@ -1,4 +1,5 @@
 import { Byte } from "../helpers";
+import getValue from "./_getValue";
 
 /**
  * "Indirect" addressing mode.
@@ -10,9 +11,10 @@ import { Byte } from "../helpers";
 export default {
 	id: "INDIRECT",
 	parameterSize: 2,
-	getParameter: ({ memory }, address) => {
+	getAddress: ({ memory }, address) => {
 		const leastSignificantByte = memory.readAt(address);
 		const mostSignificantByte = memory.readAt(address + 1);
 		return Byte.to16BitNumber(mostSignificantByte, leastSignificantByte);
-	}
+	},
+	getValue
 };

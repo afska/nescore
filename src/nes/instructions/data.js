@@ -6,6 +6,7 @@ const instructions = () => [
 	 */
 	{
 		id: "CLC",
+		needsValue: false,
 		execute: CL_("c")
 	},
 
@@ -16,6 +17,7 @@ const instructions = () => [
 	 */
 	{
 		id: "CLD",
+		needsValue: false,
 		execute: CL_("d")
 	},
 
@@ -26,6 +28,7 @@ const instructions = () => [
 	 */
 	{
 		id: "CLI",
+		needsValue: false,
 		execute: CL_("i")
 	},
 
@@ -36,6 +39,7 @@ const instructions = () => [
 	 */
 	{
 		id: "CLV",
+		needsValue: false,
 		execute: CL_("v")
 	},
 
@@ -46,6 +50,7 @@ const instructions = () => [
 	 */
 	{
 		id: "LDA",
+		needsValue: true,
 		execute: LD_("a")
 	},
 
@@ -56,6 +61,7 @@ const instructions = () => [
 	 */
 	{
 		id: "LDX",
+		needsValue: true,
 		execute: LD_("x")
 	},
 
@@ -66,6 +72,7 @@ const instructions = () => [
 	 */
 	{
 		id: "LDY",
+		needsValue: true,
 		execute: LD_("y")
 	},
 
@@ -76,6 +83,7 @@ const instructions = () => [
 	 */
 	{
 		id: "PHA",
+		needsValue: false,
 		execute: PH_((cpu) => cpu.registers.a.value)
 	},
 
@@ -86,6 +94,7 @@ const instructions = () => [
 	 */
 	{
 		id: "PHP",
+		needsValue: false,
 		execute: PH_((cpu) => cpu.flags.toByte())
 	},
 
@@ -96,6 +105,7 @@ const instructions = () => [
 	 */
 	{
 		id: "PLA",
+		needsValue: false,
 		execute: ({ cpu }) => {
 			const value = cpu.stack.pop();
 			cpu.registers.a.value = value;
@@ -110,6 +120,7 @@ const instructions = () => [
 	 */
 	{
 		id: "PLP",
+		needsValue: false,
 		execute: ({ cpu }) => {
 			cpu.flags.load(cpu.stack.pop());
 		}
@@ -122,6 +133,7 @@ const instructions = () => [
 	 */
 	{
 		id: "SEC",
+		needsValue: false,
 		execute: SE_("c")
 	},
 
@@ -132,6 +144,7 @@ const instructions = () => [
 	 */
 	{
 		id: "SED",
+		needsValue: false,
 		execute: SE_("d")
 	},
 
@@ -142,6 +155,7 @@ const instructions = () => [
 	 */
 	{
 		id: "SEI",
+		needsValue: false,
 		execute: SE_("i")
 	},
 
@@ -152,6 +166,7 @@ const instructions = () => [
 	 */
 	{
 		id: "STA",
+		needsValue: false,
 		execute: ST_("a")
 	},
 
@@ -162,6 +177,7 @@ const instructions = () => [
 	 */
 	{
 		id: "STX",
+		needsValue: false,
 		execute: ST_("x")
 	},
 
@@ -172,6 +188,7 @@ const instructions = () => [
 	 */
 	{
 		id: "STY",
+		needsValue: false,
 		execute: ST_("y")
 	},
 
@@ -182,6 +199,7 @@ const instructions = () => [
 	 */
 	{
 		id: "TAX",
+		needsValue: false,
 		execute: T__((cpu) => cpu.registers.a, (cpu) => cpu.registers.x)
 	},
 
@@ -192,6 +210,7 @@ const instructions = () => [
 	 */
 	{
 		id: "TAY",
+		needsValue: false,
 		execute: T__((cpu) => cpu.registers.a, (cpu) => cpu.registers.y)
 	},
 
@@ -202,6 +221,7 @@ const instructions = () => [
 	 */
 	{
 		id: "TSX",
+		needsValue: false,
 		execute: T__((cpu) => cpu.sp, (cpu) => cpu.registers.x)
 	},
 
@@ -212,6 +232,7 @@ const instructions = () => [
 	 */
 	{
 		id: "TXA",
+		needsValue: false,
 		execute: T__((cpu) => cpu.registers.x, (cpu) => cpu.registers.a)
 	},
 
@@ -222,6 +243,7 @@ const instructions = () => [
 	 */
 	{
 		id: "TXS",
+		needsValue: false,
 		execute: T__((cpu) => cpu.registers.x, (cpu) => cpu.sp)
 	},
 
@@ -232,6 +254,7 @@ const instructions = () => [
 	 */
 	{
 		id: "TYA",
+		needsValue: false,
 		execute: T__((cpu) => cpu.registers.y, (cpu) => cpu.registers.a)
 	}
 ];

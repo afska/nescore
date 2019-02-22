@@ -47,7 +47,9 @@ export default class CPU {
 				addressing.parameterSize
 			);
 			this.pc.value += addressing.parameterSize;
-			parameter = addressing.getParameter(this.context, parameter);
+			parameter = operation.instruction.needsValue
+				? addressing.getValue(this.context, parameter)
+				: addressing.getAddress(this.context, parameter);
 		}
 
 		console.log(

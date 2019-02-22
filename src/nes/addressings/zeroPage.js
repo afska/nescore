@@ -1,3 +1,5 @@
+import getValue from "./_getValue";
+
 /**
  * "Zero page" addressing mode.
  *
@@ -7,5 +9,6 @@
 export default {
 	id: "ZERO_PAGE",
 	parameterSize: 1,
-	getParameter: (context, address) => address
+	getAddress: (context, address) => address,
+	getValue
 };

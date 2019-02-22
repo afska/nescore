@@ -7,6 +7,7 @@ const instructions = () => [
 	 */
 	{
 		id: "AND",
+		needsValue: true,
 		execute: LOGICAL_INSTRUCTION((one, another) => one & another)
 	},
 
@@ -18,6 +19,7 @@ const instructions = () => [
 	 */
 	{
 		id: "EOR",
+		needsValue: true,
 		execute: LOGICAL_INSTRUCTION((one, another) => one ^ another)
 	},
 
@@ -29,6 +31,7 @@ const instructions = () => [
 	 */
 	{
 		id: "ORA",
+		needsValue: true,
 		execute: LOGICAL_INSTRUCTION((one, another) => one | another)
 	}
 ];

@@ -1,3 +1,5 @@
+import getValue from "./_getValue";
+
 /**
  * "Absolute" addressing mode.
  *
@@ -6,5 +8,6 @@
 export default {
 	id: "ABSOLUTE",
 	parameterSize: 2,
-	getParameter: (context, address) => address
+	getAddress: (context, address) => address,
+	getValue
 };

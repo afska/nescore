@@ -12,7 +12,7 @@ describe("addressings", () => {
 	describe("indexedAbsoluteX", () => {
 		it("returns the address + X", () => {
 			context.cpu.registers.x.value = 180;
-			addressings.INDEXED_ABSOLUTE_X.getParameter(context, 1000).should.equal(
+			addressings.INDEXED_ABSOLUTE_X.getAddress(context, 1000).should.equal(
 				1180
 			);
 		});
@@ -21,7 +21,7 @@ describe("addressings", () => {
 	describe("indexedAbsoluteY", () => {
 		it("returns the address + Y", () => {
 			context.cpu.registers.y.value = 180;
-			addressings.INDEXED_ABSOLUTE_Y.getParameter(context, 1000).should.equal(
+			addressings.INDEXED_ABSOLUTE_Y.getAddress(context, 1000).should.equal(
 				1180
 			);
 		});
@@ -30,7 +30,7 @@ describe("addressings", () => {
 	describe("indexedZeroPageX", () => {
 		it("returns the address + X", () => {
 			context.cpu.registers.x.value = 180;
-			addressings.INDEXED_ZERO_PAGE_X.getParameter(context, 130).should.equal(
+			addressings.INDEXED_ZERO_PAGE_X.getAddress(context, 130).should.equal(
 				310
 			);
 		});
@@ -39,7 +39,7 @@ describe("addressings", () => {
 	describe("indexedZeroPageY", () => {
 		it("returns the address + Y", () => {
 			context.cpu.registers.y.value = 180;
-			addressings.INDEXED_ZERO_PAGE_Y.getParameter(context, 130).should.equal(
+			addressings.INDEXED_ZERO_PAGE_Y.getAddress(context, 130).should.equal(
 				310
 			);
 		});
@@ -50,7 +50,7 @@ describe("addressings", () => {
 			context.cpu.registers.x.value = 180;
 			context.memory.writeAt(310, 0x12);
 			context.memory.writeAt(311, 0xfe);
-			addressings.INDEXED_INDIRECT_X.getParameter(context, 130).should.equal(
+			addressings.INDEXED_INDIRECT_X.getAddress(context, 130).should.equal(
 				0xfe12
 			);
 		});
@@ -61,7 +61,7 @@ describe("addressings", () => {
 			context.cpu.registers.y.value = 0xb4;
 			context.memory.writeAt(130, 0x12);
 			context.memory.writeAt(131, 0xfe);
-			addressings.INDEXED_INDIRECT_Y.getParameter(context, 130).should.equal(
+			addressings.INDEXED_INDIRECT_Y.getAddress(context, 130).should.equal(
 				0xfec6
 			);
 		});

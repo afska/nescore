@@ -26,6 +26,7 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "chai": "^4.2.0"
+    "chai": "^4.2.0",
+    "prettier": "^1.16.4"
   }
 }
