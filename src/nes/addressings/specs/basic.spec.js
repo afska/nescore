@@ -1,6 +1,8 @@
 import addressings from "..";
+import getValue from "../_getValue";
 import createTestContext from "../../helpers/createTestContext";
 import { Byte } from "../../helpers";
+import _ from "lodash";
 const should = require("chai").Should();
 
 describe("addressings", () => {
@@ -10,8 +12,15 @@ describe("addressings", () => {
 		context = createTestContext();
 	});
 
+	describe("getValue method", () => {
+		context.memory.writeAt(0xfe9d, 123);
+		const addressingMock = { getAddress: () => 0xfe9d, getValue };
+		addressingMock.getValue(context).should.equal(123);
+	});
+
 	describe("immediate", () => {
 		it("returns the same value", () => {
+			addressings.IMMEDIATE.getAddress(context, 120).should.equal(null);
 			addressings.IMMEDIATE.getValue(context, 120).should.equal(120);
 		});
 	});
