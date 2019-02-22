@@ -9,7 +9,6 @@ const instructions = () => [
 	 */
 	{
 		id: "BIT",
-		needsValue: false,
 		execute: ({ cpu, memory }, address) => {
 			const value = memory.readAt(address);
 			const mask = cpu.registers.a.value;
