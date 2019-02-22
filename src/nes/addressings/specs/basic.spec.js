@@ -21,7 +21,7 @@ describe("addressings", () => {
 	describe("immediate", () => {
 		it("returns the same value", () => {
 			(() => addressings.IMMEDIATE.getAddress(context, 120)).should.throw(
-				"An instruction with IMMEDIATE addressing mode should have `needsValue: true`"
+				"The IMMEDIATE addressing mode only supports the `getValue` method"
 			);
 			addressings.IMMEDIATE.getValue(context, 120).should.equal(120);
 		});

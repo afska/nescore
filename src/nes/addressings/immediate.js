@@ -8,7 +8,7 @@ export default {
 	parameterSize: 1,
 	getAddress: () => {
 		throw new Error(
-			"An instruction with IMMEDIATE addressing mode should have `needsValue: true`."
+			"The IMMEDIATE addressing mode only supports the `getValue` method"
 		);
 	},
 	getValue: (context, value) => value
