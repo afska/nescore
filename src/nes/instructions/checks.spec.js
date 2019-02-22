@@ -28,5 +28,54 @@ describe("instructions", () => {
 				});
 			});
 		});
+
+		[
+			{
+				instruction: "CMP",
+				register: "a",
+				source: 10,
+				value: 120,
+				z: false,
+				n: false,
+				c: false
+			},
+			{
+				instruction: "CMP",
+				register: "a",
+				source: 112,
+				value: 2,
+				z: false,
+				n: false,
+				c: true
+			},
+			{
+				instruction: "CPX",
+				register: "x",
+				source: 100,
+				value: 100,
+				z: true,
+				n: false,
+				c: true
+			},
+			{
+				instruction: "CPY",
+				register: "y",
+				source: 240,
+				value: 30,
+				z: false,
+				n: true,
+				c: true
+			}
+		].forEach(({ instruction, register, source, value, z, n, c }) => {
+			describe(instruction, () => {
+				it(`compares and sets the proper flags with ${register}=${source} and value=${value}`, () => {
+					cpu.registers[register].value = source;
+					instructions[instruction].execute(context, value);
+					cpu.flags.z.should.equal(z);
+					cpu.flags.n.should.equal(n);
+					cpu.flags.c.should.equal(c);
+				});
+			});
+		});
 	});
 });

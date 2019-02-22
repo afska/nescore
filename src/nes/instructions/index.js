@@ -28,8 +28,8 @@ export default _.keyBy([...logical, ...checks, ...data], "id");
 // checks
 //   BIT ✓
 //   CMP ✓
-//   CPX
-//   CPY
+//   CPX ✓
+//   CPY ✓
 
 // data
 //   CLC ✓
