@@ -10,6 +10,7 @@ import indirect from "./indirect";
 import indexedIndirectX from "./indexedIndirectX";
 import indexedIndirectY from "./indexedIndirectY";
 import relative from "./relative";
+import accumulator from "./accumulator";
 import _ from "lodash";
 
 export default _.keyBy(
@@ -25,7 +26,8 @@ export default _.keyBy(
 		indirect,
 		indexedIndirectX,
 		indexedIndirectY,
-		relative
+		relative,
+		accumulator
 	],
 	"id"
 );

@@ -37,4 +37,8 @@ export default class Register {
 		this.bytes[0] = value;
 		this.lastWriteOk = this.value === value;
 	}
+
+	toString() {
+		return "[REGISTER]";
+	}
 }

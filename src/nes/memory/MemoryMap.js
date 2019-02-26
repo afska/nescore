@@ -34,6 +34,12 @@ export default class MemoryMap {
 		]);
 	}
 
+	/** Writes a `byte` to `address`, which can be a register or a memory address. */
+	writeAt(address, byte) {
+		if (address.value) address.value = byte;
+		else WithComposedMemory.writeAt.call(this, address, byte);
+	}
+
 	/** When the current context is unloaded. */
 	onUnload() {
 		this.defineChunks(null);

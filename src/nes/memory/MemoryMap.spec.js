@@ -1,4 +1,5 @@
 import { MemoryMap, MemoryChunk } from ".";
+import { Register8Bit } from "../registers";
 import { Buffer } from "buffer";
 const should = require("chai").Should();
 
@@ -20,6 +21,12 @@ describe("memory", () => {
 		it("can write in the right chunk", () => {
 			memory.writeAt(CARTRIDGE_START_ADDRESS + 1, 123);
 			cartridge.readAt(1).should.equal(123);
+		});
+
+		it("can accept a register as address", () => {
+			const register = new Register8Bit(123);
+			memory.writeAt(register, 250);
+			register.value.should.equal(250);
 		});
 
 		it("can read from the right chunk", () => {

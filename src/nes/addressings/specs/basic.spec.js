@@ -57,4 +57,14 @@ describe("addressings", () => {
 			).should.equal(0xfe06);
 		});
 	});
+
+	describe("accumulator", () => {
+		it("returns the A register", () => {
+			(() => addressings.ACCUMULATOR.getValue(context, 120)).should.throw(
+				"The ACCUMULATOR addressing mode only supports the `getAddress` method"
+			);
+			context.cpu.registers.a.value = 135;
+			addressings.ACCUMULATOR.getAddress(context).value.should.equal(135);
+		});
+	});
 });
