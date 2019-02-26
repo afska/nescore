@@ -16,8 +16,16 @@ export default {
 		return number < 0 ? number + SIZE : number;
 	},
 
+	hasOverflow(value) {
+		return value >= SIZE;
+	},
+
+	isPositive(byte) {
+		return !this.isNegative(byte);
+	},
+
 	isNegative(byte) {
-		return byte & 0b10000000;
+		return !!(byte & 0b10000000);
 	},
 
 	to16BitNumber(mostSignificativeByte, leastSignificativeByte) {

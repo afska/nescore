@@ -60,11 +60,11 @@ export default class FlagsRegister {
 
 	/** Updates the Z flag depending on a `byte`. */
 	updateZero(byte) {
-		if (byte === 0) this.z = true;
+		this.z = byte === 0;
 	}
 
 	/** Updates the N flag depending on a `byte`. */
 	updateNegative(byte) {
-		if (Byte.isNegative(byte)) this.n = true;
+		this.n = Byte.isNegative(byte);
 	}
 }
