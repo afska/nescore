@@ -4,10 +4,10 @@ const should = require("chai").Should();
 
 describe("instructions", () => {
 	describe("checks", () => {
-		let cpu, memory, context;
+		let cpu, context;
 
 		beforeEach(() => {
-			({ cpu, memory, context } = createTestContext());
+			({ cpu, context } = createTestContext());
 		});
 
 		describe("BIT", () => {
@@ -19,9 +19,7 @@ describe("instructions", () => {
 					2
 				)} and value=0b${value.toString(2)}`, () => {
 					cpu.registers.a.value = mask;
-					memory.writeAt(0x02e0, value);
-
-					instructions.BIT.execute(context, 0x02e0);
+					instructions.BIT.execute(context, value);
 					cpu.flags.z.should.equal(z);
 					cpu.flags.n.should.equal(n);
 					cpu.flags.v.should.equal(v);
