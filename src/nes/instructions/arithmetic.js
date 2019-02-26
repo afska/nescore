@@ -10,6 +10,7 @@ const instructions = () => [
 	 */
 	{
 		id: "ADC",
+		needsValue: true,
 		execute: ({ cpu }, value) => {
 			const oldValue = cpu.registers.a.value;
 			const result = oldValue + value + cpu.flags.c;

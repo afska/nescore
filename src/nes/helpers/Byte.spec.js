@@ -6,11 +6,17 @@ describe("helpers", () => {
 		it("can create a number from a signed byte", () => {
 			Byte.toNumber(0b11111011).should.equal(-5);
 			Byte.toNumber(0b00000101).should.equal(5);
+
+			Byte.toNumber(127).should.equal(127);
+			Byte.toNumber(128).should.equal(-128);
 		});
 
 		it("can create a signed byte from a number", () => {
 			Byte.toSignedByte(-5).should.equal(0b11111011);
 			Byte.toSignedByte(5).should.equal(0b00000101);
+
+			Byte.toSignedByte(127).should.equal(127);
+			Byte.toSignedByte(-128).should.equal(128);
 		});
 
 		it("can create 16-bit numbers from two bytes", () => {

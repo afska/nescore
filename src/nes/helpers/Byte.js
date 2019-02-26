@@ -9,7 +9,7 @@ const LIMIT = SIZE / 2 - 1;
  */
 export default {
 	toNumber(byte) {
-		return byte < LIMIT ? byte : -(SIZE - byte);
+		return byte <= LIMIT ? byte : -(SIZE - byte);
 	},
 
 	toSignedByte(number) {
