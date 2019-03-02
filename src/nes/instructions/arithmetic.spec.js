@@ -72,5 +72,29 @@ describe("instructions", () => {
 				cpu.flags.n.should.equal(false);
 			});
 		});
+
+		describe("DEC", () => {
+			it("decrements the value", () => {
+				memory.writeAt(0x1234, 9);
+				instructions.DEC.execute(context, 0x1234);
+				memory.readAt(0x1234).should.equal(8);
+			});
+
+			it("sets the Z flag", () => {
+				memory.writeAt(0x1234, 1);
+				instructions.DEC.execute(context, 0x1234);
+				memory.readAt(0x1234).should.equal(0);
+				cpu.flags.z.should.equal(true);
+				cpu.flags.n.should.equal(false);
+			});
+
+			it("sets the N flag", () => {
+				memory.writeAt(0x1234, 0);
+				instructions.DEC.execute(context, 0x1234);
+				memory.readAt(0x1234).should.equal(255);
+				cpu.flags.z.should.equal(false);
+				cpu.flags.n.should.equal(true);
+			});
+		});
 	});
 });

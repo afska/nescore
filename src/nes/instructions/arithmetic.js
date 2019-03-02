@@ -14,9 +14,9 @@ const instructions = () => [
 		execute: ({ cpu }, value) => {
 			const oldValue = cpu.registers.a.value;
 			const result = oldValue + value + cpu.flags.c;
-			cpu.registers.a.value = result;
-			const newValue = cpu.registers.a.value;
+			const newValue = Byte.to8Bit(result);
 
+			cpu.registers.a.value = newValue;
 			cpu.flags.updateZeroAndNegative(newValue);
 			cpu.flags.updateCarry(result);
 			cpu.flags.v =
@@ -32,7 +32,7 @@ const instructions = () => [
 	/**
 	 * Arithmetic Shift Left
 	 *
-	 * Shifts all the bits of the value located in `address` one bit left.
+	 * Shifts all the bits of the value held at `address` one bit left.
 	 * Bit 0 is set to 0 and bit 7 is placed in the C flag. The Z and N flags are updated too.
 	 */
 	{
@@ -41,8 +41,25 @@ const instructions = () => [
 			const value = memory.readAt(address);
 			const result = value << 1;
 			const newValue = Byte.to8Bit(result);
+
+			memory.writeAt(address, newValue);
 			cpu.flags.updateZeroAndNegative(newValue);
 			cpu.flags.updateCarry(result);
+		}
+	},
+
+	/**
+	 * Decrement Memory
+	 *
+	 * Substracts one from the value held at `address`, setting the Z and N flags.
+	 */
+	{
+		id: "DEC",
+		execute: ({ cpu, memory }, address) => {
+			const value = memory.readAt(address);
+			const newValue = Byte.to8Bit(value - 1);
+
+			cpu.flags.updateZeroAndNegative(newValue);
 			memory.writeAt(address, newValue);
 		}
 	}
