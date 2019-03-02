@@ -239,21 +239,21 @@ const instructions = () => [
 	}
 ];
 
-const SE_ = (flag) => {
+const SE_ = (flagName) => {
 	return ({ cpu }) => {
-		cpu.flags[flag] = true;
+		cpu.flags[flagName] = true;
 	};
 };
 
-const CL_ = (flag) => {
+const CL_ = (flagName) => {
 	return ({ cpu }) => {
-		cpu.flags[flag] = false;
+		cpu.flags[flagName] = false;
 	};
 };
 
-const LD_ = (register) => {
+const LD_ = (registerName) => {
 	return ({ cpu }, value) => {
-		cpu.registers[register].value = value;
+		cpu.registers[registerName].value = value;
 		cpu.flags.updateZeroAndNegative(value);
 	};
 };
@@ -264,9 +264,9 @@ const PH_ = (getValue) => {
 	};
 };
 
-const ST_ = (register) => {
+const ST_ = (registerName) => {
 	return ({ cpu, memory }, address) => {
-		const value = cpu.registers[register].value;
+		const value = cpu.registers[registerName].value;
 		memory.writeAt(address, value);
 	};
 };

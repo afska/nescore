@@ -57,9 +57,9 @@ const instructions = () => [
 	}
 ];
 
-const CP_ = (register) => {
+const CP_ = (registerName) => {
 	return ({ cpu }, value) => {
-		const source = cpu.registers[register].value;
+		const source = cpu.registers[registerName].value;
 		cpu.flags.z = source === value;
 		cpu.flags.updateNegative(source);
 		cpu.flags.c = source >= value;

@@ -18,8 +18,13 @@ describe("registers", () => {
 			register.value += 7;
 			register.value.should.equal(1);
 			register.lastWriteOk.should.not.ok;
-			register.value = 2;
+
+			register.value = 0;
 			register.lastWriteOk.should.ok;
+
+			register.value--;
+			register.value.should.equal(255);
+			register.lastWriteOk.should.not.ok;
 		});
 
 		it("can increment the value", () => {

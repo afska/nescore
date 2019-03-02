@@ -62,8 +62,35 @@ const instructions = () => [
 			cpu.flags.updateZeroAndNegative(newValue);
 			memory.writeAt(address, newValue);
 		}
+	},
+
+	/**
+	 * Decrement X Register
+	 *
+	 * Substracts one from X, setting the Z and N flags.
+	 */
+	{
+		id: "DEX",
+		execute: DE_("x")
+	},
+
+	/**
+	 * Decrement Y Register
+	 *
+	 * Substracts one from Y, setting the Z and N flags.
+	 */
+	{
+		id: "DEY",
+		execute: DE_("y")
 	}
 ];
 
-export default instructions();
+const DE_ = (registerName) => {
+	return ({ cpu }) => {
+		const register = cpu.registers[registerName];
+		register.decrement();
+		cpu.flags.updateZeroAndNegative(register.value);
+	};
+};
 
+export default instructions();

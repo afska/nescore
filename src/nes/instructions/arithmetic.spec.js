@@ -96,5 +96,28 @@ describe("instructions", () => {
 				cpu.flags.n.should.equal(true);
 			});
 		});
+
+		[
+			{ instruction: "DEX", register: "x" },
+			{ instruction: "DEY", register: "y" }
+		].forEach(({ instruction, register }) => {
+			describe(instruction, () => {
+				it("decrements the value and updates the flags", () => {
+					cpu.registers[register].value = 1;
+					instructions[instruction].execute(context);
+
+					cpu.registers[register].value.should.equal(0);
+					cpu.flags.z.should.equal(true);
+					cpu.flags.n.should.equal(false);
+
+					cpu.registers[register].value = 0;
+					instructions[instruction].execute(context);
+
+					cpu.registers[register].value.should.equal(255);
+					cpu.flags.z.should.equal(false);
+					cpu.flags.n.should.equal(true);
+				});
+			});
+		});
 	});
 });
