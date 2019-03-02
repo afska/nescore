@@ -13,9 +13,9 @@ export default _.keyBy([...arithmetic, ...logical, ...checks, ...data], "id");
 //   DEC ✓
 //   DEX ✓
 //   DEY ✓
-//   INC
-//   INX
-//   INY
+//   INC ✓
+//   INX ✓
+//   INY ✓
 //   LSR
 //   ROL
 //   ROR

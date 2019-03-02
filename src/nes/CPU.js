@@ -63,6 +63,7 @@ export default class CPU {
 		const operation = operations[opcode];
 		if (!operation) throw new Error(`Unknown opcode: 0x${opcode.toString(16)}`);
 		this.pc.increment();
+
 		return operation;
 	}
 

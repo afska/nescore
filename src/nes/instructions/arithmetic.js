@@ -55,13 +55,7 @@ const instructions = () => [
 	 */
 	{
 		id: "DEC",
-		execute: ({ cpu, memory }, address) => {
-			const value = memory.readAt(address);
-			const newValue = Byte.to8Bit(value - 1);
-
-			cpu.flags.updateZeroAndNegative(newValue);
-			memory.writeAt(address, newValue);
-		}
+		execute: __C((one) => one - 1)
 	},
 
 	/**
@@ -82,13 +76,61 @@ const instructions = () => [
 	{
 		id: "DEY",
 		execute: DE_("y")
+	},
+
+	/**
+	 * Increment Memory
+	 *
+	 * Adds one to the value held at `address`, setting the Z and N flags.
+	 */
+	{
+		id: "INC",
+		execute: __C((one) => one + 1)
+	},
+
+	/**
+	 * Increment X Register
+	 *
+	 * Adds one to X, setting the Z and N flags.
+	 */
+	{
+		id: "INX",
+		execute: IN_("x")
+	},
+
+	/**
+	 * Increment Y Register
+	 *
+	 * Adds one to Y, setting the Z and N flags.
+	 */
+	{
+		id: "INY",
+		execute: IN_("y")
 	}
 ];
+
+const __C = (operator) => {
+	return ({ cpu, memory }, address) => {
+		const value = memory.readAt(address);
+		const newValue = Byte.to8Bit(operator(value));
+
+		cpu.flags.updateZeroAndNegative(newValue);
+		memory.writeAt(address, newValue);
+	};
+};
 
 const DE_ = (registerName) => {
 	return ({ cpu }) => {
 		const register = cpu.registers[registerName];
 		register.decrement();
+		cpu.flags.updateZeroAndNegative(register.value);
+	};
+};
+
+const IN_ = (registerName) => {
+	return ({ cpu }) => {
+		const register = cpu.registers[registerName];
+		register.increment();
 		cpu.flags.updateZeroAndNegative(register.value);
 	};
 };

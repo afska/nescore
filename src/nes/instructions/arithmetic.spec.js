@@ -119,5 +119,52 @@ describe("instructions", () => {
 				});
 			});
 		});
+
+		describe("INC", () => {
+			it("increments the value", () => {
+				memory.writeAt(0x1234, 8);
+				instructions.INC.execute(context, 0x1234);
+				memory.readAt(0x1234).should.equal(9);
+			});
+
+			it("sets the Z flag", () => {
+				memory.writeAt(0x1234, 255);
+				instructions.INC.execute(context, 0x1234);
+				memory.readAt(0x1234).should.equal(0);
+				cpu.flags.z.should.equal(true);
+				cpu.flags.n.should.equal(false);
+			});
+
+			it("sets the N flag", () => {
+				memory.writeAt(0x1234, 244);
+				instructions.INC.execute(context, 0x1234);
+				memory.readAt(0x1234).should.equal(245);
+				cpu.flags.z.should.equal(false);
+				cpu.flags.n.should.equal(true);
+			});
+		});
+
+		[
+			{ instruction: "INX", register: "x" },
+			{ instruction: "INY", register: "y" }
+		].forEach(({ instruction, register }) => {
+			describe(instruction, () => {
+				it("increments the value and updates the flags", () => {
+					cpu.registers[register].value = 255;
+					instructions[instruction].execute(context);
+
+					cpu.registers[register].value.should.equal(0);
+					cpu.flags.z.should.equal(true);
+					cpu.flags.n.should.equal(false);
+
+					cpu.registers[register].value = 244;
+					instructions[instruction].execute(context);
+
+					cpu.registers[register].value.should.equal(245);
+					cpu.flags.z.should.equal(false);
+					cpu.flags.n.should.equal(true);
+				});
+			});
+		});
 	});
 });
