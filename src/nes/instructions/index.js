@@ -9,7 +9,7 @@ export default _.keyBy([...arithmetic, ...logical, ...checks, ...data], "id");
 // TODO: Instructions
 // arithmetic
 //   ADC ✓
-//   ASL
+//   ASL ✓
 //   DEC
 //   DEX
 //   DEY

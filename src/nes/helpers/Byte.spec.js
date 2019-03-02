@@ -19,8 +19,12 @@ describe("helpers", () => {
 			Byte.toSignedByte(-128).should.equal(128);
 		});
 
+		it("can truncate numbers to 8-bit", () => {
+			Byte.to8Bit(0b110000000).should.equal(0b10000000);
+		});
+
 		it("can create 16-bit numbers from two bytes", () => {
-			Byte.to16BitNumber(0xfe, 0x12).should.equal(0xfe12);
+			Byte.to16Bit(0xfe, 0x12).should.equal(0xfe12);
 		});
 
 		it("can determine if a value is positive or negative", () => {

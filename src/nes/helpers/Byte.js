@@ -28,9 +28,14 @@ export default {
 		return !!(byte & 0b10000000);
 	},
 
-	to16BitNumber(mostSignificativeByte, leastSignificativeByte) {
+	to8Bit(value) {
+		return value & 0xff;
+	},
+
+	to16Bit(mostSignificativeByte, leastSignificativeByte) {
 		return (
-			((mostSignificativeByte & 0xff) << 8) | (leastSignificativeByte & 0xff)
+			(this.to8Bit(mostSignificativeByte) << 8) |
+			this.to8Bit(leastSignificativeByte)
 		);
 	}
 };

@@ -9,12 +9,12 @@ import getValue from "./_getValue";
  * address, and the following byte gives the most significant byte.
  */
 export default {
-	id: "INDIRECT",
-	parameterSize: 2,
-	getAddress: ({ memory }, address) => {
-		const leastSignificantByte = memory.readAt(address);
-		const mostSignificantByte = memory.readAt(address + 1);
-		return Byte.to16BitNumber(mostSignificantByte, leastSignificantByte);
-	},
-	getValue
+  id: "INDIRECT",
+  parameterSize: 2,
+  getAddress: ({ memory }, address) => {
+    const leastSignificantByte = memory.readAt(address);
+    const mostSignificantByte = memory.readAt(address + 1);
+    return Byte.to16Bit(mostSignificantByte, leastSignificantByte);
+  },
+  getValue
 };

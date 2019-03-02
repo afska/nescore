@@ -18,7 +18,7 @@ const instructions = () => [
 			const newValue = cpu.registers.a.value;
 
 			cpu.flags.updateZeroAndNegative(newValue);
-			cpu.flags.c = Byte.hasOverflow(result);
+			cpu.flags.updateCarry(result);
 			cpu.flags.v =
 				(Byte.isPositive(oldValue) &&
 					Byte.isPositive(value) &&
@@ -26,6 +26,24 @@ const instructions = () => [
 				(Byte.isNegative(oldValue) &&
 					Byte.isNegative(value) &&
 					Byte.isPositive(newValue));
+		}
+	},
+
+	/**
+	 * Arithmetic Shift Left
+	 *
+	 * Shifts all the bits of the value located in `address` one bit left.
+	 * Bit 0 is set to 0 and bit 7 is placed in the C flag. The Z and N flags are updated too.
+	 */
+	{
+		id: "ASL",
+		execute: ({ cpu, memory }, address) => {
+			const value = memory.readAt(address);
+			const result = value << 1;
+			const newValue = Byte.to8Bit(result);
+			cpu.flags.updateZeroAndNegative(newValue);
+			cpu.flags.updateCarry(result);
+			memory.writeAt(address, newValue);
 		}
 	}
 ];

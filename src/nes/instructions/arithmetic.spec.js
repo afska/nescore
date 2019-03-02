@@ -4,11 +4,11 @@ import createTestContext from "../helpers/createTestContext";
 const should = require("chai").Should();
 
 describe("instructions", () => {
-	describe("data", () => {
-		let cpu, context;
+	describe("arithmetic", () => {
+		let cpu, memory, context;
 
 		beforeEach(() => {
-			({ cpu, context } = createTestContext());
+			({ cpu, memory, context } = createTestContext());
 		});
 
 		describe("ADC", () => {
@@ -42,6 +42,34 @@ describe("instructions", () => {
 				instructions.ADC.execute(context, 122);
 				cpu.flags.c.should.equal(true);
 				cpu.flags.v.should.equal(false);
+			});
+		});
+
+		describe("ASL", () => {
+			it("multiplies the value by 2", () => {
+				memory.writeAt(0x1234, 12);
+				instructions.ASL.execute(context, 0x1234);
+				memory.readAt(0x1234).should.equal(24);
+				cpu.flags.c.should.equal(false);
+			});
+
+			it("sets the C flag when the result doesn't fit in 8 bit", () => {
+				memory.writeAt(0x1234, 0b11000000);
+				instructions.ASL.execute(context, 0x1234);
+				memory.readAt(0x1234).should.equal(0b10000000);
+				cpu.flags.c.should.equal(true);
+			});
+
+			it("updates the Z and N flags", () => {
+				memory.writeAt(0x1234, 0b11000000);
+				instructions.ASL.execute(context, 0x1234);
+				cpu.flags.z.should.equal(false);
+				cpu.flags.n.should.equal(true);
+
+				memory.writeAt(0x1234, 0);
+				instructions.ASL.execute(context, 0x1234);
+				cpu.flags.z.should.equal(true);
+				cpu.flags.n.should.equal(false);
 			});
 		});
 	});
