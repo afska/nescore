@@ -171,7 +171,7 @@ const instructions = () => [
 	 *
 	 * Substracts the contents of `value` to A together with the not of the carry bit.
 	 * The Z, N, C (set if there was no borrow), and V (set when sign is wrong) flags are updated.
-	 * It's implemented as an ADC call with one's complement of the `value`.
+	 * It's implemented as an ADC call with the negative representation of `value` - 1.
 	 */
 	{
 		id: "SBC",
