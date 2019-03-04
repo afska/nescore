@@ -33,7 +33,7 @@ const instructions = () => [
 	 * Arithmetic Shift Left
 	 *
 	 * Shifts all the bits of the value held at `address` one bit to the left.
-	 * Bit 0 is set to 0 and bit 7 is placed in the C flag.
+	 * Bit 7 is placed in the C flag and bit 0 is set to 0.
 	 * The Z and N flags are updated too.
 	 */
 	{
@@ -126,6 +126,26 @@ const instructions = () => [
 			memory.writeAt(address, newValue);
 			cpu.flags.updateZeroAndNegative(newValue);
 			cpu.flags.c = !!(value & 0b00000001);
+		}
+	},
+
+	/**
+	 * Rotate Left
+	 *
+	 * Moves all the bits of the value held at `address` one place to the left.
+	 * Bit 7 is placed in the C flag and bit 0 is filled with the old value of the C flag.
+	 * The Z and N flags are updated too.
+	 */
+	{
+		id: "ROL",
+		execute: ({ cpu, memory }, address) => {
+			const value = memory.readAt(address);
+			const result = (value << 1) | +cpu.flags.c;
+			const newValue = Byte.to8Bit(result);
+
+			memory.writeAt(address, newValue);
+			cpu.flags.updateZeroAndNegative(newValue);
+			cpu.flags.c = !!(value & 0b10000000);
 		}
 	}
 ];
