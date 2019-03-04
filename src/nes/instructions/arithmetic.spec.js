@@ -18,6 +18,13 @@ describe("instructions", () => {
 				cpu.registers.a.value.should.equal(25);
 			});
 
+			it("adds the carry bit", () => {
+				cpu.registers.a.value = 20;
+				cpu.flags.c = true;
+				instructions.ADC.execute(context, 5);
+				cpu.registers.a.value.should.equal(26);
+			});
+
 			it("updates the Z and N flags", () => {
 				cpu.registers.a.value = 50;
 				instructions.ADC.execute(context, 120);
@@ -35,10 +42,14 @@ describe("instructions", () => {
 				cpu.flags.c.should.equal(false);
 				cpu.flags.v.should.equal(false);
 
+				// positive (60) + positive (75) = negative (-121) => overflow
+				cpu.flags.c = false;
 				instructions.ADC.execute(context, 75);
 				cpu.flags.c.should.equal(false);
 				cpu.flags.v.should.equal(true);
 
+				// result is over 255 => carry
+				cpu.flags.c = false;
 				instructions.ADC.execute(context, 122);
 				cpu.flags.c.should.equal(true);
 				cpu.flags.v.should.equal(false);
@@ -265,6 +276,59 @@ describe("instructions", () => {
 				instructions.ROR.execute(context, 0x1234);
 				cpu.flags.z.should.equal(true);
 				cpu.flags.n.should.equal(false);
+			});
+		});
+
+		describe("SBC", () => {
+			it("substracts the value from the accumulator - 1 when C is clear", () => {
+				cpu.registers.a.value = 20;
+				instructions.SBC.execute(context, 5);
+				cpu.registers.a.value.should.equal(14);
+			});
+
+			it("substracts the value from the accumulator - 0 when C is set", () => {
+				cpu.registers.a.value = 20;
+				cpu.flags.c = true;
+				instructions.SBC.execute(context, 5);
+				cpu.registers.a.value.should.equal(15);
+			});
+
+			it("updates the Z and N flags", () => {
+				cpu.registers.a.value = 20;
+				instructions.SBC.execute(context, 30);
+				cpu.flags.z.should.equal(false);
+				cpu.flags.n.should.equal(true);
+
+				cpu.registers.a.value = 0;
+				cpu.flags.c = true;
+				instructions.SBC.execute(context, 0);
+				cpu.flags.z.should.equal(true);
+				cpu.flags.n.should.equal(false);
+			});
+
+			it("updates the C and V flags", () => {
+				cpu.registers.a.value = 50;
+				instructions.SBC.execute(context, 10);
+				cpu.flags.c.should.equal(true);
+				cpu.flags.v.should.equal(false);
+
+				// positive (40) - negative (-100) = negative (-116) => overflow
+				cpu.registers.a.value = 40;
+				cpu.flags.c = true;
+				instructions.SBC.execute(context, Byte.toSignedByte(-100));
+				cpu.flags.c.should.equal(false); // there was borrow
+				cpu.flags.v.should.equal(true); //  |
+				//                                  v
+				//                                  00101000 (-40)
+				//                                - 10011100 (-100)
+				//                                  ^
+
+				// negative (-40) - positive (100) = positive (116) => overflow
+				cpu.registers.a.value = Byte.toSignedByte(-40);
+				cpu.flags.c = true;
+				instructions.SBC.execute(context, 100);
+				cpu.flags.c.should.equal(true);
+				cpu.flags.v.should.equal(true);
 			});
 		});
 	});

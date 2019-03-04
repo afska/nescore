@@ -28,6 +28,12 @@ describe("helpers", () => {
 			Byte.to16Bit(0xfe, 0x12).should.equal(0xfe12);
 		});
 
+		it("can negate numbers using two's complement", () => {
+			const negative112 = Byte.toSignedByte(-112);
+			Byte.negate(112).should.equal(negative112);
+			Byte.negate(negative112).should.equal(112);
+		});
+
 		it("can determine if a value is positive or negative", () => {
 			Byte.isPositive(0xfe).should.equal(false);
 			Byte.isNegative(0xfe).should.equal(true);

@@ -11,22 +11,7 @@ const instructions = () => [
 	{
 		id: "ADC",
 		needsValue: true,
-		execute: ({ cpu }, value) => {
-			const oldValue = cpu.registers.a.value;
-			const result = oldValue + value + cpu.flags.c;
-			const newValue = Byte.to8Bit(result);
-
-			cpu.registers.a.value = newValue;
-			cpu.flags.updateZeroAndNegative(newValue);
-			cpu.flags.c = Byte.hasOverflow(result);
-			cpu.flags.v =
-				(Byte.isPositive(oldValue) &&
-					Byte.isPositive(value) &&
-					Byte.isNegative(newValue)) ||
-				(Byte.isNegative(oldValue) &&
-					Byte.isNegative(value) &&
-					Byte.isPositive(newValue));
-		}
+		execute: ADC
 	},
 
 	/**
@@ -179,8 +164,38 @@ const instructions = () => [
 			cpu.flags.updateZeroAndNegative(newValue);
 			cpu.flags.c = !!(value & 0b00000001);
 		}
+	},
+
+	/**
+	 * Subtract with Carry
+	 *
+	 * Substracts the contents of `value` to A together with the not of the carry bit.
+	 * The Z, N, C (set if there was no borrow), and V (set when sign is wrong) flags are updated.
+	 * It's implemented as an ADC call with one's complement of the `value`.
+	 */
+	{
+		id: "SBC",
+		needsValue: true,
+		execute: (context, value) => ADC(context, Byte.negate(value) - 1)
 	}
 ];
+
+const ADC = ({ cpu }, value) => {
+	const oldValue = cpu.registers.a.value;
+	const result = oldValue + value + cpu.flags.c;
+	const newValue = Byte.to8Bit(result);
+
+	cpu.registers.a.value = newValue;
+	cpu.flags.updateZeroAndNegative(newValue);
+	cpu.flags.c = Byte.hasOverflow(result);
+	cpu.flags.v =
+		(Byte.isPositive(oldValue) &&
+			Byte.isPositive(value) &&
+			Byte.isNegative(newValue)) ||
+		(Byte.isNegative(oldValue) &&
+			Byte.isNegative(value) &&
+			Byte.isPositive(newValue));
+};
 
 const DE_ = (registerName) => {
 	return ({ cpu }) => {

@@ -4,8 +4,8 @@ const LIMIT = SIZE / 2 - 1;
 /*
  * A byte helper. Signed bytes use the "Two's complement" representation.
  *
- * Positive values are: {value}
- * Negative values are: -(SIZE - {value})
+ * Positive values are: {value}             => [0  , 127]
+ * Negative values are: -(SIZE - {value})   => [128, 255]
  */
 export default {
 	toNumber(byte) {
@@ -26,6 +26,10 @@ export default {
 
 	isNegative(byte) {
 		return !!(byte & 0b10000000);
+	},
+
+	negate(byte) {
+		return SIZE - byte;
 	},
 
 	to8Bit(value) {
