@@ -18,7 +18,7 @@ const instructions = () => [
 
 			cpu.registers.a.value = newValue;
 			cpu.flags.updateZeroAndNegative(newValue);
-			cpu.flags.updateCarry(result);
+			cpu.flags.c = Byte.hasOverflow(result);
 			cpu.flags.v =
 				(Byte.isPositive(oldValue) &&
 					Byte.isPositive(value) &&
@@ -45,7 +45,7 @@ const instructions = () => [
 
 			memory.writeAt(address, newValue);
 			cpu.flags.updateZeroAndNegative(newValue);
-			cpu.flags.updateCarry(result);
+			cpu.flags.c = Byte.hasOverflow(result);
 		}
 	},
 
@@ -56,7 +56,13 @@ const instructions = () => [
 	 */
 	{
 		id: "DEC",
-		execute: __C((one) => one - 1)
+		execute: ({ cpu, memory }, address) => {
+			const value = memory.readAt(address);
+			const newValue = Byte.to8Bit(value - 1);
+
+			cpu.flags.updateZeroAndNegative(newValue);
+			memory.writeAt(address, newValue);
+		}
 	},
 
 	/**
@@ -86,7 +92,13 @@ const instructions = () => [
 	 */
 	{
 		id: "INC",
-		execute: __C((one) => one + 1)
+		execute: ({ cpu, memory }, address) => {
+			const value = memory.readAt(address);
+			const newValue = Byte.to8Bit(value + 1);
+
+			cpu.flags.updateZeroAndNegative(newValue);
+			memory.writeAt(address, newValue);
+		}
 	},
 
 	/**
@@ -147,18 +159,28 @@ const instructions = () => [
 			cpu.flags.updateZeroAndNegative(newValue);
 			cpu.flags.c = !!(value & 0b10000000);
 		}
+	},
+
+	/**
+	 * Rotate Right
+	 *
+	 * Moves all the bits of the value held at `address` one place to the right.
+	 * Bit 0 is placed in the C flag and bit 7 is filled with the old value of the C flag.
+	 * The Z and N flags are updated too.
+	 */
+	{
+		id: "ROR",
+		execute: ({ cpu, memory }, address) => {
+			const value = memory.readAt(address);
+			const result = (value >> 1) | (+cpu.flags.c << 7);
+			const newValue = Byte.to8Bit(result);
+
+			memory.writeAt(address, newValue);
+			cpu.flags.updateZeroAndNegative(newValue);
+			cpu.flags.c = !!(value & 0b00000001);
+		}
 	}
 ];
-
-const __C = (operator) => {
-	return ({ cpu, memory }, address) => {
-		const value = memory.readAt(address);
-		const newValue = Byte.to8Bit(operator(value));
-
-		cpu.flags.updateZeroAndNegative(newValue);
-		memory.writeAt(address, newValue);
-	};
-};
 
 const DE_ = (registerName) => {
 	return ({ cpu }) => {

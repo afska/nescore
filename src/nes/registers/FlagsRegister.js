@@ -67,9 +67,4 @@ export default class FlagsRegister {
 	updateNegative(byte) {
 		this.n = Byte.isNegative(byte);
 	}
-
-	/** Updates the C flag depending on a `value`. */
-	updateCarry(value) {
-		this.c = Byte.hasOverflow(value);
-	}
 }

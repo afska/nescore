@@ -230,5 +230,42 @@ describe("instructions", () => {
 				cpu.flags.n.should.equal(false);
 			});
 		});
+
+		describe("ROR", () => {
+			it("divides the value by 2", () => {
+				memory.writeAt(0x1234, 24);
+				instructions.ROR.execute(context, 0x1234);
+				memory.readAt(0x1234).should.equal(12);
+			});
+
+			it("sets the C flag with the bit 0", () => {
+				memory.writeAt(0x1234, 0b00000101);
+				instructions.ROR.execute(context, 0x1234);
+				memory.readAt(0x1234).should.equal(0b00000010);
+				cpu.flags.c.should.equal(true);
+			});
+
+			it("sets the bit 7 with the C flag", () => {
+				cpu.flags.c = true;
+				memory.writeAt(0x1234, 0b00000101);
+				instructions.ROR.execute(context, 0x1234);
+				memory.readAt(0x1234).should.equal(0b10000010);
+			});
+
+			it("updates the Z and N flags", () => {
+				cpu.flags.c = true;
+				memory.writeAt(0x1234, 0b11000000);
+				instructions.ROR.execute(context, 0x1234);
+				cpu.flags.z.should.equal(false);
+				cpu.flags.n.should.equal(true);
+
+				cpu.flags.c = false;
+
+				memory.writeAt(0x1234, 0);
+				instructions.ROR.execute(context, 0x1234);
+				cpu.flags.z.should.equal(true);
+				cpu.flags.n.should.equal(false);
+			});
+		});
 	});
 });
