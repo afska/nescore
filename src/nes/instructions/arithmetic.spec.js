@@ -166,5 +166,33 @@ describe("instructions", () => {
 				});
 			});
 		});
+
+		describe("LSR", () => {
+			it("divides the value by 2", () => {
+				memory.writeAt(0x1234, 128);
+				instructions.LSR.execute(context, 0x1234);
+				memory.readAt(0x1234).should.equal(64);
+				cpu.flags.c.should.equal(false);
+			});
+
+			it("sets the C flag when the last bit is 1", () => {
+				memory.writeAt(0x1234, 0b11000001);
+				instructions.LSR.execute(context, 0x1234);
+				memory.readAt(0x1234).should.equal(0b01100000);
+				cpu.flags.c.should.equal(true);
+			});
+
+			it("updates the Z and N flags", () => {
+				memory.writeAt(0x1234, 0b11000000);
+				instructions.LSR.execute(context, 0x1234);
+				cpu.flags.z.should.equal(false);
+				cpu.flags.n.should.equal(false);
+
+				memory.writeAt(0x1234, 0);
+				instructions.LSR.execute(context, 0x1234);
+				cpu.flags.z.should.equal(true);
+				cpu.flags.n.should.equal(false);
+			});
+		});
 	});
 });

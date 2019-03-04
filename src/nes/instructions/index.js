@@ -16,7 +16,7 @@ export default _.keyBy([...arithmetic, ...logical, ...checks, ...data], "id");
 //   INC ✓
 //   INX ✓
 //   INY ✓
-//   LSR
+//   LSR ✓
 //   ROL
 //   ROR
 //   SBC

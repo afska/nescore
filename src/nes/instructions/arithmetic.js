@@ -32,8 +32,9 @@ const instructions = () => [
 	/**
 	 * Arithmetic Shift Left
 	 *
-	 * Shifts all the bits of the value held at `address` one bit left.
-	 * Bit 0 is set to 0 and bit 7 is placed in the C flag. The Z and N flags are updated too.
+	 * Shifts all the bits of the value held at `address` one bit to the left.
+	 * Bit 0 is set to 0 and bit 7 is placed in the C flag.
+	 * The Z and N flags are updated too.
 	 */
 	{
 		id: "ASL",
@@ -51,7 +52,7 @@ const instructions = () => [
 	/**
 	 * Decrement Memory
 	 *
-	 * Substracts one from the value held at `address`, setting the Z and N flags.
+	 * Substracts one from the value held at `address`, updating the Z and N flags.
 	 */
 	{
 		id: "DEC",
@@ -61,7 +62,7 @@ const instructions = () => [
 	/**
 	 * Decrement X Register
 	 *
-	 * Substracts one from X, setting the Z and N flags.
+	 * Substracts one from X, updating the Z and N flags.
 	 */
 	{
 		id: "DEX",
@@ -71,7 +72,7 @@ const instructions = () => [
 	/**
 	 * Decrement Y Register
 	 *
-	 * Substracts one from Y, setting the Z and N flags.
+	 * Substracts one from Y, updating the Z and N flags.
 	 */
 	{
 		id: "DEY",
@@ -81,7 +82,7 @@ const instructions = () => [
 	/**
 	 * Increment Memory
 	 *
-	 * Adds one to the value held at `address`, setting the Z and N flags.
+	 * Adds one to the value held at `address`, updating the Z and N flags.
 	 */
 	{
 		id: "INC",
@@ -91,7 +92,7 @@ const instructions = () => [
 	/**
 	 * Increment X Register
 	 *
-	 * Adds one to X, setting the Z and N flags.
+	 * Adds one to X, updating the Z and N flags.
 	 */
 	{
 		id: "INX",
@@ -101,11 +102,31 @@ const instructions = () => [
 	/**
 	 * Increment Y Register
 	 *
-	 * Adds one to Y, setting the Z and N flags.
+	 * Adds one to Y, updating the Z and N flags.
 	 */
 	{
 		id: "INY",
 		execute: IN_("y")
+	},
+
+	/**
+	 * Logical Shift Right
+	 *
+	 * Shifts all the bits of the value held at `address` one bit to the right.
+	 * Bit 0 is placed in the C flag and bit 7 is set to 0.
+	 * The Z and N flags are updated too.
+	 */
+	{
+		id: "LSR",
+		execute: ({ cpu, memory }, address) => {
+			const value = memory.readAt(address);
+			const result = value >> 1;
+			const newValue = Byte.to8Bit(result);
+
+			memory.writeAt(address, newValue);
+			cpu.flags.updateZeroAndNegative(newValue);
+			cpu.flags.c = !!(value & 0b00000001);
+		}
 	}
 ];
 
