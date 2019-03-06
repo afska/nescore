@@ -2,7 +2,6 @@ import { WithComposedMemory, MemoryChunk } from "../memory";
 
 const KB = 1024;
 const PRG_ROM_PAGE_SIZE = 16 * KB;
-const MEMORY_START_ADDRESS = 0x4020;
 const MEMORY_SIZE = 0xbfe0;
 
 /** Represents a dummy mapper, which works for cartridges with no mapper. */
@@ -11,17 +10,13 @@ export default class DummyMapper {
 		WithComposedMemory.apply(this);
 
 		const expansionRom = new MemoryChunk(0x1fe0);
-		const sram = new MemoryChunk(0x2000, 0x6000);
+		const sram = new MemoryChunk(0x2000);
 		const zeroPagePrgRom = new MemoryChunk(
-			cartridge.prgRom.slice(0, PRG_ROM_PAGE_SIZE),
-			0x8000
+			cartridge.prgRom.slice(0, PRG_ROM_PAGE_SIZE)
 		);
 		const currentPagePrgRom = new MemoryChunk(
-			cartridge.prgRom.slice(PRG_ROM_PAGE_SIZE, PRG_ROM_PAGE_SIZE * 2),
-			0xc000
+			cartridge.prgRom.slice(PRG_ROM_PAGE_SIZE, PRG_ROM_PAGE_SIZE * 2)
 		);
-
-		// TODO: defineChunk should set memoryStartAddress automatically, as WithComposedMemory expects the memory to be contiguous
 
 		this.defineChunks([
 			//                   Address   Size      Description
@@ -30,11 +25,6 @@ export default class DummyMapper {
 			zeroPagePrgRom, //   $8000     $4000     PRG-ROM
 			currentPagePrgRom // $C000     $4000     PRG-ROM
 		]);
-	}
-
-	/** Returns the first address in the memory map. */
-	get memoryStartAddress() {
-		return MEMORY_START_ADDRESS;
 	}
 
 	/** Returns the assigned size in the memory map. */

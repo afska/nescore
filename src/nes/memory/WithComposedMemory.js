@@ -13,6 +13,12 @@ export default {
 	/** Defines the `chunks` of the memory map. */
 	defineChunks(chunks) {
 		this.chunks = chunks;
+
+		let startAddress = 0;
+		for (let chunk of this.chunks) {
+			chunk.$memoryStartAddress = startAddress;
+			startAddress += chunk.memorySize;
+		}
 	},
 
 	/** Reads a byte from `address`, using the correct `chunk`. */
@@ -33,7 +39,7 @@ export default {
 		if (!this.chunks) throw new Error("Undefined chunks.");
 
 		for (let chunk of this.chunks) {
-			const startAddress = chunk.memoryStartAddress;
+			const startAddress = chunk.$memoryStartAddress;
 
 			if (address >= startAddress && address < startAddress + chunk.memorySize)
 				return chunk;
@@ -43,6 +49,6 @@ export default {
 	},
 
 	_toRelativeAddress(address, chunk) {
-		return address - chunk.memoryStartAddress;
+		return address - chunk.$memoryStartAddress;
 	}
 };

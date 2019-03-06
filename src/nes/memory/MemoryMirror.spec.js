@@ -35,10 +35,6 @@ describe("memory", () => {
 			mirror.memorySize.should.equal(13);
 		});
 
-		it("can store the memory starting address", () => {
-			mirror.memoryStartAddress.should.equal(29);
-		});
-
 		it("throws an exception when the address is out of bounds", () => {
 			(() => mirror.readAt(13)).should.throw("Unreachable address: 0xd");
 		});

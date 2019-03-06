@@ -7,12 +7,11 @@ import _ from "lodash";
  * It's located at the `startAddress` of another memory structure.
  */
 export default class MemoryChunk {
-	constructor(bytes, startAddress = 0) {
+	constructor(bytes) {
 		if (_.isFinite(bytes)) bytes = Buffer.alloc(bytes);
 		WithMemory.apply(this);
 
 		this.bytes = bytes;
-		this.memoryStartAddress = startAddress;
 		this.memorySize = bytes.length;
 	}
 

@@ -28,10 +28,6 @@ describe("memory", () => {
 			chunk.memorySize.should.equal(5);
 		});
 
-		it("can store the memory starting address", () => {
-			chunk.memoryStartAddress.should.equal(29);
-		});
-
 		it("throws an exception when the address is out of bounds", () => {
 			(() => chunk.writeAt(9, 123)).should.throw(
 				"Invalid memory access at 0x9"

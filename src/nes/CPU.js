@@ -5,7 +5,7 @@ import operations from "./operations";
 
 const INITIAL_FLAGS = 0b00000100;
 const INTERRUPT_VECTORS = {
-	RESET: 0xfffc
+	RESET: 0x8000 // TODO: Implement -> 0xfffc
 };
 
 /** The Center Process Unit. It runs programs. */
