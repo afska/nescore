@@ -24,13 +24,14 @@ export default class MemoryMap {
 		const cpuTestModeRegisters = new MemoryChunk(Buffer.alloc(0x0008), 0x4018);
 
 		this.defineChunks([
-			ram,
-			ramMirror,
-			ppuRegisters,
-			ppuRegistersMirror,
-			apuAndIORegisters,
-			cpuTestModeRegisters,
-			cartridge
+			//                       Address range  Size     Device
+			ram, //                  $0000-$07FF	  $0800    2KB internal RAM
+			ramMirror, //            $0800-$1FFF	  $1800    Mirrors of $0000-$07FF
+			ppuRegisters, //         $2000-$2007	  $0008    NES PPU registers
+			ppuRegistersMirror, //   $2008-$3FFF    $1FF8	   Mirrors of $2000-2007 (repeats every 8 bytes)
+			apuAndIORegisters, //    $4000-$4017	  $0018	   NES APU and I/O registers
+			cpuTestModeRegisters, // $4018-$401F	  $0008	   APU and I/O functionality that is normally disabled
+			cartridge //             $4020-$FFFF	  $BFE0	   Cartridge space: PRG ROM, PRG RAM, and mapper registers
 		]);
 	}
 
