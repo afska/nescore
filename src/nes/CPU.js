@@ -41,8 +41,8 @@ export default class CPU {
 		const parameter = this._readParameter(operation);
 
 		console.log(
-			`RUNNING *${operation.instruction.id}*`,
-			parameter ? `WITH PARAMETER 0x${parameter.toString(16)}...` : "..."
+			`RUNNING *${operation.instruction.id}* (0x${operation.id.toString(16)})`,
+			parameter != null ? `WITH PARAMETER $${parameter.toString(16)}...` : "..."
 		);
 
 		operation.instruction.execute(this.context, parameter);
