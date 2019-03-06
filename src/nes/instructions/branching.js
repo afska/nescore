@@ -1,0 +1,89 @@
+const instructions = () => [
+	/**
+	 * Branch if Carry Clear
+	 *
+	 * If the C flag is clear, jumps to `address`.
+	 */
+	{
+		id: "BCC",
+		execute: B__("c", false)
+	},
+
+	/**
+	 * Branch if Carry Set
+	 *
+	 * If the C flag is set, jumps to `address`.
+	 */
+	{
+		id: "BCS",
+		execute: B__("c", true)
+	},
+
+	/**
+	 * Branch if Equal
+	 *
+	 * If the Z flag is set, jumps to `address`.
+	 */
+	{
+		id: "BEQ",
+		execute: B__("z", true)
+	},
+
+	/**
+	 * Branch if Minus
+	 *
+	 * If the N flag is set, jumps to `address`.
+	 */
+	{
+		id: "BMI",
+		execute: B__("n", true)
+	},
+
+	/**
+	 * Branch if Not Equal
+	 *
+	 * If the Z flag is clear, jumps to `address`.
+	 */
+	{
+		id: "BNE",
+		execute: B__("z", false)
+	},
+
+	/**
+	 * Branch if Positive
+	 *
+	 * If the N flag is clear, jumps to `address`.
+	 */
+	{
+		id: "BPL",
+		execute: B__("n", false)
+	},
+
+	/**
+	 * Branch if Overflow Clear
+	 *
+	 * If the V flag is clear, jumps to `address`.
+	 */
+	{
+		id: "BVC",
+		execute: B__("v", false)
+	},
+
+	/**
+	 * Branch if Overflow Set
+	 *
+	 * If the V flag is set, jumps to `address`.
+	 */
+	{
+		id: "BPL",
+		execute: B__("v", true)
+	}
+];
+
+const B__ = (flag, value) => {
+	return ({ cpu }, address) => {
+		if (cpu.flags[flag] === value) cpu.pc.value = address;
+	};
+};
+
+export default instructions();

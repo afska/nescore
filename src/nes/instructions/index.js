@@ -58,14 +58,14 @@ export default _.keyBy([...arithmetic, ...logical, ...checks, ...data], "id");
 //   TYA ✓
 
 // branching
-//   BCC
-//   BCS
-//   BEQ
-//   BMI
-//   BNE
-//   BPL
-//   BVC
-//   BVS
+//   BCC ✓
+//   BCS ✓
+//   BEQ ✓
+//   BMI ✓
+//   BNE ✓
+//   BPL ✓
+//   BVC ✓
+//   BVS ✓
 //   JMP
 //   JSR
 //   RTI
