@@ -4,13 +4,15 @@ import Stack from "./Stack";
 import operations from "./operations";
 
 const INITIAL_FLAGS = 0b00000100;
+const INTERRUPT_VECTORS = {
+	RESET: 0xfffc
+};
 
 /** The Center Process Unit. It runs programs. */
 export default class CPU {
 	constructor() {
 		WithContext.apply(this);
 
-		// TODO: Make program counter absolute instead of relative to the prgROM!
 		this.pc = new Register16Bit(0); // program counter
 		this.sp = new Register8Bit(0xff); // stack pointer
 		this.flags = new FlagsRegister(INITIAL_FLAGS);
@@ -27,6 +29,7 @@ export default class CPU {
 
 	/** When a context is loaded. */
 	onLoad(context) {
+		this.pc.value = INTERRUPT_VECTORS.RESET;
 		this.stack.loadContext(context);
 	}
 
@@ -59,7 +62,7 @@ export default class CPU {
 	}
 
 	_readOperation() {
-		const opcode = this.context.cartridge.prgROM[this.pc.value];
+		const opcode = this.context.memory.readAt(this.pc.value);
 		const operation = operations[opcode];
 		if (!operation) throw new Error(`Unknown opcode: 0x${opcode.toString(16)}`);
 		this.pc.increment();
@@ -70,7 +73,7 @@ export default class CPU {
 	_readParameter({ instruction, addressing }) {
 		if (addressing.parameterSize === 0) return null;
 
-		const parameter = this.context.cartridge.prgROM.readUIntLE(
+		const parameter = this.context.memory.readBytesAt(
 			this.pc.value,
 			addressing.parameterSize
 		);

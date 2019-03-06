@@ -1,6 +1,10 @@
+import WithLittleEndian from "./WithLittleEndian";
+
 /** A memory chunk that mirrors another `chunk`. */
 export default class MemoryMirror {
-	constructor(chunk, startAddress, size) {
+	constructor(chunk, size, startAddress = 0) {
+		WithLittleEndian.apply(this);
+
 		this.chunk = chunk;
 		this.memoryStartAddress = startAddress;
 		this.memorySize = size;

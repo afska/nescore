@@ -1,5 +1,4 @@
 import { MemoryChunk, MemoryMirror } from ".";
-import { Buffer } from "buffer";
 const should = require("chai").Should();
 
 describe("memory", () => {
@@ -7,29 +6,29 @@ describe("memory", () => {
 		let chunk, mirror;
 
 		beforeEach(() => {
-			chunk = new MemoryChunk(Buffer.alloc(5));
-			mirror = new MemoryMirror(chunk, 29, 13);
+			chunk = new MemoryChunk(5);
+			mirror = new MemoryMirror(chunk, 13, 29);
 		});
 
 		it("can mirror write operations", () => {
-			mirror.writeAt(5, 110);
+			mirror.writeAt(5, 104);
 			mirror.writeAt(6, 101);
-			mirror.writeAt(12, 115);
+			mirror.writeAt(12, 121);
 			mirror.writeAt(3, 33);
 			mirror.writeAt(4, 33);
 			chunk
 				.getMemory()
 				.toString()
-				.should.equal("nes!!");
+				.should.equal("hey!!");
 		});
 
 		it("can mirror read operations", () => {
-			chunk.getMemory().write("nes!!");
+			chunk.getMemory().write("hey!!");
 			[5, 6, 12, 3, 4]
 				.map((i) => mirror.readAt(i))
 				.map((c) => String.fromCharCode(c))
 				.join("")
-				.should.equal("nes!!");
+				.should.equal("hey!!");
 		});
 
 		it("can return the size of the mirrored memory", () => {

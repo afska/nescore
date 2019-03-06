@@ -11,6 +11,10 @@ describe("memory", () => {
 			chunk = new MemoryChunk(buffer, 29);
 		});
 
+		it("can create a chunk just passing the number of bytes", () => {
+			new MemoryChunk(5).getMemory().length.should.equal(5);
+		});
+
 		it("can write and read bytes", () => {
 			chunk.writeAt(2, 123);
 			chunk.readAt(2).should.equal(123);
@@ -29,7 +33,9 @@ describe("memory", () => {
 		});
 
 		it("throws an exception when the address is out of bounds", () => {
-			(() => chunk.writeAt(9, 123)).should.throw("Invalid memory access at 0x9");
+			(() => chunk.writeAt(9, 123)).should.throw(
+				"Invalid memory access at 0x9"
+			);
 		});
 	});
 });

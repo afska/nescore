@@ -1,3 +1,4 @@
+import WithLittleEndian from "./WithLittleEndian";
 import _ from "lodash";
 
 /** A mixin for composed memory handling, with multiple `chunks`. */
@@ -5,6 +6,7 @@ export default {
 	/** Applies the mixin. */
 	apply(obj) {
 		_.defaults(obj, _.omit(this, "apply"));
+		WithLittleEndian.apply(obj);
 		obj.chunks = null;
 	},
 

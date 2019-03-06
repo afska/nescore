@@ -14,10 +14,13 @@ export default class NES {
 
 	/** Loads a `rom` as the current cartridge. */
 	load(rom) {
+		const cartridge = new GameCartridge(rom);
+
 		this.loadContext({
 			cpu: this.cpu,
 			memory: this.memoryMap,
-			cartridge: new GameCartridge(rom)
+			cartridge,
+			mapper: cartridge.createMapper()
 		});
 
 		this.cpu.loadContext(this.context);

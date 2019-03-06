@@ -1,4 +1,4 @@
-import { WithMemory } from "./memory";
+import { DummyMapper } from "./mappers";
 
 const MAGIC_NUMBER = "NES";
 const KB = 1024;
@@ -6,44 +6,30 @@ const HEADER_SIZE = 16;
 const TRAINER_SIZE = 512;
 const PRG_ROM_PAGE_SIZE = 16 * KB;
 const CHR_ROM_PAGE_SIZE = 8 * KB;
-const MEMORY_START_ADDRESS = 0x4020;
-const MEMORY_SIZE = 0xbfe0;
 
 /** The game cartridge (a file in iNES format). */
 export default class GameCartridge {
 	constructor(bytes) {
-		WithMemory.apply(this);
-
 		this.bytes = bytes;
 
 		if (this.magicNumber !== MAGIC_NUMBER)
 			throw new Error("Invalid ROM format.");
 	}
 
-	/** Returns the memory bytes. */
-	getMemory() {
-		return this.prgROM;
-	}
-
-	/** Returns the first address in the memory map. */
-	get memoryStartAddress() {
-		return MEMORY_START_ADDRESS;
-	}
-
-	/** Returns the assigned size in the memory map. */
-	get memorySize() {
-		return MEMORY_SIZE;
+	/** Returns a new instance of the right mapper. */
+	createMapper() {
+		return new DummyMapper(this);
 	}
 
 	/** Returns the PRG ROM, which contains the game's code. */
-	get prgROM() {
+	get prgRom() {
 		return this._getBytes(this._programOffset, this._programSize);
 	}
 
 	/** Returns the CHR ROM, which contains static tilesets, or null. */
-	get chrROM() {
+	get chrRom() {
 		const offset = this._programOffset + this._programSize;
-		const size = this.header.chrROMPages * CHR_ROM_PAGE_SIZE;
+		const size = this.header.chrRomPages * CHR_ROM_PAGE_SIZE;
 
 		return size > 0 ? this._getBytes(offset, size) : null;
 	}
@@ -52,11 +38,11 @@ export default class GameCartridge {
 	get header() {
 		if (this.__header) return this.__header;
 
-		const flags = this.bytes[6];
+		const flags = this.bytes.readUInt8(6);
 
 		return (this.__header = {
-			prgROMPages: this.bytes[4],
-			chrROMPages: this.bytes[5],
+			prgRomPages: this.bytes.readUInt8(4),
+			chrRomPages: this.bytes.readUInt8(5),
 			hasTrainerBeforeProgram: !!(flags & 0b00000100),
 			mirroringMode: flags & 0b00000001
 		});
@@ -80,6 +66,6 @@ export default class GameCartridge {
 	}
 
 	get _programSize() {
-		return this.header.prgROMPages * PRG_ROM_PAGE_SIZE;
+		return this.header.prgRomPages * PRG_ROM_PAGE_SIZE;
 	}
 }

@@ -1,26 +1,22 @@
 import { MemoryMap, MemoryChunk } from ".";
 import { Register8Bit } from "../registers";
-import { Buffer } from "buffer";
 const should = require("chai").Should();
 
-const CARTRIDGE_START_ADDRESS = 0x4020;
-const CARTRIDGE_SIZE = 5;
+const MAPPER_START_ADDRESS = 0x4020;
+const MAPPER_SIZE = 5;
 
 describe("memory", () => {
 	describe("MemoryMap", () => {
-		let cartridge, memory;
+		let mapper, memory;
 
 		beforeEach(() => {
-			cartridge = new MemoryChunk(
-				Buffer.alloc(CARTRIDGE_SIZE),
-				CARTRIDGE_START_ADDRESS
-			);
-			memory = new MemoryMap().loadContext({ cartridge });
+			mapper = new MemoryChunk(MAPPER_SIZE, MAPPER_START_ADDRESS);
+			memory = new MemoryMap().loadContext({ mapper });
 		});
 
 		it("can write in the right chunk", () => {
-			memory.writeAt(CARTRIDGE_START_ADDRESS + 1, 123);
-			cartridge.readAt(1).should.equal(123);
+			memory.writeAt(MAPPER_START_ADDRESS + 1, 123);
+			mapper.readAt(1).should.equal(123);
 		});
 
 		it("can accept a register as address", () => {
@@ -30,8 +26,8 @@ describe("memory", () => {
 		});
 
 		it("can read from the right chunk", () => {
-			cartridge.writeAt(1, 123);
-			memory.readAt(CARTRIDGE_START_ADDRESS + 1).should.equal(123);
+			mapper.writeAt(1, 123);
+			memory.readAt(MAPPER_START_ADDRESS + 1).should.equal(123);
 		});
 
 		it("can read and write RAM's mirror", () => {
@@ -42,8 +38,7 @@ describe("memory", () => {
 		});
 
 		it("throws an exception when the address is out of bounds", () => {
-			(() =>
-				memory.readAt(CARTRIDGE_START_ADDRESS + CARTRIDGE_SIZE)).should.throw(
+			(() => memory.readAt(MAPPER_START_ADDRESS + MAPPER_SIZE)).should.throw(
 				"Unreachable address: 0x4025."
 			);
 		});
