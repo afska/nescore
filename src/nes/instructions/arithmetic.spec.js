@@ -319,7 +319,7 @@ describe("instructions", () => {
 				cpu.flags.c.should.equal(false); // there was borrow
 				cpu.flags.v.should.equal(true); //  |
 				//                                  v
-				//                                  00101000 (-40)
+				//                                  00101000 (40)
 				//                                - 10011100 (-100)
 				//                                  ^
 

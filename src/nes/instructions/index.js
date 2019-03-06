@@ -2,9 +2,14 @@ import arithmetic from "./arithmetic";
 import logical from "./logical";
 import checks from "./checks";
 import data from "./data";
+import branching from "./branching";
+import misc from "./misc";
 import _ from "lodash";
 
-export default _.keyBy([...arithmetic, ...logical, ...checks, ...data], "id");
+export default _.keyBy(
+	[...arithmetic, ...logical, ...checks, ...data, ...branching, ...misc],
+	"id"
+);
 
 // TODO: Instructions
 // arithmetic

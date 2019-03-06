@@ -75,7 +75,7 @@ const instructions = () => [
 	 * If the V flag is set, jumps to `address`.
 	 */
 	{
-		id: "BPL",
+		id: "BVS",
 		execute: B__("v", true)
 	}
 ];
