@@ -1,6 +1,6 @@
 /** A CPU register that can handle overflows and underflows. */
 export default class Register {
-	constructor(TypedArray, initialValue) {
+	constructor(TypedArray, initialValue = 0) {
 		this.bytes = new TypedArray(1);
 		this.value = this.initialValue = initialValue;
 		this.lastWriteOk = true;

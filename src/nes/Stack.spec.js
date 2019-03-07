@@ -8,6 +8,7 @@ describe("Stack", () => {
 	beforeEach(() => {
 		({ cpu, memory } = createTestContext());
 		stack = new Stack().loadContext({ cpu, memory });
+		cpu.sp.value = 0xff;
 	});
 
 	it("can push and pop values", () => {
@@ -41,13 +42,16 @@ describe("Stack", () => {
 		cpu.sp.value.should.equal(0xff);
 	});
 
-	it("handles stack underflows", () => {
-		(() => stack.pop()).should.throw("Stack underflow.");
+	it("ignores stack underflows", () => {
+		memory.writeAt(0x0100, 32);
+		stack.pop().should.equal(32);
+		cpu.sp.value.should.equal(0);
 	});
 
-	it("handles stack overflows", () => {
-		(() => {
-			for (let i = 0; i < 256; i++) stack.push(1);
-		}).should.throw("Stack overflow.");
+	it("ignores stack overflows", () => {
+		cpu.sp.value = 0;
+		stack.push(32);
+		memory.readAt(0x0100).should.equal(32);
+		cpu.sp.value.should.equal(0xff);
 	});
 });

@@ -10,14 +10,14 @@ describe("CPU", () => {
 
 		should.not.exist(cpu.context);
 		cpu.pc.value.should.equal(0);
-		cpu.sp.value.should.equal(0xff);
+		cpu.sp.value.should.equal(0);
 		cpu.flags.should.include({
 			n: false,
 			v: false,
-			b1: true,
+			b1: false,
 			b2: false,
 			d: false,
-			i: true,
+			i: false,
 			z: false,
 			c: false
 		});

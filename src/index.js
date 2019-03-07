@@ -99,8 +99,6 @@ const DEMO = async () => {
 
 	window.nes.load(bytes, nesTestLogger);
 	window.nes.cpu.pc.value = 0xc000;
-	window.nes.cpu.sp.value = 0xfd; // TODO: Debug this!!
-	window.nes.cpu.cycles = 7; // TODO: Debug this!!
 
 	// for (let i = 0; i < 100; i++) window.nes.step();
 };

@@ -7,7 +7,7 @@ const INITIAL_FLAGS = 0b00100100;
 const INTERRUPT_CYCLES = 7;
 const INTERRUPT_VECTORS = {
 	NMI: 0xfffa, // Non-maskable interrupt (used to detect vertical blanking)
-	RESET: 0x8000, // TODO: Implement -> 0xfffc // Reset
+	RESET: 0xfffc, // Reset
 	IRQ: 0xfffe // Interrupt request (temporarily stops the current program, and run an interrupt handler instead)
 };
 
@@ -16,9 +16,9 @@ export default class CPU {
 	constructor() {
 		WithContext.apply(this);
 
-		this.pc = new Register16Bit(0); // program counter
-		this.sp = new Register8Bit(0xff); // stack pointer
-		this.flags = new FlagsRegister(INITIAL_FLAGS);
+		this.pc = new Register16Bit(); // program counter
+		this.sp = new Register8Bit(); // stack pointer
+		this.flags = new FlagsRegister();
 		this.cycles = 0;
 
 		this.registers = {
@@ -32,8 +32,8 @@ export default class CPU {
 
 	/** When a context is loaded. */
 	onLoad(context) {
-		this.pc.value = INTERRUPT_VECTORS.RESET;
 		this.stack.loadContext(context);
+		this._reset();
 	}
 
 	/** Executes the next operation. */
@@ -65,12 +65,19 @@ export default class CPU {
 		this.stack.push2Bytes(this.pc.value);
 		this.stack.push(this.flags.toByte());
 
+		this.cycles += INTERRUPT_CYCLES;
+
 		this.flags.i = true; // (to make sure handler doesn't get interrupted)
 		this._jumpToInterruptHanlder(interruption);
 	}
 
 	/** When the current context is unloaded. */
 	onUnload() {
+		this.stack.unloadContext();
+		this._reset();
+	}
+
+	_reset() {
 		this.pc.reset();
 		this.sp.reset();
 		this.flags.load(INITIAL_FLAGS);
@@ -78,7 +85,8 @@ export default class CPU {
 		this.registers.a.reset();
 		this.registers.x.reset();
 		this.registers.y.reset();
-		this.stack.unloadContext();
+
+		this.interrupt("RESET");
 	}
 
 	_readOperation() {

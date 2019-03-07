@@ -5,7 +5,6 @@
 ```bash
 nvm use
 npm install
-# put a `rom.nes` file inside `public/`
 ```
 
 ## Run the app

@@ -1,8 +1,6 @@
 import { WithContext } from "./helpers";
 
 const START_ADDRESS = 0x0100;
-const STACK_UNDERFLOW = "Stack underflow.";
-const STACK_OVERFLOW = "Stack overflow.";
 
 /** An in-memory stack, controlled by the CPU. */
 export default class Stack {
@@ -54,13 +52,11 @@ export default class Stack {
 		return this.startAddress + this.context.cpu.sp.value;
 	}
 
-	_decrement() {
-		this.context.cpu.sp.decrement();
-		this.context.cpu.sp.checkLastWrite(STACK_OVERFLOW);
-	}
-
 	_increment() {
 		this.context.cpu.sp.increment();
-		this.context.cpu.sp.checkLastWrite(STACK_UNDERFLOW);
+	}
+
+	_decrement() {
+		this.context.cpu.sp.decrement();
 	}
 }

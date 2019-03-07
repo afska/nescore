@@ -24,8 +24,8 @@ export default class NES {
 			mapper: cartridge.createMapper()
 		});
 
-		this.cpu.loadContext(this.context);
 		this.memoryMap.loadContext(this.context);
+		this.cpu.loadContext(this.context);
 	}
 
 	/** Executes a step in the emulation. */
@@ -36,6 +36,8 @@ export default class NES {
 	/** Unloads the current cartridge. */
 	unload() {
 		this.unloadContext();
+
 		this.cpu.unloadContext();
+		this.memoryMap.unloadContext();
 	}
 }
