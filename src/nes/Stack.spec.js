@@ -19,6 +19,15 @@ describe("Stack", () => {
 		stack.pop().should.equal(23);
 	});
 
+	it("can push and pop 16-bit values", () => {
+		stack.push2Bytes(0xfe30);
+		stack.push2Bytes(0xcd45);
+		stack.push2Bytes(0x1234);
+		stack.pop2Bytes().should.equal(0x1234);
+		stack.pop2Bytes().should.equal(0xcd45);
+		stack.pop2Bytes().should.equal(0xfe30);
+	});
+
 	it("updates the memory and sp on push", () => {
 		stack.push(23);
 		memory.readAt(stack.startAddress + 0xff).should.equal(23);
