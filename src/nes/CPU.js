@@ -4,6 +4,7 @@ import Stack from "./Stack";
 import operations from "./operations";
 
 const INITIAL_FLAGS = 0b00100100;
+const INTERRUPT_CYCLES = 7;
 const INTERRUPT_VECTORS = {
 	NMI: 0xfffa, // Non-maskable interrupt (used to detect vertical blanking)
 	RESET: 0x8000, // TODO: Implement -> 0xfffc // Reset
