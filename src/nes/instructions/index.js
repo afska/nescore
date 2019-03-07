@@ -1,81 +1,17 @@
 import arithmetic from "./arithmetic";
-import logical from "./logical";
+import branching from "./branching";
 import checks from "./checks";
 import data from "./data";
-import branching from "./branching";
+import logical from "./logical";
 import misc from "./misc";
 import _ from "lodash";
 
 export default _.keyBy(
-	[...arithmetic, ...logical, ...checks, ...data, ...branching, ...misc],
+	[...arithmetic, ...branching, ...checks, ...data, ...logical, ...misc],
 	"id"
 );
 
 // TODO: Instructions
-// arithmetic
-//   ADC ✓
-//   ASL ✓
-//   DEC ✓
-//   DEX ✓
-//   DEY ✓
-//   INC ✓
-//   INX ✓
-//   INY ✓
-//   LSR ✓
-//   ROL ✓
-//   ROR ✓
-//   SBC ✓
-
-// logical
-//   AND ✓
-//   EOR ✓
-//   ORA ✓
-
-// checks
-//   BIT ✓
-//   CMP ✓
-//   CPX ✓
-//   CPY ✓
-
-// data
-//   CLC ✓
-//   CLD ✓
-//   CLI ✓
-//   CLV ✓
-//   LDA ✓
-//   LDX ✓
-//   LDY ✓
-//   PHA ✓
-//   PHP ✓
-//   PLA ✓
-//   PLP ✓
-//   SEC ✓
-//   SED ✓
-//   SEI ✓
-//   STA ✓
-//   STX ✓
-//   STY ✓
-//   TAX ✓
-//   TAY ✓
-//   TSX ✓
-//   TXA ✓
-//   TXS ✓
-//   TYA ✓
-
-// branching
-//   BCC ✓
-//   BCS ✓
-//   BEQ ✓
-//   BMI ✓
-//   BNE ✓
-//   BPL ✓
-//   BVC ✓
-//   BVS ✓
-//   JMP ✓
-//   JSR ✓
-//   RTI ✓
-//   RTS ✓
-
 // misc
 //   BRK
 //   NOP ✓
