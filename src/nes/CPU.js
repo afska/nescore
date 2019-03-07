@@ -58,9 +58,6 @@ export default class CPU {
 		// TODO: Test interruptions
 		if (interruption === "IRQ" && !this._areInterruptionsEnabled) return;
 
-		this.cycles += 7; // interrupts cost 7 cycles
-		// TODO: ^ check this
-
 		this.stack.push2Bytes(this.pc.value);
 		this.stack.push(this.flags.toByte());
 
