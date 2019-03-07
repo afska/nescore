@@ -48,7 +48,8 @@ export default class CPU {
 				context: this.context,
 				pc,
 				operation,
-				parameter: this.context.logger.$parameter
+				initialParameter: this.context.logger.$parameter,
+				finalParameter: parameter
 			});
 
 		operation.instruction.execute(this.context, parameter);

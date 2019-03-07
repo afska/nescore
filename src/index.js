@@ -8,7 +8,13 @@ import operations from "./nes/operations";
 window.operations = operations;
 
 const nesTestLogger = {
-	log: ({ context: { cpu, memory }, pc, operation, parameter }) => {
+	log: ({
+		context: { cpu, memory },
+		pc,
+		operation,
+		initialParameter,
+		finalParameter
+	}) => {
 		const hex = (value, length) =>
 			_.padStart(value.toString(16).toUpperCase(), length, "0");
 		const cycle = (value, length) => _.padStart(value.toString(), length);
@@ -44,17 +50,20 @@ const nesTestLogger = {
 		if (operation.addressing.parameterSize > 0) {
 			$parameters +=
 				operation.addressing.parameterSize === 2
-					? hex(Byte.lowPartOf(parameter), 2) +
+					? hex(Byte.lowPartOf(initialParameter), 2) +
 					  " " +
-					  hex(Byte.highPartOf(parameter), 2)
-					: hex(parameter, 2);
+					  hex(Byte.highPartOf(initialParameter), 2)
+					: hex(initialParameter, 2);
 		}
 		const $commandHex = section($operation + $parameters, 10);
 
-		const $hexParameter =
-			operation.addressing.parameterSize === 2
-				? hex(parameter, 4)
-				: hex(parameter, 2);
+		let $hexParameter = "";
+		if (operation.addressing.parameterSize > 0) {
+			$hexParameter =
+				operation.addressing.parameterSize === 2
+					? hex(finalParameter, 4)
+					: hex(finalParameter, 2);
+		}
 		const $assembly = section(
 			operation.instruction.id + " " + wrapParameter($hexParameter),
 			32
@@ -90,6 +99,7 @@ const DEMO = async () => {
 
 	window.nes.load(bytes, nesTestLogger);
 	window.nes.cpu.pc.value = 0xc000;
+	window.nes.cpu.flags.load(0x24); // TODO: Debug this!!
 	window.nes.cpu.sp.value = 0xfd; // TODO: Debug this!!
 	window.nes.cpu.cycles = 7; // TODO: Debug this!!
 
