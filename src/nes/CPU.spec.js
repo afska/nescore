@@ -14,7 +14,7 @@ describe("CPU", () => {
 		cpu.flags.should.include({
 			n: false,
 			v: false,
-			b1: false,
+			b1: true,
 			b2: false,
 			d: false,
 			i: true,
