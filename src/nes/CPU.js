@@ -39,11 +39,12 @@ export default class CPU {
 	step() {
 		this.requireContext();
 
+		const pc = this.pc.value;
 		const operation = this._readOperation();
 		const parameter = this._readParameter(operation);
 
 		console.log(
-			`[$${this.pc.value.toString(16)}] RUNNING *${
+			`[$${pc.toString(16)}] RUNNING *${
 				operation.instruction.id
 			}* (0x${operation.id.toString(16)})`,
 			parameter != null ? `WITH PARAMETER $${parameter.toString(16)}...` : "..."
