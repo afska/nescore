@@ -62,7 +62,7 @@ export default [
 		id: 0x4c,
 		instruction: instructions.JMP,
 		cycles: 3,
-		addressing: addressings.RELATIVE
+		addressing: addressings.ABSOLUTE
 	},
 	{
 		id: 0x6c,
