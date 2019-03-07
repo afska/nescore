@@ -43,12 +43,13 @@ export default class CPU {
 		const operation = this._readOperation();
 		const parameter = this._readParameter(operation);
 
-		console.log(
-			`[$${pc.toString(16)}] RUNNING *${
-				operation.instruction.id
-			}* (0x${operation.id.toString(16)})`,
-			parameter != null ? `WITH PARAMETER $${parameter.toString(16)}...` : "..."
-		);
+		if (this.context.logger)
+			this.context.logger.log({
+				context: this.context,
+				pc,
+				operation,
+				parameter: this.context.logger.$parameter
+			});
 
 		operation.instruction.execute(this.context, parameter);
 		this.cycles += operation.cycles;
@@ -64,12 +65,6 @@ export default class CPU {
 
 		this.flags.i = true; // (to make sure handler doesn't get interrupted)
 		this._jumpToInterruptHanlder(interruption);
-
-		console.log(
-			`*${interruption} INTERRUPTION* - Jumping to $${this.pc.value.toString(
-				16
-			)}...`
-		);
 	}
 
 	/** When the current context is unloaded. */
@@ -101,6 +96,8 @@ export default class CPU {
 			addressing.parameterSize
 		);
 		this.pc.value += addressing.parameterSize;
+
+		if (this.context.logger) this.context.logger.$parameter = parameter;
 
 		return instruction.needsValue
 			? addressing.getValue(this.context, parameter)

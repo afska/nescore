@@ -13,10 +13,11 @@ export default class NES {
 	}
 
 	/** Loads a `rom` as the current cartridge. */
-	load(rom) {
+	load(rom, logger = null) {
 		const cartridge = new GameCartridge(rom);
 
 		this.loadContext({
+			logger,
 			cpu: this.cpu,
 			memory: this.memoryMap,
 			cartridge,
