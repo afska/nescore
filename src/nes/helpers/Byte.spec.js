@@ -19,19 +19,11 @@ describe("helpers", () => {
 			Byte.toSignedByte(-128).should.equal(128);
 		});
 
-		it("can truncate numbers to 8-bit", () => {
-			Byte.to8Bit(0b110000000).should.equal(0b10000000);
-			Byte.to8Bit(-2).should.equal(254);
-		});
-
-		it("can create 16-bit numbers from two bytes", () => {
-			Byte.to16Bit(0xfe, 0x12).should.equal(0xfe12);
-		});
-
-		it("can negate numbers using two's complement", () => {
-			const negative112 = Byte.toSignedByte(-112);
-			Byte.negate(112).should.equal(negative112);
-			Byte.negate(negative112).should.equal(112);
+		it("can determine if a value has overflow", () => {
+			Byte.hasOverflow(258).should.equal(true);
+			Byte.hasOverflow(255).should.equal(false);
+			Byte.hasOverflow(25).should.equal(false);
+			Byte.hasOverflow(300).should.equal(true);
 		});
 
 		it("can determine if a value is positive or negative", () => {
@@ -42,11 +34,24 @@ describe("helpers", () => {
 			Byte.isNegative(0x10).should.equal(false);
 		});
 
-		it("can determine if a value has overflow", () => {
-			Byte.hasOverflow(258).should.equal(true);
-			Byte.hasOverflow(255).should.equal(false);
-			Byte.hasOverflow(25).should.equal(false);
-			Byte.hasOverflow(300).should.equal(true);
+		it("can negate numbers using two's complement", () => {
+			const negative112 = Byte.toSignedByte(-112);
+			Byte.negate(112).should.equal(negative112);
+			Byte.negate(negative112).should.equal(112);
+		});
+
+		it("can truncate numbers to 8-bit", () => {
+			Byte.to8Bit(0b110000000).should.equal(0b10000000);
+			Byte.to8Bit(-2).should.equal(254);
+		});
+
+		it("can split 16-bit numbers", () => {
+			Byte.highPartOf(0xfe20).should.equal(0xfe);
+			Byte.lowPartOf(0xfe20).should.equal(0x20);
+		});
+
+		it("can create 16-bit numbers from two bytes", () => {
+			Byte.to16Bit(0xfe, 0x12).should.equal(0xfe12);
 		});
 	});
 });

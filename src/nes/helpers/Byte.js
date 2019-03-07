@@ -36,6 +36,14 @@ export default {
 		return value & 0xff;
 	},
 
+	highPartOf(twoBytesNumber) {
+		return (twoBytesNumber & 0xff00) >> 8;
+	},
+
+	lowPartOf(twoBytesNumber) {
+		return twoBytesNumber & 0x00ff;
+	},
+
 	to16Bit(mostSignificativeByte, leastSignificativeByte) {
 		return (
 			(this.to8Bit(mostSignificativeByte) << 8) |
