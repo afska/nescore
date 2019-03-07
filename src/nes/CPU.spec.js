@@ -6,14 +6,14 @@ const RESET_VECTOR = 0xfffc;
 const registersOf = (cpu) => _.mapValues(cpu.registers, (reg) => reg.value);
 
 describe("CPU", () => {
-	let cpu;
+	let cpu, memory;
 
 	beforeEach(() => {
-		({ cpu } = createTestContext((memory) => {
-			// Sample program: NOP ; LDA #$01 ; STA $0200
+		({ cpu, memory } = createTestContext((memory) => {
+			// Sample program: NOP ; LDA #$05 ; STA $0201
 
 			memory.write2BytesAt(RESET_VECTOR, 0x1234);
-			[0xea, 0xa9, 0x01, 0x8d, 0x01, 0x02].forEach((byte, i) =>
+			[0xea, 0xa9, 0x05, 0x8d, 0x01, 0x02].forEach((byte, i) =>
 				memory.writeAt(0x1234 + i, byte)
 			);
 		}));
@@ -41,5 +41,16 @@ describe("CPU", () => {
 		});
 	});
 
-	// TODO: Test .step(...)
+	it("can run 3 simple operations", () => {
+		cpu.step();
+		cpu.cycles.should.equal(9);
+
+		cpu.step();
+		cpu.cycles.should.equal(11);
+		cpu.registers.a.value.should.equal(5);
+
+		cpu.step();
+		cpu.cycles.should.equal(15);
+		memory.readAt(0x0201).should.equal(5);
+	});
 });
