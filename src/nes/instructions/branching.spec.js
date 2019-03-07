@@ -62,7 +62,7 @@ describe("instructions", () => {
 		});
 
 		describe("JSR", () => {
-			it("pushes the current PC - 1 to the stack and jumps to the address", () => {
+			it("pushes the current program counter (minus one) to the stack and jumps to the address", () => {
 				cpu.pc.value = 0xfe31;
 				instructions.JSR.execute(context, 0x1234);
 				cpu.stack.pop2Bytes().should.equal(0xfe30);
@@ -77,6 +77,14 @@ describe("instructions", () => {
 				instructions.RTI.execute(context);
 				cpu.flags.toByte().should.equal(0b10101000);
 				cpu.pc.value.should.equal(0xfe35);
+			});
+		});
+
+		describe("RTS", () => {
+			it("pulls the program counter (plus one) from the stack", () => {
+				cpu.stack.push2Bytes(0xfe35);
+				instructions.RTS.execute(context);
+				cpu.pc.value.should.equal(0xfe36);
 			});
 		});
 	});

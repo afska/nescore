@@ -74,7 +74,7 @@ export default _.keyBy(
 //   JMP ✓
 //   JSR ✓
 //   RTI ✓
-//   RTS
+//   RTS ✓
 
 // misc
 //   BRK

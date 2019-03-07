@@ -115,6 +115,18 @@ const instructions = () => [
 			cpu.flags.load(cpu.stack.pop());
 			cpu.pc.value = cpu.stack.pop2Bytes();
 		}
+	},
+
+	/**
+	 * Return from Subroutine
+	 *
+	 * Pulls the program counter (plus one) from the stack.
+	 */
+	{
+		id: "RTS",
+		execute: ({ cpu }) => {
+			cpu.pc.value = cpu.stack.pop2Bytes() + 1;
+		}
 	}
 ];
 
