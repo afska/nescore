@@ -1,27 +1,33 @@
-import CPU from "./CPU";
+import createTestContext from "./helpers/createTestContext";
 import _ from "lodash";
 const should = require("chai").Should();
 
+const RESET_VECTOR = 0xfffc;
 const registersOf = (cpu) => _.mapValues(cpu.registers, (reg) => reg.value);
 
 describe("CPU", () => {
-	it("initializes all variables", () => {
-		const cpu = new CPU();
+	let cpu;
 
-		should.not.exist(cpu.context);
-		cpu.pc.value.should.equal(0);
-		cpu.sp.value.should.equal(0);
+	beforeEach(() => {
+		({ cpu } = createTestContext((memory) => {
+			memory.write2BytesAt(RESET_VECTOR, 0x1234);
+		}));
+	});
+
+	it("initializes all variables", () => {
+		cpu.pc.value.should.equal(0x1234);
+		cpu.sp.value.should.equal(0xfd);
 		cpu.flags.should.include({
 			n: false,
 			v: false,
-			b1: false,
+			b1: true,
 			b2: false,
 			d: false,
-			i: false,
+			i: true,
 			z: false,
 			c: false
 		});
-		cpu.cycles.should.equal(0);
+		cpu.cycles.should.equal(7);
 
 		registersOf(cpu).should.include({
 			x: 0,
