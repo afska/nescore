@@ -10,7 +10,12 @@ describe("CPU", () => {
 
 	beforeEach(() => {
 		({ cpu } = createTestContext((memory) => {
+			// Sample program: NOP ; LDA #$01 ; STA $0200
+
 			memory.write2BytesAt(RESET_VECTOR, 0x1234);
+			[0xea, 0xa9, 0x01, 0x8d, 0x01, 0x02].forEach((byte, i) =>
+				memory.writeAt(0x1234 + i, byte)
+			);
 		}));
 	});
 
