@@ -89,6 +89,19 @@ const instructions = () => [
 		execute: ({ cpu }, address) => {
 			cpu.pc.value = address;
 		}
+	},
+
+	/**
+	 * Jump to Subroutine
+	 *
+	 * Pushes the current program counter (minus one) on to the stack and jumps to `address`.
+	 */
+	{
+		id: "JSR",
+		execute: ({ cpu }, address) => {
+			cpu.stack.push2Bytes(cpu.pc.value - 1);
+			cpu.pc.value = address;
+		}
 	}
 ];
 

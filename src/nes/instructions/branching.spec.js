@@ -60,5 +60,14 @@ describe("instructions", () => {
 				cpu.pc.value.should.equal(0x1234);
 			});
 		});
+
+		describe("JSR", () => {
+			it("pushes the current PC - 1 to the stack and jumps to the address", () => {
+				cpu.pc.value = 0xfe31;
+				instructions.JSR.execute(context, 0x1234);
+				cpu.stack.pop2Bytes().should.equal(0xfe30);
+				cpu.pc.value.should.equal(0x1234);
+			});
+		});
 	});
 });
