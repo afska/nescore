@@ -102,6 +102,19 @@ const instructions = () => [
 			cpu.stack.push2Bytes(cpu.pc.value - 1);
 			cpu.pc.value = address;
 		}
+	},
+
+	/**
+	 * Return from Interrupt
+	 *
+	 * Pulls the flags from the stack followed by the program counter.
+	 */
+	{
+		id: "RTI",
+		execute: ({ cpu }) => {
+			cpu.flags.load(cpu.stack.pop());
+			cpu.pc.value = cpu.stack.pop2Bytes();
+		}
 	}
 ];
 

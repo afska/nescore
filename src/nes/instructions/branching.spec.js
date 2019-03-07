@@ -69,5 +69,15 @@ describe("instructions", () => {
 				cpu.pc.value.should.equal(0x1234);
 			});
 		});
+
+		describe("RTI", () => {
+			it("pulls the processor flags and the program counter from the stack", () => {
+				cpu.stack.push2Bytes(0xfe35);
+				cpu.stack.push(0b10101000);
+				instructions.RTI.execute(context);
+				cpu.flags.toByte().should.equal(0b10101000);
+				cpu.pc.value.should.equal(0xfe35);
+			});
+		});
 	});
 });
