@@ -10,8 +10,3 @@ export default _.keyBy(
 	[...arithmetic, ...branching, ...checks, ...data, ...logical, ...misc],
 	"id"
 );
-
-// TODO: Instructions
-// misc
-//   BRK
-//   NOP ✓

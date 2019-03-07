@@ -5,7 +5,9 @@ import operations from "./operations";
 
 const INITIAL_FLAGS = 0b00000100;
 const INTERRUPT_VECTORS = {
-	RESET: 0x8000 // TODO: Implement -> 0xfffc
+	NMI: 0xfffa, // Non-maskable interrupt (used to detect vertical blanking)
+	RESET: 0x8000, // TODO: Implement -> 0xfffc // Reset
+	IRQ: 0xfffe // Interrupt request (temporarily stops the current program, and run an interrupt handler instead)
 };
 
 /** The Center Process Unit. It runs programs. */
@@ -41,12 +43,35 @@ export default class CPU {
 		const parameter = this._readParameter(operation);
 
 		console.log(
-			`RUNNING *${operation.instruction.id}* (0x${operation.id.toString(16)})`,
+			`[$${this.pc.value.toString(16)}] RUNNING *${
+				operation.instruction.id
+			}* (0x${operation.id.toString(16)})`,
 			parameter != null ? `WITH PARAMETER $${parameter.toString(16)}...` : "..."
 		);
 
 		operation.instruction.execute(this.context, parameter);
 		this.cycles += operation.cycles;
+	}
+
+	/** Pushes the context to the stack and jumps to the interrupt handler. */
+	interrupt(interruption) {
+		// TODO: Test interruptions
+		if (interruption === "IRQ" && !this._areInterruptionsEnabled) return;
+
+		this.cycles += 7; // interrupts cost 7 cycles
+		// TODO: ^ check this
+
+		this.stack.push2Bytes(this.pc.value);
+		this.stack.push(this.flags.toByte());
+
+		this.flags.i = true; // (to make sure handler doesn't get interrupted)
+		this._jumpToInterruptHanlder(interruption);
+
+		console.log(
+			`*${interruption} INTERRUPTION* - Jumping to $${this.pc.value.toString(
+				16
+			)}...`
+		);
 	}
 
 	/** When the current context is unloaded. */
@@ -82,5 +107,13 @@ export default class CPU {
 		return instruction.needsValue
 			? addressing.getValue(this.context, parameter)
 			: addressing.getAddress(this.context, parameter);
+	}
+
+	_jumpToInterruptHanlder(interruption) {
+		const interruptVector = INTERRUPT_VECTORS[interruption];
+		if (!interruptVector)
+			throw new Error(`Unknown interruption: ${interruption}`);
+
+		this.pc.value = this.context.memory.read2BytesAt(interruptVector);
 	}
 }
