@@ -31,6 +31,16 @@ describe("memory", () => {
 				.should.equal("hey!!");
 		});
 
+		it("can read numbers in Little Endian", () => {
+			mirror.writeAt(0, 0x20);
+			mirror.writeAt(1, 0xff);
+
+			mirror.readBytesAt(0, 1).should.equal(0x20);
+			mirror.readBytesAt(1, 1).should.equal(0xff);
+			mirror.readBytesAt(0, 2).should.equal(0xff20);
+			mirror.read2BytesAt(0).should.equal(0xff20);
+		});
+
 		it("can return the size of the mirrored memory", () => {
 			mirror.memorySize.should.equal(13);
 		});

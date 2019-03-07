@@ -20,6 +20,16 @@ describe("memory", () => {
 			chunk.readAt(2).should.equal(123);
 		});
 
+		it("can read numbers in Little Endian", () => {
+			chunk.writeAt(0, 0x20);
+			chunk.writeAt(1, 0xff);
+
+			chunk.readBytesAt(0, 1).should.equal(0x20);
+			chunk.readBytesAt(1, 1).should.equal(0xff);
+			chunk.readBytesAt(0, 2).should.equal(0xff20);
+			chunk.read2BytesAt(0).should.equal(0xff20);
+		});
+
 		it("can return the memory buffer", () => {
 			(chunk.getMemory() === buffer).should.ok;
 		});

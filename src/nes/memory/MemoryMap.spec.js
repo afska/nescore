@@ -44,6 +44,16 @@ describe("memory", () => {
 			memory.readAt(1).should.equal(201);
 		});
 
+		it("can read numbers in Little Endian", () => {
+			memory.writeAt(0, 0x20);
+			memory.writeAt(1, 0xff);
+
+			memory.readBytesAt(0, 1).should.equal(0x20);
+			memory.readBytesAt(1, 1).should.equal(0xff);
+			memory.readBytesAt(0, 2).should.equal(0xff20);
+			memory.read2BytesAt(0).should.equal(0xff20);
+		});
+
 		it("throws an exception when the address is out of bounds", () => {
 			(() => memory.readAt(MAPPER_START_ADDRESS + MAPPER_SIZE)).should.throw(
 				"Unreachable address: 0x4025."
