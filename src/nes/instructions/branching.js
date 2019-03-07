@@ -77,6 +77,18 @@ const instructions = () => [
 	{
 		id: "BVS",
 		execute: B__("v", true)
+	},
+
+	/**
+	 * Jump
+	 *
+	 * Jumps to `address`.
+	 */
+	{
+		id: "JMP",
+		execute: ({ cpu }, address) => {
+			cpu.pc.value = address;
+		}
 	}
 ];
 

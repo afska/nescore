@@ -71,7 +71,7 @@ export default _.keyBy(
 //   BPL ✓
 //   BVC ✓
 //   BVS ✓
-//   JMP
+//   JMP ✓
 //   JSR
 //   RTI
 //   RTS
