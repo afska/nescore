@@ -1,4 +1,4 @@
-import { WithContext } from "./helpers";
+import { WithContext, Byte } from "./helpers";
 
 const START_ADDRESS = 0x0100;
 
@@ -13,33 +13,31 @@ export default class Stack {
 		this.requireContext();
 
 		this.context.memory.writeAt(this.currentAddress, value);
-		this._decrement();
+		this.context.cpu.sp.decrement();
 	}
 
 	/** Pulls a value from the stack. */
 	pop() {
 		this.requireContext();
 
-		this._increment();
+		this.context.cpu.sp.increment();
 		return this.context.memory.readAt(this.currentAddress);
 	}
 
 	/** Pushes a 16-bit `value` into the stack. */
 	push2Bytes(value) {
-		this.requireContext();
-
-		this.context.memory.write2BytesAt(this.currentAddress, value);
-		this._decrement();
-		this._decrement();
+		const low = Byte.lowPartOf(value);
+		const high = Byte.highPartOf(value);
+		this.push(high);
+		this.push(low);
 	}
 
 	/** Pulls a 16-bit `value` from the stack. */
 	pop2Bytes(value) {
-		this.requireContext();
+		const low = this.pop();
+		const high = this.pop();
 
-		this._increment();
-		this._increment();
-		return this.context.memory.read2BytesAt(this.currentAddress);
+		return Byte.to16Bit(high, low);
 	}
 
 	/** Returns the start address of the stack. */
@@ -50,13 +48,5 @@ export default class Stack {
 	/** Returns the current address of the stack. */
 	get currentAddress() {
 		return this.startAddress + this.context.cpu.sp.value;
-	}
-
-	_increment() {
-		this.context.cpu.sp.increment();
-	}
-
-	_decrement() {
-		this.context.cpu.sp.decrement();
 	}
 }
