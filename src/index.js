@@ -4,44 +4,56 @@ import "./gui";
 import { Byte } from "./nes/helpers";
 import _ from "lodash";
 
-import operations from "./nes/operations";
-window.operations = operations;
+const hex = (value, length) =>
+	_.padStart(value.toString(16).toUpperCase(), length, "0");
 
 const nesTestLogger = {
-	log: ({
-		context: { cpu, memory },
-		pc,
-		operation,
-		initialParameter,
-		finalParameter
-	}) => {
-		const hex = (value, length) =>
-			_.padStart(value.toString(16).toUpperCase(), length, "0");
+	log: (request) => {
+		const {
+			context: { cpu, memory },
+			pc,
+			operation,
+			initialParameter,
+			finalParameter
+		} = request;
+
 		const cycle = (value, length) => _.padStart(value.toString(), length);
 		const section = (string, length) =>
 			_.padEnd(string.substr(0, length), length);
-		const wrapParameter = (value) => {
+		const hexParameter = (value) => {
+			if (operation.addressing.parameterSize === 0) return "";
+
+			return operation.addressing.parameterSize === 2
+				? hex(value, 4)
+				: hex(value, 2);
+		};
+		const wrapParameter = ($finalParameter) => {
 			switch (operation.addressing.id) {
 				case "IMPLICIT":
 					return "";
 				case "IMMEDIATE":
-					return `#$${value}`;
+					return `#$${$finalParameter}`;
+				case "ZERO_PAGE":
+					return `$${$finalParameter} = ${hex(
+						memory.readAt(finalParameter),
+						2
+					)}`;
 				case "INDEXED_ABSOLUTE_X":
 				case "INDEXED_ZERO_PAGE_X":
-					return `$${value},X`;
+					return `$${$finalParameter},X`;
 				case "INDEXED_ABSOLUTE_Y":
 				case "INDEXED_ZERO_PAGE_Y":
-					return `$${value},Y`;
+					return `$${$finalParameter},Y`;
 				case "INDIRECT":
-					return `($${value})`;
+					return `($${$finalParameter})`;
 				case "INDEXED_INDIRECT_X":
-					return `($${value},X)`;
+					return `($${$finalParameter},X)`;
 				case "INDEXED_INDIRECT_Y":
-					return `($${value}),Y`;
+					return `($${$finalParameter}),Y`;
 				case "ACCUMULATOR":
 					return "A";
 				default:
-					return `$${value}`;
+					return `$${$finalParameter}`;
 			}
 		};
 
@@ -59,15 +71,10 @@ const nesTestLogger = {
 		}
 		const $commandHex = section($operation + $parameters, 10);
 
-		let $hexParameter = "";
-		if (operation.addressing.parameterSize > 0) {
-			$hexParameter =
-				operation.addressing.parameterSize === 2
-					? hex(finalParameter, 4)
-					: hex(finalParameter, 2);
-		}
 		const $assembly = section(
-			operation.instruction.id + " " + wrapParameter($hexParameter),
+			operation.instruction.id +
+				" " +
+				wrapParameter(hexParameter(finalParameter)),
 			32
 		);
 

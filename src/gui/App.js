@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import nes from "./assets/images/nes.png";
 import "./App.css";
 
 export default class App extends Component {
