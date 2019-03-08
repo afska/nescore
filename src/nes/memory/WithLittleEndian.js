@@ -10,6 +10,8 @@ export default {
 
 	/** Reads `length` (1 or 2) bytes in LE from `address`. */
 	readBytesAt(address, length) {
+		if (length === 0) return null;
+
 		return length === 2 ? this.read2BytesAt(address) : this.readAt(address);
 	},
 

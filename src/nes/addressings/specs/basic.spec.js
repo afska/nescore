@@ -18,6 +18,15 @@ describe("addressings", () => {
 		addressingMock.getValue(context).should.equal(123);
 	});
 
+	describe("implicit", () => {
+		it("returns null or an error", () => {
+			(() => addressings.IMPLICIT.getValue(context)).should.throw(
+				"The IMPLICIT addressing mode only supports the `getAddress` method (and it always returns null)"
+			);
+			should.not.exist(addressings.IMPLICIT.getAddress(context));
+		});
+	});
+
 	describe("immediate", () => {
 		it("returns the same value", () => {
 			(() => addressings.IMMEDIATE.getAddress(context, 120)).should.throw(

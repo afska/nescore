@@ -1,7 +1,3 @@
-const INVALID_OPERATION = () => {
-	throw new Error("The parameter is implicit!");
-};
-
 /**
  * "Implicit" addressing mode.
  *
@@ -10,6 +6,10 @@ const INVALID_OPERATION = () => {
 export default {
 	id: "IMPLICIT",
 	parameterSize: 0,
-	getAddress: INVALID_OPERATION,
-	getValue: INVALID_OPERATION
+	getAddress: (context) => null,
+	getValue: () => {
+		throw new Error(
+			"The IMPLICIT addressing mode only supports the `getAddress` method (and it always returns null)"
+		);
+	}
 };

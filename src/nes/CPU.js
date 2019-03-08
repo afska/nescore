@@ -112,8 +112,6 @@ export default class CPU {
 	}
 
 	_readParameter({ instruction, addressing, canTakeExtraCycles }) {
-		if (addressing.parameterSize === 0) return null;
-
 		const parameter = this.context.memory.readBytesAt(
 			this.pc.value,
 			addressing.parameterSize
