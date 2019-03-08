@@ -46,7 +46,7 @@ const nesTestLogger = {
 				case "IMMEDIATE":
 					return `#$${$finalParameter}`;
 				case "ABSOLUTE":
-					let $address = `$${$finalParameter}`;
+					let $address = `$${$initialParameter}`;
 					if (_.includes(instructionsWithValue, operation.instruction.id))
 						$address += ` = ${hex(memory.readAt(finalAddress), 2)}`;
 					return $address;
