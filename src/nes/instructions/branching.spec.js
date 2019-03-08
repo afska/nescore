@@ -27,6 +27,7 @@ describe("instructions", () => {
 				});
 
 				it("doesnt jump if the flag is set", () => {
+					cpu.extraCycles = 3;
 					cpu.flags[flag] = true;
 					instructions[instruction].execute(context, 0x2000);
 					cpu.pc.value.should.equal(0x1000);
@@ -50,6 +51,7 @@ describe("instructions", () => {
 				});
 
 				it("doesnt jump if the flag is clear", () => {
+					cpu.extraCycles = 3;
 					cpu.flags[flag] = false;
 					instructions[instruction].execute(context, 0x2000);
 					cpu.pc.value.should.equal(0x1000);

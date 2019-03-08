@@ -135,6 +135,8 @@ const B__ = (flag, value) => {
 		if (cpu.flags[flag] === value) {
 			cpu.pc.value = address;
 			cpu.extraCycles++;
+		} else {
+			cpu.extraCycles = 0;
 		}
 	};
 };

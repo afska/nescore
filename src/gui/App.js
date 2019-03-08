@@ -28,7 +28,9 @@ export default class App extends Component {
 		);
 	}
 
-	onStep = () => {
+	onStep = (event) => {
+		if (event.code !== "Enter") return;
+
 		let diffs = [];
 		for (let i = 0; i < 15; i++) diffs.push(window.getDiff());
 

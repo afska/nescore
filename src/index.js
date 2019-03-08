@@ -10,12 +10,13 @@ const hex = (value, length) =>
 const nesTestLogger = {
 	log: (request) => {
 		const {
-			context: { cpu, memory },
+			context,
 			pc,
 			operation,
 			initialParameter,
 			finalParameter
 		} = request;
+		const { cpu, memory } = context;
 
 		const cycle = (value, length) => _.padStart(value.toString(), length);
 		const section = (string, length) =>
@@ -27,15 +28,31 @@ const nesTestLogger = {
 				? hex(value, 4)
 				: hex(value, 2);
 		};
-		const wrapParameter = ($finalParameter) => {
+		const formatParameter = () => {
+			const instructionsWithValue = ["STA", "STX", "STY", "LDA", "LDX", "LDY"];
+			const $initialParameter = hexParameter(initialParameter, 2);
+			const $finalParameter = hexParameter(finalParameter, 2);
+			let finalAddress = null;
+			try {
+				finalAddress = operation.addressing.getAddress(
+					context,
+					initialParameter
+				);
+			} catch (e) {}
+
 			switch (operation.addressing.id) {
 				case "IMPLICIT":
 					return "";
 				case "IMMEDIATE":
 					return `#$${$finalParameter}`;
+				case "ABSOLUTE":
+					let $address = `$${$finalParameter}`;
+					if (_.includes(instructionsWithValue, operation.instruction.id))
+						$address += ` = ${hex(memory.readAt(finalAddress), 2)}`;
+					return $address;
 				case "ZERO_PAGE":
-					return `$${$finalParameter} = ${hex(
-						memory.readAt(finalParameter),
+					return `$${$initialParameter} = ${hex(
+						memory.readAt(finalAddress),
 						2
 					)}`;
 				case "INDEXED_ABSOLUTE_X":
@@ -72,9 +89,7 @@ const nesTestLogger = {
 		const $commandHex = section($operation + $parameters, 10);
 
 		const $assembly = section(
-			operation.instruction.id +
-				" " +
-				wrapParameter(hexParameter(finalParameter)),
+			operation.instruction.id + " " + formatParameter(),
 			32
 		);
 
