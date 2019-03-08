@@ -1,4 +1,4 @@
-export default function(context, parameter) {
-	const address = this.getAddress(context, parameter);
+export default function(context, parameter, canTakeExtraCycles) {
+	const address = this.getAddress(context, parameter, canTakeExtraCycles);
 	return context.memory.readAt(address);
 }

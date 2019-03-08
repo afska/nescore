@@ -6,14 +6,15 @@ import _ from "lodash";
 const should = require("chai").Should();
 
 describe("addressings", () => {
-	let context;
+	let cpu, memory, context;
 
 	beforeEach(() => {
-		context = createTestContext();
+		({ cpu, memory, context } = createTestContext());
+		cpu.cycles = 2;
 	});
 
 	it("getValue method", () => {
-		context.memory.writeAt(0xfe9d, 123);
+		memory.writeAt(0xfe9d, 123);
 		const addressingMock = { getAddress: () => 0xfe9d, getValue };
 		addressingMock.getValue(context).should.equal(123);
 	});
@@ -41,20 +42,34 @@ describe("addressings", () => {
 
 	describe("indirect", () => {
 		it("dereferences the address", () => {
-			context.memory.writeAt(130, 0x12);
-			context.memory.writeAt(131, 0xfe);
+			memory.writeAt(130, 0x12);
+			memory.writeAt(131, 0xfe);
 			addressings.INDIRECT.getAddress(context, 130).should.equal(0xfe12);
 		});
 	});
 
 	describe("relative", () => {
 		it("returns an address based on the current pc + offset", () => {
-			context.cpu.pc.value = 0xfe10;
+			cpu.pc.value = 0xfe10;
 			addressings.RELATIVE.getAddress(context, 4).should.equal(0xfe14);
 			addressings.RELATIVE.getAddress(
 				context,
 				Byte.toSignedByte(-10)
 			).should.equal(0xfe06);
+		});
+
+		describe("when the operation can take extra cycles", () => {
+			it("adds two cycles if a page-crossed event occurs", () => {
+				cpu.pc.value = 0xfafe;
+				addressings.RELATIVE.getAddress(context, 20, true);
+				cpu.cycles.should.equal(4);
+			});
+
+			it("doesnt add any cycles if no page-crossed event occurs", () => {
+				cpu.pc.value = 0xfe10;
+				addressings.RELATIVE.getAddress(context, 4, true);
+				cpu.cycles.should.equal(2);
+			});
 		});
 	});
 
@@ -63,7 +78,7 @@ describe("addressings", () => {
 			(() => addressings.ACCUMULATOR.getValue(context, 120)).should.throw(
 				"The ACCUMULATOR addressing mode only supports the `getAddress` method"
 			);
-			context.cpu.registers.a.value = 135;
+			cpu.registers.a.value = 135;
 			addressings.ACCUMULATOR.getAddress(context).value.should.equal(135);
 		});
 	});

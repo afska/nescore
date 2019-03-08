@@ -9,6 +9,15 @@ import getValue from "./_getValue";
 export default {
 	id: "RELATIVE",
 	parameterSize: 1,
-	getAddress: ({ cpu }, offset) => cpu.pc.value + Byte.toNumber(offset),
+	getAddress: ({ cpu }, offset, canTakeExtraCycles) => {
+		const address = cpu.pc.value;
+		const newAddress = address + Byte.toNumber(offset);
+		const pageCrossed =
+			Byte.highPartOf(address) !== Byte.highPartOf(newAddress);
+
+		if (pageCrossed && canTakeExtraCycles) cpu.cycles += 2;
+
+		return newAddress;
+	},
 	getValue
 };
