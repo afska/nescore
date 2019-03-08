@@ -225,11 +225,11 @@ const instructions = () => [
 	/**
 	 * Transfer X to Stack Pointer
 	 *
-	 * Copies X into SP, updating the Z and N flags.
+	 * Copies X into SP, WITHOUT updating any flag.
 	 */
 	{
 		id: "TXS",
-		execute: T__((cpu) => cpu.registers.x, (cpu) => cpu.sp)
+		execute: T__((cpu) => cpu.registers.x, (cpu) => cpu.sp, false)
 	},
 
 	/**
@@ -269,11 +269,11 @@ const ST_ = (registerName) => {
 	};
 };
 
-const T__ = (getSourceRegister, getTargetRegister) => {
+const T__ = (getSourceRegister, getTargetRegister, updateFlags = true) => {
 	return ({ cpu }) => {
 		const value = getSourceRegister(cpu).value;
 		getTargetRegister(cpu).value = value;
-		cpu.flags.updateZeroAndNegative(value);
+		if (updateFlags) cpu.flags.updateZeroAndNegative(value);
 	};
 };
 
