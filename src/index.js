@@ -87,7 +87,7 @@ const nesTestLogger = {
 		const $cpuCycle = "CYC:" + cpu.cycles;
 		const $status = `${$registers} ${$ppuCycle} ${$cpuCycle}`;
 
-		console.log($counter + $commandHex + $assembly + $status);
+		window.lastLog = $counter + $commandHex + $assembly + $status;
 	}
 };
 
@@ -102,7 +102,20 @@ const DEMO = async () => {
 	window.nes.load(bytes, nesTestLogger);
 	window.nes.cpu.pc.value = 0xc000;
 
-	// for (let i = 0; i < 100; i++) window.nes.step();
+	const logResponse = await fetch("testroms/nestest.log");
+	const logText = await logResponse.text();
+	const logLines = logText.split("\n");
+
+	const expected = document.querySelector("#expected");
+	const actual = document.querySelector("#actual");
+	let line = 0;
+	window.onkeydown = () => {
+		window.nes.step();
+		actual.innerHTML += window.lastLog + "\n";
+		expected.innerHTML += logLines[line] + "\n";
+		document.body.scrollIntoView(false);
+		line++;
+	};
 };
 
 DEMO();

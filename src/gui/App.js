@@ -6,9 +6,10 @@ export default class App extends Component {
 	render() {
 		return (
 			<div className="app">
-				<header className="app-header">
-					<img src={nes} className="app-logo" alt="logo" />
-				</header>
+				<div className="debugger">
+					<pre id="expected" className="log" />
+					<pre id="actual" className="log" />
+				</div>
 			</div>
 		);
 	}
