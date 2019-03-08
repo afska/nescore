@@ -1,5 +1,5 @@
 import { Byte } from "../helpers";
-import indirect from "./indirect";
+import { getIndirectAddress } from "./indirect";
 import indexedGetAddress from "./_indexedGetAddress";
 import getValue from "./_getValue";
 
@@ -18,7 +18,7 @@ export default {
 		return Byte.force16Bit(
 			indexedGetAddressY(
 				context,
-				indirect.getAddress(context, address),
+				getIndirectAddress(context, address),
 				canTakeExtraCycles
 			)
 		);
