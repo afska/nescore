@@ -10,14 +10,14 @@ export default {
 	},
 
 	/** Returns the memory bytes. */
-	getMemory() {
+	getBytes() {
 		throw new Error("not_implemented");
 	},
 
 	/** Reads a byte from `address`. */
 	readAt(address) {
 		try {
-			return this.getMemory().readUInt8(address);
+			return this.getBytes().readUInt8(address);
 		} catch (e) {
 			this._throwInvalidAddressError(address);
 		}
@@ -26,7 +26,7 @@ export default {
 	/** Writes a `byte` to `address`. */
 	writeAt(address, byte) {
 		try {
-			this.getMemory().writeUInt8(byte, address);
+			this.getBytes().writeUInt8(byte, address);
 		} catch (e) {
 			this._throwInvalidAddressError(address);
 		}

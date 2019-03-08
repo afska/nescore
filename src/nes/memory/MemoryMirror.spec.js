@@ -17,13 +17,13 @@ describe("memory", () => {
 			mirror.writeAt(3, 33);
 			mirror.writeAt(4, 33);
 			chunk
-				.getMemory()
+				.getBytes()
 				.toString()
 				.should.equal("hey!!");
 		});
 
 		it("can mirror read operations", () => {
-			chunk.getMemory().write("hey!!");
+			chunk.getBytes().write("hey!!");
 			[5, 6, 12, 3, 4]
 				.map((i) => mirror.readAt(i))
 				.map((c) => String.fromCharCode(c))

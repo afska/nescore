@@ -12,7 +12,7 @@ describe("memory", () => {
 		});
 
 		it("can create a chunk just passing the number of bytes", () => {
-			new MemoryChunk(5).getMemory().length.should.equal(5);
+			new MemoryChunk(5).getBytes().length.should.equal(5);
 		});
 
 		it("can write and read bytes", () => {
@@ -33,7 +33,7 @@ describe("memory", () => {
 		});
 
 		it("can return the memory buffer", () => {
-			(chunk.getMemory() === buffer).should.ok;
+			(chunk.getBytes() === buffer).should.ok;
 		});
 
 		it("can return the size of the buffer", () => {

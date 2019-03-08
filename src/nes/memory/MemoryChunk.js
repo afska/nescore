@@ -16,7 +16,7 @@ export default class MemoryChunk {
 	}
 
 	/** Returns the memory bytes. */
-	getMemory() {
+	getBytes() {
 		return this.bytes;
 	}
 }

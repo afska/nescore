@@ -17,8 +17,9 @@ export default class DummyMapper {
 			cartridge.prgRom.slice(0, PRG_ROM_PAGE_SIZE)
 		);
 		const currentPagePrgRom = new MemoryChunk(
-			cartridge.prgRom.slice(0, PRG_ROM_PAGE_SIZE) // TODO: Fix 32kb cartridges
-			//cartridge.prgRom.slice(PRG_ROM_PAGE_SIZE, PRG_ROM_PAGE_SIZE * 2)
+			cartridge.header.prgRomPages === 2
+				? cartridge.prgRom.slice(PRG_ROM_PAGE_SIZE, PRG_ROM_PAGE_SIZE * 2)
+				: zeroPagePrgRom.getBytes()
 		);
 
 		this.defineChunks([
