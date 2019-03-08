@@ -38,9 +38,14 @@ export default {
 		return SIZE - byte;
 	},
 
-	/** Truncates a value to a single byte. */
-	to8Bit(value) {
+	/** Forces a `value` to fit in 8 bits (256 => 0). */
+	force8Bit(value) {
 		return value & 0xff;
+	},
+
+	/** Forces a `value` to fit in 16 bits (65536 => 0). */
+	force16Bit(value) {
+		return value & 0xffff;
 	},
 
 	/** Returns the most significative byte of a `twoBytesNumber`. */
@@ -56,8 +61,8 @@ export default {
 	/** Returns a two bytes value from the `mostSignificativeByte` and `leastSignificativeByte`. */
 	to16Bit(mostSignificativeByte, leastSignificativeByte) {
 		return (
-			(this.to8Bit(mostSignificativeByte) << 8) |
-			this.to8Bit(leastSignificativeByte)
+			(this.force8Bit(mostSignificativeByte) << 8) |
+			this.force8Bit(leastSignificativeByte)
 		);
 	}
 };

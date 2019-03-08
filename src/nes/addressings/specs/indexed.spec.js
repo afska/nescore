@@ -106,6 +106,13 @@ describe("addressings", () => {
 			);
 		});
 
+		it("cannot cross the limit of memory", () => {
+			cpu.registers.y.value = 3;
+			memory.writeAt(130, 0xff);
+			memory.writeAt(131, 0xff);
+			addressings.INDEXED_INDIRECT_Y.getAddress(context, 130).should.equal(2);
+		});
+
 		describe("when the operation can take extra cycles", () => {
 			it("adds a cycle if a page-crossed event occurs", () => {
 				cpu.registers.y.value = 0xfc;

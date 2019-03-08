@@ -15,7 +15,7 @@ export default {
 		return getIndirectAddress(
 			context,
 			address + context.cpu.registers.x.value,
-			Byte.to8Bit
+			Byte.force8Bit
 		);
 	},
 	getValue

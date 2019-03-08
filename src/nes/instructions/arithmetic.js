@@ -26,7 +26,7 @@ const instructions = () => [
 		execute: ({ cpu, memory }, address) => {
 			const value = memory.readAt(address);
 			const result = value << 1;
-			const newValue = Byte.to8Bit(result);
+			const newValue = Byte.force8Bit(result);
 
 			memory.writeAt(address, newValue);
 			cpu.flags.updateZeroAndNegative(newValue);
@@ -43,7 +43,7 @@ const instructions = () => [
 		id: "DEC",
 		execute: ({ cpu, memory }, address) => {
 			const value = memory.readAt(address);
-			const newValue = Byte.to8Bit(value - 1);
+			const newValue = Byte.force8Bit(value - 1);
 
 			cpu.flags.updateZeroAndNegative(newValue);
 			memory.writeAt(address, newValue);
@@ -79,7 +79,7 @@ const instructions = () => [
 		id: "INC",
 		execute: ({ cpu, memory }, address) => {
 			const value = memory.readAt(address);
-			const newValue = Byte.to8Bit(value + 1);
+			const newValue = Byte.force8Bit(value + 1);
 
 			cpu.flags.updateZeroAndNegative(newValue);
 			memory.writeAt(address, newValue);
@@ -118,7 +118,7 @@ const instructions = () => [
 		execute: ({ cpu, memory }, address) => {
 			const value = memory.readAt(address);
 			const result = value >> 1;
-			const newValue = Byte.to8Bit(result);
+			const newValue = Byte.force8Bit(result);
 
 			memory.writeAt(address, newValue);
 			cpu.flags.updateZeroAndNegative(newValue);
@@ -138,7 +138,7 @@ const instructions = () => [
 		execute: ({ cpu, memory }, address) => {
 			const value = memory.readAt(address);
 			const result = (value << 1) | +cpu.flags.c;
-			const newValue = Byte.to8Bit(result);
+			const newValue = Byte.force8Bit(result);
 
 			memory.writeAt(address, newValue);
 			cpu.flags.updateZeroAndNegative(newValue);
@@ -158,7 +158,7 @@ const instructions = () => [
 		execute: ({ cpu, memory }, address) => {
 			const value = memory.readAt(address);
 			const result = (value >> 1) | (+cpu.flags.c << 7);
-			const newValue = Byte.to8Bit(result);
+			const newValue = Byte.force8Bit(result);
 
 			memory.writeAt(address, newValue);
 			cpu.flags.updateZeroAndNegative(newValue);
@@ -183,7 +183,7 @@ const instructions = () => [
 const ADC = ({ cpu }, value) => {
 	const oldValue = cpu.registers.a.value;
 	const result = oldValue + value + cpu.flags.c;
-	const newValue = Byte.to8Bit(result);
+	const newValue = Byte.force8Bit(result);
 
 	cpu.registers.a.value = newValue;
 	cpu.flags.updateZeroAndNegative(newValue);

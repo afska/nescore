@@ -14,7 +14,7 @@ export default {
 	id: "INDEXED_ZERO_PAGE_X",
 	parameterSize: 1,
 	getAddress: (context, address) => {
-		return Byte.to8Bit(indexedGetAddressX(context, address, false));
+		return Byte.force8Bit(indexedGetAddressX(context, address, false));
 	},
 	getValue
 };

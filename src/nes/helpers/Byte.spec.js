@@ -40,9 +40,14 @@ describe("helpers", () => {
 			Byte.negate(negative112).should.equal(112);
 		});
 
-		it("can truncate numbers to 8-bit", () => {
-			Byte.to8Bit(0b110000000).should.equal(0b10000000);
-			Byte.to8Bit(-2).should.equal(254);
+		it("can force numbers to 8-bit", () => {
+			Byte.force8Bit(0b110000000).should.equal(0b10000000);
+			Byte.force8Bit(-2).should.equal(254);
+		});
+
+		it("can force numbers to 16-bit", () => {
+			Byte.force16Bit(65537).should.equal(1);
+			Byte.force16Bit(-2).should.equal(65534);
 		});
 
 		it("can split 16-bit numbers", () => {

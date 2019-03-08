@@ -63,7 +63,7 @@ const CP_ = (registerName) => {
 	return ({ cpu }, value) => {
 		const source = cpu.registers[registerName].value;
 		cpu.flags.z = source === value;
-		cpu.flags.updateNegative(Byte.to8Bit(source - value));
+		cpu.flags.updateNegative(Byte.force8Bit(source - value));
 		cpu.flags.c = source >= value;
 	};
 };

@@ -17,7 +17,7 @@ export default {
 
 		if (pageCrossed && canTakeExtraCycles) cpu.extraCycles += 2;
 
-		return newAddress;
+		return Byte.force16Bit(newAddress);
 	},
 	getValue
 };

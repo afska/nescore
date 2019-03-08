@@ -26,5 +26,6 @@ export const getIndirectAddress = (
 	const end = transform(start + 1);
 	const low = memory.readAt(start);
 	const high = memory.readAt(end);
+
 	return Byte.to16Bit(high, low);
 };
