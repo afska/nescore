@@ -85,7 +85,7 @@ const nesTestLogger = {
 				case "INDEXED_ZERO_PAGE_Y":
 					return `$${$initialParameter},Y`;
 				case "INDIRECT":
-					return `($${$initialParameter})`;
+					return `($${$initialParameter}) = ${hex(finalAddress, 4)}`;
 				case "INDEXED_INDIRECT_X":
 					return `($${$initialParameter},X) @ ${hex(
 						Byte.force8Bit(initialParameter + cpu.registers.x.value),
