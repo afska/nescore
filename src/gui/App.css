@@ -5,13 +5,5 @@
 
 .debugger {
 	display: flex;
-	flex-direction: row;
-}
-
-.log {
-	flex: 0.5;
-	padding-left: 10px;
-	padding-right: 10px;
-	border-left: 1px solid;
-	border-right: 1px solid;
+	font-size: 8pt;
 }

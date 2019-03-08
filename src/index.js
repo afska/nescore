@@ -111,17 +111,18 @@ const DEMO = async () => {
 
 	const logResponse = await fetch("testroms/nestest.log");
 	const logText = await logResponse.text();
-	const logLines = logText.split("\n");
+	const logLines = logText.split(/\n|\r\n|\r/);
 
-	const expected = document.querySelector("#expected");
-	const actual = document.querySelector("#actual");
+	const withoutPpu = (line) => line.replace(/PPU: *\d+, *\d+ CYC:/, "CYC:");
 	let line = 0;
-	window.onkeydown = () => {
+	window.getDiff = () => {
 		window.nes.step();
-		actual.innerHTML += window.lastLog + "\n";
-		expected.innerHTML += logLines[line] + "\n";
-		document.body.scrollIntoView(false);
+		const diff = {
+			actual: withoutPpu(window.lastLog),
+			expected: withoutPpu(logLines[line])
+		};
 		line++;
+		return diff;
 	};
 };
 
