@@ -52,22 +52,45 @@ describe("addressings", () => {
 
 		describe(`indexedZeroPage${name}`, () => {
 			it(`returns the address + ${name}`, () => {
-				cpu.registers[register].value = 180;
+				cpu.registers[register].value = 20;
 				addressings[`INDEXED_ZERO_PAGE_${name}`]
 					.getAddress(context, 130)
-					.should.equal(310);
+					.should.equal(150);
 			});
 
-			testExtraCycle(register, `INDEXED_ZERO_PAGE_${name}`, 130, 180, 20, 30);
+			it("cannot cross the first page", () => {
+				cpu.registers[register].value = 200;
+				addressings[`INDEXED_ZERO_PAGE_${name}`]
+					.getAddress(context, 130)
+					.should.equal(74);
+			});
 		});
 	});
 
 	describe("indexedIndirectX", () => {
 		it("dereferences the address + X", () => {
 			cpu.registers.x.value = 180;
-			memory.writeAt(310, 0x12);
-			memory.writeAt(311, 0xfe);
-			addressings.INDEXED_INDIRECT_X.getAddress(context, 130).should.equal(
+			memory.writeAt(195, 0x12);
+			memory.writeAt(196, 0xfe);
+			addressings.INDEXED_INDIRECT_X.getAddress(context, 15).should.equal(
+				0xfe12
+			);
+		});
+
+		it("cannot cross the first page", () => {
+			cpu.registers.x.value = 255;
+			memory.writeAt(0, 0x12);
+			memory.writeAt(1, 0xfe);
+			addressings.INDEXED_INDIRECT_X.getAddress(context, 1).should.equal(
+				0xfe12
+			);
+		});
+
+		it("cannot dereference the address outside the first page", () => {
+			cpu.registers.x.value = 254;
+			memory.writeAt(255, 0x12);
+			memory.writeAt(0, 0xfe);
+			addressings.INDEXED_INDIRECT_X.getAddress(context, 1).should.equal(
 				0xfe12
 			);
 		});

@@ -65,7 +65,7 @@ const nesTestLogger = {
 					return `($${$initialParameter})`;
 				case "INDEXED_INDIRECT_X":
 					return `($${$initialParameter},X) @ ${hex(
-						initialParameter + cpu.registers.x.value,
+						Byte.to8Bit(initialParameter + cpu.registers.x.value),
 						2
 					)} = ${hex(finalAddress, 4)} = ${hex(
 						memory.readAt(finalAddress),

@@ -11,10 +11,20 @@ import getValue from "./_getValue";
 export default {
 	id: "INDIRECT",
 	parameterSize: 2,
-	getAddress: ({ memory }, address) => {
-		const leastSignificantByte = memory.readAt(address);
-		const mostSignificantByte = memory.readAt(address + 1);
-		return Byte.to16Bit(mostSignificantByte, leastSignificantByte);
+	getAddress: (context, address) => {
+		return getIndirectAddress(context, address);
 	},
 	getValue
+};
+
+export const getIndirectAddress = (
+	{ memory },
+	address,
+	transform = (it) => it
+) => {
+	const start = transform(address);
+	const end = transform(start + 1);
+	const low = memory.readAt(start);
+	const high = memory.readAt(end);
+	return Byte.to16Bit(high, low);
 };
