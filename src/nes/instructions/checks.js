@@ -1,3 +1,5 @@
+import { Byte } from "../helpers";
+
 const instructions = () => [
 	/**
 	 * Bit Test
@@ -24,7 +26,7 @@ const instructions = () => [
 	 * Compare
 	 *
 	 * Compares A with `value`, setting the flags:
-	 * Z (if A = `value`), N (if bit 7 of A is set) and C (if A >= `value`).
+	 * Z (if A = `value`), N (if bit 7 of A - `value` is set) and C (if A >= `value`).
 	 */
 	{
 		id: "CMP",
@@ -36,7 +38,7 @@ const instructions = () => [
 	 * Compare X Register
 	 *
 	 * Compares X with `value`, setting the flags:
-	 * Z (if X = `value`), N (if bit 7 of X is set) and C (if X >= `value`).
+	 * Z (if X = `value`), N (if bit 7 of X - `value` is set) and C (if X >= `value`).
 	 */
 	{
 		id: "CPX",
@@ -48,7 +50,7 @@ const instructions = () => [
 	 * Compare Y Register
 	 *
 	 * Compares Y with `value`, setting the flags:
-	 * Z (if Y = `value`), N (if bit 7 of Y is set) and C (if Y >= `value`).
+	 * Z (if Y = `value`), N (if bit 7 of Y - `value` is set) and C (if Y >= `value`).
 	 */
 	{
 		id: "CPY",
@@ -61,7 +63,7 @@ const CP_ = (registerName) => {
 	return ({ cpu }, value) => {
 		const source = cpu.registers[registerName].value;
 		cpu.flags.z = source === value;
-		cpu.flags.updateNegative(source);
+		cpu.flags.updateNegative(Byte.to8Bit(source - value));
 		cpu.flags.c = source >= value;
 	};
 };

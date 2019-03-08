@@ -34,7 +34,7 @@ describe("instructions", () => {
 				source: 10,
 				value: 120,
 				z: false,
-				n: false,
+				n: true,
 				c: false
 			},
 			{
