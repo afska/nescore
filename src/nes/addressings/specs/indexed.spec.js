@@ -7,7 +7,7 @@ describe("addressings", () => {
 
 	beforeEach(() => {
 		({ cpu, memory, context } = createTestContext());
-		cpu.cycles = 0;
+		cpu.cycles = 2;
 	});
 
 	const testExtraCycle = (
@@ -22,13 +22,13 @@ describe("addressings", () => {
 			it("adds a cycle if a page-crossed event occurs", () => {
 				cpu.registers[register].value = offset1;
 				addressings[addressing].getAddress(context, base1, true);
-				cpu.cycles.should.equal(1);
+				cpu.cycles.should.equal(3);
 			});
 
 			it("doesnt add a cycle if no page-crossed event occurs", () => {
 				cpu.registers[register].value = offset2;
 				addressings[addressing].getAddress(context, base2, true);
-				cpu.cycles.should.equal(0);
+				cpu.cycles.should.equal(2);
 			});
 		});
 	};
@@ -90,7 +90,7 @@ describe("addressings", () => {
 				memory.writeAt(130, 0x12);
 				memory.writeAt(131, 0xfa);
 				addressings.INDEXED_INDIRECT_Y.getAddress(context, 130, true);
-				cpu.cycles.should.equal(1);
+				cpu.cycles.should.equal(3);
 			});
 
 			it("doesnt add a cycle if no page-crossed event occurs", () => {
@@ -98,7 +98,7 @@ describe("addressings", () => {
 				memory.writeAt(130, 0x12);
 				memory.writeAt(131, 0xfe);
 				addressings.INDEXED_INDIRECT_Y.getAddress(context, 130, true);
-				cpu.cycles.should.equal(0);
+				cpu.cycles.should.equal(2);
 			});
 		});
 	});
