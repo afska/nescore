@@ -57,12 +57,15 @@ export default class CPU {
 		this.cycles += operation.cycles;
 	}
 
-	/** Pushes the context to the stack and jumps to the interrupt handler. */
-	interrupt(type) {
+	/**
+	 * Pushes the context to the stack and jumps to the interrupt handler.
+	 * The flags pushed to the stack always have the B1 flag set, while B2 depends on `flagsMask`.
+	 */
+	interrupt(type, flagsMask = 0) {
 		if (type === "IRQ" && !this._areInterruptsEnabled) return;
 
 		this.stack.push2Bytes(this.pc.value);
-		this.stack.push(this.flags.toByte());
+		this.stack.push(this.flags.toByte() | flagsMask);
 
 		this.cycles += INTERRUPT_CYCLES;
 

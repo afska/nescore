@@ -3,15 +3,13 @@ const instructions = () => [
 	 * Force Interrupt
 	 *
 	 * Forces the generation of an interrupt request.
-	 * The program counter and flags are pushed on the stack, then the IRQ
-	 * interrupt vector at $FFFE/F is loaded into the PC and the B flags are set.
+	 * The program counter and flags (with B2 set) are pushed on the stack, then the IRQ
+	 * interrupt vector at $FFFE/F is loaded into the PC.
 	 */
 	{
 		id: "BRK",
 		execute: ({ cpu }) => {
-			cpu.flags.b1 = true;
-			cpu.flags.b2 = true;
-			cpu.interrupt("IRQ");
+			cpu.interrupt("IRQ", 0b00010000);
 		}
 	},
 
