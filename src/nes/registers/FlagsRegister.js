@@ -13,11 +13,13 @@ export default class FlagsRegister {
 	constructor(initialValue = 0) {
 		this.n = false; // negative
 		this.v = false; // overflow
-		// (here are "B1" and "B2", which are not actual flags)
 		this.d = false; // decimal mode
 		this.i = false; // interrupt disable
 		this.z = false; // zero
 		this.c = false; // carry
+
+		// (bits 4 and 5 -also called "B1" and "B2"- are not actual flags)
+		// (they only appear when the flags are pushed to the stack)
 
 		this.load(initialValue);
 	}

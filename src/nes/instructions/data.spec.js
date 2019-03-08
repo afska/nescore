@@ -70,7 +70,7 @@ describe("instructions", () => {
 				cpu.flags.c = true;
 				cpu.flags.v = true;
 				instructions.PHP.execute(context);
-				cpu.stack.pop().should.equal(0b01100101);
+				cpu.stack.pop().should.equal(0b01110101);
 			});
 		});
 

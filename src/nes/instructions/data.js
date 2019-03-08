@@ -79,17 +79,21 @@ const instructions = () => [
 	 */
 	{
 		id: "PHA",
-		execute: PH_((cpu) => cpu.registers.a.value)
+		execute: ({ cpu }) => {
+			cpu.stack.push(cpu.registers.a.value);
+		}
 	},
 
 	/**
 	 * Push Processor Status
 	 *
-	 * Pushes the flags (as a byte) into the stack.
+	 * Pushes the flags (as a byte, with B2 set) into the stack.
 	 */
 	{
 		id: "PHP",
-		execute: PH_((cpu) => cpu.flags.toByte())
+		execute: ({ cpu }) => {
+			cpu.pushFlags(true);
+		}
 	},
 
 	/**
@@ -255,12 +259,6 @@ const LD_ = (registerName) => {
 	return ({ cpu }, value) => {
 		cpu.registers[registerName].value = value;
 		cpu.flags.updateZeroAndNegative(value);
-	};
-};
-
-const PH_ = (getValue) => {
-	return ({ cpu }) => {
-		cpu.stack.push(getValue(cpu));
 	};
 };
 
