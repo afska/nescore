@@ -113,6 +113,15 @@ describe("addressings", () => {
 			addressings.INDEXED_INDIRECT_Y.getAddress(context, 130).should.equal(2);
 		});
 
+		it("cannot dereference the address outside the first page", () => {
+			cpu.registers.y.value = 3;
+			memory.writeAt(0xff, 0x12);
+			memory.writeAt(0x00, 0xfe);
+			addressings.INDEXED_INDIRECT_Y.getAddress(context, 0xff).should.equal(
+				0xfe15
+			);
+		});
+
 		describe("when the operation can take extra cycles", () => {
 			it("adds a cycle if a page-crossed event occurs", () => {
 				cpu.registers.y.value = 0xfc;

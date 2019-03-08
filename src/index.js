@@ -1,5 +1,6 @@
 import NES from "./nes/NES";
 import { Buffer } from "buffer";
+import { getIndirectAddress } from "./nes/addressings/indirect";
 import "./gui";
 import { Byte } from "./nes/helpers";
 import _ from "lodash";
@@ -95,7 +96,7 @@ const nesTestLogger = {
 					)}`;
 				case "INDEXED_INDIRECT_Y":
 					return `($${$initialParameter}),Y = ${hex(
-						memory.read2BytesAt(initialParameter),
+						getIndirectAddress(context, initialParameter, Byte.force8Bit),
 						4
 					)} @ ${hex(finalAddress, 4)} = ${hex(
 						memory.readAt(finalAddress),

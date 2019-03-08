@@ -18,7 +18,7 @@ export default {
 		return Byte.force16Bit(
 			indexedGetAddressY(
 				context,
-				getIndirectAddress(context, address),
+				getIndirectAddress(context, address, Byte.force8Bit),
 				canTakeExtraCycles
 			)
 		);
