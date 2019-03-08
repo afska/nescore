@@ -4,6 +4,8 @@ const KB = 1024;
 const PRG_ROM_PAGE_SIZE = 16 * KB;
 const MEMORY_SIZE = 0xbfe0;
 
+// TODO: This should be named mapper 0 (NROM)
+
 /** Represents a dummy mapper, which works for cartridges with no mapper. */
 export default class DummyMapper {
 	constructor(cartridge) {

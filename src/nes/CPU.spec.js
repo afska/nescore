@@ -2,7 +2,9 @@ import createTestContext from "./helpers/createTestContext";
 import _ from "lodash";
 const should = require("chai").Should();
 
+const NMI_VECTOR = 0xfffa;
 const RESET_VECTOR = 0xfffc;
+const IRQ_VECTOR = 0xfffe;
 const registersOf = (cpu) => _.mapValues(cpu.registers, (reg) => reg.value);
 
 describe("CPU", () => {
@@ -43,14 +45,52 @@ describe("CPU", () => {
 
 	it("can run 3 simple operations", () => {
 		cpu.step();
+		cpu.pc.value.should.equal(0x1235);
 		cpu.cycles.should.equal(9);
 
 		cpu.step();
+		cpu.pc.value.should.equal(0x1237);
 		cpu.cycles.should.equal(11);
 		cpu.registers.a.value.should.equal(5);
 
 		cpu.step();
+		cpu.pc.value.should.equal(0x123a);
 		cpu.cycles.should.equal(15);
 		memory.readAt(0x0201).should.equal(5);
+	});
+
+	[
+		{ interrupt: "NMI", vector: NMI_VECTOR },
+		{ interrupt: "RESET", vector: RESET_VECTOR },
+		{ interrupt: "IRQ", vector: IRQ_VECTOR }
+	].forEach(({ interrupt, vector }) => {
+		it(`can handle ${interrupt} interrupts`, () => {
+			cpu.step();
+			cpu.pc.value.should.equal(0x1235);
+
+			cpu.flags.i = false;
+			memory.write2BytesAt(vector, 0x3125);
+			cpu.interrupt(interrupt);
+
+			cpu.stack.pop().should.equal(0b00100000);
+			cpu.stack.pop2Bytes().should.equal(0x1235);
+			cpu.cycles.should.equal(16);
+			cpu.flags.i.should.equal(true);
+			cpu.pc.value.should.equal(0x3125);
+		});
+	});
+
+	it("ignores IRQ interrupts when the I flag is set", () => {
+		cpu.step();
+		cpu.pc.value.should.equal(0x1235);
+
+		cpu.flags.i = true;
+		memory.write2BytesAt(IRQ_VECTOR, 0x3125);
+		cpu.interrupt("IRQ");
+
+		cpu.sp.value.should.equal(0xfd);
+		cpu.cycles.should.equal(9);
+		cpu.flags.i.should.equal(true);
+		cpu.pc.value.should.equal(0x1235);
 	});
 });

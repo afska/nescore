@@ -58,9 +58,8 @@ export default class CPU {
 	}
 
 	/** Pushes the context to the stack and jumps to the interrupt handler. */
-	interrupt(interruption) {
-		// TODO: Test interruptions
-		if (interruption === "IRQ" && !this._areInterruptionsEnabled) return;
+	interrupt(type) {
+		if (type === "IRQ" && !this._areInterruptsEnabled) return;
 
 		this.stack.push2Bytes(this.pc.value);
 		this.stack.push(this.flags.toByte());
@@ -68,7 +67,7 @@ export default class CPU {
 		this.cycles += INTERRUPT_CYCLES;
 
 		this.flags.i = true; // (to make sure handler doesn't get interrupted)
-		this._jumpToInterruptHanlder(interruption);
+		this._jumpToInterruptHanlder(type);
 	}
 
 	/** When the current context is unloaded. */
@@ -114,11 +113,14 @@ export default class CPU {
 			: addressing.getAddress(this.context, parameter);
 	}
 
-	_jumpToInterruptHanlder(interruption) {
-		const interruptVector = INTERRUPT_VECTORS[interruption];
-		if (!interruptVector)
-			throw new Error(`Unknown interruption: ${interruption}`);
+	_jumpToInterruptHanlder(type) {
+		const interruptVector = INTERRUPT_VECTORS[type];
+		if (!interruptVector) throw new Error(`Unknown interrupt: ${type}`);
 
 		this.pc.value = this.context.memory.read2BytesAt(interruptVector);
+	}
+
+	get _areInterruptsEnabled() {
+		return !this.flags.i;
 	}
 }
