@@ -43,14 +43,14 @@ export default [
 		instruction: instructions.CMP,
 		cycles: 4,
 		addressing: addressings.INDEXED_ABSOLUTE_X,
-		extraCycleIfPageCrossed: true
+		canTakeExtraCycles: true
 	},
 	{
 		id: 0xd9,
 		instruction: instructions.CMP,
 		cycles: 4,
 		addressing: addressings.INDEXED_ABSOLUTE_Y,
-		extraCycleIfPageCrossed: true
+		canTakeExtraCycles: true
 	},
 	{
 		id: 0xc1,
@@ -63,7 +63,7 @@ export default [
 		instruction: instructions.CMP,
 		cycles: 5,
 		addressing: addressings.INDEXED_INDIRECT_Y,
-		extraCycleIfPageCrossed: true
+		canTakeExtraCycles: true
 	},
 	{
 		id: 0xe0,

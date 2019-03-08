@@ -1,5 +1,8 @@
 import indirect from "./indirect";
+import indexedGetAddress from "./_indexedGetAddress";
 import getValue from "./_getValue";
+
+const indexedGetAddressY = indexedGetAddress("y");
 
 /**
  * "Indirect indexed" addressing mode.
@@ -10,9 +13,11 @@ import getValue from "./_getValue";
 export default {
 	id: "INDEXED_INDIRECT_Y",
 	parameterSize: 1,
-	getAddress: (context, address) => {
-		return (
-			indirect.getAddress(context, address) + context.cpu.registers.y.value
+	getAddress: (context, address, canTakeExtraCycles) => {
+		return indexedGetAddressY(
+			context,
+			indirect.getAddress(context, address),
+			canTakeExtraCycles
 		);
 	},
 	getValue

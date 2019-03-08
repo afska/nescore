@@ -1,3 +1,4 @@
+import indexedGetAddress from "./_indexedGetAddress";
 import getValue from "./_getValue";
 
 /**
@@ -9,6 +10,6 @@ import getValue from "./_getValue";
 export default {
 	id: "INDEXED_ABSOLUTE_Y",
 	parameterSize: 2,
-	getAddress: ({ cpu }, address) => address + cpu.registers.y.value,
+	getAddress: indexedGetAddress("y"),
 	getValue
 };

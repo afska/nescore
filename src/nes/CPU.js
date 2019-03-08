@@ -28,6 +28,8 @@ export default class CPU {
 		};
 
 		this.stack = new Stack();
+
+		this._parameter = null;
 	}
 
 	/** When a context is loaded. */
@@ -49,7 +51,7 @@ export default class CPU {
 				context: this.context,
 				pc,
 				operation,
-				initialParameter: this.context.logger.$parameter,
+				initialParameter: this._parameter,
 				finalParameter: parameter
 			});
 
@@ -87,6 +89,7 @@ export default class CPU {
 		this.registers.a.reset();
 		this.registers.x.reset();
 		this.registers.y.reset();
+		this._parameter = null;
 
 		this.interrupt("RESET");
 	}
@@ -100,7 +103,7 @@ export default class CPU {
 		return operation;
 	}
 
-	_readParameter({ instruction, addressing }) {
+	_readParameter({ instruction, addressing, canTakeExtraCycles }) {
 		if (addressing.parameterSize === 0) return null;
 
 		const parameter = this.context.memory.readBytesAt(
@@ -108,12 +111,11 @@ export default class CPU {
 			addressing.parameterSize
 		);
 		this.pc.value += addressing.parameterSize;
-
-		if (this.context.logger) this.context.logger.$parameter = parameter;
+		this._parameter = parameter;
 
 		return instruction.needsValue
-			? addressing.getValue(this.context, parameter)
-			: addressing.getAddress(this.context, parameter);
+			? addressing.getValue(this.context, parameter, canTakeExtraCycles)
+			: addressing.getAddress(this.context, parameter, canTakeExtraCycles);
 	}
 
 	_jumpToInterruptHanlder(type) {

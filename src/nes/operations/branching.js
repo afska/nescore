@@ -7,56 +7,56 @@ export default [
 		instruction: instructions.BCC,
 		cycles: 2,
 		addressing: addressings.RELATIVE,
-		extraCyclesIfBranchSuccessPageCrossedEtc: true
+		canTakeExtraCycles: true
 	},
 	{
 		id: 0xb0,
 		instruction: instructions.BCS,
 		cycles: 2,
 		addressing: addressings.RELATIVE,
-		extraCyclesIfBranchSuccessPageCrossedEtc: true
+		canTakeExtraCycles: true
 	},
 	{
 		id: 0xf0,
 		instruction: instructions.BEQ,
 		cycles: 2,
 		addressing: addressings.RELATIVE,
-		extraCyclesIfBranchSuccessPageCrossedEtc: true
+		canTakeExtraCycles: true
 	},
 	{
 		id: 0x30,
 		instruction: instructions.BMI,
 		cycles: 2,
 		addressing: addressings.RELATIVE,
-		extraCyclesIfBranchSuccessPageCrossedEtc: true
+		canTakeExtraCycles: true
 	},
 	{
 		id: 0xd0,
 		instruction: instructions.BNE,
 		cycles: 2,
 		addressing: addressings.RELATIVE,
-		extraCyclesIfBranchSuccessPageCrossedEtc: true
+		canTakeExtraCycles: true
 	},
 	{
 		id: 0x10,
 		instruction: instructions.BPL,
 		cycles: 2,
 		addressing: addressings.RELATIVE,
-		extraCyclesIfBranchSuccessPageCrossedEtc: true
+		canTakeExtraCycles: true
 	},
 	{
 		id: 0x50,
 		instruction: instructions.BVC,
 		cycles: 2,
 		addressing: addressings.RELATIVE,
-		extraCyclesIfBranchSuccessPageCrossedEtc: true
+		canTakeExtraCycles: true
 	},
 	{
 		id: 0x70,
 		instruction: instructions.BVS,
 		cycles: 2,
 		addressing: addressings.RELATIVE,
-		extraCyclesIfBranchSuccessPageCrossedEtc: true
+		canTakeExtraCycles: true
 	},
 	{
 		id: 0x4c,

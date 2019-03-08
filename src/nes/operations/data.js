@@ -55,14 +55,14 @@ export default [
 		instruction: instructions.LDA,
 		cycles: 4,
 		addressing: addressings.INDEXED_ABSOLUTE_X,
-		extraCycleIfPageCrossed: true
+		canTakeExtraCycles: true
 	},
 	{
 		id: 0xb9,
 		instruction: instructions.LDA,
 		cycles: 4,
 		addressing: addressings.INDEXED_ABSOLUTE_Y,
-		extraCycleIfPageCrossed: true
+		canTakeExtraCycles: true
 	},
 	{
 		id: 0xa1,
@@ -75,7 +75,7 @@ export default [
 		instruction: instructions.LDA,
 		cycles: 5,
 		addressing: addressings.INDEXED_INDIRECT_Y,
-		extraCycleIfPageCrossed: true
+		canTakeExtraCycles: true
 	},
 	{
 		id: 0xa2,
@@ -106,7 +106,7 @@ export default [
 		instruction: instructions.LDX,
 		cycles: 4,
 		addressing: addressings.INDEXED_ABSOLUTE_Y,
-		extraCycleIfPageCrossed: true
+		canTakeExtraCycles: true
 	},
 	{
 		id: 0xa0,
@@ -137,7 +137,7 @@ export default [
 		instruction: instructions.LDY,
 		cycles: 4,
 		addressing: addressings.INDEXED_ABSOLUTE_X,
-		extraCycleIfPageCrossed: true
+		canTakeExtraCycles: true
 	},
 	{
 		id: 0x48,

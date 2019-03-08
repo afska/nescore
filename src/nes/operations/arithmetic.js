@@ -31,14 +31,14 @@ export default [
 		instruction: instructions.ADC,
 		cycles: 4,
 		addressing: addressings.INDEXED_ABSOLUTE_X,
-		extraCycleIfPageCrossed: true
+		canTakeExtraCycles: true
 	},
 	{
 		id: 0x79,
 		instruction: instructions.ADC,
 		cycles: 4,
 		addressing: addressings.INDEXED_ABSOLUTE_Y,
-		extraCycleIfPageCrossed: true
+		canTakeExtraCycles: true
 	},
 	{
 		id: 0x61,
@@ -51,7 +51,7 @@ export default [
 		instruction: instructions.ADC,
 		cycles: 5,
 		addressing: addressings.INDEXED_INDIRECT_Y,
-		extraCycleIfPageCrossed: true
+		canTakeExtraCycles: true
 	},
 	{
 		id: 0x0a,
@@ -274,14 +274,14 @@ export default [
 		instruction: instructions.SBC,
 		cycles: 4,
 		addressing: addressings.INDEXED_ABSOLUTE_X,
-		extraCycleIfPageCrossed: true
+		canTakeExtraCycles: true
 	},
 	{
 		id: 0xf9,
 		instruction: instructions.SBC,
 		cycles: 4,
 		addressing: addressings.INDEXED_ABSOLUTE_Y,
-		extraCycleIfPageCrossed: true
+		canTakeExtraCycles: true
 	},
 	{
 		id: 0xe1,
@@ -294,6 +294,6 @@ export default [
 		instruction: instructions.SBC,
 		cycles: 5,
 		addressing: addressings.INDEXED_INDIRECT_Y,
-		extraCycleIfPageCrossed: true
+		canTakeExtraCycles: true
 	}
 ];

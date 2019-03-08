@@ -38,6 +38,8 @@ const nesTestLogger = {
 					return `($${value},X)`;
 				case "INDEXED_INDIRECT_Y":
 					return `($${value}),Y`;
+				case "ACCUMULATOR":
+					return "A";
 				default:
 					return `$${value}`;
 			}

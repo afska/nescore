@@ -1,3 +1,4 @@
+import indexedGetAddress from "./_indexedGetAddress";
 import getValue from "./_getValue";
 
 /**
@@ -9,6 +10,6 @@ import getValue from "./_getValue";
 export default {
 	id: "INDEXED_ZERO_PAGE_Y",
 	parameterSize: 1,
-	getAddress: ({ cpu }, address) => address + cpu.registers.y.value,
+	getAddress: indexedGetAddress("y"),
 	getValue
 };

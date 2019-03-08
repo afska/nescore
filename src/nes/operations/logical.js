@@ -31,14 +31,14 @@ export default [
 		instruction: instructions.AND,
 		cycles: 4,
 		addressing: addressings.INDEXED_ABSOLUTE_X,
-		extraCycleIfPageCrossed: true
+		canTakeExtraCycles: true
 	},
 	{
 		id: 0x39,
 		instruction: instructions.AND,
 		cycles: 4,
 		addressing: addressings.INDEXED_ABSOLUTE_Y,
-		extraCycleIfPageCrossed: true
+		canTakeExtraCycles: true
 	},
 	{
 		id: 0x21,
@@ -51,7 +51,7 @@ export default [
 		instruction: instructions.AND,
 		cycles: 5,
 		addressing: addressings.INDEXED_INDIRECT_Y,
-		extraCycleIfPageCrossed: true
+		canTakeExtraCycles: true
 	},
 	{
 		id: 0x49,
@@ -82,14 +82,14 @@ export default [
 		instruction: instructions.EOR,
 		cycles: 4,
 		addressing: addressings.INDEXED_ABSOLUTE_X,
-		extraCycleIfPageCrossed: true
+		canTakeExtraCycles: true
 	},
 	{
 		id: 0x59,
 		instruction: instructions.EOR,
 		cycles: 4,
 		addressing: addressings.INDEXED_ABSOLUTE_Y,
-		extraCycleIfPageCrossed: true
+		canTakeExtraCycles: true
 	},
 	{
 		id: 0x41,
@@ -102,7 +102,7 @@ export default [
 		instruction: instructions.EOR,
 		cycles: 5,
 		addressing: addressings.INDEXED_INDIRECT_Y,
-		extraCycleIfPageCrossed: true
+		canTakeExtraCycles: true
 	},
 	{
 		id: 0x09,
@@ -133,14 +133,14 @@ export default [
 		instruction: instructions.ORA,
 		cycles: 4,
 		addressing: addressings.INDEXED_ABSOLUTE_X,
-		extraCycleIfPageCrossed: true
+		canTakeExtraCycles: true
 	},
 	{
 		id: 0x19,
 		instruction: instructions.ORA,
 		cycles: 4,
 		addressing: addressings.INDEXED_ABSOLUTE_Y,
-		extraCycleIfPageCrossed: true
+		canTakeExtraCycles: true
 	},
 	{
 		id: 0x01,
@@ -153,6 +153,6 @@ export default [
 		instruction: instructions.ORA,
 		cycles: 5,
 		addressing: addressings.INDEXED_INDIRECT_Y,
-		extraCycleIfPageCrossed: true
+		canTakeExtraCycles: true
 	}
 ];

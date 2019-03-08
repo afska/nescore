@@ -37,7 +37,7 @@ export default {
 	},
 
 	highPartOf(twoBytesNumber) {
-		return (twoBytesNumber & 0xff00) >> 8;
+		return twoBytesNumber >> 8;
 	},
 
 	lowPartOf(twoBytesNumber) {
