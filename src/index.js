@@ -57,16 +57,16 @@ const nesTestLogger = {
 					)}`;
 				case "INDEXED_ABSOLUTE_X":
 				case "INDEXED_ZERO_PAGE_X":
-					return `$${$finalParameter},X`;
+					return `$${initialParameter},X`;
 				case "INDEXED_ABSOLUTE_Y":
 				case "INDEXED_ZERO_PAGE_Y":
-					return `$${$finalParameter},Y`;
+					return `$${$initialParameter},Y`;
 				case "INDIRECT":
-					return `($${$finalParameter})`;
+					return `($${$initialParameter})`;
 				case "INDEXED_INDIRECT_X":
-					return `($${$finalParameter},X)`;
+					return `($${$initialParameter},X)`;
 				case "INDEXED_INDIRECT_Y":
-					return `($${$finalParameter}),Y`;
+					return `($${$initialParameter}),Y`;
 				case "ACCUMULATOR":
 					return "A";
 				default:
@@ -127,6 +127,15 @@ const DEMO = async () => {
 	const logResponse = await fetch("testroms/nestest.log");
 	const logText = await logResponse.text();
 	const logLines = logText.split(/\n|\r\n|\r/);
+
+	// DEBUG:
+	// window.nes.cpu.pc.value = 0xce34;
+	// window.nes.cpu.registers.a.value = 0x69;
+	// window.nes.cpu.registers.x.value = 0x80;
+	// window.nes.cpu.registers.y.value = 0x01;
+	// window.nes.cpu.flags.load(0x27);
+	// window.nes.cpu.sp.value = 0x80;
+	// window.nes.cpu.cycles = 2013;
 
 	const withoutPpu = (line) => line.replace(/PPU: *\d+, *\d+ CYC:/, "CYC:");
 	let line = 0;

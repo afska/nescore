@@ -14,17 +14,12 @@ describe("registers", () => {
 
 		it("handles overflows and underflows correctly", () => {
 			const register = new Register8Bit(250);
-			register.lastWriteOk.should.ok;
 			register.value += 7;
 			register.value.should.equal(1);
-			register.lastWriteOk.should.not.ok;
 
 			register.value = 0;
-			register.lastWriteOk.should.ok;
-
 			register.value--;
 			register.value.should.equal(255);
-			register.lastWriteOk.should.not.ok;
 		});
 
 		it("can increment the value", () => {
@@ -37,12 +32,6 @@ describe("registers", () => {
 			const register = new Register8Bit(250);
 			register.decrement();
 			register.value.should.equal(249);
-		});
-
-		it("can check overflows", () => {
-			const register = new Register8Bit(250);
-			register.value += 7;
-			(() => register.checkLastWrite("OVERFLOW")).should.throw("OVERFLOW");
 		});
 	});
 });

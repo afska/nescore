@@ -3,7 +3,6 @@ export default class Register {
 	constructor(TypedArray, initialValue = 0) {
 		this.bytes = new TypedArray(1);
 		this.value = this.initialValue = initialValue;
-		this.lastWriteOk = true;
 	}
 
 	/** Resets the `value` to the `initialValue`. */
@@ -21,11 +20,6 @@ export default class Register {
 		this.value--;
 	}
 
-	/** Throws an `error` if an overflow or underflow has occurred. */
-	checkLastWrite(error) {
-		if (!this.lastWriteOk) throw new Error(error);
-	}
-
 	/** Returns the actual value. */
 	get value() {
 		return this.bytes[0];
@@ -33,9 +27,7 @@ export default class Register {
 
 	/** Sets the actual value. */
 	set value(value) {
-		this.lastWriteOk = true;
 		this.bytes[0] = value;
-		this.lastWriteOk = this.value === value;
 	}
 
 	toString() {
