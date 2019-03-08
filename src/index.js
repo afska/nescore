@@ -29,7 +29,29 @@ const nesTestLogger = {
 				: hex(value, 2);
 		};
 		const formatParameter = () => {
-			const instructionsWithValue = ["STA", "STX", "STY", "LDA", "LDX", "LDY"];
+			const instructionsWithValue = [
+				"STA",
+				"STX",
+				"STY",
+				"LDA",
+				"LDX",
+				"LDY",
+				"BIT",
+				"ORA",
+				"AND",
+				"EOR",
+				"ADC",
+				"SBC",
+				"CMP",
+				"CPX",
+				"CPY",
+				"LSR",
+				"ASL",
+				"ROR",
+				"ROL",
+				"INC",
+				"DEC"
+			];
 			const $initialParameter = hexParameter(initialParameter, 2);
 			const $finalParameter = hexParameter(finalParameter, 2);
 			let finalAddress = null;
@@ -72,7 +94,13 @@ const nesTestLogger = {
 						2
 					)}`;
 				case "INDEXED_INDIRECT_Y":
-					return `($${$initialParameter}),Y`;
+					return `($${$initialParameter}),Y = ${hex(
+						memory.read2BytesAt(initialParameter),
+						4
+					)} @ ${hex(finalAddress, 4)} = ${hex(
+						memory.readAt(finalAddress),
+						2
+					)}`;
 				case "ACCUMULATOR":
 					return "A";
 				default:
