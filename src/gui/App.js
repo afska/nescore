@@ -24,6 +24,11 @@ export default class App extends Component {
 						splitView={true}
 					/>
 				</div>
+				<div className="titles">
+					<h1 className="title">NesTest</h1>
+					<h1 className="title">My emulator</h1>
+				</div>
+				<i className="hint">Enter => Next page</i>
 			</div>
 		);
 	}
