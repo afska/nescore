@@ -6,7 +6,7 @@ export default (register) => {
 		const pageCrossed =
 			Byte.highPartOf(address) !== Byte.highPartOf(newAddress);
 
-		if (pageCrossed && canTakeExtraCycles) cpu.cycles++;
+		if (pageCrossed && canTakeExtraCycles) cpu.extraCycles++;
 
 		return newAddress;
 	};

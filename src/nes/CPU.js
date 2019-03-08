@@ -16,10 +16,11 @@ export default class CPU {
 	constructor() {
 		WithContext.apply(this);
 
-		this.pc = new Register16Bit(); // program counter
-		this.sp = new Register8Bit(); // stack pointer
-		this.flags = new FlagsRegister();
-		this.cycles = 0;
+		this.pc = new Register16Bit(); //    -> program counter
+		this.sp = new Register8Bit(); //     -> stack pointer
+		this.flags = new FlagsRegister(); // -> also called "P" register
+		this.cycles = 0; //                  -> current cycle
+		this.extraCycles = 0; //             -> pending cycles (to add in next step)
 
 		this.registers = {
 			a: new Register8Bit(0), // accumulator
@@ -56,7 +57,8 @@ export default class CPU {
 			});
 
 		operation.instruction.execute(this.context, parameter);
-		this.cycles += operation.cycles;
+		this.cycles += operation.cycles + this.extraCycles;
+		this.extraCycles = 0;
 	}
 
 	/** Pushes the context to the stack and jumps to the interrupt handler. */
@@ -91,6 +93,7 @@ export default class CPU {
 		this.sp.reset();
 		this.flags.load(INITIAL_FLAGS);
 		this.cycles = 0;
+		this.extraCycles = 0;
 		this.registers.a.reset();
 		this.registers.x.reset();
 		this.registers.y.reset();

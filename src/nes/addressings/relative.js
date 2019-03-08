@@ -15,7 +15,7 @@ export default {
 		const pageCrossed =
 			Byte.highPartOf(address) !== Byte.highPartOf(newAddress);
 
-		if (pageCrossed && canTakeExtraCycles) cpu.cycles += 2;
+		if (pageCrossed && canTakeExtraCycles) cpu.extraCycles += 2;
 
 		return newAddress;
 	},

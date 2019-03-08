@@ -10,7 +10,6 @@ describe("instructions", () => {
 		beforeEach(() => {
 			({ cpu, context } = createTestContext());
 			cpu.pc.value = 0x1000;
-			cpu.cycles = 2;
 		});
 
 		[
@@ -24,14 +23,14 @@ describe("instructions", () => {
 					cpu.flags[flag] = false;
 					instructions[instruction].execute(context, 0x2000);
 					cpu.pc.value.should.equal(0x2000);
-					cpu.cycles.should.equal(3);
+					cpu.extraCycles.should.equal(1);
 				});
 
 				it("doesnt jump if the flag is set", () => {
 					cpu.flags[flag] = true;
 					instructions[instruction].execute(context, 0x2000);
 					cpu.pc.value.should.equal(0x1000);
-					cpu.cycles.should.equal(2);
+					cpu.extraCycles.should.equal(0);
 				});
 			});
 		});
@@ -47,14 +46,14 @@ describe("instructions", () => {
 					cpu.flags[flag] = true;
 					instructions[instruction].execute(context, 0x2000);
 					cpu.pc.value.should.equal(0x2000);
-					cpu.cycles.should.equal(3);
+					cpu.extraCycles.should.equal(1);
 				});
 
 				it("doesnt jump if the flag is clear", () => {
 					cpu.flags[flag] = false;
 					instructions[instruction].execute(context, 0x2000);
 					cpu.pc.value.should.equal(0x1000);
-					cpu.cycles.should.equal(2);
+					cpu.extraCycles.should.equal(0);
 				});
 			});
 		});

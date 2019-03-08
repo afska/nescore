@@ -10,7 +10,6 @@ describe("addressings", () => {
 
 	beforeEach(() => {
 		({ cpu, memory, context } = createTestContext());
-		cpu.cycles = 2;
 	});
 
 	it("getValue method", () => {
@@ -62,13 +61,13 @@ describe("addressings", () => {
 			it("adds two cycles if a page-crossed event occurs", () => {
 				cpu.pc.value = 0xfafe;
 				addressings.RELATIVE.getAddress(context, 20, true);
-				cpu.cycles.should.equal(4);
+				cpu.extraCycles.should.equal(2);
 			});
 
 			it("doesnt add any cycles if no page-crossed event occurs", () => {
 				cpu.pc.value = 0xfe10;
 				addressings.RELATIVE.getAddress(context, 4, true);
-				cpu.cycles.should.equal(2);
+				cpu.extraCycles.should.equal(0);
 			});
 		});
 	});
