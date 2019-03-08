@@ -25,11 +25,11 @@ export default class FlagsRegister {
 	}
 
 	/** Deserializes a `byte` into the status flags. **/
-	load(byte) {
+	load(byte, ignoreBFlag = false) {
 		this.n = !!(byte & N_BIT);
 		this.v = !!(byte & V_BIT);
-		this.b1 = !!(byte & B1_BIT);
-		this.b2 = !!(byte & B2_BIT);
+		if (!ignoreBFlag) this.b1 = !!(byte & B1_BIT);
+		if (!ignoreBFlag) this.b2 = !!(byte & B2_BIT);
 		this.d = !!(byte & D_BIT);
 		this.i = !!(byte & I_BIT);
 		this.z = !!(byte & Z_BIT);
