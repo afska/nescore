@@ -7,12 +7,23 @@ import getValue from "./_getValue";
  * The parameter is an absolute memory address to look up another address.
  * The byte readed from memory gives the least significant byte of the final
  * address, and the following byte gives the most significant byte.
+ *
+ * This addressing mode has a bug:
+ * If `address` falls on a page boundary ($xxFF), it fetches the least significative byte from
+ * $xxFF as expected, but takes the most significative byte from $xx00.
  */
 export default {
 	id: "INDIRECT",
 	parameterSize: 2,
-	getAddress: (context, address) => {
-		return getIndirectAddress(context, address);
+	getAddress: ({ memory }, address) => {
+		const msb = Byte.highPartOf(address);
+		const lsb = Byte.lowPartOf(address);
+		const low = memory.readAt(address);
+		const high = memory.readAt(
+			lsb === 0xff ? Byte.to16Bit(msb, 0x00) : address + 1
+		);
+
+		return Byte.to16Bit(high, low);
 	},
 	getValue
 };

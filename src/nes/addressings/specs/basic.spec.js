@@ -54,6 +54,12 @@ describe("addressings", () => {
 			memory.writeAt(131, 0xfe);
 			addressings.INDIRECT.getAddress(context, 130).should.equal(0xfe12);
 		});
+
+		it("emulates the page boundary bug", () => {
+			memory.writeAt(0x25ff, 0x12);
+			memory.writeAt(0x2500, 0xcd);
+			addressings.INDIRECT.getAddress(context, 0x25ff).should.equal(0xcd12);
+		});
 	});
 
 	describe("relative", () => {
