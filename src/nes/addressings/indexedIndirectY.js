@@ -15,12 +15,10 @@ export default {
 	id: "INDEXED_INDIRECT_Y",
 	parameterSize: 1,
 	getAddress: (context, address, canTakeExtraCycles) => {
-		return Byte.force16Bit(
-			indexedGetAddressY(
-				context,
-				getIndirectAddress(context, address, Byte.force8Bit),
-				canTakeExtraCycles
-			)
+		return indexedGetAddressY(
+			context,
+			getIndirectAddress(context, address, Byte.force8Bit),
+			canTakeExtraCycles
 		);
 	},
 	getValue

@@ -43,6 +43,13 @@ describe("addressings", () => {
 					.should.equal(1180);
 			});
 
+			it("cannot cross the limit of memory", () => {
+				cpu.registers[register].value = 2;
+				addressings[`INDEXED_ABSOLUTE_${name}`]
+					.getAddress(context, 0xffff)
+					.should.equal(0x0001);
+			});
+
 			testExtraCycle(register, `INDEXED_ABSOLUTE_${name}`, 1000, 180, 900, 20);
 		});
 	});

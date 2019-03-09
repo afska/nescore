@@ -8,6 +8,6 @@ export default (register) => {
 
 		if (pageCrossed && canTakeExtraCycles) cpu.extraCycles++;
 
-		return newAddress;
+		return Byte.force16Bit(newAddress);
 	};
 };

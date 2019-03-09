@@ -63,6 +63,8 @@ const nesTestLogger = {
 				);
 			} catch (e) {}
 
+			// TODO: Refactor this. Use `hexParameter` when needed.
+
 			switch (operation.addressing.id) {
 				case "IMPLICIT":
 					return "";
@@ -80,10 +82,14 @@ const nesTestLogger = {
 					)}`;
 				case "INDEXED_ABSOLUTE_X":
 				case "INDEXED_ZERO_PAGE_X":
-					return `$${initialParameter},X`;
+					return `$${$initialParameter},X @ ${hexParameter(
+						finalAddress
+					)} = ${hex(memory.readAt(finalAddress), 2)}`;
 				case "INDEXED_ABSOLUTE_Y":
 				case "INDEXED_ZERO_PAGE_Y":
-					return `$${$initialParameter},Y`;
+					return `$${$initialParameter},Y @ ${hexParameter(
+						finalAddress
+					)} = ${hex(memory.readAt(finalAddress), 2)}`;
 				case "INDIRECT":
 					return `($${$initialParameter}) = ${hex(finalAddress, 4)}`;
 				case "INDEXED_INDIRECT_X":
