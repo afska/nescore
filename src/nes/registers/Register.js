@@ -1,7 +1,10 @@
 /** A CPU register that can handle overflows and underflows. */
 export default class Register {
-	constructor(TypedArray, initialValue = 0) {
-		this.bytes = new TypedArray(1);
+	constructor(typedArray, initialValue = 0) {
+		if (typedArray.length !== 1)
+			throw new Error("The typed array must have exactly one element");
+
+		this.bytes = typedArray;
 		this.value = this.initialValue = initialValue;
 	}
 
