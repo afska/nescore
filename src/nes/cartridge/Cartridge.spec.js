@@ -1,8 +1,8 @@
-import GameCartridge from "./GameCartridge";
+import Cartridge from "./Cartridge";
 import fs from "fs";
 const should = require("chai").Should();
 
-describe("GameCartridge", () => {
+describe("Cartridge", () => {
 	let bytes;
 
 	beforeEach(() => {
@@ -10,7 +10,7 @@ describe("GameCartridge", () => {
 	});
 
 	it("can read the header", () => {
-		new GameCartridge(bytes).header.should.eql({
+		new Cartridge(bytes).header.should.eql({
 			prgRomPages: 1,
 			chrRomPages: 1,
 			hasTrainerBeforeProgram: false,
@@ -19,6 +19,6 @@ describe("GameCartridge", () => {
 	});
 
 	it("can read the magic number", () => {
-		new GameCartridge(bytes).magicNumber.should.equal("NES");
+		new Cartridge(bytes).magicNumber.should.equal("NES");
 	});
 });

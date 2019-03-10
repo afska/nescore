@@ -8,7 +8,7 @@ const PRG_ROM_PAGE_SIZE = 16 * KB;
 const CHR_ROM_PAGE_SIZE = 8 * KB;
 
 /** The game cartridge (a file in iNES format). */
-export default class GameCartridge {
+export default class Cartridge {
 	constructor(bytes) {
 		this.bytes = bytes;
 
