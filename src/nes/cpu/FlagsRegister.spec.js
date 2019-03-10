@@ -1,4 +1,4 @@
-import { FlagsRegister } from ".";
+import FlagsRegister from "./FlagsRegister";
 const should = require("chai").Should();
 
 describe("registers", () => {

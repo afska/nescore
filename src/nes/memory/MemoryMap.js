@@ -6,7 +6,7 @@ import { WithContext } from "../helpers";
 const KB = 1024;
 const RAM_SIZE = 2 * KB;
 
-/** The whole system's memory. It handles absolute addresses. */
+/** The CPU memory map. It handles absolute addresses. */
 export default class MemoryMap {
 	constructor() {
 		WithContext.apply(this);

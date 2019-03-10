@@ -1,5 +1,5 @@
 import Stack from "./Stack";
-import createTestContext from "./helpers/createTestContext";
+import createTestContext from "../helpers/createTestContext";
 const should = require("chai").Should();
 
 describe("Stack", () => {

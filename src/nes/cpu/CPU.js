@@ -1,5 +1,6 @@
-import { WithContext } from "./helpers";
-import { Register8Bit, Register16Bit, FlagsRegister } from "./registers";
+import { WithContext } from "../helpers";
+import { Register8Bit, Register16Bit } from "../registers";
+import FlagsRegister from "./FlagsRegister";
 import Stack from "./Stack";
 import operations from "./operations";
 

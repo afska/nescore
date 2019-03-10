@@ -1,6 +1,6 @@
-import CPU from "./CPU";
+import CPU from "./cpu";
 import { MemoryMap } from "./memory";
-import GameCartridge from "./GameCartridge";
+import GameCartridge from "./cartridge/GameCartridge";
 import { WithContext } from "./helpers";
 
 /** The NES Emulator. */
@@ -9,7 +9,7 @@ export default class NES {
 		WithContext.apply(this);
 
 		this.cpu = new CPU();
-		this.memoryMap = new MemoryMap();
+		this.memory = new MemoryMap();
 	}
 
 	/** Loads a `rom` as the current cartridge. */
@@ -19,12 +19,12 @@ export default class NES {
 		this.loadContext({
 			logger,
 			cpu: this.cpu,
-			memory: this.memoryMap,
+			memory: this.memory,
 			cartridge,
 			mapper: cartridge.createMapper()
 		});
 
-		this.memoryMap.loadContext(this.context);
+		this.memory.loadContext(this.context);
 		this.cpu.loadContext(this.context);
 	}
 
@@ -38,6 +38,6 @@ export default class NES {
 		this.unloadContext();
 
 		this.cpu.unloadContext();
-		this.memoryMap.unloadContext();
+		this.memory.unloadContext();
 	}
 }

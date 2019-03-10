@@ -1,4 +1,4 @@
-import { Byte } from "../helpers";
+import { Byte } from "../../helpers";
 import getValue from "./_getValue";
 
 /**

@@ -1,4 +1,4 @@
-import CPU from "../CPU";
+import CPU from "../cpu";
 import { MemoryMap, MemoryChunk } from "../memory";
 
 const KB = 1024;

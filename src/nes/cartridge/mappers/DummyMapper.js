@@ -1,4 +1,4 @@
-import { WithComposedMemory, MemoryChunk } from "../memory";
+import { WithComposedMemory, MemoryChunk } from "../../memory";
 
 const KB = 1024;
 const PRG_ROM_PAGE_SIZE = 16 * KB;

@@ -1,7 +1,7 @@
 import addressings from "..";
 import getValue from "../_getValue";
-import createTestContext from "../../helpers/createTestContext";
-import { Byte } from "../../helpers";
+import createTestContext from "../../../helpers/createTestContext";
+import { Byte } from "../../../helpers";
 import _ from "lodash";
 const should = require("chai").Should();
 

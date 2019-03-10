@@ -1,4 +1,4 @@
-import createTestContext from "./helpers/createTestContext";
+import createTestContext from "../helpers/createTestContext";
 import _ from "lodash";
 const should = require("chai").Should();
 

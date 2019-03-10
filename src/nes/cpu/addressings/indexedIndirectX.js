@@ -1,4 +1,4 @@
-import { Byte } from "../helpers";
+import { Byte } from "../../helpers";
 import { getIndirectAddress } from "./indirect";
 import getValue from "./_getValue";
 

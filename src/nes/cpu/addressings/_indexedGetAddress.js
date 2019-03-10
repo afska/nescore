@@ -1,4 +1,4 @@
-import { Byte } from "../helpers";
+import { Byte } from "../../helpers";
 
 export default (register) => {
 	return function({ cpu }, address, canTakeExtraCycles) {

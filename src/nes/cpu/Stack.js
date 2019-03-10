@@ -1,4 +1,4 @@
-import { WithContext, Byte } from "./helpers";
+import { WithContext, Byte } from "../helpers";
 
 const START_ADDRESS = 0x0100;
 

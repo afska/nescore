@@ -1,6 +1,6 @@
 import instructions from ".";
-import { Byte } from "../helpers";
-import createTestContext from "../helpers/createTestContext";
+import { Byte } from "../../helpers";
+import createTestContext from "../../helpers/createTestContext";
 const should = require("chai").Should();
 
 describe("instructions", () => {

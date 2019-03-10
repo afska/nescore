@@ -1,6 +1,6 @@
 import NES from "./nes/NES";
 import { Buffer } from "buffer";
-import { getIndirectAddress } from "./nes/addressings/indirect";
+import { getIndirectAddress } from "./nes/cpu/addressings/indirect";
 import "./gui";
 import { Byte } from "./nes/helpers";
 import _ from "lodash";
