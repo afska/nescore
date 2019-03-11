@@ -28,11 +28,12 @@ export default class NES {
 
 		this.memory.loadContext(this.context);
 		this.cpu.loadContext(this.context);
+		this.ppu.loadContext(this.context);
 	}
 
 	/** Executes a step in the emulation. */
 	step() {
-		this.cpu.step();
+		// this.cpu.step(); // TODO: Add cycle counter and PPU sync
 		this.ppu.step();
 	}
 
@@ -40,6 +41,7 @@ export default class NES {
 	unload() {
 		this.unloadContext();
 
+		this.ppu.unloadContext();
 		this.cpu.unloadContext();
 		this.memory.unloadContext();
 	}
