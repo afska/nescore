@@ -1,5 +1,6 @@
 import CPU from "./cpu";
 import { MemoryMap } from "./memory";
+import PPU from "./ppu";
 import Cartridge from "./cartridge";
 import { WithContext } from "./helpers";
 
@@ -9,6 +10,7 @@ export default class NES {
 		WithContext.apply(this);
 
 		this.cpu = new CPU();
+		this.ppu = new PPU();
 		this.memory = new MemoryMap();
 	}
 
@@ -31,6 +33,7 @@ export default class NES {
 	/** Executes a step in the emulation. */
 	step() {
 		this.cpu.step();
+		this.ppu.step();
 	}
 
 	/** Unloads the current cartridge. */
