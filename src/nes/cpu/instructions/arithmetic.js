@@ -122,7 +122,7 @@ const instructions = () => [
 
 			memory.writeAt(address, newValue);
 			cpu.flags.updateZeroAndNegative(newValue);
-			cpu.flags.c = !!(value & 0b00000001);
+			cpu.flags.c = !!Byte.getBit(value, 0);
 		}
 	},
 
@@ -142,7 +142,7 @@ const instructions = () => [
 
 			memory.writeAt(address, newValue);
 			cpu.flags.updateZeroAndNegative(newValue);
-			cpu.flags.c = !!(value & 0b10000000);
+			cpu.flags.c = !!Byte.getBit(value, 7);
 		}
 	},
 
@@ -162,7 +162,7 @@ const instructions = () => [
 
 			memory.writeAt(address, newValue);
 			cpu.flags.updateZeroAndNegative(newValue);
-			cpu.flags.c = !!(value & 0b00000001);
+			cpu.flags.c = !!Byte.getBit(value, 0);
 		}
 	},
 

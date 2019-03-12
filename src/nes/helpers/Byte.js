@@ -30,7 +30,7 @@ export default {
 
 	/** Returns if `value` is negative. */
 	isNegative(byte) {
-		return !!(byte & 0b10000000);
+		return !!this.getBit(byte, 7);
 	},
 
 	/** Converts a signed `byte` to negative. */

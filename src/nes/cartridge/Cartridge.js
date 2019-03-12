@@ -1,3 +1,4 @@
+import { Byte } from "../helpers";
 import { DummyMapper } from "./mappers";
 
 const MAGIC_NUMBER = "NES";
@@ -43,8 +44,8 @@ export default class Cartridge {
 		return (this.__header = {
 			prgRomPages: this.bytes.readUInt8(4),
 			chrRomPages: this.bytes.readUInt8(5),
-			hasTrainerBeforeProgram: !!(flags & 0b00000100),
-			mirroringMode: flags & 0b00000001
+			hasTrainerBeforeProgram: !!Byte.getBit(flags, 2),
+			mirroringMode: Byte.getBit(0)
 		});
 	}
 

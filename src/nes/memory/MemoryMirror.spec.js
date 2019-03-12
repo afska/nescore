@@ -15,20 +15,20 @@ describe("memory", () => {
 			mirror.writeAt(6, 101);
 			mirror.writeAt(12, 121);
 			mirror.writeAt(3, 33);
-			mirror.writeAt(4, 33);
+			mirror.writeAt(4, 45);
 			chunk
 				.getBytes()
 				.toString()
-				.should.equal("hey!!");
+				.should.equal("hey!-");
 		});
 
 		it("can mirror read operations", () => {
-			chunk.getBytes().write("hey!!");
+			chunk.getBytes().write("hey!-");
 			[5, 6, 12, 3, 4]
 				.map((i) => mirror.readAt(i))
 				.map((c) => String.fromCharCode(c))
 				.join("")
-				.should.equal("hey!!");
+				.should.equal("hey!-");
 		});
 
 		it("can read and write numbers in Little Endian", () => {

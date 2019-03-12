@@ -18,7 +18,7 @@ const instructions = () => [
 
 			cpu.flags.updateZero(result);
 			cpu.flags.updateNegative(value);
-			cpu.flags.v = !!(value & 0b01000000);
+			cpu.flags.v = !!Byte.getBit(value, 6);
 		}
 	},
 
