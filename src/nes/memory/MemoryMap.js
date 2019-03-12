@@ -3,7 +3,7 @@ import MemoryChunk from "./MemoryChunk";
 import MemoryMirror from "./MemoryMirror";
 import { WithContext } from "../helpers";
 
-/** The CPU memory map. It handles absolute addresses. */
+/** The CPU memory map. Addess space size: 64KB. */
 export default class MemoryMap {
 	constructor() {
 		WithContext.apply(this);
