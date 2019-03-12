@@ -2,7 +2,6 @@ import { WithComposedMemory, MemoryChunk, MemoryMirror } from "../../memory";
 
 const KB = 1024;
 const PRG_ROM_PAGE_SIZE = 16 * KB;
-const MEMORY_SIZE = 0xbfe0;
 
 /** The simplest mapper (also called "mapper 0"). */
 export default class NROM {
@@ -30,10 +29,5 @@ export default class NROM {
 			prgRomFirstPage, //  $8000     $4000     PRG-ROM (first 16KB of ROM)
 			prgRomLastPage //    $C000     $4000     PRG-ROM (last 16KB of ROM or mirror)
 		]);
-	}
-
-	/** Returns the assigned size in the memory map. */
-	get memorySize() {
-		return MEMORY_SIZE;
 	}
 }

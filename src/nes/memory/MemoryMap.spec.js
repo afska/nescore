@@ -4,7 +4,8 @@ import _ from "lodash";
 const should = require("chai").Should();
 
 const MAPPER_START_ADDRESS = 0x4020;
-const MAPPER_SIZE = 5;
+const MAPPER_SIZE = 0xbfe0;
+const KB = 1024;
 
 describe("memory", () => {
 	describe("MemoryMap", () => {
@@ -19,6 +20,10 @@ describe("memory", () => {
 			_.last(memory.chunks).$memoryStartAddress.should.equal(
 				MAPPER_START_ADDRESS
 			);
+		});
+
+		it("stores the memory size", () => {
+			memory.memorySize.should.equal(64 * KB);
 		});
 
 		it("can write in the right chunk", () => {
@@ -58,7 +63,7 @@ describe("memory", () => {
 
 		it("throws an exception when the address is out of bounds", () => {
 			(() => memory.readAt(MAPPER_START_ADDRESS + MAPPER_SIZE)).should.throw(
-				"Unreachable address: 0x4025."
+				"Unreachable address: 0x10000."
 			);
 		});
 	});

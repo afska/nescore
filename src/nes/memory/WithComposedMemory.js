@@ -19,6 +19,8 @@ export default {
 			chunk.$memoryStartAddress = startAddress;
 			startAddress += chunk.memorySize;
 		}
+
+		this.memorySize = startAddress;
 	},
 
 	/** Reads a byte from `address`, using the correct `chunk`. */
