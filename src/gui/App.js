@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-// import DiffViewer from "react-diff-viewer";
+import DiffViewer from "react-diff-viewer";
 import _ from "lodash";
 import "./App.css";
 
@@ -17,27 +17,31 @@ export default class App extends Component {
 	render() {
 		return (
 			<div className="app">
-				{_.range(0, 64).map((n, i) => {
-					return (
-						<span key={i}>
-							{n > 0 && n % 8 === 0 ? <br /> : null}
-							<span id={`p${n}`}>▢</span>
-						</span>
-					);
-				})}
+				<div style={{ display: "block" }}>
+					{_.range(0, 64).map((n, i) => {
+						return (
+							<span key={i}>
+								{n > 0 && n % 8 === 0 ? <br /> : null}
+								<span id={`p${n}`}>▢</span>
+							</span>
+						);
+					})}
+				</div>
 
-				{/*<div className="debugger" onKeyDown={this.onStep}>
-					<DiffViewer
-						oldValue={this.state.expected}
-						newValue={this.state.actual}
-						splitView={true}
-					/>
+				<div style={{ display: "none" }}>
+					<div className="debugger" onKeyDown={this.onStep}>
+						<DiffViewer
+							oldValue={this.state.expected}
+							newValue={this.state.actual}
+							splitView={true}
+						/>
+					</div>
+					<div className="titles">
+						<h1 className="title">NesTest</h1>
+						<h1 className="title">My emulator</h1>
+					</div>
+					<i className="hint">Enter => Next page</i>
 				</div>
-				<div className="titles">
-					<h1 className="title">NesTest</h1>
-					<h1 className="title">My emulator</h1>
-				</div>
-				<i className="hint">Enter => Next page</i>*/}
 			</div>
 		);
 	}

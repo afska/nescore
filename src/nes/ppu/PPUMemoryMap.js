@@ -1,17 +1,17 @@
-import WithComposedMemory from "./WithComposedMemory";
-import MemoryChunk from "./MemoryChunk";
-import MemoryMirror from "./MemoryMirror";
+import { WithComposedMemory, MemoryChunk, MemoryMirror } from "../memory";
 import { WithContext } from "../helpers";
 
-/** The CPU memory map. Addess space size: 64KB. */
-export default class MemoryMap {
+/** The CPU memory map. Addess space size: 16KB. */
+export default class PPUMemoryMap {
 	constructor() {
 		WithContext.apply(this);
 		WithComposedMemory.apply(this);
+
+		// TODO: Do it
 	}
 
 	/** When a context is loaded. */
-	onLoad({ mapper }) {
+	onLoad() {
 		const ram = new MemoryChunk(0x0800);
 		const ramMirror = new MemoryMirror(ram, 0x1800);
 		const ppuRegisters = new MemoryChunk(0x0008);

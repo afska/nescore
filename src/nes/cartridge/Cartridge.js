@@ -1,5 +1,5 @@
 import { Byte } from "../helpers";
-import { DummyMapper } from "./mappers";
+import mappers from "./mappers";
 
 const MAGIC_NUMBER = "NES";
 const KB = 1024;
@@ -19,7 +19,7 @@ export default class Cartridge {
 
 	/** Returns a new instance of the right mapper. */
 	createMapper() {
-		return new DummyMapper(this);
+		return new mappers[0](this); // TODO: Return the right mapper
 	}
 
 	/** Returns the PRG ROM, which contains the game's code. */

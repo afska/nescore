@@ -1,3 +1,4 @@
-import DummyMapper from "./DummyMapper";
+import NROM from "./NROM";
+import _ from "lodash";
 
-export { DummyMapper };
+export default _.keyBy([NROM], "id");
