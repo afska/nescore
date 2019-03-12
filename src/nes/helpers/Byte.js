@@ -53,6 +53,12 @@ export default {
 		return (number >> position) & 1;
 	},
 
+	/** Returns a sub-number from the `startPosition` to the `endPosition` of a `byte`. */
+	getSubNumber(byte, startPosition, endPosition) {
+		const bits = endPosition - startPosition + 1;
+		return (byte >> startPosition) & (0xff >> (8 - bits));
+	},
+
 	/** Returns the most significative byte of a `twoBytesNumber`. */
 	highPartOf(twoBytesNumber) {
 		return twoBytesNumber >> 8;

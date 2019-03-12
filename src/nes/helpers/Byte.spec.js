@@ -63,6 +63,14 @@ describe("helpers", () => {
 			Byte.getBit(0b100101, 6).should.equal(0);
 		});
 
+		it("can return a sub-number from a number", () => {
+			Byte.getSubNumber(0b00001110, 1, 3).should.equal(0b111);
+			Byte.getSubNumber(0b00001110, 0, 2).should.equal(0b110);
+			Byte.getSubNumber(0b00001110, 0, 1).should.equal(0b10);
+			Byte.getSubNumber(0b00001110, 2, 4).should.equal(0b011);
+			Byte.getSubNumber(0b00001110, 3, 4).should.equal(0b01);
+		});
+
 		it("can split 16-bit numbers", () => {
 			Byte.highPartOf(0xfe20).should.equal(0xfe);
 			Byte.lowPartOf(0xfe20).should.equal(0x20);
