@@ -1,4 +1,4 @@
-import { WithContext } from "../helpers";
+import { WithContext, Byte } from "../helpers";
 
 // TODO: Add docs
 const TILE_SIZE_X = 8;
@@ -9,6 +9,10 @@ export default class PPU {
 	constructor() {
 		WithContext.apply(this);
 
+		this.frame = 0;
+		this.scanLine = 0;
+		this.cycle = 0;
+
 		// TODO: Initialize
 		this.tile = 0;
 	}
@@ -16,6 +20,8 @@ export default class PPU {
 	step() {
 		const cartridge = this.context.cartridge;
 		const chrRom = cartridge.chrRom;
+
+		// The pattern table is an area of memory connected to the PPU that defines the shapes of tiles that make up backgrounds and sprites. Each tile in the pattern table is 16 bytes, made of two planes. The first plane controls bit 0 of the color; the second plane controls bit 1. Any pixel whose color is 0 is background/transparent.
 
 		// render tile
 		const start = this.tile * TILE_SIZE_BYTES;
@@ -25,15 +31,15 @@ export default class PPU {
 			start + TILE_SIZE_BYTES
 		);
 
-		const pixels = [];
+		const pixels = []; // TODO: Avoid allocation
 		for (let y = 0; y < TILE_SIZE_Y; y++) {
 			const row1 = firstPlane[y];
 			const row2 = secondPlane[y];
 
 			for (let x = 0; x < TILE_SIZE_X; x++) {
 				const column = TILE_SIZE_X - 1 - x;
-				const lsb = (row1 >> column) & 1;
-				const msb = (row2 >> column) & 1;
+				const lsb = Byte.getBit(row1, column);
+				const msb = Byte.getBit(row2, column);
 				pixels.push(lsb + msb * 2);
 			}
 		}

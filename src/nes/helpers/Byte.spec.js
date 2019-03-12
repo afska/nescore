@@ -50,6 +50,19 @@ describe("helpers", () => {
 			Byte.force16Bit(-2).should.equal(65534);
 		});
 
+		it("can return a bit from a number", () => {
+			Byte.getBit(2, 1).should.equal(1);
+			Byte.getBit(2, 0).should.equal(0);
+
+			Byte.getBit(0b100101, 0).should.equal(1);
+			Byte.getBit(0b100101, 1).should.equal(0);
+			Byte.getBit(0b100101, 2).should.equal(1);
+			Byte.getBit(0b100101, 3).should.equal(0);
+			Byte.getBit(0b100101, 4).should.equal(0);
+			Byte.getBit(0b100101, 5).should.equal(1);
+			Byte.getBit(0b100101, 6).should.equal(0);
+		});
+
 		it("can split 16-bit numbers", () => {
 			Byte.highPartOf(0xfe20).should.equal(0xfe);
 			Byte.lowPartOf(0xfe20).should.equal(0x20);

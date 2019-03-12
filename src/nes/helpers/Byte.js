@@ -48,6 +48,11 @@ export default {
 		return value & 0xffff;
 	},
 
+	/** Returns the bit located at `position` in `number`. */
+	getBit(number, position) {
+		return (number >> position) & 1;
+	},
+
 	/** Returns the most significative byte of a `twoBytesNumber`. */
 	highPartOf(twoBytesNumber) {
 		return twoBytesNumber >> 8;
