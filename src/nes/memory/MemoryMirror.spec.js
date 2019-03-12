@@ -7,7 +7,7 @@ describe("memory", () => {
 
 		beforeEach(() => {
 			chunk = new MemoryChunk(5);
-			mirror = new MemoryMirror(chunk, 13, 29);
+			mirror = new MemoryMirror(chunk, 13);
 		});
 
 		it("can mirror write operations", () => {
@@ -45,6 +45,14 @@ describe("memory", () => {
 
 		it("can return the size of the mirrored memory", () => {
 			mirror.memorySize.should.equal(13);
+		});
+
+		it("supports the startAt and mirroredSize parameters", () => {
+			const mirror = new MemoryMirror(chunk, 13, 1, 3);
+			chunk.getBytes().write("BYTES");
+			//                       012
+			//                       345 <<
+			mirror.readAt(5).should.equal("E".charCodeAt(0));
 		});
 
 		it("throws an exception when the address is out of bounds", () => {

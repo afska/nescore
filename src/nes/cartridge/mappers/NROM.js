@@ -1,15 +1,17 @@
+import Mapper from "./Mapper";
 import { WithComposedMemory, MemoryChunk, MemoryMirror } from "../../memory";
 
 const KB = 1024;
 const PRG_ROM_PAGE_SIZE = 16 * KB;
 
 /** The simplest mapper (also called "mapper 0"). */
-export default class NROM {
+export default class NROM extends Mapper {
 	static get id() {
 		return 0;
 	}
 
 	constructor(cartridge) {
+		super(cartridge);
 		WithComposedMemory.apply(this);
 
 		const unused = new MemoryChunk(0x3fe0);
