@@ -3,9 +3,6 @@ import MemoryChunk from "./MemoryChunk";
 import MemoryMirror from "./MemoryMirror";
 import { WithContext } from "../helpers";
 
-const KB = 1024;
-const RAM_SIZE = 2 * KB;
-
 /** The CPU memory map. It handles absolute addresses. */
 export default class MemoryMap {
 	constructor() {
@@ -15,7 +12,7 @@ export default class MemoryMap {
 
 	/** When a context is loaded. */
 	onLoad({ mapper }) {
-		const ram = new MemoryChunk(RAM_SIZE);
+		const ram = new MemoryChunk(0x0800);
 		const ramMirror = new MemoryMirror(ram, 0x1800, 0x0800);
 		const ppuRegisters = new MemoryChunk(0x0008, 0x2000);
 		const ppuRegistersMirror = new MemoryMirror(ppuRegisters, 0x1ff8, 0x2008);
