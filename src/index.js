@@ -179,7 +179,8 @@ const DEMO = async () => {
 	// window.nes.cpu.sp.value = 0x80;
 	// window.nes.cpu.cycles = 2013;
 
-	const withoutPpu = (line) => line.replace(/PPU: *\d+, *\d+ CYC:/, "CYC:");
+	const withoutPpu = (line) =>
+		line && line.replace(/PPU: *\d+, *\d+ CYC:/, "CYC:");
 	let line = 0;
 	window.getDiff = () => {
 		window.nes.step();
