@@ -1,5 +1,6 @@
 import { WithContext } from "../helpers";
 import { Register8Bit, Register16Bit } from "../registers";
+import CPUMemoryMap from "./CPUMemoryMap";
 import FlagsRegister from "./FlagsRegister";
 import Stack from "./Stack";
 import operations from "./operations";
@@ -29,6 +30,7 @@ export default class CPU {
 			y: new Register8Bit(0) // index Y
 		};
 
+		this.memory = new CPUMemoryMap();
 		this.stack = new Stack();
 
 		this._parameter = null;
@@ -36,6 +38,7 @@ export default class CPU {
 
 	/** When a context is loaded. */
 	onLoad(context) {
+		this.memory.loadContext(context);
 		this.stack.loadContext(context);
 		this._reset();
 	}
@@ -85,6 +88,7 @@ export default class CPU {
 
 	/** When the current context is unloaded. */
 	onUnload() {
+		this.memory.unloadContext();
 		this.stack.unloadContext();
 		this._reset();
 	}

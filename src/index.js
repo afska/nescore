@@ -155,8 +155,11 @@ const nesTestLogger = {
 };
 
 const DEMO = async () => {
-	// const response = await fetch("testroms/nestest.nes");
-	const response = await fetch("rom.nes");
+	window.TEST = "PPU"; // "NESTEST" || "PPU"
+
+	const response = await fetch(
+		window.TEST === "NESTEST" ? "testroms/nestest.nes" : "rom.nes"
+	);
 	const arrayBuffer = await response.arrayBuffer();
 	const bytes = Buffer.from(arrayBuffer);
 

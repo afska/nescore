@@ -1,4 +1,5 @@
-import { MemoryMap, MemoryChunk } from ".";
+import CPUMemoryMap from "./CPUMemoryMap";
+import { MemoryChunk } from "../memory";
 import { Register8Bit } from "../registers";
 import _ from "lodash";
 const should = require("chai").Should();
@@ -8,12 +9,12 @@ const MAPPER_SIZE = 0xbfe0;
 const KB = 1024;
 
 describe("memory", () => {
-	describe("MemoryMap", () => {
+	describe("CPUMemoryMap", () => {
 		let mapper, memory;
 
 		beforeEach(() => {
 			mapper = new MemoryChunk(MAPPER_SIZE, MAPPER_START_ADDRESS);
-			memory = new MemoryMap().loadContext({ mapper });
+			memory = new CPUMemoryMap().loadContext({ mapper });
 		});
 
 		it("stores the start address of each chunk", () => {

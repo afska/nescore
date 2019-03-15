@@ -1,5 +1,4 @@
 import CPU from "./cpu";
-import { MemoryMap } from "./memory";
 import PPU from "./ppu";
 import Cartridge from "./cartridge";
 import { WithContext } from "./helpers";
@@ -11,7 +10,6 @@ export default class NES {
 
 		this.cpu = new CPU();
 		this.ppu = new PPU();
-		this.memory = new MemoryMap();
 	}
 
 	/** Loads a `rom` as the current cartridge. */
@@ -21,26 +19,32 @@ export default class NES {
 		this.loadContext({
 			logger,
 			cpu: this.cpu,
-			memory: this.memory,
+			memory: this.cpu.memory,
+			ppu: this.ppu,
 			cartridge,
 			mapper: cartridge.createMapper()
 		});
-
-		this.memory.loadContext(this.context);
-		this.cpu.loadContext(this.context);
-		this.ppu.loadContext(this.context);
 	}
 
 	/** Executes a step in the emulation. */
 	step() {
-		// this.cpu.step(); // TODO: Add cycle counter and PPU sync
+		this.cpu.step(); // TODO: Add cycle counter and PPU sync
 		this.ppu.step();
 	}
 
 	/** Unloads the current cartridge. */
 	unload() {
 		this.unloadContext();
+	}
 
+	/** When a context is loaded. */
+	onLoad(context) {
+		this.cpu.loadContext(this.context);
+		this.ppu.loadContext(this.context);
+	}
+
+	/** When the current context is unloaded. */
+	onUnload() {
 		this.ppu.unloadContext();
 		this.cpu.unloadContext();
 		this.memory.unloadContext();

@@ -1,10 +1,8 @@
-import WithComposedMemory from "./WithComposedMemory";
-import MemoryChunk from "./MemoryChunk";
-import MemoryMirror from "./MemoryMirror";
+import { WithComposedMemory, MemoryChunk, MemoryMirror } from "../memory";
 import { WithContext } from "../helpers";
 
 /** The CPU memory map. Addess space size: 64KB. */
-export default class MemoryMap {
+export default class CPUMemoryMap {
 	constructor() {
 		WithContext.apply(this);
 		WithComposedMemory.apply(this);

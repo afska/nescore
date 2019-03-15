@@ -17,7 +17,7 @@ export default class App extends Component {
 	render() {
 		return (
 			<div className="app">
-				<div style={{ display: "block" }}>
+				<div style={{ display: window.TEST === "PPU" ? "block" : "none" }}>
 					{_.range(0, 64).map((n, i) => {
 						return (
 							<span key={i}>
@@ -28,7 +28,7 @@ export default class App extends Component {
 					})}
 				</div>
 
-				<div style={{ display: "none" }}>
+				<div style={{ display: window.TEST === "NESTEST" ? "block" : "none" }}>
 					<div className="debugger" onKeyDown={this.onStep}>
 						<DiffViewer
 							oldValue={this.state.expected}
