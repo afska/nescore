@@ -15,7 +15,7 @@ export default class Register {
 		this.value++;
 	}
 
-	/** decrements the value. */
+	/** Decrements the value. */
 	decrement() {
 		this.value--;
 	}

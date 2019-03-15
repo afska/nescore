@@ -53,10 +53,18 @@ export default {
 		return (number >> position) & 1;
 	},
 
-	/** Returns a sub-number from the `startPosition` to the `endPosition` of a `byte`. */
-	getSubNumber(byte, startPosition, endPosition) {
-		const bits = endPosition - startPosition + 1;
-		return (byte >> startPosition) & (0xff >> (8 - bits));
+	/** Returns a sub-number of `size` bits inside a `byte`, starting at `startPosition`. */
+	getSubNumber(byte, startPosition, size) {
+		return (byte >> startPosition) & (0xff >> (8 - size));
+	},
+
+	/** Inserts a `value` (of `size` bits) inside a `byte`, starting at `startPosition`. */
+	setSubNumber(byte, startPosition, size, value) {
+		let newByte = byte;
+		for (let i = startPosition; i < startPosition + size; i++) {
+			newByte &= this.negate(1 << i) - 1;
+		}
+		return newByte | (value << startPosition);
 	},
 
 	/** Returns the most significative byte of a `twoBytesNumber`. */

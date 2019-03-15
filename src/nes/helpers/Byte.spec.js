@@ -65,10 +65,16 @@ describe("helpers", () => {
 
 		it("can return a sub-number from a number", () => {
 			Byte.getSubNumber(0b00001110, 1, 3).should.equal(0b111);
-			Byte.getSubNumber(0b00001110, 0, 2).should.equal(0b110);
-			Byte.getSubNumber(0b00001110, 0, 1).should.equal(0b10);
-			Byte.getSubNumber(0b00001110, 2, 4).should.equal(0b011);
-			Byte.getSubNumber(0b00001110, 3, 4).should.equal(0b01);
+			Byte.getSubNumber(0b00001110, 0, 3).should.equal(0b110);
+			Byte.getSubNumber(0b00001110, 0, 2).should.equal(0b10);
+			Byte.getSubNumber(0b00001110, 2, 2).should.equal(0b011);
+			Byte.getSubNumber(0b00001110, 3, 2).should.equal(0b01);
+		});
+
+		it("can insert a sub-number inside a byte", () => {
+			Byte.setSubNumber(0b00001110, 2, 2, 0b10).should.equal(0b00001010);
+			Byte.setSubNumber(0b00001110, 2, 2, 0b01).should.equal(0b00000110);
+			Byte.setSubNumber(0b00001110, 2, 5, 0b10101).should.equal(0b01010110);
 		});
 
 		it("can split 16-bit numbers", () => {
