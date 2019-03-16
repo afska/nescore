@@ -58,7 +58,7 @@ export default {
 		return (byte >> startPosition) & (0xff >> (8 - size));
 	},
 
-	/** Inserts a `value` (of `size` bits) inside a `byte`, starting at `startPosition`. */
+	/** Inserts a `value` of `size` bits inside a `byte`, starting at `startPosition`. */
 	setSubNumber(byte, startPosition, size, value) {
 		let newByte = byte;
 		for (let i = startPosition; i < startPosition + size; i++) {

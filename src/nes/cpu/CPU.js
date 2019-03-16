@@ -88,9 +88,9 @@ export default class CPU {
 
 	/** When the current context is unloaded. */
 	onUnload() {
+		this._reset();
 		this.memory.unloadContext();
 		this.stack.unloadContext();
-		this._reset();
 	}
 
 	_reset() {

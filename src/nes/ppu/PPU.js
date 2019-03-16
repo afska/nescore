@@ -12,6 +12,7 @@ import {
 	OAMDMA
 } from "./registers";
 import PPUMemoryMap from "./PPUMemoryMap";
+import _ from "lodash";
 
 const INITIAL_PPUSTATUS = 0b10000000;
 const PRIMARY_OAM_SIZE = 256;
@@ -25,13 +26,13 @@ export default class PPU {
 	constructor() {
 		WithContext.apply(this);
 
-		this.memory = new PPUMemoryMap();
-		this.oamRam = null; // OAM = Object Attribute Memory (contains sprite data)
-		this.oamRam2 = null;
-
 		this.frame = 0;
 		this.scanLine = 0;
 		this.cycle = 0;
+
+		this.memory = new PPUMemoryMap();
+		this.oamRam = null; // OAM = Object Attribute Memory (contains sprite data)
+		this.oamRam2 = null;
 
 		this.registers = {
 			ppuCtrl: new PPUCtrl(),
@@ -54,6 +55,7 @@ export default class PPU {
 		this.memory.loadContext(context);
 		this.oamRam = new MemoryChunk(PRIMARY_OAM_SIZE);
 		this.oamRam2 = new MemoryChunk(SECONDARY_OAM_SIZE);
+		_.each(this.registers, (register) => register.loadContext(context.memory));
 		this._reset();
 	}
 
@@ -97,13 +99,17 @@ export default class PPU {
 
 	/** When the current context is unloaded. */
 	onUnload() {
+		this._reset();
 		this.memory.unloadContext();
 		this.oamRam = null;
 		this.oamRam2 = null;
-		this._reset();
+		_.each(this.registers, (register) => register.unloadContext());
 	}
 
 	_reset() {
+		this.frame = 0;
+		this.scanLine = 0;
+		this.cycle = 0;
 		this.registers.ppuStatus.value = INITIAL_PPUSTATUS;
 	}
 }
