@@ -13,6 +13,7 @@ import {
 } from "./registers";
 import PPUMemoryMap from "./PPUMemoryMap";
 
+const INITIAL_PPUSTATUS = 0b10000000;
 const PRIMARY_OAM_SIZE = 256;
 const SECONDARY_OAM_SIZE = 32;
 const TILE_SIZE_X = 8;
@@ -102,5 +103,7 @@ export default class PPU {
 		this._reset();
 	}
 
-	_reset() {}
+	_reset() {
+		this.registers.ppuStatus.value = INITIAL_PPUSTATUS;
+	}
 }
