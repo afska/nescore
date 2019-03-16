@@ -1,9 +1,13 @@
 import { InMemoryRegister } from "../../registers";
 
-/** PPU Mask Register. */
+/**
+ * PPU Mask Register
+ *
+ * Controls the rendering of sprites and backgrounds, as well as colour effects.
+ */
 export default class PPUMask extends InMemoryRegister {
 	constructor() {
-		super(0x2000);
+		super(0x2001);
 
 		this.addField("grayscale", 0)
 			.addField("showBackgroundInLeftmost8PixelsOfScreen", 1)

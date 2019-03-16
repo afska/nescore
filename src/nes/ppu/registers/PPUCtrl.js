@@ -1,6 +1,10 @@
 import { InMemoryRegister } from "../../registers";
 
-/** PPU Control Register. */
+/**
+ * PPU Control Register
+ *
+ * Contains various flags controlling PPU operation.
+ */
 export default class PPUCtrl extends InMemoryRegister {
 	constructor() {
 		super(0x2000);
