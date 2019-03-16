@@ -1,7 +1,7 @@
 import { InMemoryRegister } from "../../registers";
 
 /**
- * OAM Data Port <> read/write
+ * OAM Data Port (<> read/write)
  *
  * Write OAM data here. Writes will increment `OAMAddr` after the write.
  */
