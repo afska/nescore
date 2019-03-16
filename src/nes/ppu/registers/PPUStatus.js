@@ -1,7 +1,7 @@
 import { InMemoryRegister } from "../../registers";
 
 /**
- * PPU Status Register
+ * PPU Status Register (< read)
  *
  * Reflects the state of various functions inside the PPU.
  * It is often used for determining timing.

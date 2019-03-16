@@ -1,7 +1,7 @@
 import { InMemoryRegister } from "../../registers";
 
 /**
- * OAM Address Port
+ * OAM Address Port (> write)
  *
  * Write the address of OAM you want to access here.
  * Most games just write $00 here and then use `OAMDMA`.

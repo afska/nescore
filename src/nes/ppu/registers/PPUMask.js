@@ -1,7 +1,7 @@
 import { InMemoryRegister } from "../../registers";
 
 /**
- * PPU Mask Register
+ * PPU Mask Register (> write)
  *
  * Controls the rendering of sprites and backgrounds, as well as colour effects.
  */

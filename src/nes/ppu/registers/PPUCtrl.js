@@ -1,7 +1,7 @@
 import { InMemoryRegister } from "../../registers";
 
 /**
- * PPU Control Register
+ * PPU Control Register (> write)
  *
  * Contains various flags controlling PPU operation.
  */
