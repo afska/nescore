@@ -13,6 +13,6 @@ export default class PPUStatus extends InMemoryRegister {
 
 		this.addField("spriteOverflow", 5)
 			.addField("sprite0Hit", 6)
-			.addField("vBlankHasStarted", 7);
+			.addField("isInVBlankInterval", 7);
 	}
 }
