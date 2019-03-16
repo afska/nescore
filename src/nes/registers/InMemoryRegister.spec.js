@@ -18,13 +18,13 @@ describe("registers", () => {
 		it("allows reading subfields", () => {
 			memory.writeAt(3, 0b01100100);
 
-			register.booleanBit2.should.equal(true);
+			register.booleanBit2.should.equal(1);
 			register.shortNumberBit5.should.equal(0b11);
 			register.longNumberBit4.should.equal(0b0110);
 		});
 
 		it("allows writing subfields", () => {
-			register.booleanBit2 = true;
+			register.booleanBit2 = 1;
 			memory.readAt(3).should.equal(0b00000100);
 			register.longNumberBit4 = 0b1101;
 			memory.readAt(3).should.equal(0b11010100);

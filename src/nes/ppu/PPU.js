@@ -5,6 +5,7 @@ const TILE_SIZE_X = 8;
 const TILE_SIZE_Y = 8;
 const TILE_SIZE_BYTES = 16;
 
+/** The Picture Processing Unit. It generates a video signal of 256x240 pixels. */
 export default class PPU {
 	constructor() {
 		WithContext.apply(this);
@@ -17,6 +18,7 @@ export default class PPU {
 		this.tile = 0;
 	}
 
+	/** Executes the next operation. */
 	step() {
 		const cartridge = this.context.cartridge;
 		const chrRom = cartridge.chrRom;

@@ -12,8 +12,7 @@ export default class InMemoryRegister {
 	addField(name, startPosition, size = 1) {
 		Object.defineProperty(this, name, {
 			get() {
-				const value = Byte.getSubNumber(this.value, startPosition, size);
-				return size === 1 ? !!value : value;
+				return Byte.getSubNumber(this.value, startPosition, size);
 			},
 			set(value) {
 				this.value = Byte.setSubNumber(this.value, startPosition, size, value);
