@@ -147,7 +147,7 @@ const nesTestLogger = {
 			" SP:" +
 			hex(cpu.sp.value, 2);
 		const $ppuCycle = "PPU:" + cycle(0, 3) + "," + cycle(1, 3);
-		const $cpuCycle = "CYC:" + cpu.cycles;
+		const $cpuCycle = "CYC:" + cpu.cycle;
 		const $status = `${$registers} ${$ppuCycle} ${$cpuCycle}`;
 
 		window.lastLog = $counter + $commandHex + $assembly + $status;
@@ -180,7 +180,7 @@ const DEMO = async () => {
 	// window.nes.cpu.registers.y.value = 0x01;
 	// window.nes.cpu.flags.load(0x27);
 	// window.nes.cpu.sp.value = 0x80;
-	// window.nes.cpu.cycles = 2013;
+	// window.nes.cpu.cycle = 2013;
 
 	const withoutPpu = (line) =>
 		line && line.replace(/PPU: *\d+, *\d+ CYC:/, "CYC:");

@@ -21,7 +21,7 @@ export default class CPU {
 		this.pc = new Register16Bit(); //    -> program counter
 		this.sp = new Register8Bit(); //     -> stack pointer
 		this.flags = new FlagsRegister(); // -> also called "P" register
-		this.cycles = 0; //                  -> current cycle
+		this.cycle = 0; //                   -> current cycle
 		this.extraCycles = 0; //             -> pending cycles (to add in next step)
 
 		this.registers = {
@@ -61,7 +61,7 @@ export default class CPU {
 			});
 
 		operation.instruction.execute(this.context, parameter);
-		this.cycles += operation.cycles + this.extraCycles;
+		this.cycle += operation.cycles + this.extraCycles;
 		this.extraCycles = 0;
 	}
 
@@ -72,7 +72,7 @@ export default class CPU {
 		this.stack.push2Bytes(this.pc.value);
 		this.pushFlags(withB2Flag);
 
-		this.cycles += INTERRUPT_CYCLES;
+		this.cycle += INTERRUPT_CYCLES;
 
 		this.flags.i = true; // (to make sure handler doesn't get interrupted)
 		this._jumpToInterruptHanlder(type);
@@ -97,7 +97,7 @@ export default class CPU {
 		this.pc.reset();
 		this.sp.reset();
 		this.flags.load(INITIAL_FLAGS);
-		this.cycles = 0;
+		this.cycle = 0;
 		this.extraCycles = 0;
 		this.registers.a.reset();
 		this.registers.x.reset();

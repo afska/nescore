@@ -32,7 +32,7 @@ describe("CPU", () => {
 			z: false,
 			c: false
 		});
-		cpu.cycles.should.equal(7);
+		cpu.cycle.should.equal(7);
 
 		registersOf(cpu).should.include({
 			x: 0,
@@ -44,16 +44,16 @@ describe("CPU", () => {
 	it("can run 3 simple operations", () => {
 		cpu.step();
 		cpu.pc.value.should.equal(0x1235);
-		cpu.cycles.should.equal(9);
+		cpu.cycle.should.equal(9);
 
 		cpu.step();
 		cpu.pc.value.should.equal(0x1237);
-		cpu.cycles.should.equal(11);
+		cpu.cycle.should.equal(11);
 		cpu.registers.a.value.should.equal(5);
 
 		cpu.step();
 		cpu.pc.value.should.equal(0x123a);
-		cpu.cycles.should.equal(15);
+		cpu.cycle.should.equal(15);
 		memory.readAt(0x0201).should.equal(5);
 	});
 
@@ -72,7 +72,7 @@ describe("CPU", () => {
 
 			cpu.stack.pop().should.equal(0b00100000);
 			cpu.stack.pop2Bytes().should.equal(0x1235);
-			cpu.cycles.should.equal(16);
+			cpu.cycle.should.equal(16);
 			cpu.flags.i.should.equal(true);
 			cpu.pc.value.should.equal(0x3125);
 		});
@@ -87,7 +87,7 @@ describe("CPU", () => {
 		cpu.interrupt("IRQ");
 
 		cpu.sp.value.should.equal(0xfd);
-		cpu.cycles.should.equal(9);
+		cpu.cycle.should.equal(9);
 		cpu.flags.i.should.equal(true);
 		cpu.pc.value.should.equal(0x1235);
 	});
