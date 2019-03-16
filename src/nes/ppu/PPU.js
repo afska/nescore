@@ -1,6 +1,20 @@
 import { WithContext, Byte } from "../helpers";
+import { MemoryChunk } from "../memory";
+import {
+	PPUCtrl,
+	PPUMask,
+	PPUStatus,
+	OAMAddr,
+	OAMData,
+	PPUScroll,
+	PPUAddr,
+	PPUData,
+	OAMDMA
+} from "./registers";
+import PPUMemoryMap from "./PPUMemoryMap";
 
-// TODO: Add docs
+const PRIMARY_OAM_SIZE = 256;
+const SECONDARY_OAM_SIZE = 32;
 const TILE_SIZE_X = 8;
 const TILE_SIZE_Y = 8;
 const TILE_SIZE_BYTES = 16;
@@ -10,12 +24,36 @@ export default class PPU {
 	constructor() {
 		WithContext.apply(this);
 
+		this.memory = new PPUMemoryMap();
+		this.oamRam = null; // OAM = Object Attribute Memory (contains sprite data)
+		this.oamRam2 = null;
+
 		this.frame = 0;
 		this.scanLine = 0;
 		this.cycle = 0;
 
+		this.registers = {
+			ppuCtrl: new PPUCtrl(),
+			ppuMask: new PPUMask(),
+			ppuStatus: new PPUStatus(),
+			oamAddr: new OAMAddr(),
+			oamData: new OAMData(),
+			ppuScroll: new PPUScroll(),
+			ppuAddr: new PPUAddr(),
+			ppuData: new PPUData(),
+			oamDma: new OAMDMA()
+		};
+
 		// TODO: Initialize
 		this.tile = 0;
+	}
+
+	/** When a context is loaded. */
+	onLoad(context) {
+		this.memory.loadContext(context);
+		this.oamRam = new MemoryChunk(PRIMARY_OAM_SIZE);
+		this.oamRam2 = new MemoryChunk(SECONDARY_OAM_SIZE);
+		this._reset();
 	}
 
 	/** Executes the next operation. */
@@ -55,4 +93,14 @@ export default class PPU {
 		this.tile++;
 		// TODO: Do it
 	}
+
+	/** When the current context is unloaded. */
+	onUnload() {
+		this.memory.unloadContext();
+		this.oamRam = null;
+		this.oamRam2 = null;
+		this._reset();
+	}
+
+	_reset() {}
 }
