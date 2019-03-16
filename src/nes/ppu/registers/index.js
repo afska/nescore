@@ -6,6 +6,7 @@ import OAMData from "./OAMData";
 import PPUScroll from "./PPUScroll";
 import PPUAddr from "./PPUAddr";
 import PPUData from "./PPUData";
+import OAMDMA from "./OAMDMA";
 
 export {
 	PPUCtrl,
@@ -15,5 +16,6 @@ export {
 	OAMData,
 	PPUScroll,
 	PPUAddr,
-	PPUData
+	PPUData,
+	OAMDMA
 };
