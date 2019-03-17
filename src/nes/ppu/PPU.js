@@ -17,6 +17,8 @@ import _ from "lodash";
 const INITIAL_PPUSTATUS = 0b10000000;
 const PRIMARY_OAM_SIZE = 256;
 const SECONDARY_OAM_SIZE = 32;
+const LAST_CYCLE = 340;
+const LAST_SCANLINE = 261;
 const TILE_SIZE_X = 8;
 const TILE_SIZE_Y = 8;
 const TILE_SIZE_BYTES = 16;
@@ -104,6 +106,23 @@ export default class PPU {
 		this.oamRam = null;
 		this.oamRam2 = null;
 		_.each(this.registers, (register) => register.unloadContext());
+	}
+
+	_updateCounters() {
+		// cycle:      0 - LAST_CYCLE
+		// scanLine:   0 - LAST_SCANLINE
+
+		this.cycle++;
+
+		if (this.cycle > LAST_CYCLE) {
+			this.cycle = 0;
+			this.scanLine++;
+
+			if (this.scanLine > LAST_SCANLINE) {
+				this.scanLine = 0;
+				this.frame++;
+			}
+		}
 	}
 
 	_reset() {
