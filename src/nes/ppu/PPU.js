@@ -12,6 +12,7 @@ import {
 	OAMDMA
 } from "./registers";
 import PPUMemoryMap from "./PPUMemoryMap";
+// import palette from "./palette";
 import _ from "lodash";
 
 const INITIAL_PPUSTATUS = 0b10000000;
@@ -68,6 +69,14 @@ export default class PPU {
 
 	/** Executes the next cycle. */
 	step() {
+		// this._renderPixel();
+		// this._shiftRegisters();
+		// this._fetch();
+		// this._evaluateSprites();
+		// this._updateFlags();
+		// this._updateScroll();
+		// this._updateCounters();
+
 		const cartridge = this.context.cartridge;
 		const chrRom = cartridge.chrRom;
 
@@ -111,6 +120,17 @@ export default class PPU {
 		this.oamRam = null;
 		this.oamRam2 = null;
 		_.each(this.registers, (register) => register.unloadContext());
+	}
+
+	_renderPixel() {
+		if (this.cycle >= 257 || this.scanLine >= 240 || this.cycle === 0) return;
+		// (performance check)
+
+		// const x = this.cycle - 1;
+		// const y = this.scanLine;
+
+		// const backgroundVisible = !!this.registers.ppuMask.showBackground;
+		// const spritesVisible = !!this.registers.ppuMask.showSprites;
 	}
 
 	_updateCounters() {
