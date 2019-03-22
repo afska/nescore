@@ -28,12 +28,12 @@ export default class PPUMemoryMap {
 
 	/** Reads a `byte` from `address`, delegating to the mapper. */
 	readAt(address) {
-		this.context.mapper.mapPpuReadAt(this, address);
+		return this.context.mapper.mapPpuReadAt(this, address);
 	}
 
 	/** Writes a `byte` to `address`, delegating to the mapper. */
 	writeAt(address, byte) {
-		this.context.mapper.mapPpuReadAt(this, address);
+		return this.context.mapper.mapPpuWriteAt(this, address);
 	}
 
 	/** When the current context is unloaded. */

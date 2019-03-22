@@ -77,23 +77,16 @@ export default class PPU {
 		// this._updateScroll();
 		// this._updateCounters();
 
-		const cartridge = this.context.cartridge;
-		const chrRom = cartridge.chrRom;
-
 		// The pattern table is an area of memory connected to the PPU that defines the shapes of tiles that make up backgrounds and sprites. Each tile in the pattern table is 16 bytes, made of two planes. The first plane controls bit 0 of the color; the second plane controls bit 1. Any pixel whose color is 0 is background/transparent.
 
 		// render tile
-		const start = this.tile * TILE_SIZE_BYTES;
-		const firstPlane = chrRom.slice(start, start + TILE_SIZE_BYTES / 2);
-		const secondPlane = chrRom.slice(
-			start + TILE_SIZE_BYTES / 2,
-			start + TILE_SIZE_BYTES
-		);
+		const firstPlane = this.tile * TILE_SIZE_BYTES;
+		const secondPlane = firstPlane + TILE_SIZE_BYTES / 2;
 
 		const pixels = []; // TODO: Avoid allocation
 		for (let y = 0; y < TILE_SIZE_Y; y++) {
-			const row1 = firstPlane[y];
-			const row2 = secondPlane[y];
+			const row1 = this.memory.readAt(firstPlane + y);
+			const row2 = this.memory.readAt(secondPlane + y);
 
 			for (let x = 0; x < TILE_SIZE_X; x++) {
 				const column = TILE_SIZE_X - 1 - x;
