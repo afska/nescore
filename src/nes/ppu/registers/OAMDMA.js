@@ -8,6 +8,8 @@ import { InMemoryRegister } from "../../registers";
 
 export default class OAMDMA extends InMemoryRegister {
 	constructor() {
-		super(0x4014);
+		super(0x4014, () => {
+			// TODO: Write OAMDMA transfer logic with this.context.memory
+		});
 	}
 }
