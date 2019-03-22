@@ -207,7 +207,7 @@ if (window.TEST === "PPU") {
 	// with a fallback to a canvas render. It will also setup the ticker
 	// and the root stage PIXI.Container
 
-	const app = new PIXI.Application(32, 32, { backgroundColor: 0xcecece });
+	const app = new PIXI.Application(512, 480, { backgroundColor: 0xcecece });
 	const graphics = new PIXI.Graphics();
 	app.stage.addChild(graphics);
 
@@ -219,9 +219,9 @@ if (window.TEST === "PPU") {
 		// graphics.endFill();
 	});
 
-	window.drawPix = (x, y, color) => {
+	window.drawPix = (x, y, color, scale = 16) => {
 		graphics.beginFill(color);
-		graphics.drawRect(x, y, 1, 1);
+		graphics.drawRect(x * scale, y * scale, scale, scale);
 		graphics.endFill();
 	};
 
