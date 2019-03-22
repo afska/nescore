@@ -11,6 +11,7 @@ export default class NES {
 		this.display = display;
 		this.logger = logger;
 
+		this.masterCycle = 0;
 		this.cpu = new CPU();
 		this.ppu = new PPU();
 	}
@@ -30,9 +31,18 @@ export default class NES {
 		});
 	}
 
+	/** // TODO: Figure out this. */
+	frame(cycles) {
+		this.masterCycle += cycles;
+
+		this.cpu.stepTo(this.masterCycle);
+		this.ppu.stepTo(this.masterCycle);
+	}
+
 	/** Executes a step in the emulation. */
+	/** // TODO: Delete this method and use `frame`. **/
 	step() {
-		this.cpu.step(); // TODO: Add cycle counter and PPU sync
+		this.cpu.step();
 		this.ppu.step();
 	}
 
@@ -43,14 +53,20 @@ export default class NES {
 
 	/** When a context is loaded. */
 	onLoad(context) {
+		this._reset();
 		this.cpu.loadContext(this.context);
 		this.ppu.loadContext(this.context);
 	}
 
 	/** When the current context is unloaded. */
 	onUnload() {
+		this._reset();
 		this.ppu.unloadContext();
 		this.cpu.unloadContext();
 		this.memory.unloadContext();
+	}
+
+	_reset() {
+		this.masterCycle = 0;
 	}
 }

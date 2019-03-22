@@ -43,6 +43,11 @@ export default class CPU {
 		this._reset();
 	}
 
+	/** Executes operations until reaching `masterCycle`. */
+	stepTo(masterCycle) {
+		while (this.cycle < masterCycle) this.step();
+	}
+
 	/** Executes the next operation. */
 	step() {
 		this.requireContext();

@@ -61,7 +61,12 @@ export default class PPU {
 		this._reset();
 	}
 
-	/** Executes the next operation. */
+	/** Executes cycles until reaching `masterCycle`. */
+	stepTo(masterCycle) {
+		while (this.cycle < masterCycle) this.step();
+	}
+
+	/** Executes the next cycle. */
 	step() {
 		const cartridge = this.context.cartridge;
 		const chrRom = cartridge.chrRom;

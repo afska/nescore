@@ -57,6 +57,22 @@ describe("CPU", () => {
 		memory.readAt(0x0201).should.equal(5);
 	});
 
+	it("runs operations until reaching masterCycles", () => {
+		cpu.stepTo(12);
+
+		cpu.pc.value.should.equal(0x123a);
+		cpu.cycle.should.equal(15);
+		cpu.registers.a.value.should.equal(5);
+		memory.readAt(0x0201).should.equal(5);
+
+		cpu.stepTo(14);
+
+		cpu.pc.value.should.equal(0x123a);
+		cpu.cycle.should.equal(15);
+		cpu.registers.a.value.should.equal(5);
+		memory.readAt(0x0201).should.equal(5);
+	});
+
 	[
 		{ interrupt: "NMI", vector: NMI_VECTOR },
 		{ interrupt: "RESET", vector: RESET_VECTOR },
