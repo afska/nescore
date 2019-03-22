@@ -92,7 +92,7 @@ export default class PPU {
 		const palette = [0xffffff, 0xcecece, 0x686868, 0x000000];
 
 		pixels.forEach((p, i) => {
-			window.drawPix(i % 8, Math.floor(i / 8), palette[p]);
+			this.context.display.draw(i % 8, Math.floor(i / 8), palette[p]);
 		});
 
 		this.tile++;
@@ -109,8 +109,8 @@ export default class PPU {
 	}
 
 	_updateCounters() {
-		// cycle:      0 - LAST_CYCLE
-		// scanLine:   0 - LAST_SCANLINE
+		// cycle:      [0 ... LAST_CYCLE]
+		// scanLine:   [0 ... LAST_SCANLINE]
 
 		this.cycle++;
 

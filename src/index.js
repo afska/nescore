@@ -165,9 +165,9 @@ const DEMO = async () => {
 	const bytes = Buffer.from(arrayBuffer);
 
 	window.bytes = bytes;
-	window.nes = new NES();
+	window.nes = new NES(window.display, nesTestLogger);
 
-	window.nes.load(bytes, nesTestLogger);
+	window.nes.load(bytes);
 	window.nes.cpu.pc.value = 0xc000;
 
 	const logResponse = await fetch("testroms/nestest.log");
@@ -201,7 +201,7 @@ DEMO();
 
 // ---
 
-window.drawPix = () => {};
+window.display = { draw: () => {} };
 if (window.TEST === "PPU") {
 	// The application will create a renderer using WebGL, if possible,
 	// with a fallback to a canvas render. It will also setup the ticker
@@ -219,10 +219,13 @@ if (window.TEST === "PPU") {
 		// graphics.endFill();
 	});
 
-	window.drawPix = (x, y, color, scale = 16) => {
-		graphics.beginFill(color);
-		graphics.drawRect(x * scale, y * scale, scale, scale);
-		graphics.endFill();
+	window.display = {
+		draw(x, y, color) {
+			graphics.beginFill(color);
+			graphics.drawRect(x * this.scale, y * this.scale, this.scale, this.scale);
+			graphics.endFill();
+		},
+		scale: 16
 	};
 
 	// The application will create a canvas element for you that you

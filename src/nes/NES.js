@@ -5,8 +5,11 @@ import { WithContext } from "./helpers";
 
 /** The NES Emulator. */
 export default class NES {
-	constructor() {
+	constructor(display, logger = null) {
 		WithContext.apply(this);
+
+		this.display = display;
+		this.logger = logger;
 
 		this.cpu = new CPU();
 		this.ppu = new PPU();
@@ -17,7 +20,8 @@ export default class NES {
 		const cartridge = new Cartridge(rom);
 
 		this.loadContext({
-			logger,
+			display: this.display,
+			logger: this.logger,
 			cpu: this.cpu,
 			memory: this.cpu.memory,
 			ppu: this.ppu,
