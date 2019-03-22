@@ -1,7 +1,7 @@
 import { WithContext } from "../helpers";
 import { Register8Bit, Register16Bit } from "../registers";
-import CPUMemoryMap from "./CPUMemoryMap";
 import FlagsRegister from "./FlagsRegister";
+import CPUMemoryMap from "./CPUMemoryMap";
 import Stack from "./Stack";
 import operations from "./operations";
 
@@ -94,8 +94,8 @@ export default class CPU {
 	/** When the current context is unloaded. */
 	onUnload() {
 		this._reset();
-		this.memory.unloadContext();
 		this.stack.unloadContext();
+		this.memory.unloadContext();
 	}
 
 	_reset() {

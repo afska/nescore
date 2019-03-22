@@ -220,6 +220,9 @@ if (window.TEST === "PPU") {
 	});
 
 	window.display = {
+		clear() {
+			graphics.clear();
+		},
 		draw(x, y, color) {
 			graphics.beginFill(color);
 			graphics.drawRect(x * this.scale, y * this.scale, this.scale, this.scale);

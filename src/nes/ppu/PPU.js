@@ -1,4 +1,4 @@
-import { WithContext, Byte } from "../helpers";
+import { WithContext } from "../helpers";
 import { MemoryChunk } from "../memory";
 import {
 	PPUCtrl,
@@ -12,6 +12,7 @@ import {
 	OAMDMA
 } from "./registers";
 import PPUMemoryMap from "./PPUMemoryMap";
+import PatternTable from "./PatternTable";
 // import palette from "./palette";
 import _ from "lodash";
 
@@ -20,9 +21,6 @@ const PRIMARY_OAM_SIZE = 256;
 const SECONDARY_OAM_SIZE = 32;
 const LAST_CYCLE = 340;
 const LAST_SCANLINE = 261;
-const TILE_SIZE_X = 8;
-const TILE_SIZE_Y = 8;
-const TILE_SIZE_BYTES = 16;
 
 /** The Picture Processing Unit. It generates a video signal of 256x240 pixels. */
 export default class PPU {
@@ -34,6 +32,7 @@ export default class PPU {
 		this.cycle = 0;
 
 		this.memory = new PPUMemoryMap();
+		this.patternTable = new PatternTable();
 		this.oamRam = null; // OAM = Object Attribute Memory (contains sprite data)
 		this.oamRam2 = null;
 
@@ -49,13 +48,13 @@ export default class PPU {
 			oamDma: new OAMDMA()
 		};
 
-		// TODO: Initialize
-		this.tile = 0;
+		this.tile = 0; // TODO: Remove this
 	}
 
 	/** When a context is loaded. */
 	onLoad(context) {
 		this.memory.loadContext(context);
+		this.patternTable.loadContext(context);
 		this.oamRam = new MemoryChunk(PRIMARY_OAM_SIZE);
 		this.oamRam2 = new MemoryChunk(SECONDARY_OAM_SIZE);
 		_.each(this.registers, (register) => register.loadContext(context.memory));
@@ -77,38 +76,19 @@ export default class PPU {
 		// this._updateScroll();
 		// this._updateCounters();
 
-		// The pattern table is an area of memory connected to the PPU that defines the shapes of tiles that make up backgrounds and sprites. Each tile in the pattern table is 16 bytes, made of two planes. The first plane controls bit 0 of the color; the second plane controls bit 1. Any pixel whose color is 0 is background/transparent.
-
-		// render tile
-		const firstPlane = this.tile * TILE_SIZE_BYTES;
-		const secondPlane = firstPlane + TILE_SIZE_BYTES / 2;
-
-		const pixels = []; // TODO: Avoid allocation
-		for (let y = 0; y < TILE_SIZE_Y; y++) {
-			const row1 = this.memory.readAt(firstPlane + y);
-			const row2 = this.memory.readAt(secondPlane + y);
-
-			for (let x = 0; x < TILE_SIZE_X; x++) {
-				const column = TILE_SIZE_X - 1 - x;
-				const lsb = Byte.getBit(row1, column);
-				const msb = Byte.getBit(row2, column);
-				pixels.push(lsb + msb * 2);
-			}
-		}
-
-		const palette = [0xffffff, 0xcecece, 0x686868, 0x000000];
-
-		pixels.forEach((p, i) => {
-			this.context.display.draw(i % 8, Math.floor(i / 8), palette[p]);
-		});
-
+		// this.context.display.clear();
+		this.patternTable.renderTile(
+			this.tile,
+			((this.tile % 16) * 8) % 32,
+			Math.floor((this.tile % 16) / 4) * 8
+		);
 		this.tile++;
-		// TODO: Do it
 	}
 
 	/** When the current context is unloaded. */
 	onUnload() {
 		this._reset();
+		this.patternTable.unloadContext();
 		this.memory.unloadContext();
 		this.oamRam = null;
 		this.oamRam2 = null;

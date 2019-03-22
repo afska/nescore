@@ -23,9 +23,13 @@ export default class NES {
 		this.loadContext({
 			display: this.display,
 			logger: this.logger,
+
 			cpu: this.cpu,
-			memory: this.cpu.memory,
 			ppu: this.ppu,
+
+			memory: this.cpu.memory,
+			ppuMemory: this.ppu.memory,
+
 			cartridge,
 			mapper: cartridge.createMapper()
 		});
@@ -63,7 +67,6 @@ export default class NES {
 		this._reset();
 		this.ppu.unloadContext();
 		this.cpu.unloadContext();
-		this.memory.unloadContext();
 	}
 
 	_reset() {
