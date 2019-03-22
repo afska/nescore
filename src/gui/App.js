@@ -17,17 +17,6 @@ export default class App extends Component {
 	render() {
 		return (
 			<div className="app">
-				<div style={{ display: window.TEST === "PPU" ? "block" : "none" }}>
-					{_.range(0, 64).map((n, i) => {
-						return (
-							<span key={i}>
-								{n > 0 && n % 8 === 0 ? <br /> : null}
-								<span id={`p${n}`}>▢</span>
-							</span>
-						);
-					})}
-				</div>
-
 				<div style={{ display: window.TEST === "NESTEST" ? "block" : "none" }}>
 					<div className="debugger" onKeyDown={this.onStep}>
 						<DiffViewer
@@ -50,7 +39,8 @@ export default class App extends Component {
 		if (event.code !== "Enter") return;
 
 		let diffs = [];
-		for (let i = 0; i < 15; i++) diffs.push(window.getDiff());
+		for (let i = 0; i < (window.TEST === "NESTEST" ? 15 : 1); i++)
+			diffs.push(window.getDiff());
 
 		this.setState({
 			expected: _(diffs)

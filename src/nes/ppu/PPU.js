@@ -89,10 +89,10 @@ export default class PPU {
 			}
 		}
 
-		const palette = ["#ffffff", "#cecece", "#686868", "#000000"];
+		const palette = [0xffffff, 0xcecece, 0x686868, 0x000000];
 
 		pixels.forEach((p, i) => {
-			document.querySelector(`#p${i}`).style.backgroundColor = palette[p];
+			window.drawPix(i % 8, Math.floor(i / 8), palette[p]);
 		});
 
 		this.tile++;
