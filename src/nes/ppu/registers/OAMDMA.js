@@ -1,4 +1,5 @@
 import { InMemoryRegister } from "../../registers";
+import { Byte } from "../../helpers";
 
 /**
  * OAM DMA Register (> write)
@@ -8,8 +9,14 @@ import { InMemoryRegister } from "../../registers";
 
 export default class OAMDMA extends InMemoryRegister {
 	constructor() {
-		super(0x4014, () => {
-			// TODO: Write OAMDMA transfer logic with this.context.memory
+		super(0x4014, (page) => {
+			for (let i = 0; i < 256; i++) {
+				const address = Byte.to16Bit(page, i);
+				const value = this.context.memory.readAt(address);
+				this.context.ppu.oamRam.writeAt(i, value);
+			}
+
+			// TODO: Add 513 cycles (+1 on odd cycles) (+1 for the OAMDMA write tick)
 		});
 	}
 }
