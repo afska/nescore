@@ -21,13 +21,13 @@ export default class PatternTable {
 
 	/** Renders the tile `id` in (`startX`, `startY`). */
 	renderTile(id, startX, startY) {
-		const { ppuMemory } = this.context;
+		const { memory } = this.context.ppu;
 		const firstPlane = id * TILE_SIZE_BYTES;
 		const secondPlane = firstPlane + TILE_SIZE_BYTES / 2;
 
 		for (let y = 0; y < TILE_SIZE_Y; y++) {
-			const row1 = ppuMemory.readAt(START_ADDRESS + firstPlane + y);
-			const row2 = ppuMemory.readAt(START_ADDRESS + secondPlane + y);
+			const row1 = memory.readAt(START_ADDRESS + firstPlane + y);
+			const row2 = memory.readAt(START_ADDRESS + secondPlane + y);
 
 			for (let x = 0; x < TILE_SIZE_X; x++) {
 				const column = TILE_SIZE_X - 1 - x;

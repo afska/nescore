@@ -11,9 +11,11 @@ export default class OAMDMA extends InMemoryRegister {
 	constructor() {
 		super(0x4014, (page) => {
 			for (let i = 0; i < 256; i++) {
+				const { ppu, memory } = this.context;
+
 				const address = Byte.to16Bit(page, i);
-				const value = this.context.memory.readAt(address);
-				this.context.ppu.oamRam.writeAt(i, value);
+				const value = memory.readAt(address);
+				ppu.oamRam.writeAt(i, value);
 			}
 
 			// TODO: Add 513 cycles (+1 on odd cycles) (+1 for the OAMDMA write tick)

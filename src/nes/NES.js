@@ -28,7 +28,6 @@ export default class NES {
 			ppu: this.ppu,
 
 			memory: this.cpu.memory,
-			ppuMemory: this.ppu.memory,
 
 			cartridge,
 			mapper: cartridge.createMapper()

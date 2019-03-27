@@ -10,6 +10,7 @@ export default class Register {
 		this.value = this.initialValue;
 	}
 
+	// TODO: Check usages and remove these two methods
 	/** Increments the value. */
 	increment() {
 		this.value++;
