@@ -17,10 +17,6 @@ export default class PPUData extends InMemoryRegister {
 			ppu.memory.writeAt(address, value);
 			ppuAddr.value += ppuCtrl.vramAddressIncrement;
 
-			// TODO: Understand
-			// this.currentVRamAddress &= 0x7FFF;
-			// this.ppuaddr.store(this.currentVRamAddress & 0xFF);
-
 			// TODO: Add cycles
 		});
 	}

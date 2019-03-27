@@ -30,6 +30,8 @@ export default class InMemoryRegister {
 
 	/** Sets the actual value. */
 	set value(value) {
+		value = Byte.force8Bit(value);
+
 		this.onChange(value);
 		this.context.writeAt(this.address, value);
 	}
