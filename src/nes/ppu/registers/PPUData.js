@@ -11,11 +11,15 @@ export default class PPUData extends InMemoryRegister {
 	constructor() {
 		super(0x2007, (value) => {
 			const { ppu } = this.context;
-			const { ppuAddr } = ppu.registers;
+			const { ppuAddr, ppuCtrl } = ppu.registers;
 
 			const address = Byte.to16Bit(ppuAddr.previousValue, ppuAddr.value);
 			ppu.memory.writeAt(address, value);
-			ppuAddr.value++;
+			ppuAddr.value += ppuCtrl.vramAddressIncrement;
+
+			// TODO: Understand
+			// this.currentVRamAddress &= 0x7FFF;
+			// this.ppuaddr.store(this.currentVRamAddress & 0xFF);
 
 			// TODO: Add cycles
 		});
