@@ -8,6 +8,12 @@ import { InMemoryRegister } from "../../registers";
 
 export default class PPUAddr extends InMemoryRegister {
 	constructor() {
-		super(0x2006);
+		super(0x2006, (byte) => {
+			this.previousValue = this.value;
+
+			// TODO: Add cycles
+		});
+
+		this.previousValue = null;
 	}
 }

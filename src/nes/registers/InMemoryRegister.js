@@ -30,7 +30,7 @@ export default class InMemoryRegister {
 
 	/** Sets the actual value. */
 	set value(value) {
-		this.context.writeAt(this.address, value);
 		this.onChange(value);
+		this.context.writeAt(this.address, value);
 	}
 }

@@ -1,4 +1,5 @@
 import { InMemoryRegister } from "../../registers";
+import { Byte } from "../../helpers";
 
 /**
  * PPU Data Port (<> read/write)
@@ -8,6 +9,15 @@ import { InMemoryRegister } from "../../registers";
 
 export default class PPUData extends InMemoryRegister {
 	constructor() {
-		super(0x2007);
+		super(0x2007, (value) => {
+			const { ppu } = this.context;
+			const { ppuAddr } = ppu.registers;
+
+			const address = Byte.to16Bit(ppuAddr.previousValue, ppuAddr.value);
+			ppu.memory.writeAt(address, value);
+			ppuAddr.value++;
+
+			// TODO: Add cycles
+		});
 	}
 }

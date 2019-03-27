@@ -10,11 +10,11 @@ export default class OAMAddr extends InMemoryRegister {
 	constructor() {
 		super(0x2004, (value) => {
 			const { ppu } = this.context;
+			const { oamAddr } = ppu.registers;
 
-			const address = ppu.registers.oamAddr.value;
+			const address = oamAddr.value;
 			ppu.oamRam.writeAt(address, value);
-
-			ppu.registers.oamAddr.value++;
+			oamAddr.value++;
 
 			// TODO: Add cycles
 		});
