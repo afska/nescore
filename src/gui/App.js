@@ -37,6 +37,7 @@ export default class App extends Component {
 
 	onStep = (event) => {
 		if (event.code !== "Enter") return;
+		return; // TODO: Refactor this
 
 		let diffs = [];
 		for (let i = 0; i < (window.TEST === "NESTEST" ? 15 : 1); i++)

@@ -13,7 +13,6 @@ import {
 } from "./registers";
 import PPUMemoryMap from "./PPUMemoryMap";
 import PatternTable from "./PatternTable";
-// import palette from "./palette";
 import _ from "lodash";
 
 const INITIAL_PPUSTATUS = 0b10000000;

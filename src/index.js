@@ -152,6 +152,7 @@ const nesTestLogger = {
 		const $status = `${$registers} ${$ppuCycle} ${$cpuCycle}`;
 
 		window.lastLog = $counter + $commandHex + $assembly + $status;
+		console.log(window.lastLog);
 	}
 };
 
@@ -212,6 +213,10 @@ if (window.TEST === "PPU") {
 	app.stage.addChild(graphics);
 
 	app.ticker.add(function(delta) {
+		// this is a frame
+
+		window.nes.frame(29780);
+
 		// graphics.clear();
 		// // Rectangle
 		// graphics.beginFill(0xffffff);
