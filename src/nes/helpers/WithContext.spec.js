@@ -46,15 +46,55 @@ describe("helpers", () => {
 			state.should.equal(99);
 		});
 
-		it("it works without an onLoad method", () => {
+		it("works without an onLoad method", () => {
 			target.onLoad = undefined;
 			(() => target.loadContext({})).should.not.throw(Error);
 		});
 
-		it("it works without an onUnload method", () => {
+		it("works without an onUnload method", () => {
 			target.onUnload = undefined;
 			target.loadContext({});
 			(() => target.unloadContext({})).should.not.throw(Error);
+		});
+
+		describe("dependencies", () => {
+			let thing;
+
+			beforeEach(() => {
+				thing = 3;
+
+				const dep1 = {
+					onLoad() {
+						thing /= 2;
+					},
+					onUnload() {
+						thing /= 3;
+					}
+				};
+
+				const dep2 = {
+					onLoad() {
+						thing += 1;
+					},
+					onUnload() {
+						thing += 2;
+					}
+				};
+
+				WithContext.apply(dep1);
+				WithContext.apply(dep2);
+				target.addDependency(dep1).addDependency(dep2);
+			});
+
+			it("loads dependencies in the right order", () => {
+				target.loadContext({});
+				thing.should.equal(2.5); // -> 3 / 2 + 1
+			});
+
+			it("unloads dependencies in reversed order", () => {
+				target.loadContext({}).unloadContext();
+				thing.should.equal(1.5); // -> (2.5 + 2) / 3
+			});
 		});
 	});
 });
