@@ -56,9 +56,9 @@ export default class NES {
 
 	/** When a context is loaded. */
 	onLoad(context) {
-		this._reset();
 		this.cpu.loadContext(this.context);
 		this.ppu.loadContext(this.context);
+		this._reset();
 	}
 
 	/** When the current context is unloaded. */

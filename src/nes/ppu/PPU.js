@@ -96,12 +96,8 @@ export default class PPU {
 	}
 
 	_renderPixel() {
-		if (this.cycle >= 257 || this.scanLine >= 240 || this.cycle === 0) return;
-		// (performance check)
-
 		// const x = this.cycle - 1;
 		// const y = this.scanLine;
-
 		// const backgroundVisible = !!this.registers.ppuMask.showBackground;
 		// const spritesVisible = !!this.registers.ppuMask.showSprites;
 	}

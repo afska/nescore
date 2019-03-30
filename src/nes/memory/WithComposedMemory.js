@@ -7,16 +7,15 @@ export default {
 	apply(obj) {
 		_.defaults(obj, _.omit(this, "apply"));
 		WithLittleEndian.apply(obj);
-
-		obj._chunks = null;
+		obj.chunks = null;
 	},
 
 	/** Defines the `chunks` of the memory map. */
 	defineChunks(chunks) {
-		this._chunks = chunks;
+		this.chunks = chunks;
 
 		let startAddress = 0;
-		for (let chunk of this._chunks) {
+		for (let chunk of this.chunks) {
 			chunk.$memoryStartAddress = startAddress;
 			startAddress += chunk.memorySize;
 		}
@@ -39,9 +38,9 @@ export default {
 	},
 
 	_getChunkFor(address) {
-		if (!this._chunks) throw new Error("Undefined chunks.");
+		if (!this.chunks) throw new Error("Undefined chunks.");
 
-		for (let chunk of this._chunks) {
+		for (let chunk of this.chunks) {
 			const startAddress = chunk.$memoryStartAddress;
 
 			if (address >= startAddress && address < startAddress + chunk.memorySize)

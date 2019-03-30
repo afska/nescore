@@ -9,7 +9,7 @@ const palette = [0xffffff, 0xcecece, 0x686868, 0x000000]; // TODO: Remove this
 
 /**
  * An area of memory which defines the shapes of tiles that make up backgrounds and sprites.
- * Each tile is is 16 bytes, made of two planes:
+ * Each tile is 16 bytes, made of two planes:
  * - The first plane controls bit 0 of the color
  * - The second plane controls bit 1 of the color.
  * Any pixel whose color is 0 is background/transparent.

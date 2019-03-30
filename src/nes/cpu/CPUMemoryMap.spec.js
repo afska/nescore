@@ -17,6 +17,12 @@ describe("memory", () => {
 			memory = new CPUMemoryMap().loadContext({ mapper });
 		});
 
+		it("stores the start address of each chunk", () => {
+			_.last(memory.chunks).$memoryStartAddress.should.equal(
+				MAPPER_START_ADDRESS
+			);
+		});
+
 		it("stores the memory size", () => {
 			memory.memorySize.should.equal(64 * KB);
 		});
