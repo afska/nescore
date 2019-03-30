@@ -11,6 +11,7 @@ import {
 	PPUData,
 	OAMDMA
 } from "./registers";
+import { cycleType, scanlineType } from "./constants";
 import PPUMemoryMap from "./PPUMemoryMap";
 import PatternTable from "./PatternTable";
 import _ from "lodash";
@@ -47,9 +48,8 @@ export default class PPU {
 			oamDma: new OAMDMA()
 		};
 
-		this.flags = {};
-
-		this.tile = 0; // TODO: Remove this
+		this._cycleType = null;
+		this._scanlineType = null;
 	}
 
 	/** When a context is loaded. */
@@ -69,7 +69,23 @@ export default class PPU {
 
 	/** Executes the next cycle. */
 	step() {
+		this._cycleType = cycleType(this.cycle);
+		this._scanlineType = scanlineType(this.scanline);
+
+		let interrupt = null;
+		if (this.scanlineType === "VBLANK_START") {
+			interrupt = this._doVBlankLine();
+		} else if (this._isRenderingEnabled) {
+			if (this.scanlineType === "PRELINE") {
+				interrupt = this._doPreline();
+			} else if (this.scanlineType === "VISIBLE") {
+				interrupt = this._doVisibleLine();
+			}
+		}
+
 		this._incrementCounters();
+
+		return interrupt;
 	}
 
 	/** When the current context is unloaded. */
@@ -120,8 +136,18 @@ export default class PPU {
 
 	_reset() {
 		this.frame = 0;
-		this.scanline = 0;
+		this.scanline = LAST_SCANLINE;
 		this.cycle = 0;
 		this.registers.ppuStatus.value = INITIAL_PPUSTATUS;
+
+		this._cycleType = null;
+		this._scanlineType = null;
+	}
+
+	get _isRenderingEnabled() {
+		return (
+			this.registers.ppuMask.showBackground ||
+			this.registers.ppuMask.showSprites
+		);
 	}
 }
