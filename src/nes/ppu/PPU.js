@@ -27,7 +27,7 @@ export default class PPU {
 		WithContext.apply(this);
 
 		this.frame = 0;
-		this.scanLine = 0;
+		this.scanline = 0;
 		this.cycle = 0;
 
 		this.memory = new PPUMemoryMap();
@@ -96,23 +96,23 @@ export default class PPU {
 
 	_renderPixel() {
 		// const x = this.cycle - 1;
-		// const y = this.scanLine;
+		// const y = this.scanline;
 		// const backgroundVisible = !!this.registers.ppuMask.showBackground;
 		// const spritesVisible = !!this.registers.ppuMask.showSprites;
 	}
 
 	_updateCounters() {
 		// cycle:      [0 ... LAST_CYCLE]
-		// scanLine:   [0 ... LAST_SCANLINE]
+		// scanline:   [0 ... LAST_SCANLINE]
 
 		this.cycle++;
 
 		if (this.cycle > LAST_CYCLE) {
 			this.cycle = 0;
-			this.scanLine++;
+			this.scanline++;
 
-			if (this.scanLine > LAST_SCANLINE) {
-				this.scanLine = 0;
+			if (this.scanline > LAST_SCANLINE) {
+				this.scanline = 0;
 				this.frame++;
 			}
 		}
@@ -120,7 +120,7 @@ export default class PPU {
 
 	_reset() {
 		this.frame = 0;
-		this.scanLine = 0;
+		this.scanline = 0;
 		this.cycle = 0;
 		this.registers.ppuStatus.value = INITIAL_PPUSTATUS;
 	}
