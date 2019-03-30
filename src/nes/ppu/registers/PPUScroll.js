@@ -7,7 +7,7 @@ import { InMemoryRegister } from "../../registers";
  * (selected through `PPUCtrl`) should be at the top left corner of the rendered screen.
  */
 
-export default class PPUStatus extends InMemoryRegister {
+export default class PPUScroll extends InMemoryRegister {
 	constructor() {
 		super(0x2005);
 	}

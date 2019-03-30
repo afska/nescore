@@ -21,6 +21,7 @@ const PRIMARY_OAM_SIZE = 256;
 const SECONDARY_OAM_SIZE = 32;
 const LAST_CYCLE = 340;
 const LAST_SCANLINE = 261;
+const SPRITES_PER_SCANLINE = 8;
 
 /** The Picture Processing Unit. It generates a video signal of 256x240 pixels. */
 export default class PPU {
@@ -46,6 +47,30 @@ export default class PPU {
 			ppuAddr: new PPUAddr(),
 			ppuData: new PPUData(),
 			oamDma: new OAMDMA()
+		};
+
+		this.internal = {
+			v: 0, // current vram address (15 bit)
+			t: 0, // temporary vram address (15 bit)
+			y: 0, // y, used to help compute vram address
+			x: 0, // fine x scroll (3 bit)
+			w: 0, // write toggle (1 bit)
+			register: 0,
+			registerRead: 0,
+			registerBuffer: 0,
+			render: {
+				backgroundTileBuffer: null,
+				lowTileByte: 0,
+				highTileByte: 0,
+				attributeTableByte: 0,
+				spriteCount: 0,
+				sprites: null
+			}
+		};
+
+		this.flags = {
+			isFrameReady: false,
+			nmiOccurred: false
 		};
 
 		this._cycleType = null;
@@ -105,6 +130,149 @@ export default class PPU {
 		// const spritesVisible = !!this.registers.ppuMask.showSprites;
 	}
 
+	_doPreline() {
+		if (
+			this._cycleType === "ONE" ||
+			this._cycleType === "VISIBLE" ||
+			this._cycleType === "PREFETCH"
+		) {
+			this.internal.render.backgroundTileBuffer.shift();
+
+			if (this.cycle % 8 === 0) {
+				if (this.cycle < 256) {
+					this._fetchAndStoreBackgroundRow();
+				}
+				this._updateScrollingX();
+			}
+		}
+
+		if (this._cycleType === "SPRITES") {
+			this.internal.render.spriteCount = 0;
+		}
+
+		if (this._cycleType === "COPY_Y") {
+			// https://wiki.nesdev.com/w/index.php/PPU_scrolling#During_dots_280_to_304_of_the_pre-render_scanline_.28end_of_vblank.29
+			this.internal.v = (this.internal.v & 0x841f) | (this.internal.t & 0x7be0);
+		}
+
+		this._updateScrollingY();
+
+		if (this._cycleType === "ONE") {
+			this._clearVerticalBlank();
+		}
+
+		if (this._cycleType === "MAPPER_TICK") {
+			// if (this.memory.mapper.tick()) { // TODO: Add Mapper::tick()
+			// 	// (only used for a few mappers)
+			// 	return "IRQ";
+			// }
+		}
+	}
+
+	_doVisibleLine() {
+		if (this._cycleType === "ONE" || this._cycleType === "VISIBLE") {
+			// this.renderPixel(); // TODO: Implement
+		}
+
+		if (this._cycleType === "VISIBLE") {
+			this.internal.render.backgroundTileBuffer.shift();
+
+			if (this.cycle % 8 === 0) {
+				if (this.cycle < 256) {
+					this._fetchAndStoreBackgroundRow();
+				}
+				this._updateScrollingX();
+			}
+		} else if (this._cycleType === "FLUSH_TILEDATA") {
+			this.internal.render.backgroundTileBuffer.length = 0;
+		} else if (this._cycleType === "PREFETCH") {
+			if (this.cycle % 8 === 0) {
+				this._fetchAndStoreBackgroundRow(); // TODO: Implement
+				this._updateScrollingX(); // TODO: Implement
+			}
+		}
+
+		this._updateScrollingY();
+
+		if (this._cycleType === "SPRITES") {
+			this._fetchAndStoreSpriteRows(); // TODO: Implement
+		}
+
+		if (this._cycleType === "MAPPER_TICK") {
+			// if (this.memory.mapper.tick()) { // TODO: Add Mapper::tick()
+			// 	return "IRQ";
+			// }
+		}
+
+		return null;
+	}
+
+	_doVBlankLine() {
+		if (this._cycleType === "SPRITES") {
+			this.internal.render.spriteCount = 0;
+		}
+
+		// Vertical Blank is set at second tick of scanline 241
+		if (this._cycleType === "ONE") {
+			this._setVerticalBlank();
+			if (this.registers.ppuCtrl.generateNmiAtStartOfVBlank) {
+				return "NMI";
+			}
+		}
+
+		return null;
+	}
+
+	_updateScrollingY() {
+		// This one is a mess
+		// Values are coming from nesdev, don't touch, don't break
+
+		if (this.cycleType === "INCREMENT_Y") {
+			// https://wiki.nesdev.com/w/index.php/PPU_scrolling#Y_increment
+
+			// increment vert(v)
+			// if fine Y < 7
+			if ((this.internal.v & 0x7000) !== 0x7000) {
+				// increment fine Y
+				this.internal.v += 0x1000;
+			} else {
+				// fine Y = 0
+				this.internal.v = this.internal.v & 0x8fff;
+				// let y = coarse Y
+				this.internal.y = (this.internal.v & 0x03e0) >> 5;
+				if (this.internal.y === 29) {
+					// coarse Y = 0
+					this.internal.y = 0;
+					// switch vertical nametable
+					this.internal.v = this.internal.v ^ 0x0800;
+				} else if (this.internal.y === 31) {
+					// coarse Y = 0, nametable not switched
+					this.internal.y = 0;
+				} else {
+					// increment coarse Y
+					this.internal.y++;
+				}
+				// put coarse Y back into v
+				this.internal.v = (this.internal.v & 0xfc1f) | (this.internal.y << 5);
+			}
+		}
+
+		if (this.cycleType === "COPY_X") {
+			// https://wiki.nesdev.com/w/index.php/PPU_scrolling#At_dot_257_of_each_scanline
+
+			this.internal.v = (this.internal.v & 0xfbe0) | (this.internal.t & 0x041f);
+		}
+	}
+
+	_setVerticalBlank() {
+		this.flags.nmiOccurred = true;
+	}
+
+	_clearVerticalBlank() {
+		this.flags.nmiOccurred = false;
+		this.flags.isFrameReady = true;
+	}
+
 	_incrementCounters() {
 		// cycle:      [0 ... LAST_CYCLE]
 		// scanline:   [0 ... LAST_SCANLINE]
@@ -138,7 +306,34 @@ export default class PPU {
 		this.frame = 0;
 		this.scanline = LAST_SCANLINE;
 		this.cycle = 0;
+
 		this.registers.ppuStatus.value = INITIAL_PPUSTATUS;
+
+		this.internal.v = 0;
+		this.internal.t = 0;
+		this.internal.y = 0;
+		this.internal.x = 0;
+		this.internal.w = 0;
+		this.internal.register = 0;
+		this.internal.registerRead = 0;
+		this.internal.registerBuffer = 0;
+		this.internal.render.backgroundTileBuffer = [];
+		this.internal.render.lowTileByte = 0;
+		this.internal.render.highTileByte = 0;
+		this.internal.render.attributeTableByte = 0;
+		this.internal.render.spriteCount = 0;
+		this.internal.render.sprites = new Array(SPRITES_PER_SCANLINE);
+		for (var i = 0; i < SPRITES_PER_SCANLINE; i++) {
+			this.internal.render.sprites[i] = {
+				buffer: [],
+				x: null,
+				priority: null,
+				index: null
+			};
+		}
+
+		this.flags.isFrameReady = false;
+		this.flags.nmiOccurred = false;
 
 		this._cycleType = null;
 		this._scanlineType = null;
