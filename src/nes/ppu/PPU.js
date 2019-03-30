@@ -47,6 +47,8 @@ export default class PPU {
 			oamDma: new OAMDMA()
 		};
 
+		this.flags = {};
+
 		this.tile = 0; // TODO: Remove this
 	}
 
@@ -67,21 +69,7 @@ export default class PPU {
 
 	/** Executes the next cycle. */
 	step() {
-		// this._renderPixel();
-		// this._shiftRegisters();
-		// this._fetch();
-		// this._evaluateSprites();
-		// this._updateFlags();
-		// this._updateScroll();
-		// this._updateCounters();
-
-		// this.context.display.clear();
-		this.patternTable.renderTile(
-			this.tile,
-			((this.tile % 16) * 8) % 32,
-			Math.floor((this.tile % 16) / 4) * 8
-		);
-		this.tile++;
+		this._incrementCounters();
 	}
 
 	/** When the current context is unloaded. */
@@ -101,11 +89,12 @@ export default class PPU {
 		// const spritesVisible = !!this.registers.ppuMask.showSprites;
 	}
 
-	_updateCounters() {
+	_incrementCounters() {
 		// cycle:      [0 ... LAST_CYCLE]
 		// scanline:   [0 ... LAST_SCANLINE]
 
 		this.cycle++;
+		this._skipOneCycleIfOddFrameAndBackgroundOn();
 
 		if (this.cycle > LAST_CYCLE) {
 			this.cycle = 0;
@@ -115,6 +104,17 @@ export default class PPU {
 				this.scanline = 0;
 				this.frame++;
 			}
+		}
+	}
+
+	_skipOneCycleIfOddFrameAndBackgroundOn() {
+		if (
+			this.scanline === LAST_SCANLINE &&
+			this.cycle === LAST_CYCLE &&
+			this.ppuMask.showBackground &&
+			this.frame % 2 === 1
+		) {
+			this.cycle++;
 		}
 	}
 
