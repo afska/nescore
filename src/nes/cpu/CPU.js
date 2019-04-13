@@ -4,14 +4,10 @@ import FlagsRegister from "./FlagsRegister";
 import CPUMemoryMap from "./CPUMemoryMap";
 import Stack from "./Stack";
 import operations from "./operations";
+import { interrupts } from "./constants";
 
 const INITIAL_FLAGS = 0b00100100;
 const INTERRUPT_CYCLES = 7;
-const INTERRUPT_VECTORS = {
-	NMI: 0xfffa, // Non-maskable interrupt (used to detect vertical blanking)
-	RESET: 0xfffc, // Reset
-	IRQ: 0xfffe // Interrupt request (temporarily stops the current program, and run an interrupt handler instead)
-};
 
 /** The Center Process Unit. It runs programs. */
 export default class CPU {
@@ -71,8 +67,8 @@ export default class CPU {
 	}
 
 	/** Pushes the context to the stack and jumps to the interrupt handler. */
-	interrupt(type, withB2Flag) {
-		if (type === "IRQ" && !this._areInterruptsEnabled) return;
+	interrupt(interrupt, withB2Flag) {
+		if (interrupt.id === "IRQ" && !this._areInterruptsEnabled) return;
 
 		this.stack.push2Bytes(this.pc.value);
 		this.pushFlags(withB2Flag);
@@ -80,7 +76,7 @@ export default class CPU {
 		this.cycle += INTERRUPT_CYCLES;
 
 		this.flags.i = true; // (to make sure handler doesn't get interrupted)
-		this._jumpToInterruptHandler(type);
+		this._jumpToInterruptHandler(interrupt);
 	}
 
 	/**
@@ -109,7 +105,7 @@ export default class CPU {
 		this.registers.y.reset();
 		this._parameter = null;
 
-		this.interrupt("RESET");
+		this.interrupt(interrupts.RESET);
 	}
 
 	_readOperation() {
@@ -134,11 +130,8 @@ export default class CPU {
 			: addressing.getAddress(this.context, parameter, canTakeExtraCycles);
 	}
 
-	_jumpToInterruptHandler(type) {
-		const interruptVector = INTERRUPT_VECTORS[type];
-		if (!interruptVector) throw new Error(`Unknown interrupt: ${type}`);
-
-		this.pc.value = this.memory.read2BytesAt(interruptVector);
+	_jumpToInterruptHandler(interrupt) {
+		this.pc.value = this.memory.read2BytesAt(interrupt.vector);
 	}
 
 	get _areInterruptsEnabled() {

@@ -1,3 +1,5 @@
+import { interrupts } from "../constants";
+
 const instructions = () => [
 	/**
 	 * Force Interrupt
@@ -9,7 +11,7 @@ const instructions = () => [
 	{
 		id: "BRK",
 		execute: ({ cpu }) => {
-			cpu.interrupt("IRQ", true);
+			cpu.interrupt(interrupts.IRQ, true);
 		}
 	},
 
