@@ -1,5 +1,10 @@
 import Mapper from "./Mapper";
-import { WithComposedMemory, MemoryChunk, MemoryMirror } from "../../memory";
+import {
+	WithComposedMemory,
+	MemoryChunk,
+	MemoryMirror,
+	MemoryPadding
+} from "../../memory";
 
 const KB = 1024;
 const PRG_ROM_PAGE_SIZE = 16 * KB;
@@ -14,7 +19,7 @@ export default class NROM extends Mapper {
 		super(cartridge);
 		WithComposedMemory.apply(this);
 
-		const unused = new MemoryChunk(0x3fe0);
+		const unused = new MemoryPadding(0x3fe0);
 		const prgRomFirstPage = new MemoryChunk(
 			cartridge.prgRom.slice(0, PRG_ROM_PAGE_SIZE)
 		);

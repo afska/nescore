@@ -1,4 +1,9 @@
-import { WithComposedMemory, MemoryChunk, MemoryMirror } from "../memory";
+import {
+	WithComposedMemory,
+	MemoryChunk,
+	MemoryMirror,
+	MemoryPadding
+} from "../memory";
 import { WithContext } from "../helpers";
 
 /** The CPU memory map. Addess space size: 64KB. */
@@ -12,10 +17,10 @@ export default class CPUMemoryMap {
 	onLoad({ mapper }) {
 		const ram = new MemoryChunk(0x0800);
 		const ramMirror = new MemoryMirror(ram, 0x1800);
-		const ppuRegisters = new MemoryChunk(0x0008);
-		const ppuRegistersMirror = new MemoryMirror(ppuRegisters, 0x1ff8);
+		const ppuRegisters = new MemoryPadding(0x0008);
+		const ppuRegistersMirror = new MemoryPadding(0x1ff8);
 		const apuAndIoRegisters = new MemoryChunk(0x0018);
-		const cpuTestModeRegisters = new MemoryChunk(0x0008);
+		const cpuTestModeRegisters = new MemoryPadding(0x0008);
 
 		this.defineChunks([
 			//                       Address range  Size     Device
