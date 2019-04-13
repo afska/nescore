@@ -80,7 +80,7 @@ export default class CPU {
 		this.cycle += INTERRUPT_CYCLES;
 
 		this.flags.i = true; // (to make sure handler doesn't get interrupted)
-		this._jumpToInterruptHanlder(type);
+		this._jumpToInterruptHandler(type);
 	}
 
 	/**
@@ -134,7 +134,7 @@ export default class CPU {
 			: addressing.getAddress(this.context, parameter, canTakeExtraCycles);
 	}
 
-	_jumpToInterruptHanlder(type) {
+	_jumpToInterruptHandler(type) {
 		const interruptVector = INTERRUPT_VECTORS[type];
 		if (!interruptVector) throw new Error(`Unknown interrupt: ${type}`);
 
