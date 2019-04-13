@@ -12,6 +12,7 @@ import {
 	OAMDMA
 } from "./registers";
 import { cycleType, scanlineType } from "./constants";
+import { interrupts } from "../cpu/constants";
 import PPUMemoryMap from "./PPUMemoryMap";
 import PatternTable from "./PatternTable";
 import _ from "lodash";
@@ -164,7 +165,7 @@ export default class PPU {
 		if (this._cycleType === "MAPPER_TICK") {
 			// if (this.memory.mapper.tick()) { // TODO: Add Mapper::tick()
 			// 	// (only used for a few mappers)
-			// 	return "IRQ";
+			// 	return interrupts.IRQ;
 			// }
 		}
 	}
@@ -200,7 +201,7 @@ export default class PPU {
 
 		if (this._cycleType === "MAPPER_TICK") {
 			// if (this.memory.mapper.tick()) { // TODO: Add Mapper::tick()
-			// 	return "IRQ";
+			// 	return interrupts.IRQ;
 			// }
 		}
 
@@ -216,7 +217,7 @@ export default class PPU {
 		if (this._cycleType === "ONE") {
 			this._setVerticalBlank();
 			if (this.registers.ppuCtrl.generateNmiAtStartOfVBlank) {
-				return "NMI";
+				return interrupts.NMI;
 			}
 		}
 
