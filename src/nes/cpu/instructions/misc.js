@@ -27,5 +27,3 @@ const instructions = () => [
 ];
 
 export default instructions();
-
-// TODO: Test these instructions

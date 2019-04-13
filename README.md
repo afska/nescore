@@ -1,6 +1,6 @@
-# netsplay
+# nescore
 
-A work-in-progress NES Emulator.
+A NES CPU Emulator made for educational purposes.
 
 ## Install
 
@@ -26,3 +26,9 @@ npm test
 ```bash
 npm run build
 ```
+
+## Useful links
+
+- Easy 6502: https://skilldrick.github.io/easy6502/
+- Opcodes: http://www.obelisk.me.uk/6502/reference.html
+- NesDev CPU: https://wiki.nesdev.com/w/index.php/CPU

@@ -19,7 +19,7 @@ export default class Cartridge {
 
 	/** Returns a new instance of the right mapper. */
 	createMapper() {
-		return new mappers[0](this); // TODO: Return the right mapper
+		return new mappers[this.header.mapperId](this);
 	}
 
 	/** Returns the PRG ROM, which contains the game's code. */
@@ -39,13 +39,19 @@ export default class Cartridge {
 	get header() {
 		if (this.__header) return this.__header;
 
-		const flags = this.bytes.readUInt8(6);
+		const flags6 = this.bytes.readUInt8(6);
+		const flags7 = this.bytes.readUInt8(7);
 
 		return (this.__header = {
 			prgRomPages: this.bytes.readUInt8(4),
 			chrRomPages: this.bytes.readUInt8(5),
-			hasTrainerBeforeProgram: !!Byte.getBit(flags, 2),
-			mirroringMode: Byte.getBit(0)
+			hasTrainerBeforeProgram: !!Byte.getBit(flags6, 2),
+			mapperId: Byte.setSubNumber(
+				Byte.getSubNumber(flags6, 4, 4),
+				4,
+				4,
+				Byte.getSubNumber(flags7, 4, 4)
+			)
 		});
 	}
 

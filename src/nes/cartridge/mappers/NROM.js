@@ -36,14 +36,5 @@ export default class NROM extends Mapper {
 			prgRomFirstPage, //  $8000     $4000     PRG-ROM (first 16KB of ROM)
 			prgRomLastPage //    $C000     $4000     PRG-ROM (last 16KB of ROM or mirror)
 		]);
-
-		this._chrRom = new MemoryChunk(cartridge.chrRom);
-	}
-
-	/** Maps a PPU read operation. */
-	mapPpuReadAt(memory, address) {
-		return address >= 0x0000 && address <= 0x1fff
-			? this._chrRom.readAt(address)
-			: super.mapPpuReadAt(memory, address);
 	}
 }

@@ -19,7 +19,7 @@ export default class CPUMemoryMap {
 		const ramMirror = new MemoryMirror(ram, 0x1800);
 		const ppuRegisters = new MemoryPadding(0x0008);
 		const ppuRegistersMirror = new MemoryPadding(0x1ff8);
-		const apuAndIoRegisters = new MemoryChunk(0x0018);
+		const apuAndIoRegisters = new MemoryPadding(0x0018);
 		const cpuTestModeRegisters = new MemoryPadding(0x0008);
 
 		this.defineChunks([

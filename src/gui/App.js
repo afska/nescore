@@ -17,7 +17,7 @@ export default class App extends Component {
 	render() {
 		return (
 			<div className="app">
-				<div style={{ display: window.TEST === "NESTEST" ? "block" : "none" }}>
+				<div>
 					<div className="debugger" onKeyDown={this.onStep}>
 						<DiffViewer
 							oldValue={this.state.expected}
@@ -27,7 +27,7 @@ export default class App extends Component {
 					</div>
 					<div className="titles">
 						<h1 className="title">NesTest</h1>
-						<h1 className="title">My emulator</h1>
+						<h1 className="title">NesCore</h1>
 					</div>
 					<i className="hint">Enter => Next page</i>
 				</div>
@@ -37,11 +37,9 @@ export default class App extends Component {
 
 	onStep = (event) => {
 		if (event.code !== "Enter") return;
-		return; // TODO: Refactor this
 
 		let diffs = [];
-		for (let i = 0; i < (window.TEST === "NESTEST" ? 15 : 1); i++)
-			diffs.push(window.getDiff());
+		for (let i = 0; i < 10; i++) diffs.push(window.getDiff());
 
 		this.setState({
 			expected: _(diffs)

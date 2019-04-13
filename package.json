@@ -1,11 +1,10 @@
 {
-  "name": "netsplay",
+  "name": "nescore",
   "version": "1.0.0",
   "private": true,
   "dependencies": {
     "buffer": "^5.2.1",
     "lodash": "^4.17.11",
-    "pixi.js": "^4.8.6",
     "react": "^16.7.0",
     "react-diff-viewer": "^1.0.4",
     "react-dom": "^16.7.0",

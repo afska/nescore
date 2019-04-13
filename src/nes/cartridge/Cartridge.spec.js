@@ -14,7 +14,7 @@ describe("Cartridge", () => {
 			prgRomPages: 1,
 			chrRomPages: 1,
 			hasTrainerBeforeProgram: false,
-			mirroringMode: 0
+			mapperId: 0
 		});
 	});
 
