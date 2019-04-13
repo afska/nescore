@@ -6,6 +6,9 @@ export default class Mapper {
 		throw new Error("not_implemented");
 	}
 
+	/** Runs in the last PPU cycle. Some mappers use it. */
+	step() {}
+
 	/** Maps a PPU read operation. */
 	mapPpuReadAt(memory, address) {
 		return WithComposedMemory.readAt.call(memory, address);

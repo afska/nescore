@@ -1,5 +1,7 @@
 # netsplay
 
+A work-in-progress NES Emulator.
+
 ## Install
 
 ```bash

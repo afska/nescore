@@ -17,6 +17,7 @@ export default class OAMDMA extends InMemoryRegister {
 				const value = memory.readAt(address);
 				ppu.oamRam.writeAt(i, value);
 			}
+			// TODO: This doesn't work, context is PPUMemory
 
 			// TODO: Add 513 cycles (+1 on odd cycles) (+1 for the OAMDMA write tick)
 		});

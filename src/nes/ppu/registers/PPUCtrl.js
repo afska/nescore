@@ -38,11 +38,11 @@ export default class PPUCtrl extends InMemoryRegister {
 	}
 
 	get patternTableAddressFor8x8Sprites() {
-		return this.patternTableAddressIdFor8x8Sprites === 0 ? 0x0000 : 0x1000;
+		return this.patternTableAddressIdFor8x8Sprites * 0x1000;
 	}
 
 	get patternTableAddressForBackground() {
-		return this.patternTableAddressIdForBackground === 0 ? 0x0000 : 0x1000;
+		return this.patternTableAddressIdForBackground * 0x1000;
 	}
 
 	get spriteWidth() {

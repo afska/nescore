@@ -124,13 +124,6 @@ export default class PPU {
 		_.each(this.registers, (register) => register.unloadContext());
 	}
 
-	_renderPixel() {
-		// const x = this.cycle - 1;
-		// const y = this.scanline;
-		// const backgroundVisible = !!this.registers.ppuMask.showBackground;
-		// const spritesVisible = !!this.registers.ppuMask.showSprites;
-	}
-
 	_doPreline() {
 		if (
 			this._cycleType === "ONE" ||
@@ -163,10 +156,7 @@ export default class PPU {
 		}
 
 		if (this._cycleType === "MAPPER_TICK") {
-			// if (this.memory.mapper.tick()) { // TODO: Add Mapper::tick()
-			// 	// (only used for a few mappers)
-			// 	return interrupts.IRQ;
-			// }
+			if (this.context.mapper.tick()) return interrupts.IRQ;
 		}
 	}
 
@@ -188,21 +178,19 @@ export default class PPU {
 			this.internal.render.backgroundTileBuffer.length = 0;
 		} else if (this._cycleType === "PREFETCH") {
 			if (this.cycle % 8 === 0) {
-				this._fetchAndStoreBackgroundRow(); // TODO: Implement
-				this._updateScrollingX(); // TODO: Implement
+				this._fetchAndStoreBackgroundRow();
+				this._updateScrollingX();
 			}
 		}
 
 		this._updateScrollingY();
 
 		if (this._cycleType === "SPRITES") {
-			this._fetchAndStoreSpriteRows(); // TODO: Implement
+			this._fetchAndStoreSpriteRows();
 		}
 
 		if (this._cycleType === "MAPPER_TICK") {
-			// if (this.memory.mapper.tick()) { // TODO: Add Mapper::tick()
-			// 	return interrupts.IRQ;
-			// }
+			if (this.context.mapper.tick()) return interrupts.IRQ;
 		}
 
 		return null;
@@ -216,19 +204,197 @@ export default class PPU {
 		// Vertical Blank is set at second tick of scanline 241
 		if (this._cycleType === "ONE") {
 			this._setVerticalBlank();
-			if (this.registers.ppuCtrl.generateNmiAtStartOfVBlank) {
+
+			if (this.registers.ppuCtrl.generateNmiAtStartOfVBlank)
 				return interrupts.NMI;
-			}
 		}
 
 		return null;
 	}
 
+	_fetchAndStoreBackgroundRow() {
+		/**
+		 * Actions that should be done over 8 ticks
+		 * but instead done into 1 call because YOLO.
+		 *
+		 * Retrieves the background tiles that are to be rendered on the next X bytes
+		 *
+		 * - Read the nametable byte using current `v`
+		 * - Fetch corresponding attribute byte using current `v`
+		 * - Read CHR/Pattern table low+high bytes
+		 */
+		// TODO: Move
+
+		let address,
+			shift,
+			fineY,
+			nameTableByte = 0;
+
+		// Fetch Name Table byte
+		address = 0x2000 | (this.internal.v & 0x0fff);
+		nameTableByte = this.memory.readAt(address);
+
+		// Fetch Attribute Table byte
+		address =
+			0x23c0 |
+			(this.internal.v & 0x0c00) |
+			((this.internal.v >> 4) & 0x38) |
+			((this.internal.v >> 2) & 0x07);
+		shift = ((this.internal.v >> 4) & 4) | (this.internal.v & 2);
+		this.internal.render.attributeTableByte =
+			((this.memory.readAt(address) >> shift) & 3) << 2;
+
+		// Fetch Low Tile byte
+		fineY = (this.internal.v >> 12) & 7;
+		address =
+			this.registers.ppuCtrl.patternTableAddressForBackground +
+			nameTableByte * 16 +
+			fineY;
+		this.internal.render.lowTileByte = this.memory.readAt(address);
+
+		// Fetch High Tile byte
+		fineY = (this.internal.v >> 12) & 7;
+		address =
+			this.registers.ppuCtrl.patternTableAddressForBackground +
+			nameTableByte * 16 +
+			fineY;
+		this.internal.render.highTileByte = this.memory.readAt(address + 8);
+
+		// Store Tile Data
+		this._readTileRow(
+			this.internal.render.backgroundTileBuffer,
+			this.internal.render.attributeTableByte,
+			this.internal.render.lowTileByte,
+			this.internal.render.highTileByte,
+			false,
+			false
+		);
+	}
+
+	_fetchAndStoreSpriteRows() {
+		// TODO: Move
+		/**
+		 * Retrieves the sprites that are to be rendered on the next scanline
+		 * Executed at the end of a scanline
+		 */
+
+		this.internal.render.spriteCount = 0;
+		const spriteHeight = this.registers.ppuCtrl.spriteHeight;
+
+		for (let i = 0; i < 64; i++) {
+			const y = this.memory.oam[i * 4 + 0];
+			const row = this.scanline - y;
+
+			if (row < 0 || row >= spriteHeight) continue;
+
+			if (this.internal.render.spriteCount < 8) {
+				const attributes = this.oamRam.readAt(i * 4 + 2);
+				const sprite = this.internal.render.sprites[
+					this.internal.render.spriteCount
+				];
+
+				this._fetchSpriteRow(sprite.buffer, i, row);
+				sprite.x = this.oamRam.readAt(i * 4 + 3);
+				sprite.priority = (attributes >> 5) & 1;
+				sprite.index = i;
+			}
+			this.internal.render.spriteCount++;
+
+			if (this.internal.render.spriteCount > 8) {
+				this.internal.render.spriteCount = 8;
+				this.this.registers.ppuStatus.spriteOverflow = 1;
+				break;
+			}
+		}
+	}
+
+	_fetchSpriteRow(tileData, i, row) {
+		// Sub function of _fetchAndStoreSpriteRows
+		let tile = this.oamRam.readAt(i * 4 + 1);
+		const attributes = this.oamRam.readAt(i * 4 + 2);
+		const isReversedVertically = (attributes & 0x80) === 0x80;
+		const isReversedHorizontally = (attributes & 0x40) === 0x40;
+		const attributeTableByte = (attributes & 3) << 2;
+		const spriteHeight = this.registers.ppuCtrl.spriteHeight;
+
+		let table;
+		if (spriteHeight === 8) {
+			table = this.registers.ppuCtrl.patternTableAddressIdFor8x8Sprites;
+		} else {
+			table = tile & 1;
+			tile = tile & 0xfe;
+		}
+
+		row = isReversedVertically ? spriteHeight - 1 - row : row;
+		if (row > 7) {
+			tile++;
+			row = row % 8;
+		}
+
+		const address = 0x1000 * table + tile * 16 + row;
+		this.internal.render.lowTileByte = this.memory.readAt(address);
+		this.internal.render.highTileByte = this.memory.readAt(address + 8);
+
+		this._readTileRow(
+			tileData,
+			attributeTableByte,
+			this.internal.render.lowTileByte,
+			this.internal.render.highTileByte,
+			isReversedHorizontally,
+			true
+		);
+	}
+
+	_readTileRow(
+		tileData,
+		attributeTableByte,
+		lowTileByte,
+		highTileByte,
+		isReversedHorizontally,
+		flush
+	) {
+		// TODO: Move
+		/**
+		 *  Helper method that appends a tile line to `tileData`
+		 *  by reading & concatenating lowTileByte, highTileByte and attributeTableByte.
+		 *  Must be called 8 times (or 16 for some sprites) to generate a sprite
+		 */
+		if (flush) {
+			tileData.length = 0;
+		}
+
+		for (var tileX = 0; tileX < 8; tileX++) {
+			const tileShiftX = isReversedHorizontally ? tileX : 7 - tileX;
+			const value =
+				attributeTableByte |
+				(((lowTileByte >> tileShiftX) & 1) |
+					(((highTileByte >> tileShiftX) & 1) << 1));
+
+			tileData.push(value);
+		}
+	}
+
+	_updateScrollingX() {
+		// https://wiki.nesdev.com/w/index.php/PPU_scrolling#Coarse_X_increment
+
+		// increment hori(v) if coarse X === 31
+		if ((this.internal.v & 0x001f) === 31) {
+			// coarse X = 0
+			this.internal.v = this.internal.v & 0xffe0;
+			// switch horizontal nametable
+			this.internal.v = this.internal.v ^ 0x0400;
+		} else {
+			// increment coarse X
+			this.internal.v++;
+		}
+	}
+
 	_updateScrollingY() {
+		// TODO: Move
 		// This one is a mess
 		// Values are coming from nesdev, don't touch, don't break
 
-		if (this.cycleType === "INCREMENT_Y") {
+		if (this._cycleType === "INCREMENT_Y") {
 			// https://wiki.nesdev.com/w/index.php/PPU_scrolling#Y_increment
 
 			// increment vert(v)
@@ -258,7 +424,7 @@ export default class PPU {
 			}
 		}
 
-		if (this.cycleType === "COPY_X") {
+		if (this._cycleType === "COPY_X") {
 			// https://wiki.nesdev.com/w/index.php/PPU_scrolling#At_dot_257_of_each_scanline
 
 			this.internal.v = (this.internal.v & 0xfbe0) | (this.internal.t & 0x041f);
