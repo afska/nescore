@@ -15,7 +15,7 @@ export default class NES {
 	}
 
 	/** Loads a `rom` as the current cartridge. */
-	load(rom, logger = null) {
+	load(rom) {
 		const cartridge = new Cartridge(rom);
 
 		this.loadContext({
@@ -45,7 +45,6 @@ export default class NES {
 		context.mapper.loadContext(context);
 		this.cpu.loadContext(context);
 		this.ppu.loadContext(context);
-		this._reset();
 	}
 
 	/** When the current context is unloaded. */
@@ -53,8 +52,5 @@ export default class NES {
 		this.cpu.unloadContext();
 		this.ppu.unloadContext();
 		context.mapper.unloadContext();
-		this._reset();
 	}
-
-	_reset() {}
 }
