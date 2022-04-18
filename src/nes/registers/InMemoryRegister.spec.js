@@ -7,9 +7,7 @@ describe("registers", () => {
 		let memory, register;
 
 		beforeEach(() => {
-			memory = {};
-			WithComposedMemory.apply(memory);
-			memory.defineChunks([
+			memory = WithComposedMemory.createSegment([
 				new InMemoryRegister(), // byte 0
 				new InMemoryRegister(), // byte 1
 				new InMemoryRegister(), // byte 2

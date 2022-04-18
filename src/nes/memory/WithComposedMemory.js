@@ -5,9 +5,17 @@ import _ from "lodash";
 export default {
 	/** Applies the mixin. */
 	apply(obj) {
-		_.defaults(obj, _.omit(this, "apply"));
+		_.defaults(obj, _.omit(this, "apply", "createSegment"));
 		WithLittleEndian.apply(obj);
 		obj.chunks = null;
+	},
+
+	/** Creates a composed memory segment with different `chunks`. */
+	createSegment(chunks) {
+		const memory = {};
+		this.apply(memory);
+		memory.defineChunks(chunks);
+		return memory;
 	},
 
 	/** Defines the `chunks` of the memory map. */

@@ -25,10 +25,7 @@ class PPURegisterSegment {
 
 	/** Creates a memory segment with the first 8 registers ($2000-$2007). */
 	toMemory() {
-		const memory = {};
-		WithComposedMemory.apply(memory);
-
-		memory.defineChunks([
+		return WithComposedMemory.createSegment([
 			this.ppuCtrl,
 			this.ppuMask,
 			this.ppuStatus,
@@ -38,8 +35,6 @@ class PPURegisterSegment {
 			this.ppuAddr,
 			this.ppuData
 		]);
-
-		return memory;
 	}
 }
 
