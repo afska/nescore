@@ -7,8 +7,8 @@ import { InMemoryRegister } from "../../registers";
  * It is often used for determining timing.
  */
 export default class PPUStatus extends InMemoryRegister {
-	constructor() {
-		super(0x2002);
+	constructor(memory, address) {
+		super(memory, address);
 
 		this.addField("spriteOverflow", 5)
 			.addField("sprite0Hit", 6)

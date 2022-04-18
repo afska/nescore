@@ -8,11 +8,10 @@ describe("registers", () => {
 
 		beforeEach(() => {
 			memory = new MemoryChunk(5);
-			register = new InMemoryRegister(3)
+			register = new InMemoryRegister(memory, 3)
 				.addField("booleanBit2", 2)
 				.addField("shortNumberBit5", 5, 2)
-				.addField("longNumberBit4", 4, 4)
-				.loadContext(memory);
+				.addField("longNumberBit4", 4, 4);
 		});
 
 		it("allows reading subfields", () => {

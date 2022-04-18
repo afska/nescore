@@ -5,8 +5,4 @@ import { InMemoryRegister } from "../../registers";
  *
  * Read/Write VRAM data here. `PPUAddr` will be incremented after the operation.
  */
-export default class PPUData extends InMemoryRegister {
-	constructor() {
-		super(0x2007);
-	}
-}
+export default class PPUData extends InMemoryRegister {}

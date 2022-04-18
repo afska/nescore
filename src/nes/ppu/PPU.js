@@ -14,7 +14,6 @@ import {
 import { cycleType, scanlineType } from "./constants";
 import { interrupts } from "../cpu/constants";
 import PPUMemoryMap from "./PPUMemoryMap";
-import _ from "lodash";
 
 const INITIAL_PPUSTATUS = 0b10000000;
 const REGISTER_SEGMENT_SIZE = 8;
@@ -37,29 +36,7 @@ export default class PPU {
 		this.registersRam = null; // 8-byte segment with `registers` (mapped to CPU)
 		this.oamRam = null; // OAM = Object Attribute Memory (contains sprite data)
 		this.oamRam2 = null;
-
-		/**
-		 *  0x2000 PPUCtrl
-				0x2001 PPUMask
-				0x2002 PPUStatus
-				0x2003 OAMAddr
-				0x2004 OAMData
-				0x2005 PPUScroll
-				0x2006 PPUAddr
-				0x2007 PPUData
-				0x4014 OAMDMA
-		 */
-		this.registers = {
-			ppuCtrl: new PPUCtrl(), // TODO: Pass memory segment and relative addresses
-			ppuMask: new PPUMask(),
-			ppuStatus: new PPUStatus(),
-			oamAddr: new OAMAddr(),
-			oamData: new OAMData(),
-			ppuScroll: new PPUScroll(),
-			ppuAddr: new PPUAddr(),
-			ppuData: new PPUData(),
-			oamDma: new OAMDMA()
-		};
+		this.registers = null;
 	}
 
 	/** When a context is loaded. */
@@ -68,7 +45,17 @@ export default class PPU {
 		this.registersRam = new MemoryChunk(REGISTER_SEGMENT_SIZE);
 		this.oamRam = new MemoryChunk(PRIMARY_OAM_SIZE);
 		this.oamRam2 = new MemoryChunk(SECONDARY_OAM_SIZE);
-		_.each(this.registers, (register) => register.loadContext(context.memory));
+		this.registers = {
+			ppuCtrl: new PPUCtrl(this.context.memory, 0x2000),
+			ppuMask: new PPUMask(this.context.memory, 0x2001),
+			ppuStatus: new PPUStatus(this.context.memory, 0x2002),
+			oamAddr: new OAMAddr(this.context.memory, 0x2003),
+			oamData: new OAMData(this.context.memory, 0x2004),
+			ppuScroll: new PPUScroll(this.context.memory, 0x2005),
+			ppuAddr: new PPUAddr(this.context.memory, 0x2006),
+			ppuData: new PPUData(this.context.memory, 0x2007),
+			oamDma: new OAMDMA(this.context.memory, 0x4014)
+		};
 		this._reset();
 	}
 
@@ -79,7 +66,7 @@ export default class PPU {
 		this.registersRam = null;
 		this.oamRam = null;
 		this.oamRam2 = null;
-		_.each(this.registers, (register) => register.unloadContext());
+		this.registers = null;
 	}
 
 	_reset() {

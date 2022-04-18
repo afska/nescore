@@ -1,10 +1,9 @@
-import { WithContext, Byte } from "../helpers";
+import { Byte } from "../helpers";
 
 /** A 8-bit register with multiple status flags and values that live in RAM. */
 export default class InMemoryRegister {
-	constructor(address) {
-		WithContext.apply(this);
-
+	constructor(memory, address) {
+		this.memory = memory;
 		this.address = address;
 	}
 
@@ -24,13 +23,13 @@ export default class InMemoryRegister {
 
 	/** Returns the actual value. */
 	get value() {
-		return this.context.readAt(this.address);
+		return this.memory.readAt(this.address);
 	}
 
 	/** Sets the actual value. */
 	set value(value) {
 		value = Byte.force8Bit(value);
 
-		this.context.writeAt(this.address, value);
+		this.memory.writeAt(this.address, value);
 	}
 }
