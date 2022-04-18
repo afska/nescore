@@ -1,5 +1,5 @@
 import { InMemoryRegister } from ".";
-import { MemoryChunk } from "../memory";
+import { WithComposedMemory } from "../memory";
 const should = require("chai").Should();
 
 describe("registers", () => {
@@ -7,11 +7,17 @@ describe("registers", () => {
 		let memory, register;
 
 		beforeEach(() => {
-			memory = new MemoryChunk(5);
-			register = new InMemoryRegister(memory, 3)
-				.addField("booleanBit2", 2)
-				.addField("shortNumberBit5", 5, 2)
-				.addField("longNumberBit4", 4, 4);
+			memory = {};
+			WithComposedMemory.apply(memory);
+			memory.defineChunks([
+				new InMemoryRegister(), // byte 0
+				new InMemoryRegister(), // byte 1
+				new InMemoryRegister(), // byte 2
+				(register = new InMemoryRegister() // byte 3
+					.addField("booleanBit2", 2)
+					.addField("shortNumberBit5", 5, 2)
+					.addField("longNumberBit4", 4, 4))
+			]);
 		});
 
 		it("allows reading subfields", () => {
