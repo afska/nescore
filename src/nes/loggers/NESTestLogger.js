@@ -12,20 +12,14 @@ export default class NESTestLogger {
 	}
 
 	log(request) {
-		const {
-			context,
-			pc,
-			operation,
-			initialParameter,
-			finalParameter
-		} = request;
+		const { context, pc, operation, initialArgument, finalArgument } = request;
 
 		const { cpu, memory } = context;
 
 		const cycle = (value, length) => _.padStart(value.toString(), length);
 		const section = (string, length) =>
 			_.padEnd(string.substr(0, length), length);
-		const hexParameter = (value) => {
+		const hexArgument = (value) => {
 			if (operation.addressing.parameterSize === 0) return "";
 
 			return operation.addressing.parameterSize === 2
@@ -57,14 +51,14 @@ export default class NESTestLogger {
 				"DEC"
 			];
 
-			const $initialParameter = hexParameter(initialParameter, 2);
-			const $finalParameter = hexParameter(finalParameter, 2);
+			const $initialArgument = hexArgument(initialArgument, 2);
+			const $finalArgument = hexArgument(finalArgument, 2);
 			let finalAddress = null;
 
 			try {
 				finalAddress = operation.addressing.getAddress(
 					context,
-					initialParameter
+					initialArgument
 				);
 			} catch (e) {}
 
@@ -72,40 +66,42 @@ export default class NESTestLogger {
 				case "IMPLICIT":
 					return "";
 				case "IMMEDIATE":
-					return `#$${$finalParameter}`;
+					return `#$${$finalArgument}`;
 				case "ABSOLUTE":
-					let $address = `$${$initialParameter}`;
+					let $address = `$${$initialArgument}`;
 					if (_.includes(instructionsWithValue, operation.instruction.id))
 						$address += ` = ${hex(memory.readAt(finalAddress), 2)}`;
 					return $address;
 				case "ZERO_PAGE":
-					return `$${$initialParameter} = ${hex(
+					return `$${$initialArgument} = ${hex(
 						memory.readAt(finalAddress),
 						2
 					)}`;
 				case "INDEXED_ABSOLUTE_X":
 				case "INDEXED_ZERO_PAGE_X":
-					return `$${$initialParameter},X @ ${hexParameter(
-						finalAddress
-					)} = ${hex(memory.readAt(finalAddress), 2)}`;
+					return `$${$initialArgument},X @ ${hexArgument(finalAddress)} = ${hex(
+						memory.readAt(finalAddress),
+						2
+					)}`;
 				case "INDEXED_ABSOLUTE_Y":
 				case "INDEXED_ZERO_PAGE_Y":
-					return `$${$initialParameter},Y @ ${hexParameter(
-						finalAddress
-					)} = ${hex(memory.readAt(finalAddress), 2)}`;
+					return `$${$initialArgument},Y @ ${hexArgument(finalAddress)} = ${hex(
+						memory.readAt(finalAddress),
+						2
+					)}`;
 				case "INDIRECT":
-					return `($${$initialParameter}) = ${hex(finalAddress, 4)}`;
+					return `($${$initialArgument}) = ${hex(finalAddress, 4)}`;
 				case "INDEXED_INDIRECT_X":
-					return `($${$initialParameter},X) @ ${hex(
-						Byte.force8Bit(initialParameter + cpu.registers.x.value),
+					return `($${$initialArgument},X) @ ${hex(
+						Byte.force8Bit(initialArgument + cpu.registers.x.value),
 						2
 					)} = ${hex(finalAddress, 4)} = ${hex(
 						memory.readAt(finalAddress),
 						2
 					)}`;
 				case "INDEXED_INDIRECT_Y":
-					return `($${$initialParameter}),Y = ${hex(
-						getIndirectAddress(context, initialParameter, Byte.force8Bit),
+					return `($${$initialArgument}),Y = ${hex(
+						getIndirectAddress(context, initialArgument, Byte.force8Bit),
 						4
 					)} @ ${hex(finalAddress, 4)} = ${hex(
 						memory.readAt(finalAddress),
@@ -114,23 +110,23 @@ export default class NESTestLogger {
 				case "ACCUMULATOR":
 					return "A";
 				default:
-					return `$${$finalParameter}`;
+					return `$${$finalArgument}`;
 			}
 		};
 
 		const $counter = section(hex(pc, 4), 6);
 
 		const $operation = hex(operation.id, 2);
-		let $parameters = " ";
+		let $arguments = " ";
 		if (operation.addressing.parameterSize > 0) {
-			$parameters +=
+			$arguments +=
 				operation.addressing.parameterSize === 2
-					? hex(Byte.lowPartOf(initialParameter), 2) +
+					? hex(Byte.lowPartOf(initialArgument), 2) +
 					  " " +
-					  hex(Byte.highPartOf(initialParameter), 2)
-					: hex(initialParameter, 2);
+					  hex(Byte.highPartOf(initialArgument), 2)
+					: hex(initialArgument, 2);
 		}
-		const $commandHex = section($operation + $parameters, 10);
+		const $commandHex = section($operation + $arguments, 10);
 
 		const $assembly = section(
 			operation.instruction.id + " " + formatParameter(),

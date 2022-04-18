@@ -29,7 +29,7 @@ export default class CPU {
 		this.memory = new CPUMemoryMap();
 		this.stack = new Stack();
 
-		this._parameter = null;
+		this._argument = null;
 	}
 
 	/** When a context is loaded. */
@@ -45,18 +45,18 @@ export default class CPU {
 
 		const pc = this.pc.value;
 		const operation = this._readOperation();
-		const parameter = this._readParameter(operation);
+		const argument = this._readArgument(operation);
 
 		if (this.context.logger)
 			this.context.logger.log({
 				context: this.context,
 				pc,
 				operation,
-				initialParameter: this._parameter,
-				finalParameter: parameter
+				initialArgument: this._argument,
+				finalArgument: argument
 			});
 
-		operation.instruction.execute(this.context, parameter);
+		operation.instruction.execute(this.context, argument);
 		this.cycle += operation.cycles + this.extraCycles;
 		this.extraCycles = 0;
 	}
@@ -98,7 +98,7 @@ export default class CPU {
 		this.registers.a.reset();
 		this.registers.x.reset();
 		this.registers.y.reset();
-		this._parameter = null;
+		this._argument = null;
 
 		this.interrupt(interrupts.RESET);
 	}
@@ -112,17 +112,17 @@ export default class CPU {
 		return operation;
 	}
 
-	_readParameter({ instruction, addressing, canTakeExtraCycles }) {
-		const parameter = this.memory.readBytesAt(
+	_readArgument({ instruction, addressing, canTakeExtraCycles }) {
+		const argument = this.memory.readBytesAt(
 			this.pc.value,
 			addressing.parameterSize
 		);
 		this.pc.value += addressing.parameterSize;
-		this._parameter = parameter;
+		this._argument = argument;
 
 		return instruction.needsValue
-			? addressing.getValue(this.context, parameter, canTakeExtraCycles)
-			: addressing.getAddress(this.context, parameter, canTakeExtraCycles);
+			? addressing.getValue(this.context, argument, canTakeExtraCycles)
+			: addressing.getAddress(this.context, argument, canTakeExtraCycles);
 	}
 
 	_jumpToInterruptHandler(interrupt) {

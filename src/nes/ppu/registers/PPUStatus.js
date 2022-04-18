@@ -14,4 +14,8 @@ export default class PPUStatus extends InMemoryRegister {
 			.addField("sprite0Hit", 6)
 			.addField("isInVBlankInterval", 7);
 	}
+
+	reset() {
+		this.value = 0b10000000;
+	}
 }

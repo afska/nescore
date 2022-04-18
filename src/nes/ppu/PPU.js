@@ -15,8 +15,6 @@ import { cycleType, scanlineType } from "./constants";
 import { interrupts } from "../cpu/constants";
 import PPUMemoryMap from "./PPUMemoryMap";
 
-const INITIAL_PPUSTATUS = 0b10000000;
-const REGISTER_SEGMENT_SIZE = 8;
 const PRIMARY_OAM_SIZE = 256;
 const SECONDARY_OAM_SIZE = 32;
 const LAST_CYCLE = 340;
@@ -73,7 +71,7 @@ export default class PPU {
 		this.scanline = LAST_SCANLINE;
 		this.cycle = 0;
 
-		this.registers.ppuStatus.value = INITIAL_PPUSTATUS;
+		this.registers.ppuStatus.reset();
 	}
 
 	get _isRenderingEnabled() {
