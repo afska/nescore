@@ -18,7 +18,7 @@ import PPUMemoryMap from "./PPUMemoryMap";
 const PRIMARY_OAM_SIZE = 256;
 const SECONDARY_OAM_SIZE = 32;
 const LAST_CYCLE = 340;
-const LAST_SCANLINE = 261;
+const LAST_SCANLINE = 260;
 const SPRITES_PER_SCANLINE = 8;
 
 /** The Picture Processing Unit. It generates a video signal of 256x240 pixels. */
@@ -57,6 +57,22 @@ export default class PPU {
 		this._reset();
 	}
 
+	/** Executes the next operation. */
+	step() {
+		this.requireContext();
+
+		this.cycle++;
+		if (this.cycle > LAST_CYCLE) {
+			this.cycle = 0;
+			this.scanline++;
+
+			if (this.scanline > LAST_SCANLINE) {
+				this.scanline = -1;
+				this.frame++;
+			}
+		}
+	}
+
 	/** When the current context is unloaded. */
 	onUnload() {
 		this._reset();
@@ -68,7 +84,7 @@ export default class PPU {
 
 	_reset() {
 		this.frame = 0;
-		this.scanline = LAST_SCANLINE;
+		this.scanline = -1;
 		this.cycle = 0;
 
 		this.registers.ppuStatus.reset();
