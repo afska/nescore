@@ -57,8 +57,11 @@ export default class CPU {
 			});
 
 		operation.instruction.execute(this.context, argument);
-		this.cycle += operation.cycles + this.extraCycles;
+		const cycles = operation.cycles + this.extraCycles;
+		this.cycle += cycles;
 		this.extraCycles = 0;
+
+		return cycles;
 	}
 
 	/** Pushes the context to the stack and jumps to the interrupt handler. */

@@ -38,10 +38,10 @@ export default class NES {
 
 	/** Executes a step in the emulation. */
 	step() {
-		this.cpu.step();
+		const cycles = this.cpu.step();
 
 		// (PPU clock is three times faster than CPU clock)
-		for (let i = 0; i < 3; i++) this.ppu.step();
+		for (let i = 0; i < cycles * 3; i++) this.ppu.step();
 	}
 
 	/** Unloads the current cartridge. */

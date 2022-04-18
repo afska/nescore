@@ -40,16 +40,21 @@ describe("CPU", () => {
 	});
 
 	it("can run 3 simple operations", () => {
-		cpu.step();
+		let cycles;
+
+		cycles = cpu.step();
+		cycles.should.equal(2);
 		cpu.pc.value.should.equal(0x1235);
 		cpu.cycle.should.equal(9);
 
-		cpu.step();
+		cycles = cpu.step();
+		cycles.should.equal(2);
 		cpu.pc.value.should.equal(0x1237);
 		cpu.cycle.should.equal(11);
 		cpu.registers.a.value.should.equal(5);
 
-		cpu.step();
+		cycles = cpu.step();
+		cycles.should.equal(4);
 		cpu.pc.value.should.equal(0x123a);
 		cpu.cycle.should.equal(15);
 		memory.readAt(0x0201).should.equal(5);
