@@ -23,7 +23,7 @@ export default class NES {
 
 			cpu: this.cpu,
 			ppu: this.ppu,
-			memory: this.cpu.memory,
+			memory: this.cpu.memory, // TODO: Create Bus and read/write to memory through mapper
 
 			cartridge,
 			mapper: cartridge.createMapper()
@@ -42,6 +42,7 @@ export default class NES {
 
 	/** When a context is loaded. */
 	onLoad(context) {
+		context.mapper.loadContext(context);
 		this.cpu.loadContext(context);
 		this.ppu.loadContext(context);
 		this._reset();
@@ -49,9 +50,10 @@ export default class NES {
 
 	/** When the current context is unloaded. */
 	onUnload() {
+		this.cpu.unloadContext();
+		this.ppu.unloadContext();
+		context.mapper.unloadContext();
 		this._reset();
-		this.cpu.unloadContext(context);
-		this.ppu.unloadContext(context);
 	}
 
 	_reset() {}

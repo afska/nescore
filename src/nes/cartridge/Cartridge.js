@@ -19,7 +19,7 @@ export default class Cartridge {
 
 	/** Returns a new instance of the right mapper. */
 	createMapper() {
-		return new mappers[this.header.mapperId](this);
+		return new mappers[this.header.mapperId]();
 	}
 
 	/** Returns the PRG ROM, which contains the game's code. */

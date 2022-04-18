@@ -5,6 +5,7 @@ import {
 	MemoryMirror,
 	MemoryPadding
 } from "../../memory";
+import { WithContext } from "../../helpers";
 
 const KB = 1024;
 const PRG_ROM_PAGE_SIZE = 16 * KB;
@@ -15,10 +16,15 @@ export default class NROM extends Mapper {
 		return 0;
 	}
 
-	constructor(cartridge) {
-		super(cartridge);
-		WithComposedMemory.apply(this);
+	constructor() {
+		super();
 
+		WithContext.apply(this);
+		WithComposedMemory.apply(this);
+	}
+
+	/** When a context is loaded. */
+	onLoad({ cartridge }) {
 		const unused = new MemoryPadding(0x3fe0);
 		const prgRomFirstPage = new MemoryChunk(
 			cartridge.prgRom.slice(0, PRG_ROM_PAGE_SIZE)
@@ -36,5 +42,10 @@ export default class NROM extends Mapper {
 			prgRomFirstPage, //  $8000     $4000     PRG-ROM (first 16KB of ROM)
 			prgRomLastPage //    $C000     $4000     PRG-ROM (last 16KB of ROM or mirror)
 		]);
+	}
+
+	/** When the current context is unloaded. */
+	onUnload() {
+		this.defineChunks(null);
 	}
 }
