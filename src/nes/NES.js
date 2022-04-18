@@ -30,6 +30,12 @@ export default class NES {
 		});
 	}
 
+	/** Executes a whole frame in the emulation. */
+	frame() {
+		const currentFrame = this.ppu.frame;
+		while (this.ppu.frame === currentFrame) this.step();
+	}
+
 	/** Executes a step in the emulation. */
 	step() {
 		this.cpu.step();
