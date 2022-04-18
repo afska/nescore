@@ -33,7 +33,7 @@ export default class Stack {
 	}
 
 	/** Pulls a 16-bit `value` from the stack. */
-	pop2Bytes(value) {
+	pop2Bytes() {
 		const low = this.pop();
 		const high = this.pop();
 
