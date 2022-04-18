@@ -19,7 +19,7 @@ export default class PPUMemoryMap {
 		this.defineChunks([
 			//                   Address range  Size     Device
 			patternTables, //    $0000-$1FFF    $2000    Pattern tables 0 and 1 (mapper)
-			nametables, //       $2000-$2FFF    $1800    Nametables 0 to 3 (VRAM and mapper)
+			nametables, //       $2000-$2FFF    $1000    Nametables 0 to 3 (VRAM and mapper)
 			nametablesMirror, // $3000-$3EFF    $0F00    Mirrors of $2000-$2EFF
 			paletteRam, //       $3F00-$3F1F    $0020    Palette RAM indexes
 			paletteRamMirror //  $3F20-$3FFF    $00E0    Mirrors of $3F00-$3F1F
