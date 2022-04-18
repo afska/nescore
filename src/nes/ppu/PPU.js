@@ -33,7 +33,6 @@ export default class PPU {
 		this.cycle = 0;
 
 		this.memory = new PPUMemoryMap();
-		this.registersRam = null; // 8-byte segment with `registers` (mapped to CPU)
 		this.oamRam = null; // OAM = Object Attribute Memory (contains sprite data)
 		this.oamRam2 = null;
 		this.registers = null;
@@ -41,20 +40,21 @@ export default class PPU {
 
 	/** When a context is loaded. */
 	onLoad(context) {
+		const cpuMemory = context.memory;
+
 		this.memory.loadContext(context);
-		this.registersRam = new MemoryChunk(REGISTER_SEGMENT_SIZE);
 		this.oamRam = new MemoryChunk(PRIMARY_OAM_SIZE);
 		this.oamRam2 = new MemoryChunk(SECONDARY_OAM_SIZE);
 		this.registers = {
-			ppuCtrl: new PPUCtrl(this.context.memory, 0x2000),
-			ppuMask: new PPUMask(this.context.memory, 0x2001),
-			ppuStatus: new PPUStatus(this.context.memory, 0x2002),
-			oamAddr: new OAMAddr(this.context.memory, 0x2003),
-			oamData: new OAMData(this.context.memory, 0x2004),
-			ppuScroll: new PPUScroll(this.context.memory, 0x2005),
-			ppuAddr: new PPUAddr(this.context.memory, 0x2006),
-			ppuData: new PPUData(this.context.memory, 0x2007),
-			oamDma: new OAMDMA(this.context.memory, 0x4014)
+			ppuCtrl: new PPUCtrl(cpuMemory, 0x2000),
+			ppuMask: new PPUMask(cpuMemory, 0x2001),
+			ppuStatus: new PPUStatus(cpuMemory, 0x2002),
+			oamAddr: new OAMAddr(cpuMemory, 0x2003),
+			oamData: new OAMData(cpuMemory, 0x2004),
+			ppuScroll: new PPUScroll(cpuMemory, 0x2005),
+			ppuAddr: new PPUAddr(cpuMemory, 0x2006),
+			ppuData: new PPUData(cpuMemory, 0x2007),
+			oamDma: new OAMDMA(cpuMemory, 0x4014)
 		};
 		this._reset();
 	}
@@ -63,7 +63,6 @@ export default class PPU {
 	onUnload() {
 		this._reset();
 		this.memory.unloadContext();
-		this.registersRam = null;
 		this.oamRam = null;
 		this.oamRam2 = null;
 		this.registers = null;

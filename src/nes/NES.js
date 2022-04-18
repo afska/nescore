@@ -1,4 +1,5 @@
 import CPU from "./cpu";
+import PPU from "./ppu";
 import Cartridge from "./cartridge";
 import { WithContext } from "./helpers";
 
@@ -10,6 +11,7 @@ export default class NES {
 		this.logger = logger;
 
 		this.cpu = new CPU();
+		this.ppu = new PPU();
 	}
 
 	/** Loads a `rom` as the current cartridge. */
@@ -20,6 +22,7 @@ export default class NES {
 			logger: this.logger,
 
 			cpu: this.cpu,
+			ppu: this.ppu,
 			memory: this.cpu.memory,
 
 			cartridge,
@@ -39,7 +42,8 @@ export default class NES {
 
 	/** When a context is loaded. */
 	onLoad(context) {
-		this.cpu.loadContext(this.context);
+		this.cpu.loadContext(context);
+		this.ppu.loadContext(context);
 		this._reset();
 	}
 
