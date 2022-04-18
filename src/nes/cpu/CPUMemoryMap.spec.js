@@ -1,7 +1,9 @@
 import CPUMemoryMap from "./CPUMemoryMap";
+import { PPURegisterSegment } from "../ppu/registers";
 import { MemoryChunk } from "../memory";
 import { Register8Bit } from "../registers";
 import _ from "lodash";
+import PPU from "../ppu";
 const should = require("chai").Should();
 
 const MAPPER_START_ADDRESS = 0x4020;
@@ -10,11 +12,12 @@ const KB = 1024;
 
 describe("memory", () => {
 	describe("CPUMemoryMap", () => {
-		let mapper, memory;
+		let ppu, mapper, memory;
 
 		beforeEach(() => {
+			ppu = { registers: new PPURegisterSegment() };
 			mapper = new MemoryChunk(MAPPER_SIZE, MAPPER_START_ADDRESS);
-			memory = new CPUMemoryMap().loadContext({ mapper });
+			memory = new CPUMemoryMap().loadContext({ ppu, mapper });
 		});
 
 		it("stores the start address of each chunk", () => {

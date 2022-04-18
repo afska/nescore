@@ -52,8 +52,8 @@ export default class NES {
 	/** When a context is loaded. */
 	onLoad(context) {
 		context.mapper.loadContext(context);
-		this.cpu.loadContext(context);
 		this.ppu.loadContext(context);
+		this.cpu.loadContext(context);
 	}
 
 	/** When the current context is unloaded. */

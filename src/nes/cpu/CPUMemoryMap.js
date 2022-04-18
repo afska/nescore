@@ -14,12 +14,13 @@ export default class CPUMemoryMap {
 	}
 
 	/** When a context is loaded. */
-	onLoad({ mapper }) {
+	onLoad({ ppu, mapper }) {
 		const ram = new MemoryChunk(0x0800);
 		const ramMirror = new MemoryMirror(ram, 0x1800);
-		const ppuRegisters = new MemoryChunk(0x0008);
+		const ppuRegisters = ppu.registers.toMemory();
 		const ppuRegistersMirror = new MemoryMirror(ppuRegisters, 0x1ff8);
-		const apuAndIoRegisters = new MemoryPadding(0x0018);
+		const apuRegisters = new MemoryPadding(0x0014);
+		const ioRegisters = new MemoryPadding(0x0003);
 		const cpuTestModeRegisters = new MemoryPadding(0x0008);
 
 		this.defineChunks([
@@ -28,7 +29,9 @@ export default class CPUMemoryMap {
 			ramMirror, //            $0800-$1FFF    $1800    Mirrors of $0000-$07FF
 			ppuRegisters, //         $2000-$2007    $0008    NES PPU registers
 			ppuRegistersMirror, //   $2008-$3FFF    $1FF8	   Mirrors of $2000-2007 (repeats every 8 bytes)
-			apuAndIoRegisters, //    $4000-$4017    $0018	   NES APU and I/O registers
+			apuRegisters, //         $4000-$4013    $0014	   NES APU registers
+			ppu.registers.oamDma, // $4014-$4014    $0001    PPU's OAM DMA register
+			ioRegisters, //          $4015-$4017    $0003    I/O registers
 			cpuTestModeRegisters, // $4018-$401F    $0008	   APU and I/O functionality that is normally disabled
 			mapper //                $4020-$FFFF    $BFE0	   Cartridge space: PRG ROM, PRG RAM, and mapper registers
 		]);
