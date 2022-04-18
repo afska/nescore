@@ -3,7 +3,6 @@ import { PPURegisterSegment } from "../ppu/registers";
 import { MemoryChunk } from "../memory";
 import { Register8Bit } from "../registers";
 import _ from "lodash";
-import PPU from "../ppu";
 const should = require("chai").Should();
 
 const MAPPER_START_ADDRESS = 0x4020;
@@ -63,6 +62,29 @@ describe("memory", () => {
 			memory.readBytesAt(0, 2).should.equal(0xff20);
 			memory.read2BytesAt(0).should.equal(0xff20);
 			memory.read2BytesAt(2).should.equal(0xfe30);
+		});
+
+		it("can write the PPUMask register", () => {
+			ppu.registers.ppuMask.showBackground.should.equal(0);
+			ppu.registers.ppuMask.emphasizeRed.should.equal(0);
+			ppu.registers.ppuMask.showSprites.should.equal(0);
+			ppu.registers.ppuMask.emphasizeGreen.should.equal(0);
+
+			memory.writeAt(0x2001, 0b00101000);
+
+			ppu.registers.ppuMask.showBackground.should.equal(1);
+			ppu.registers.ppuMask.emphasizeRed.should.equal(1);
+			ppu.registers.ppuMask.showSprites.should.equal(0);
+			ppu.registers.ppuMask.emphasizeGreen.should.equal(0);
+		});
+
+		it("can read the PPUStatus register", () => {
+			memory.readAt(0x2002).should.equal(0);
+
+			ppu.registers.ppuStatus.isInVBlankInterval = 1;
+			ppu.registers.ppuStatus.spriteOverflow = 1;
+
+			memory.readAt(0x2002).should.equal(0b10100000);
 		});
 
 		it("throws an exception when the address is out of bounds", () => {
