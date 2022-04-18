@@ -1,5 +1,5 @@
 import NES from "./nes/NES";
-import NESTestLogger from "./nes/NESTestLogger";
+import NESTestLogger from "./nes/loggers/NESTestLogger";
 import { Buffer } from "buffer";
 import "./gui";
 
@@ -9,7 +9,8 @@ const DEMO = async () => {
 	const bytes = Buffer.from(arrayBuffer);
 
 	window.bytes = bytes;
-	window.nes = new NES(NESTestLogger);
+	window.logger = new NESTestLogger(true);
+	window.nes = new NES(window.logger);
 
 	window.nes.load(bytes);
 	window.nes.cpu.pc.value = 0xc000;
@@ -24,7 +25,7 @@ const DEMO = async () => {
 	window.getDiff = () => {
 		window.nes.step();
 		const diff = {
-			actual: withoutPpu(window.lastLog),
+			actual: withoutPpu(window.logger.lastLog),
 			expected: withoutPpu(logLines[line])
 		};
 		line++;

@@ -1,12 +1,17 @@
-import { getIndirectAddress } from "./cpu/addressings/indirect";
-import { Byte } from "./helpers";
+import { getIndirectAddress } from "../cpu/addressings/indirect";
+import { Byte } from "../helpers";
 import _ from "lodash";
 
 const hex = (value, length) =>
 	_.padStart(value.toString(16).toUpperCase(), length, "0");
 
-export default {
-	log: (request) => {
+export default class NESTestLogger {
+	constructor(withConsole = false) {
+		this.lastLog = null;
+		this.withConsole = withConsole;
+	}
+
+	log(request) {
 		const {
 			context,
 			pc,
@@ -149,7 +154,7 @@ export default {
 		const $cpuCycle = "CYC:" + cpu.cycle;
 		const $status = `${$registers} ${$ppuCycle} ${$cpuCycle}`;
 
-		window.lastLog = $counter + $commandHex + $assembly + $status;
-		console.log(window.lastLog);
+		this.lastLog = $counter + $commandHex + $assembly + $status;
+		if (this.withConsole) console.log(this.lastLog);
 	}
-};
+}
