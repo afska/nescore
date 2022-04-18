@@ -50,6 +50,8 @@ export default class NES {
 	/** When the current context is unloaded. */
 	onUnload() {
 		this._reset();
+		this.cpu.unloadContext(context);
+		this.ppu.unloadContext(context);
 	}
 
 	_reset() {}
