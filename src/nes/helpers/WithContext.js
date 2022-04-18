@@ -26,7 +26,7 @@ export default {
 		return this;
 	},
 
-	/** Asserts that a current context exists.. */
+	/** Asserts that a current context exists. */
 	requireContext() {
 		if (!this.context) throw new Error("Execution context not found.");
 	}
