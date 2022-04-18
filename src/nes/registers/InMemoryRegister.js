@@ -2,11 +2,10 @@ import { WithContext, Byte } from "../helpers";
 
 /** A 8-bit register with multiple status flags and values that live in RAM. */
 export default class InMemoryRegister {
-	constructor(address, onChange = () => {}) {
+	constructor(address) {
 		WithContext.apply(this);
 
 		this.address = address;
-		this.onChange = onChange;
 	}
 
 	// Adds a field of `size` bits named `named`, starting at `startPosition`.
@@ -32,7 +31,6 @@ export default class InMemoryRegister {
 	set value(value) {
 		value = Byte.force8Bit(value);
 
-		this.onChange(value);
 		this.context.writeAt(this.address, value);
 	}
 }

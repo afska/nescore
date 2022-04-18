@@ -31,15 +31,5 @@ describe("registers", () => {
 			register.shortNumberBit5 = 0b01;
 			memory.readAt(3).should.equal(0b10110100);
 		});
-
-		it("allows a onChange callback", (done) => {
-			const finish = (value) => {
-				value.should.equal(8);
-				done();
-			};
-
-			const register = new InMemoryRegister(3, finish).loadContext(memory);
-			register.value = 8;
-		});
 	});
 });
