@@ -2,11 +2,13 @@ import Cartridge from "./Cartridge";
 import fs from "fs";
 const should = require("chai").Should();
 
+const ROM_FILE = "public/testroms/nestest.nes";
+
 describe("Cartridge", () => {
 	let bytes;
 
 	beforeEach(() => {
-		bytes = fs.readFileSync("public/testroms/nestest.nes");
+		bytes = fs.readFileSync(ROM_FILE);
 	});
 
 	it("can read the header", () => {
