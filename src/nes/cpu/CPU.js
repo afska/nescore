@@ -9,7 +9,7 @@ import { interrupts } from "./constants";
 const INITIAL_FLAGS = 0b00100100;
 const INTERRUPT_CYCLES = 7;
 
-/** The Center Process Unit. It runs programs. */
+/** The Center Processing Unit. It runs programs. */
 export default class CPU {
 	constructor() {
 		WithContext.apply(this);
