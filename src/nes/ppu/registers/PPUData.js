@@ -3,7 +3,7 @@ import { InMemoryRegister } from "../../registers";
 /**
  * PPU Data Port (<> read/write)
  *
- * Read/Write VRAM data here. `PPUAddr` will be incremented after the operation.
+ * Read/Write VRAM data here. `PPUAddr` will be incremented after any read/write.
  * Reads are delayed by 1.
  */
 export default class PPUData extends InMemoryRegister {
@@ -21,11 +21,14 @@ export default class PPUData extends InMemoryRegister {
 			// PALETTE_RAM_START
 			data = this.buffer; // skip buffer
 
+		this.context.ppu.registers.ppuAddr.address++;
+
 		return data;
 	}
 
 	writeAt(__, byte) {
 		const ppuAddress = this.context.ppu.registers.ppuAddr.address;
 		this.context.memoryBus.ppu.writeAt(ppuAddress, byte);
+		this.context.ppu.registers.ppuAddr.address++;
 	}
 }
