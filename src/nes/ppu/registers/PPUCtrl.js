@@ -10,7 +10,7 @@ export default class PPUCtrl extends InMemoryRegister {
 		super(memory, address);
 
 		this.addField("baseNametableAddressId", 0, 2)
-			.addField("vramAddressIncrementPerAccessPpuData", 2)
+			.addField("vramAddressIncrement32", 2)
 			.addField("patternTableAddressIdFor8x8Sprites", 3)
 			.addField("patternTableAddressIdForBackground", 4)
 			.addField("spriteSizeId", 5)
@@ -35,6 +35,10 @@ export default class PPUCtrl extends InMemoryRegister {
 			default:
 				return 0x2000;
 		}
+	}
+
+	get vramAddressIncrement() {
+		return this.vramAddressIncrement32 === 1 ? 32 : 1;
 	}
 
 	get patternTableAddressFor8x8Sprites() {

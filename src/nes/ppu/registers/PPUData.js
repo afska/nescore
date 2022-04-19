@@ -21,7 +21,7 @@ export default class PPUData extends InMemoryRegister {
 			// PALETTE_RAM_START
 			data = this.buffer; // skip buffer
 
-		if (!this.context.isDebugging) this.context.ppu.registers.ppuAddr.address++;
+		if (!this.context.isDebugging) this._incrementAddress();
 
 		return data;
 	}
@@ -29,6 +29,11 @@ export default class PPUData extends InMemoryRegister {
 	writeAt(__, byte) {
 		const ppuAddress = this.context.ppu.registers.ppuAddr.address;
 		this.context.memoryBus.ppu.writeAt(ppuAddress, byte);
-		this.context.ppu.registers.ppuAddr.address++;
+		this._incrementAddress();
+	}
+
+	_incrementAddress() {
+		const { registers } = this.context.ppu;
+		registers.ppuAddr.address += registers.ppuCtrl.vramAddressIncrement;
 	}
 }
