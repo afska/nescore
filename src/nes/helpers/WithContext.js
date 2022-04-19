@@ -21,8 +21,8 @@ export default {
 	unloadContext() {
 		this.requireContext();
 
-		this.context = null;
 		if (this.onUnload) this.onUnload();
+		this.context = null;
 		return this;
 	},
 

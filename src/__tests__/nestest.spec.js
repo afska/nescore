@@ -1,4 +1,4 @@
-import NES from "../nes/NES";
+import NES from "../nes";
 import NESTestLogger from "../nes/loggers/NESTestLogger";
 import fs from "fs";
 const should = require("chai").Should();

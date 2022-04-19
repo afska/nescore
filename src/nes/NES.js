@@ -34,6 +34,7 @@ export default class NES {
 	frame() {
 		const currentFrame = this.ppu.frame;
 		while (this.ppu.frame === currentFrame) this.step();
+		// TODO: RETURN FRAME BUFFER
 	}
 
 	/** Executes a step in the emulation. */
@@ -60,6 +61,6 @@ export default class NES {
 	onUnload() {
 		this.cpu.unloadContext();
 		this.ppu.unloadContext();
-		context.mapper.unloadContext();
+		this.context.mapper.unloadContext();
 	}
 }
