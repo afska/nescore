@@ -11,7 +11,7 @@ export default class PPUData extends InMemoryRegister {
 		this.buffer = 0;
 	}
 
-	readAt(address) {
+	readAt() {
 		let data = this.buffer;
 		const ppuAddress = this.context.ppu.registers.ppuAddr.address;
 		this.buffer = this.context.memoryBus.ppu.readAt(ppuAddress);
@@ -22,5 +22,10 @@ export default class PPUData extends InMemoryRegister {
 			data = this.buffer; // skip buffer
 
 		return data;
+	}
+
+	writeAt(__, byte) {
+		const ppuAddress = this.context.ppu.registers.ppuAddr.address;
+		this.context.memoryBus.ppu.writeAt(ppuAddress, byte);
 	}
 }

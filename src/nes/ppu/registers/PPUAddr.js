@@ -12,14 +12,14 @@ export default class PPUAddr extends InMemoryRegister {
 		this.address = 0;
 	}
 
-	writeAt(address, byte) {
+	writeAt(__, byte) {
 		this.address = this.latch
 			? Byte.to16Bit(byte, Byte.lowPartOf(this.address))
 			: Byte.to16Bit(Byte.highPartOf(this.address), byte);
 		this.latch = !this.latch;
 	}
 
-	readAt(address) {
+	readAt() {
 		return 0;
 	}
 }

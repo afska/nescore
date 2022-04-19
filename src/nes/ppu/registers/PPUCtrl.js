@@ -18,7 +18,7 @@ export default class PPUCtrl extends InMemoryRegister {
 			.addField("generateNmiAtStartOfVBlank", 7);
 	}
 
-	readAt(address) {
+	readAt() {
 		return 0;
 	}
 

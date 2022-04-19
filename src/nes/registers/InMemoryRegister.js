@@ -26,12 +26,12 @@ export default class InMemoryRegister {
 	}
 
 	/** Returns the actual value. */
-	readAt(address) {
+	readAt() {
 		return this._value;
 	}
 
 	/** Sets the actual value. */
-	writeAt(address, byte) {
+	writeAt(__, byte) {
 		byte = Byte.force8Bit(byte);
 
 		this._value = byte;
