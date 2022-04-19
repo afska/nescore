@@ -1,8 +1,4 @@
 import React, { Component } from "react";
-/** DEBUG */
-import NameTable from "../../nes/ppu/debug/NameTable";
-import PatternTable from "../../nes/ppu/debug/PatternTable";
-/** DEBUG */
 import styles from "./Screen.module.css";
 
 const SCREEN_WIDTH = 256;
@@ -14,36 +10,6 @@ export default class Screen extends Component {
 		super(props);
 
 		this.setBuffer = this.setBuffer.bind(this);
-
-		/** DEBUG */
-		let tile = 0;
-		const frameBuffer = new Uint32Array(256 * 240);
-		window.drawTile = () => {
-			const id = tile;
-			const startX = (tile * 8) % 256;
-			const startY = Math.floor((tile * 8) / 256) * 8;
-			console.log("DRAWING TILE", tile, startX, startY);
-
-			const plot = (x, y, color) => {
-				frameBuffer[y * 256 + x] = color;
-			};
-			new PatternTable()
-				.loadContext(window.nes.context)
-				.renderTile(id, startX, startY, plot);
-			this.setBuffer(frameBuffer);
-
-			tile++;
-		};
-		window.drawTiles = () => {
-			tile = 0;
-			try {
-				while (true) window.drawTile();
-			} catch (e) {}
-		};
-		window.drawNameTable = (id = 0) => {
-			this.setBuffer(NameTable(id));
-		};
-		/** DEBUG */
 	}
 
 	render() {

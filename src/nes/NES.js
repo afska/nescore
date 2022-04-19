@@ -32,7 +32,16 @@ export default class NES {
 			},
 
 			cartridge,
-			mapper
+			mapper,
+
+			inDebugMode(action) {
+				try {
+					this.isDebugging = true;
+					return action();
+				} finally {
+					this.isDebugging = false;
+				}
+			}
 		});
 	}
 

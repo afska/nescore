@@ -1,9 +1,10 @@
 import React, { Component } from "react";
 import { Buffer } from "buffer";
 import Screen from "./Screen";
-import FrameTimer from "./FrameTimer";
+import FrameTimer from "../emulator/FrameTimer";
 import NES from "../../nes";
 import NESTestLogger from "../../nes/loggers/NESTestLogger";
+import debug from "../emulator/debug";
 
 export default class Emulator extends Component {
 	render() {
@@ -59,7 +60,7 @@ export default class Emulator extends Component {
 		}
 
 		// DEBUG
-		window.nes = this.nes;
+		window.debug = debug(this);
 	}
 
 	_onError(e) {

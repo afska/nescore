@@ -13,8 +13,7 @@ export default class NESTestLogger {
 	log(request) {
 		const { context, pc, operation, initialArgument, finalArgument } = request;
 
-		try {
-			context.isDebugging = true;
+		context.inDebugMode(() => {
 			const { cpu, memoryBus } = context;
 			const memory = memoryBus.cpu;
 
@@ -153,8 +152,6 @@ export default class NESTestLogger {
 			const $status = `${$registers} ${$ppuCycle} ${$cpuCycle}`;
 
 			this.lastLog = $counter + $commandHex + $assembly + $status;
-		} finally {
-			context.isDebugging = false;
-		}
+		});
 	}
 }
