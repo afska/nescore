@@ -6,10 +6,6 @@ import NES from "../../nes";
 import NESTestLogger from "../../nes/loggers/NESTestLogger";
 
 export default class Emulator extends Component {
-	constructor(props) {
-		super(props);
-	}
-
 	render() {
 		return (
 			<Screen

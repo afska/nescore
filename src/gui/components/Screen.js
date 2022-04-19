@@ -63,8 +63,6 @@ export default class Screen extends Component {
 		this.buf32 = new Uint32Array(this.buf);
 
 		// Set alpha
-		for (let i = 0; i < this.buf32.length; ++i) {
-			this.buf32[i] = FULL_ALPHA;
-		}
+		for (let i = 0; i < this.buf32.length; ++i) this.buf32[i] = FULL_ALPHA;
 	}
 }
