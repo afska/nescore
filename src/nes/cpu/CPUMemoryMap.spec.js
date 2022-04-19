@@ -1,7 +1,7 @@
 import CPUMemoryMap from "./CPUMemoryMap";
 import { PPURegisterSegment } from "../ppu/registers";
 import { MemoryChunk } from "../memory";
-import { Register8Bit } from "../registers";
+import { Register8Bit } from "./registers";
 import _ from "lodash";
 const should = require("chai").Should();
 

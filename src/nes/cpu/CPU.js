@@ -1,6 +1,5 @@
 import { WithContext } from "../helpers";
-import { Register8Bit, Register16Bit } from "../registers";
-import FlagsRegister from "./FlagsRegister";
+import { Register8Bit, Register16Bit, FlagsRegister } from "./registers";
 import CPUMemoryMap from "./CPUMemoryMap";
 import Stack from "./Stack";
 import operations from "./operations";
