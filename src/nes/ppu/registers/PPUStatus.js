@@ -21,12 +21,13 @@ export default class PPUStatus extends InMemoryRegister {
 		const value = super.readAt(address);
 
 		// reading the value has two side effects:
+		if (!this.context.isDebugging) {
+			// it resets the vertical blank flag
+			this.isInVBlankInterval = 0;
 
-		// it resets the vertical blank flag
-		this.isInVBlankInterval = 0;
-
-		// it resets the address latch
-		this.context.ppu.registers.ppuAddr.latch = false;
+			// it resets the address latch
+			this.context.ppu.registers.ppuAddr.latch = false;
+		}
 
 		return value;
 	}

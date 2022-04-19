@@ -21,7 +21,7 @@ export default class PPUData extends InMemoryRegister {
 			// PALETTE_RAM_START
 			data = this.buffer; // skip buffer
 
-		this.context.ppu.registers.ppuAddr.address++;
+		if (!this.context.isDebugging) this.context.ppu.registers.ppuAddr.address++;
 
 		return data;
 	}
