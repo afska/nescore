@@ -1,7 +1,6 @@
 // TODO: DEBUG
 
 import { Byte } from "../../helpers";
-import _ from "lodash";
 
 const START_ADDRESS = 0x0000;
 const TILE_SIZE_X = 8;
@@ -46,9 +45,7 @@ export default (nametableId = 0) => {
 					const msb = Byte.getBit(row2, column);
 					const color = (msb << 1) | lsb;
 
-					console.log(x, y, color.toString(16));
-					plot(startX + x, startY + y, _.sample(palette));
-					// plot(startX + x, startY + y, palette[color]);
+					plot(startX + x, startY + y, palette[color]);
 				}
 			}
 		} finally {

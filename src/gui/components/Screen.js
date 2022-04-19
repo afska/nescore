@@ -35,9 +35,13 @@ export default class Screen extends Component {
 			tile++;
 		};
 		window.drawTiles = () => {
+			tile = 0;
 			try {
 				while (true) window.drawTile();
 			} catch (e) {}
+		};
+		window.drawNameTable = (id = 0) => {
+			this.setBuffer(NameTable(id));
 		};
 		/** DEBUG */
 	}
