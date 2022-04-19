@@ -6,9 +6,8 @@ const hex = (value, length) =>
 	_.padStart(value.toString(16).toUpperCase(), length, "0");
 
 export default class NESTestLogger {
-	constructor(withConsole = false) {
+	constructor() {
 		this.lastLog = null;
-		this.withConsole = withConsole;
 	}
 
 	log(request) {
@@ -152,6 +151,5 @@ export default class NESTestLogger {
 		const $status = `${$registers} ${$ppuCycle} ${$cpuCycle}`;
 
 		this.lastLog = $counter + $commandHex + $assembly + $status;
-		if (this.withConsole) console.log(this.lastLog);
 	}
 }
