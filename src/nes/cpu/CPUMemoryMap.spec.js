@@ -14,9 +14,12 @@ describe("memory", () => {
 		let ppu, mapper, memory;
 
 		beforeEach(() => {
-			ppu = { registers: new PPURegisterSegment() };
+			const context = {};
+			ppu = { registers: new PPURegisterSegment(context) };
 			mapper = new MemoryChunk(MAPPER_SIZE, MAPPER_START_ADDRESS);
-			memory = new CPUMemoryMap().loadContext({ ppu, mapper });
+			context.ppu = ppu;
+			context.mapper = mapper;
+			memory = new CPUMemoryMap().loadContext(context);
 		});
 
 		it("stores the start address of each chunk", () => {

@@ -16,7 +16,7 @@ export default class PPUStatus extends InMemoryRegister {
 	}
 
 	readAt(address) {
-		this.isInVBlankInterval = true; // TODO: REMOVE // HACK
+		// this.isInVBlankInterval = true; // TODO: REMOVE // HACK
 
 		const value = super.readAt(address);
 
