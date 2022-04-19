@@ -5,11 +5,13 @@ import _ from "lodash";
 const hex = (value, length) =>
 	_.padStart(value.toString(16).toUpperCase(), length, "0");
 
+/** A logger that resembles Nintendulator's logs format, to use with nestest (a test ROM). */
 export default class NESTestLogger {
 	constructor() {
 		this.lastLog = null;
 	}
 
+	/** Logs a CPU instruction. All the information is in `request`. */
 	log(request) {
 		const { context, pc, operation, initialArgument, finalArgument } = request;
 

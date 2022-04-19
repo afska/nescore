@@ -107,7 +107,7 @@ export default class CPU {
 	}
 
 	_readOperation() {
-		const opcode = this.memoryBus.readAt(this.pc.value);
+		const opcode = this._memoryBus.readAt(this.pc.value);
 		const operation = operations[opcode];
 		if (!operation) throw new Error(`Unknown opcode: 0x${opcode.toString(16)}`);
 		this.pc.increment();
@@ -116,7 +116,7 @@ export default class CPU {
 	}
 
 	_readArgument({ instruction, addressing, canTakeExtraCycles }) {
-		const argument = this.memoryBus.readBytesAt(
+		const argument = this._memoryBus.readBytesAt(
 			this.pc.value,
 			addressing.parameterSize
 		);
@@ -129,14 +129,14 @@ export default class CPU {
 	}
 
 	_jumpToInterruptHandler(interrupt) {
-		this.pc.value = this.memoryBus.read2BytesAt(interrupt.vector);
+		this.pc.value = this._memoryBus.read2BytesAt(interrupt.vector);
+	}
+
+	get _memoryBus() {
+		return this.context.memoryBus.cpu;
 	}
 
 	get _areInterruptsEnabled() {
 		return !this.flags.i;
-	}
-
-	get memoryBus() {
-		return this.context.memoryBus.cpu;
 	}
 }

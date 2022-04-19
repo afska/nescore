@@ -4,6 +4,7 @@ import { WithContext } from "../helpers";
 
 const KB = 1024;
 
+/** Creates a mocked test context for CPU testing. */
 export default (initializeMemory = () => {}) => {
 	const cpu = new CPU();
 	const memory = (cpu.memory = new MemoryChunk(64 * KB));
