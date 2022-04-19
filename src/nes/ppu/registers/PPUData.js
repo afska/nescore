@@ -12,8 +12,15 @@ export default class PPUData extends InMemoryRegister {
 	}
 
 	readAt(address) {
-		const data = this.buffer;
-		this.buffer = this.context.memoryBus.ppu.readAt(address);
+		let data = this.buffer;
+		const ppuAddress = this.context.ppu.registers.ppuAddr.address;
+		this.buffer = this.context.memoryBus.ppu.readAt(ppuAddress);
+
+		// all reads are delayed by one, except for the palette ram
+		if (ppuAddress > 0x3f00)
+			// PALETTE_RAM_START
+			data = this.buffer; // skip buffer
+
 		return data;
 	}
 }
