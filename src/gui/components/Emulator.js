@@ -3,6 +3,7 @@ import { Buffer } from "buffer";
 import Screen from "./Screen";
 import FrameTimer from "./FrameTimer";
 import NES from "../../nes";
+import NESTestLogger from "../../nes/loggers/NESTestLogger";
 
 export default class Emulator extends Component {
 	constructor(props) {
@@ -41,16 +42,18 @@ export default class Emulator extends Component {
 	}
 
 	_initialize(screen) {
-		const { rom, onError } = this.props;
+		const { rom, onLog } = this.props;
 		if (!rom) return;
 		const bytes = Buffer.from(rom);
 
 		this.stop();
 
+		const logger = new NESTestLogger();
 		this.screen = screen;
-		this.nes = new NES();
+		this.nes = new NES(logger);
 		this.frameTimer = new FrameTimer(() => {
 			this.frame();
+			onLog(logger.lastLog);
 		});
 
 		try {
