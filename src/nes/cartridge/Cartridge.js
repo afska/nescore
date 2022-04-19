@@ -19,7 +19,10 @@ export default class Cartridge {
 
 	/** Returns a new instance of the right mapper. */
 	createMapper() {
-		return new mappers[this.header.mapperId]();
+		const mapperId = this.header.mapperId;
+		const Mapper = mappers[mapperId];
+		if (!Mapper) throw new Error(`Unknown mapper: ${mapperId}.`);
+		return new Mapper();
 	}
 
 	/** Returns the PRG ROM, which contains the game's code. */

@@ -19,16 +19,12 @@ export default class Emulator extends Component {
 		);
 	}
 
-	componentWillUpdate() {
-		this.stop();
-	}
-
 	start() {
-		this.frameTimer.start();
+		if (this.frameTimer) this.frameTimer.start();
 	}
 
 	stop() {
-		this.frameTimer.stop();
+		if (this.frameTimer) this.frameTimer.stop();
 	}
 
 	frame() {
@@ -36,8 +32,7 @@ export default class Emulator extends Component {
 			const buffer = this.nes.frame();
 			// TODO: WRITE BUFFER
 		} catch (e) {
-			debugger;
-			this.props.onError(e);
+			this._onError(e);
 		}
 	}
 
@@ -50,6 +45,8 @@ export default class Emulator extends Component {
 		if (!rom) return;
 		const bytes = Buffer.from(rom);
 
+		this.stop();
+
 		this.screen = screen;
 		this.nes = new NES();
 		this.frameTimer = new FrameTimer(() => {
@@ -57,10 +54,14 @@ export default class Emulator extends Component {
 		});
 
 		try {
-			this.nes.loadROM(bytes);
+			this.nes.load(bytes);
 		} catch (e) {
-			debugger;
-			onError(e);
+			this._onError(e);
 		}
+	}
+
+	_onError(e) {
+		this.props.onError(e);
+		this.stop();
 	}
 }
