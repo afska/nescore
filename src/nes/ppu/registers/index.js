@@ -11,16 +11,16 @@ import { WithComposedMemory } from "../../memory";
 
 /** Represents all the CPU-mapped PPU registers. */
 class PPURegisterSegment {
-	constructor() {
-		this.ppuCtrl = new PPUCtrl();
-		this.ppuMask = new PPUMask();
-		this.ppuStatus = new PPUStatus();
-		this.oamAddr = new OAMAddr();
-		this.oamData = new OAMData();
-		this.ppuScroll = new PPUScroll();
-		this.ppuAddr = new PPUAddr();
-		this.ppuData = new PPUData();
-		this.oamDma = new OAMDMA();
+	constructor(context) {
+		this.ppuCtrl = new PPUCtrl().loadContext(context);
+		this.ppuMask = new PPUMask().loadContext(context);
+		this.ppuStatus = new PPUStatus().loadContext(context);
+		this.oamAddr = new OAMAddr().loadContext(context);
+		this.oamData = new OAMData().loadContext(context);
+		this.ppuScroll = new PPUScroll().loadContext(context);
+		this.ppuAddr = new PPUAddr().loadContext(context);
+		this.ppuData = new PPUData().loadContext(context);
+		this.oamDma = new OAMDMA().loadContext(context);
 	}
 
 	/** Creates a memory segment with the first 8 registers ($2000-$2007). */

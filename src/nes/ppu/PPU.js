@@ -31,7 +31,7 @@ export default class PPU {
 		this.memory.loadContext(context);
 		this.oamRam = new MemoryChunk(PRIMARY_OAM_SIZE);
 		this.oamRam2 = new MemoryChunk(SECONDARY_OAM_SIZE);
-		this.registers = new PPURegisterSegment();
+		this.registers = new PPURegisterSegment(context);
 		this._reset();
 	}
 
