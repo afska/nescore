@@ -14,7 +14,8 @@ export default class NESTestLogger {
 	log(request) {
 		const { context, pc, operation, initialArgument, finalArgument } = request;
 
-		const { cpu, memory } = context;
+		const { cpu, memoryBus } = context;
+		const memory = memoryBus.cpu;
 
 		const cycle = (value, length) => _.padStart(value.toString(), length);
 		const section = (string, length) =>

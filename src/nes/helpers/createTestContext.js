@@ -8,10 +8,12 @@ export default (initializeMemory = () => {}) => {
 	const cpu = new CPU();
 	const memory = (cpu.memory = new MemoryChunk(64 * KB));
 	WithContext.apply(memory);
-	const context = { cpu, memory };
+	const context = { cpu, memoryBus: { cpu: memory } };
 
 	initializeMemory(memory);
 	cpu.loadContext(context);
+
+	context.memory = memory;
 	context.context = context;
 
 	return context;

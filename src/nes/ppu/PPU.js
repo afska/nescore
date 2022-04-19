@@ -1,5 +1,5 @@
 import { WithContext } from "../helpers";
-import { MemoryChunk, WithComposedMemory } from "../memory";
+import { MemoryChunk } from "../memory";
 import { PPURegisterSegment } from "./registers";
 import PPUMemoryMap from "./PPUMemoryMap";
 import { cycleType, scanlineType } from "./constants";

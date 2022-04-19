@@ -1,5 +1,6 @@
 import CPU from "./cpu";
 import PPU from "./ppu";
+import { CPUBus, PPUBus } from "./memory/Bus";
 import Cartridge from "./cartridge";
 import { WithContext } from "./helpers";
 
@@ -17,16 +18,21 @@ export default class NES {
 	/** Loads a `rom` as the current cartridge. */
 	load(rom) {
 		const cartridge = new Cartridge(rom);
+		const mapper = cartridge.createMapper();
 
 		this.loadContext({
 			logger: this.logger,
 
 			cpu: this.cpu,
 			ppu: this.ppu,
-			memory: this.cpu.memory, // TODO: Create Bus and read/write to memory through mapper
+
+			memoryBus: {
+				cpu: new CPUBus(mapper),
+				ppu: new PPUBus(mapper)
+			},
 
 			cartridge,
-			mapper: cartridge.createMapper()
+			mapper
 		});
 	}
 

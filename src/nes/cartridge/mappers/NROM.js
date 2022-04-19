@@ -5,7 +5,6 @@ import {
 	MemoryMirror,
 	MemoryPadding
 } from "../../memory";
-import { WithContext } from "../../helpers";
 
 const KB = 1024;
 const PRG_ROM_PAGE_SIZE = 16 * KB;
@@ -19,7 +18,6 @@ export default class NROM extends Mapper {
 	constructor() {
 		super();
 
-		WithContext.apply(this);
 		WithComposedMemory.apply(this);
 	}
 

@@ -12,7 +12,7 @@ export default class Stack {
 	push(value) {
 		this.requireContext();
 
-		this.context.memory.writeAt(this.currentAddress, value);
+		this.context.memoryBus.cpu.writeAt(this.currentAddress, value);
 		this.context.cpu.sp.decrement();
 	}
 
@@ -21,7 +21,7 @@ export default class Stack {
 		this.requireContext();
 
 		this.context.cpu.sp.increment();
-		return this.context.memory.readAt(this.currentAddress);
+		return this.context.memoryBus.cpu.readAt(this.currentAddress);
 	}
 
 	/** Pushes a 16-bit `value` into the stack. */

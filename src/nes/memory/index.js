@@ -6,12 +6,16 @@ import MemoryPadding from "./MemoryPadding";
 
 /**
  * A memory segment should have:
- * - `memorySize`: how many bytes it contains
  * - `readAt(address)`: read 1 byte
  * - `writeAt(address, byte)`: write 1 byte
+ *
+ * Top level segments also require:
  * - `read2BytesAt(address)`: read 2 bytes in Little Endian
  * - `write2BytesAt(address, value)`: writes 2 bytes in Little Endian
  * - `readBytesAt(address, length)`: read 1 or 2 bytes
+ *
+ * For mirroring or composed memory usage, define:
+ * - `memorySize`: how many bytes it contains
  */
 
 export {

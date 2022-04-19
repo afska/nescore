@@ -23,12 +23,12 @@ const instructions = () => [
 	 */
 	{
 		id: "ASL",
-		execute: ({ cpu, memory }, address) => {
-			const value = memory.readAt(address);
+		execute: ({ cpu, memoryBus }, address) => {
+			const value = memoryBus.cpu.readAt(address);
 			const result = value << 1;
 			const newValue = Byte.force8Bit(result);
 
-			memory.writeAt(address, newValue);
+			memoryBus.cpu.writeAt(address, newValue);
 			cpu.flags.updateZeroAndNegative(newValue);
 			cpu.flags.c = Byte.hasOverflow(result);
 		}
@@ -41,12 +41,12 @@ const instructions = () => [
 	 */
 	{
 		id: "DEC",
-		execute: ({ cpu, memory }, address) => {
-			const value = memory.readAt(address);
+		execute: ({ cpu, memoryBus }, address) => {
+			const value = memoryBus.cpu.readAt(address);
 			const newValue = Byte.force8Bit(value - 1);
 
 			cpu.flags.updateZeroAndNegative(newValue);
-			memory.writeAt(address, newValue);
+			memoryBus.cpu.writeAt(address, newValue);
 		}
 	},
 
@@ -77,12 +77,12 @@ const instructions = () => [
 	 */
 	{
 		id: "INC",
-		execute: ({ cpu, memory }, address) => {
-			const value = memory.readAt(address);
+		execute: ({ cpu, memoryBus }, address) => {
+			const value = memoryBus.cpu.readAt(address);
 			const newValue = Byte.force8Bit(value + 1);
 
 			cpu.flags.updateZeroAndNegative(newValue);
-			memory.writeAt(address, newValue);
+			memoryBus.cpu.writeAt(address, newValue);
 		}
 	},
 
@@ -115,12 +115,12 @@ const instructions = () => [
 	 */
 	{
 		id: "LSR",
-		execute: ({ cpu, memory }, address) => {
-			const value = memory.readAt(address);
+		execute: ({ cpu, memoryBus }, address) => {
+			const value = memoryBus.cpu.readAt(address);
 			const result = value >> 1;
 			const newValue = Byte.force8Bit(result);
 
-			memory.writeAt(address, newValue);
+			memoryBus.cpu.writeAt(address, newValue);
 			cpu.flags.updateZeroAndNegative(newValue);
 			cpu.flags.c = !!Byte.getBit(value, 0);
 		}
@@ -135,12 +135,12 @@ const instructions = () => [
 	 */
 	{
 		id: "ROL",
-		execute: ({ cpu, memory }, address) => {
-			const value = memory.readAt(address);
+		execute: ({ cpu, memoryBus }, address) => {
+			const value = memoryBus.cpu.readAt(address);
 			const result = (value << 1) | +cpu.flags.c;
 			const newValue = Byte.force8Bit(result);
 
-			memory.writeAt(address, newValue);
+			memoryBus.cpu.writeAt(address, newValue);
 			cpu.flags.updateZeroAndNegative(newValue);
 			cpu.flags.c = !!Byte.getBit(value, 7);
 		}
@@ -155,12 +155,12 @@ const instructions = () => [
 	 */
 	{
 		id: "ROR",
-		execute: ({ cpu, memory }, address) => {
-			const value = memory.readAt(address);
+		execute: ({ cpu, memoryBus }, address) => {
+			const value = memoryBus.cpu.readAt(address);
 			const result = (value >> 1) | (+cpu.flags.c << 7);
 			const newValue = Byte.force8Bit(result);
 
-			memory.writeAt(address, newValue);
+			memoryBus.cpu.writeAt(address, newValue);
 			cpu.flags.updateZeroAndNegative(newValue);
 			cpu.flags.c = !!Byte.getBit(value, 0);
 		}
