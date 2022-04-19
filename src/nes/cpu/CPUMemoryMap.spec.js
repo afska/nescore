@@ -81,10 +81,10 @@ describe("memory", () => {
 		it("can read the PPUStatus register", () => {
 			memory.readAt(0x2002).should.equal(0);
 
-			ppu.registers.ppuStatus.isInVBlankInterval = 1;
 			ppu.registers.ppuStatus.spriteOverflow = 1;
+			ppu.registers.ppuStatus.sprite0Hit = 1;
 
-			memory.readAt(0x2002).should.equal(0b10100000);
+			memory.readAt(0x2002).should.equal(0b01100000);
 		});
 
 		it("throws an exception when the address is out of bounds", () => {

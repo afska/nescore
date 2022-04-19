@@ -15,6 +15,22 @@ export default class PPUStatus extends InMemoryRegister {
 			.addField("isInVBlankInterval", 7);
 	}
 
+	readAt(address) {
+		this.isInVBlankInterval = true; // TODO: REMOVE // HACK
+
+		const value = super.readAt(address);
+
+		// reading the value has two side effects:
+
+		// it resets the vertical blank flag
+		this.isInVBlankInterval = 0;
+
+		// it resets the address latch
+		this.context.ppu.registers.ppuAddr.latch = false;
+
+		return value;
+	}
+
 	writeAt(address, byte) {}
 
 	reset() {
