@@ -14,7 +14,7 @@ export default class App extends Component {
 		return (
 			<div className={styles.app}>
 				<h1>NesCore</h1>
-				<br />
+				<h6>(drag a NES ROM here)</h6>
 
 				<div
 					className={classNames(
