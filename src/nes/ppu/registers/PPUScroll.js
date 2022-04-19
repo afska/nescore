@@ -7,7 +7,8 @@ import { InMemoryRegister } from "../../registers";
  * (selected through `PPUCtrl`) should be at the top left corner of the rendered screen.
  */
 export default class PPUScroll extends InMemoryRegister {
-	readAt(address) {
+	/** Reads nothing (write-only address). */
+	readAt() {
 		return 0;
 	}
 }

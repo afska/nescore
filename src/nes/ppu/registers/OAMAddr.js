@@ -7,6 +7,7 @@ import { InMemoryRegister } from "../../registers";
  * Most games just write $00 here and then use `OAMDMA`.
  */
 export default class OAMAddr extends InMemoryRegister {
+	/** Reads nothing (write-only address). */
 	readAt() {
 		return 0;
 	}

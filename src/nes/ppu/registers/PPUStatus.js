@@ -30,9 +30,11 @@ export default class PPUStatus extends InMemoryRegister {
 		return value;
 	}
 
+	/** Writes nothing (read-only address). */
 	writeAt() {}
 
+	/** Resets the value. */
 	reset() {
-		this.value = 0b10000000;
+		this._value = 0b10000000;
 	}
 }

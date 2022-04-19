@@ -19,6 +19,7 @@ export default class PPUAddr extends InMemoryRegister {
 		this.latch = !this.latch;
 	}
 
+	/** Reads nothing (write-only address). */
 	readAt() {
 		return 0;
 	}
