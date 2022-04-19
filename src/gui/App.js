@@ -73,7 +73,7 @@ export default class App extends Component {
 	};
 
 	_onLog = (log) => {
-		console.log(log);
+		// console.log(log);
 	};
 
 	_onError = (error) => {
