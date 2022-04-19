@@ -12,10 +12,10 @@ export default class MemoryPadding {
 	}
 
 	/** Reads nothing. */
-	readAt(address) {
+	readAt() {
 		return 0;
 	}
 
 	/** Writes nothing. */
-	writeAt(address, byte) {}
+	writeAt() {}
 }

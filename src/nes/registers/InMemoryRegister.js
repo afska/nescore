@@ -9,7 +9,7 @@ export default class InMemoryRegister {
 		this._value = 0;
 	}
 
-	// Adds a field of `size` bits named `named`, starting at `startPosition`.
+	/** Adds a field of `size` bits named `named`, starting at `startPosition`. */
 	addField(name, startPosition, size = 1) {
 		Object.defineProperty(this, name, {
 			get() {

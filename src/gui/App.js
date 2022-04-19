@@ -66,7 +66,7 @@ export default class App extends Component {
 
 		reader.onload = (event) => {
 			const rom = event.target.result;
-			this._loadRom(event.target.result);
+			this._loadRom(rom);
 		};
 
 		reader.readAsArrayBuffer(file);
