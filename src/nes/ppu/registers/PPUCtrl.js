@@ -18,6 +18,10 @@ export default class PPUCtrl extends InMemoryRegister {
 			.addField("generateNmiAtStartOfVBlank", 7);
 	}
 
+	readAt(address) {
+		return 0;
+	}
+
 	// TODO: Write jsdocs of properties
 
 	get baseNametableAddress() {

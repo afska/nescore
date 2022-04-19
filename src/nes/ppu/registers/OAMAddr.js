@@ -6,4 +6,8 @@ import { InMemoryRegister } from "../../registers";
  * Write the address of OAM you want to access here, then write in `OAMData`.
  * Most games just write $00 here and then use `OAMDMA`.
  */
-export default class OAMAddr extends InMemoryRegister {}
+export default class OAMAddr extends InMemoryRegister {
+	readAt(address) {
+		return 0;
+	}
+}

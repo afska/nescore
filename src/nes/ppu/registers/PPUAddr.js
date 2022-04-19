@@ -5,4 +5,8 @@ import { InMemoryRegister } from "../../registers";
  *
  * Write the address of VRAM you want to access here, then write in `PPUData`.
  */
-export default class PPUAddr extends InMemoryRegister {}
+export default class PPUAddr extends InMemoryRegister {
+	readAt(address) {
+		return 0;
+	}
+}

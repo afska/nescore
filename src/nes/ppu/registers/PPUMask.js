@@ -18,4 +18,8 @@ export default class PPUMask extends InMemoryRegister {
 			.addField("emphasizeGreen", 6)
 			.addField("emphasizeBlue", 7);
 	}
+
+	readAt(address) {
+		return 0;
+	}
 }

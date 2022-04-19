@@ -15,6 +15,8 @@ export default class PPUStatus extends InMemoryRegister {
 			.addField("isInVBlankInterval", 7);
 	}
 
+	writeAt(address, byte) {}
+
 	reset() {
 		this.value = 0b10000000;
 	}

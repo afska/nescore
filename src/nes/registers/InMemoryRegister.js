@@ -11,14 +11,12 @@ export default class InMemoryRegister {
 	addField(name, startPosition, size = 1) {
 		Object.defineProperty(this, name, {
 			get() {
-				const currentValue = this.readAt(0);
-				return Byte.getSubNumber(currentValue, startPosition, size);
+				return Byte.getSubNumber(this._value, startPosition, size);
 			},
 			set(value) {
-				const currentValue = this.readAt(0);
-				this.writeAt(
+				this._value = Byte.force8Bit(
 					0,
-					Byte.setSubNumber(currentValue, startPosition, size, value)
+					Byte.setSubNumber(this._value, startPosition, size, value)
 				);
 			}
 		});
