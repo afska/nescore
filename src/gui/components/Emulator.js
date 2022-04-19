@@ -57,6 +57,9 @@ export default class Emulator extends Component {
 		} catch (e) {
 			this._onError(e);
 		}
+
+		// DEBUG
+		window.nes = this.nes;
 	}
 
 	_onError(e) {
