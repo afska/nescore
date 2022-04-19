@@ -14,8 +14,8 @@ export default class PPUAddr extends InMemoryRegister {
 
 	writeAt(__, byte) {
 		this.address = this.latch
-			? Byte.to16Bit(byte, Byte.lowPartOf(this.address))
-			: Byte.to16Bit(Byte.highPartOf(this.address), byte);
+			? Byte.to16Bit(Byte.highPartOf(this.address), byte)
+			: Byte.to16Bit(byte, Byte.lowPartOf(this.address));
 		this.latch = !this.latch;
 	}
 
