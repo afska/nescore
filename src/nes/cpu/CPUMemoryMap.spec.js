@@ -1,7 +1,5 @@
-import CPUMemoryMap from "./CPUMemoryMap";
-import { PPURegisterSegment } from "../ppu/registers";
-import { MemoryChunk } from "../memory";
 import { Register8Bit } from "./registers";
+import { createTestContextForCPUMemoryMap } from "../helpers/createTestContext";
 import _ from "lodash";
 const should = require("chai").Should();
 
@@ -14,12 +12,7 @@ describe("memory", () => {
 		let ppu, mapper, memory;
 
 		beforeEach(() => {
-			const context = {};
-			ppu = { registers: new PPURegisterSegment(context) };
-			mapper = new MemoryChunk(MAPPER_SIZE);
-			context.ppu = ppu;
-			context.mapper = mapper;
-			memory = new CPUMemoryMap().loadContext(context);
+			({ ppu, mapper, memory } = createTestContextForCPUMemoryMap());
 		});
 
 		it("stores the start address of each chunk", () => {
