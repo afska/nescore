@@ -3,7 +3,7 @@ import { Buffer } from "buffer";
 import Screen from "./Screen";
 import FrameTimer from "../emulator/FrameTimer";
 import NES from "../../nes";
-import NESTestLogger from "../../nes/loggers/NESTestLogger";
+/*import NESTestLogger from "../../nes/loggers/NESTestLogger";*/
 import debug from "../emulator/debug";
 
 export default class Emulator extends Component {
@@ -39,18 +39,19 @@ export default class Emulator extends Component {
 	}
 
 	_initialize(screen) {
-		const { rom, onLog } = this.props;
+		const { rom /*, onLog*/ } = this.props;
 		if (!rom) return;
 		const bytes = Buffer.from(rom);
 
 		this.stop();
 
-		const logger = new NESTestLogger();
+		// TODO: Logger decreases performance and crashes SMB. Fix.
+		/*const logger = new NESTestLogger();*/
 		this.screen = screen;
-		this.nes = new NES(logger);
+		this.nes = new NES(/*logger*/);
 		this.frameTimer = new FrameTimer(() => {
 			this.frame();
-			onLog(logger.lastLog);
+			// onLog(logger.lastLog);
 		});
 
 		try {
