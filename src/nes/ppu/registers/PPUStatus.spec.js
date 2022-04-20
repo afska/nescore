@@ -28,6 +28,22 @@ describe("CPU/PPU registers interaction", () => {
 			memory.readAt(ADDRESS).should.equal(0b01100000);
 		});
 
-		// TODO: TEST SIDE EFFECTS
+		describe("side effects", () => {
+			it("resets the vertical blank flag on every read", () => {
+				register.isInVBlankInterval = 1;
+
+				memory.readAt(ADDRESS);
+
+				register.isInVBlankInterval.should.equal(0);
+			});
+
+			it("resets PPUAddr's latch on every read", () => {
+				ppu.registers.ppuAddr.latch = true;
+
+				memory.readAt(ADDRESS);
+
+				ppu.registers.ppuAddr.latch.should.equal(false);
+			});
+		});
 	});
 });

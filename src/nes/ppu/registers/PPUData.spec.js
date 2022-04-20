@@ -43,14 +43,18 @@ describe("CPU/PPU registers interaction", () => {
 				it(`${operation}: increments PPUAddr by 1 if bit 2 of PPUCtrl is 0`, () => {
 					ppu.registers.ppuCtrl.value = 0b00000000;
 					ppu.registers.ppuAddr.value = 0x2016;
+
 					run(operation);
+
 					ppu.registers.ppuAddr.value.should.equal(0x2017);
 				});
 
 				it(`${operation}: increments PPUAddr by 32 if bit 2 of PPUCtrl is 1`, () => {
 					ppu.registers.ppuCtrl.value = 0b00000100;
 					ppu.registers.ppuAddr.value = 0x2016;
+
 					run(operation);
+
 					ppu.registers.ppuAddr.value.should.equal(0x2036);
 				});
 			});
