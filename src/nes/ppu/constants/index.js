@@ -1,5 +1,5 @@
-import cycleType from "./cycleType";
-import scanlineType from "./scanlineType";
+import getCycleType from "./cycleType";
+import getScanlineType from "./scanlineType";
 import palette from "./palette";
 
-export { cycleType, scanlineType, palette };
+export { getCycleType, getScanlineType, palette };

@@ -74,6 +74,8 @@ export default class CPU {
 
 		this.flags.i = true; // (to make sure handler doesn't get interrupted)
 		this._jumpToInterruptHandler(interrupt);
+
+		return INTERRUPT_CYCLES;
 	}
 
 	/**

@@ -1,15 +1,14 @@
-import { WithContext } from "../helpers";
-import { MemoryChunk } from "../memory";
 import { PPURegisterSegment } from "./registers";
 import PPUMemoryMap from "./PPUMemoryMap";
-import { cycleType, scanlineType } from "./constants";
-import { interrupts } from "../cpu/constants";
+import pipeline from "./pipeline";
+import { getScanlineType } from "./constants";
+import { MemoryChunk } from "../memory";
+import { WithContext } from "../helpers";
 
 const PRIMARY_OAM_SIZE = 256;
 const SECONDARY_OAM_SIZE = 32;
 const LAST_CYCLE = 340;
 const LAST_SCANLINE = 260;
-const SPRITES_PER_SCANLINE = 8;
 
 /** The Picture Processing Unit. It generates a video signal of 256x240 pixels. */
 export default class PPU {
@@ -39,7 +38,12 @@ export default class PPU {
 	step() {
 		this.requireContext();
 
+		const scanlineType = getScanlineType(this.scanline);
+		const interrupt = pipeline[scanlineType](this.context);
+
 		this._incrementCounters();
+
+		return interrupt;
 	}
 
 	/** When the current context is unloaded. */

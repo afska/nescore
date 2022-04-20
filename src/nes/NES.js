@@ -4,6 +4,8 @@ import { CPUBus, PPUBus } from "./memory/Bus";
 import Cartridge from "./cartridge";
 import { WithContext } from "./helpers";
 
+const PPU_CYCLES_PER_CPU_CYCLE = 3;
+
 /** The NES Emulator. */
 export default class NES {
 	constructor(logger = null) {
@@ -54,10 +56,16 @@ export default class NES {
 
 	/** Executes a step in the emulation. */
 	step() {
-		const cycles = this.cpu.step();
-
 		// (PPU clock is three times faster than CPU clock)
-		for (let i = 0; i < cycles * 3; i++) this.ppu.step();
+		let ppuCycles = this.cpu.step() * PPU_CYCLES_PER_CPU_CYCLE;
+
+		while (ppuCycles > 0) {
+			const interrupt = this.ppu.step();
+			ppuCycles--;
+
+			if (interrupt)
+				ppuCycles += this.cpu.interrupt(interrupt) * PPU_CYCLES_PER_CPU_CYCLE;
+		}
 	}
 
 	/** Unloads the current cartridge. */
