@@ -35,10 +35,12 @@ describe("memory", () => {
 			memory.readAt(MAPPER_START_ADDRESS + 1).should.equal(123);
 		});
 
-		it("can accept a register as address", () => {
-			const register = new Register8Bit(123);
-			memory.writeAt(register, 250);
-			register.value.should.equal(250);
+		[123, 0].forEach((value) => {
+			it(`can accept a register as address (containing ${value} as value)`, () => {
+				const register = new Register8Bit(value);
+				memory.writeAt(register, 250);
+				register.value.should.equal(250);
+			});
 		});
 
 		it("can read and write RAM's mirror", () => {

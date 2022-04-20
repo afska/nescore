@@ -39,14 +39,14 @@ export default class CPUMemoryMap {
 
 	/** Reads a `byte` from `address`, which can be a register or a memory address. */
 	readAt(address) {
-		return address.value
+		return address.value != null
 			? address.value
 			: WithComposedMemory.readAt.call(this, address);
 	}
 
 	/** Writes a `byte` to `address`, which can be a register or a memory address. */
 	writeAt(address, byte) {
-		if (address.value) address.value = byte;
+		if (address.value != null) address.value = byte;
 		else WithComposedMemory.writeAt.call(this, address, byte);
 	}
 
