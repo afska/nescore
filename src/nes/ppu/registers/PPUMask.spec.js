@@ -5,24 +5,31 @@ const ADDRESS = 0x2001;
 
 describe("CPU/PPU registers interaction", () => {
 	describe("PPUMask", () => {
-		let ppu, memory;
+		let ppu, memory, register;
 
 		beforeEach(() => {
 			({ ppu, memory } = createTestContextForCPUMemoryMap());
+			register = ppu.registers.ppuMask;
+		});
+
+		it("is write-only", () => {
+			memory.writeAt(ADDRESS, 123);
+			register.value.should.equal(123);
+			memory.readAt(ADDRESS).should.equal(0);
 		});
 
 		it("can write the register", () => {
-			ppu.registers.ppuMask.showBackground.should.equal(0);
-			ppu.registers.ppuMask.emphasizeRed.should.equal(0);
-			ppu.registers.ppuMask.showSprites.should.equal(0);
-			ppu.registers.ppuMask.emphasizeGreen.should.equal(0);
+			register.showBackground.should.equal(0);
+			register.emphasizeRed.should.equal(0);
+			register.showSprites.should.equal(0);
+			register.emphasizeGreen.should.equal(0);
 
 			memory.writeAt(ADDRESS, 0b00101000);
 
-			ppu.registers.ppuMask.showBackground.should.equal(1);
-			ppu.registers.ppuMask.emphasizeRed.should.equal(1);
-			ppu.registers.ppuMask.showSprites.should.equal(0);
-			ppu.registers.ppuMask.emphasizeGreen.should.equal(0);
+			register.showBackground.should.equal(1);
+			register.emphasizeRed.should.equal(1);
+			register.showSprites.should.equal(0);
+			register.emphasizeGreen.should.equal(0);
 		});
 	});
 });
