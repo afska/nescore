@@ -39,6 +39,19 @@ export default class PPU {
 	step() {
 		this.requireContext();
 
+		this._incrementCounters();
+	}
+
+	/** When the current context is unloaded. */
+	onUnload() {
+		this._reset();
+		this.memory.unloadContext();
+		this.oamRam = null;
+		this.oamRam2 = null;
+		this.registers = null;
+	}
+
+	_incrementCounters() {
 		this.cycle++;
 		if (this.cycle > LAST_CYCLE) {
 			this.cycle = 0;
@@ -49,15 +62,6 @@ export default class PPU {
 				this.frame++;
 			}
 		}
-	}
-
-	/** When the current context is unloaded. */
-	onUnload() {
-		this._reset();
-		this.memory.unloadContext();
-		this.oamRam = null;
-		this.oamRam2 = null;
-		this.registers = null;
 	}
 
 	_reset() {
