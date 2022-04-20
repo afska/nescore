@@ -11,5 +11,9 @@ describe("CPU/PPU registers interaction", () => {
 			({ ppu, memory } = createTestContextForCPUMemoryMap());
 			register = ppu.registers.oamData;
 		});
+
+		it("// TODO", () => {
+			// TODO: TEST
+		});
 	});
 });
