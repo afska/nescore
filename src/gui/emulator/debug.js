@@ -9,7 +9,7 @@ export default (emulator) => {
 	return {
 		emulator,
 
-		drawTiles() {
+		drawTiles(patternTableId = 0) {
 			this.draw((plot) => {
 				let tile = 0;
 
@@ -20,7 +20,7 @@ export default (emulator) => {
 
 					new DebugPatternTable()
 						.loadContext(this.emulator.nes.context)
-						.renderTile(tile, plot, startX, startY);
+						.renderTile(patternTableId, tile, plot, startX, startY);
 
 					tile++;
 				};
@@ -31,7 +31,7 @@ export default (emulator) => {
 			});
 		},
 
-		drawNametable(id = 0) {
+		drawBackground(id = 0) {
 			this.draw((plot) => {
 				new DebugNametable()
 					.loadContext(this.emulator.nes.context)
