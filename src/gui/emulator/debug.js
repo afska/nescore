@@ -31,7 +31,7 @@ export default (emulator) => {
 			});
 		},
 
-		drawNameTable(id = 0) {
+		drawNametable(id = 0) {
 			this.draw((plot) => {
 				new DebugNametable()
 					.loadContext(this.emulator.nes.context)
