@@ -9,16 +9,16 @@ const TOTAL_TILES_X = 32;
 /**
  * A background is made up of a grid of tiles, each tile being 8x8 pixels.
  * A frame is 256x240 pixels or 32x30 tiles.
- * A Name Table defines a background, living in VRAM.
- * Each byte represents a tile (they're indexes into the Pattern Table).
+ * A Nametable defines a background, living in VRAM.
+ * Each byte represents a tile (they're indexes into the Pattern table).
  */
-export default class DebugNameTable {
+export default class DebugNametable {
 	constructor() {
 		WithContext.apply(this);
 	}
 
 	/** Renders the tile `id` using the `plot`(x, y, bgrColor) function. */
-	renderNameTable(id, plot) {
+	renderNametable(id, plot) {
 		this.requireContext();
 
 		this.context.inDebugMode(() => {

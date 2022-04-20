@@ -23,7 +23,7 @@ export default class PPUCtrl extends InMemoryRegister {
 		return 0;
 	}
 
-	/** Returns the address of the base name table. */
+	/** Returns the address of the base Nametable. */
 	get baseNametableAddress() {
 		switch (this.baseNametableAddressId) {
 			case 1:
@@ -42,12 +42,12 @@ export default class PPUCtrl extends InMemoryRegister {
 		return this.vramAddressIncrement32 === 1 ? 32 : 1;
 	}
 
-	/** Returns the Pattern Table address for 8x8 sprites. */
+	/** Returns the Pattern table address for 8x8 sprites. */
 	get patternTableAddressFor8x8Sprites() {
 		return this.patternTableAddressIdFor8x8Sprites === 0 ? 0x0000 : 0x1000;
 	}
 
-	/** Returns the Pattern Table address for background. */
+	/** Returns the Pattern table address for background. */
 	get patternTableAddressForBackground() {
 		return this.patternTableAddressIdForBackground === 0 ? 0x0000 : 0x1000;
 	}
