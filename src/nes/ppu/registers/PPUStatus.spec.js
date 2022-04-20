@@ -1,4 +1,4 @@
-import { createTestContextForCPUMemoryMap } from "../../helpers/createTestContext";
+import { createTestContextForMemory } from "../../helpers/createTestContext";
 const should = require("chai").Should();
 
 const ADDRESS = 0x2002;
@@ -8,7 +8,7 @@ describe("CPU/PPU registers interaction", () => {
 		let ppu, memory, register;
 
 		beforeEach(() => {
-			({ ppu, memory } = createTestContextForCPUMemoryMap());
+			({ ppu, memory } = createTestContextForMemory());
 			register = ppu.registers.ppuStatus;
 		});
 
@@ -27,5 +27,7 @@ describe("CPU/PPU registers interaction", () => {
 
 			memory.readAt(ADDRESS).should.equal(0b01100000);
 		});
+
+		// TODO: TEST SIDE EFFECTS
 	});
 });

@@ -1,5 +1,5 @@
 import { Register8Bit } from "./registers";
-import { createTestContextForCPUMemoryMap } from "../helpers/createTestContext";
+import { createTestContextForMemory } from "../helpers/createTestContext";
 import _ from "lodash";
 const should = require("chai").Should();
 
@@ -12,7 +12,7 @@ describe("memory", () => {
 		let ppu, mapper, memory;
 
 		beforeEach(() => {
-			({ ppu, mapper, memory } = createTestContextForCPUMemoryMap());
+			({ ppu, mapper, memory } = createTestContextForMemory());
 		});
 
 		it("stores the start address of each chunk", () => {
