@@ -6,18 +6,18 @@ export default class InMemoryRegister {
 		WithContext.apply(this);
 
 		this.memorySize = 1;
-		this._value = 0;
+		this.value = 0;
 	}
 
 	/** Adds a field of `size` bits named `named`, starting at `startPosition`. */
 	addField(name, startPosition, size = 1) {
 		Object.defineProperty(this, name, {
 			get() {
-				return Byte.getSubNumber(this._value, startPosition, size);
+				return Byte.getSubNumber(this.value, startPosition, size);
 			},
 			set(value) {
-				this._value = Byte.force8Bit(
-					Byte.setSubNumber(this._value, startPosition, size, value)
+				this.value = Byte.force8Bit(
+					Byte.setSubNumber(this.value, startPosition, size, value)
 				);
 			}
 		});
@@ -27,13 +27,13 @@ export default class InMemoryRegister {
 
 	/** Returns the actual value. */
 	readAt() {
-		return this._value;
+		return this.value;
 	}
 
 	/** Sets the actual value. */
 	writeAt(__, byte) {
 		byte = Byte.force8Bit(byte);
 
-		this._value = byte;
+		this.value = byte;
 	}
 }

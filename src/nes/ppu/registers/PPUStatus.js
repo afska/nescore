@@ -15,15 +15,16 @@ export default class PPUStatus extends InMemoryRegister {
 			.addField("isInVBlankInterval", 7);
 	}
 
+	/** Reads the status flags, with some side effects. */
 	readAt(address) {
 		const value = super.readAt(address);
 
-		// reading the value has two side effects:
+		// this has two side effects:
 		if (!this.context.isDebugging) {
-			// it resets the vertical blank flag
+			// - it resets the vertical blank flag
 			this.isInVBlankInterval = 0;
 
-			// it resets the address latch
+			// - it resets the PPUAddr's latch
 			this.context.ppu.registers.ppuAddr.latch = false;
 		}
 
@@ -35,6 +36,6 @@ export default class PPUStatus extends InMemoryRegister {
 
 	/** Resets the value. */
 	reset() {
-		this._value = 0b10000000;
+		this.value = 0b10000000;
 	}
 }
