@@ -27,8 +27,8 @@ export default class Emulator extends Component {
 
 	frame() {
 		try {
-			/*const buffer = */ this.nes.frame();
-			// TODO: WRITE BUFFER
+			const frameBuffer = this.nes.frame();
+			this.screen.setBuffer(frameBuffer);
 		} catch (e) {
 			this._onError(e);
 		}

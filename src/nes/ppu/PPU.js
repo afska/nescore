@@ -5,6 +5,8 @@ import { getScanlineType } from "./constants";
 import { MemoryChunk } from "../memory";
 import { WithContext } from "../helpers";
 
+const SCREEN_WIDTH = 256;
+const SCREEN_HEIGHT = 240;
 const PRIMARY_OAM_SIZE = 256;
 const SECONDARY_OAM_SIZE = 32;
 const LAST_CYCLE = 340;
@@ -23,6 +25,8 @@ export default class PPU {
 		this.oamRam = null; // OAM = Object Attribute Memory (contains sprite data)
 		this.oamRam2 = null;
 		this.registers = null;
+
+		this.frameBuffer = new Uint32Array(SCREEN_WIDTH * SCREEN_HEIGHT);
 	}
 
 	/** When a context is loaded. */
@@ -44,6 +48,11 @@ export default class PPU {
 		this._incrementCounters();
 
 		return interrupt;
+	}
+
+	/** Draws a pixel in (`x`, `y`) using `color`. */
+	plot(x, y, color) {
+		this.frameBuffer[y * SCREEN_WIDTH + x] = color;
 	}
 
 	/** When the current context is unloaded. */
@@ -74,6 +83,9 @@ export default class PPU {
 		this.cycle = 0;
 
 		this.registers.ppuStatus.reset();
+
+		for (let i = 0; i < this.frameBuffer.length - 1; i++)
+			this.frameBuffer[i] = 0;
 	}
 
 	get _isRenderingEnabled() {
