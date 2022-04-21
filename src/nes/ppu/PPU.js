@@ -1,7 +1,7 @@
 import { PPURegisterSegment } from "./registers";
 import PPUMemoryMap from "./PPUMemoryMap";
 import pipeline from "./pipeline";
-import { NameTable, PatternTable } from "./pipeline/renderers";
+import { NameTable, PatternTable, FramePalette } from "./pipeline/renderers";
 import { getScanlineType } from "./constants";
 import { MemoryChunk } from "../memory";
 import { WithContext } from "../helpers";
@@ -24,6 +24,7 @@ export default class PPU {
 		this.frameBuffer = new Uint32Array(constants.TOTAL_PIXELS);
 		this.nameTable = new NameTable();
 		this.patternTable = new PatternTable();
+		this.framePalette = new FramePalette();
 	}
 
 	/** When a context is loaded. */
@@ -35,6 +36,7 @@ export default class PPU {
 
 		this.nameTable.loadContext(context);
 		this.patternTable.loadContext(context);
+		this.framePalette.loadContext(context);
 
 		this._reset();
 	}
@@ -67,6 +69,7 @@ export default class PPU {
 
 		this.nameTable.unloadContext();
 		this.patternTable.unloadContext();
+		this.framePalette.unloadContext();
 	}
 
 	_incrementCounters() {

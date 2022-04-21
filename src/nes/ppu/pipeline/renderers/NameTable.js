@@ -2,7 +2,7 @@ import { WithContext } from "../../../helpers";
 import constants from "../../../constants";
 
 /**
- * A Name table defines a background, living in VRAM.
+ * An area of memory which defines a background. It's located at $2000 (VRAM).
  * A background is made up of a grid of tiles, each tile being 8x8 pixels.
  * A frame is 256x240 pixels or 32x30 tiles.
  * Each byte represents a tile (they're indexes into the Pattern table).

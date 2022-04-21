@@ -3,6 +3,7 @@ import constants from "../../../constants";
 
 /**
  * An area of memory which defines the shapes of tiles that make up backgrounds and sprites.
+ * It's located at $0000, and it's usually mapped to CHR-ROM.
  * Each tile is 16 bytes, made of two planes:
  * - The first plane controls bit 0 of the color.
  * - The second plane controls bit 1 of the color.
@@ -18,17 +19,17 @@ export default class PatternTable {
 	 * from tile `tileId` of `patternTableId`.
 	 */
 	getColorIndexOf(patternTableId, tileId, x, y) {
-		const startAddressPattern =
+		const startAddress =
 			constants.PATTERN_TABLES_START_ADDRESS +
 			patternTableId * constants.PATTERN_TABLE_SIZE;
 		const firstPlane = tileId * constants.TILE_SIZE_BYTES;
 		const secondPlane = firstPlane + constants.TILE_SIZE_BYTES / 2;
 
 		const rowLowBits = this.context.memoryBus.ppu.readAt(
-			startAddressPattern + firstPlane + y
+			startAddress + firstPlane + y
 		);
 		const rowHighBits = this.context.memoryBus.ppu.readAt(
-			startAddressPattern + secondPlane + y
+			startAddress + secondPlane + y
 		);
 
 		const column = constants.TILE_SIZE - 1 - x;

@@ -29,6 +29,7 @@ export default class Screen extends Component {
 		for (let y = 0; y < SCREEN_HEIGHT; ++y) {
 			for (let x = 0; x < SCREEN_WIDTH; ++x) {
 				const i = y * 256 + x;
+
 				// Convert pixel from NES BGR to canvas ABGR
 				this.buf32[i] = FULL_ALPHA | buffer[i];
 			}
