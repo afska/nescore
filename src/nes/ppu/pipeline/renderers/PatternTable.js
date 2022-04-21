@@ -1,4 +1,4 @@
-import { WithContext, Byte } from "../../helpers";
+import { WithContext, Byte } from "../../../helpers";
 
 const START_ADDRESS = 0x0000;
 const PATTERN_TABLE_SIZE = 0x1000;

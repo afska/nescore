@@ -1,4 +1,4 @@
-import { WithContext } from "../../helpers";
+import { WithContext } from "../../../helpers";
 
 const START_ADDRESS = 0x2000;
 const NAME_TABLE_SIZE = 1024;

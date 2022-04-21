@@ -2,7 +2,11 @@ const SCREEN_WIDTH = 256;
 const TILE_SIZE = 8;
 const TEST_PALETTE = [0xffffff, 0xcecece, 0x686868, 0x000000];
 
-export default ({ ppu }) => {
+export default (context) => {
+	renderBackground(context);
+};
+
+const renderBackground = ({ ppu }) => {
 	if (ppu.cycle < SCREEN_WIDTH) {
 		const x = ppu.cycle;
 		const y = ppu.scanline;

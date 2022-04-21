@@ -1,7 +1,7 @@
 import { getCycleType } from "../constants";
 import { interrupts } from "../../cpu/constants";
 
-export default ({ ppu, cpu }) => {
+export default ({ ppu }) => {
 	const cycleType = getCycleType(ppu.cycle);
 
 	if (cycleType === "ONE") {
