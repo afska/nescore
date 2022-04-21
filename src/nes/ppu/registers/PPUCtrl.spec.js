@@ -18,18 +18,18 @@ describe("CPU/PPU registers interaction", () => {
 			memory.readAt(ADDRESS).should.equal(0);
 		});
 
-		it("can return the base Nametable address", () => {
+		it("can return the base Name table address", () => {
 			memory.writeAt(ADDRESS, 0b00000000);
-			register.baseNametableAddress.should.equal(0x2000);
+			register.baseNameTableAddress.should.equal(0x2000);
 
 			memory.writeAt(ADDRESS, 0b00000001);
-			register.baseNametableAddress.should.equal(0x2400);
+			register.baseNameTableAddress.should.equal(0x2400);
 
 			memory.writeAt(ADDRESS, 0b00000010);
-			register.baseNametableAddress.should.equal(0x2800);
+			register.baseNameTableAddress.should.equal(0x2800);
 
 			memory.writeAt(ADDRESS, 0b00000011);
-			register.baseNametableAddress.should.equal(0x2c00);
+			register.baseNameTableAddress.should.equal(0x2c00);
 		});
 
 		it("can return the VRAM address increment", () => {

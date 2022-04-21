@@ -16,15 +16,10 @@ export default ({ ppu, memoryBus }) => {
 			const x = ppu.cycle;
 			const y = ppu.scanline;
 
-			const startAddress = START_ADDRESS + 0 * NAME_TABLE_SIZE;
 			const patternTableId =
 				ppu.registers.ppuCtrl.patternTableAddressIdForBackground;
-
-			const tileX = Math.floor(x / 8);
-			const tileY = Math.floor(y / 8);
-			const tileIndex = tileY * TOTAL_TILES_X + tileX;
-			const tileId = memoryBus.ppu.readAt(startAddress + tileIndex);
-			const insideY = y % 8; // row # inside pattern table
+			const tileId = ppu.nameTable.getTileIdOf(0, x, y);
+			const insideY = y % 8; // row # inside Pattern table
 
 			/**
 			 * RENDER PATTERN TABLE ROW

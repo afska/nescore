@@ -1,6 +1,7 @@
 import { PPURegisterSegment } from "./registers";
 import PPUMemoryMap from "./PPUMemoryMap";
 import pipeline from "./pipeline";
+import { NameTable, PatternTable } from "./renderers";
 import { getScanlineType } from "./constants";
 import { MemoryChunk } from "../memory";
 import { WithContext } from "../helpers";
@@ -27,6 +28,8 @@ export default class PPU {
 		this.registers = null;
 
 		this.frameBuffer = new Uint32Array(SCREEN_WIDTH * SCREEN_HEIGHT);
+		this.nameTable = new NameTable();
+		this.patternTable = new PatternTable();
 	}
 
 	/** When a context is loaded. */
@@ -35,6 +38,8 @@ export default class PPU {
 		this.oamRam = new MemoryChunk(PRIMARY_OAM_SIZE);
 		this.oamRam2 = new MemoryChunk(SECONDARY_OAM_SIZE);
 		this.registers = new PPURegisterSegment(context);
+		this.nameTable.loadContext(context);
+		this.patternTable.loadContext(context);
 		this._reset();
 	}
 
@@ -62,6 +67,8 @@ export default class PPU {
 		this.oamRam = null;
 		this.oamRam2 = null;
 		this.registers = null;
+		this.nameTable.unloadContext();
+		this.patternTable.unloadContext();
 	}
 
 	_incrementCounters() {

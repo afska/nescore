@@ -1,10 +1,11 @@
-import DebugNametable from "../../nes/ppu/debug/DebugNametable";
+import DebugNameTable from "../../nes/ppu/debug/DebugNameTable";
 import DebugPatternTable from "../../nes/ppu/debug/DebugPatternTable";
 
 const SCREEN_WIDTH = 256;
 const SCREEN_HEIGHT = 240;
 const TILE_SIZE = 8;
 
+/** Debug functions */
 export default (emulator) => {
 	return {
 		emulator,
@@ -31,11 +32,11 @@ export default (emulator) => {
 			});
 		},
 
-		drawBackground(id = 0) {
+		drawBackground(nameTableId = 0) {
 			this.draw((plot) => {
-				new DebugNametable()
+				new DebugNameTable()
 					.loadContext(this.emulator.nes.context)
-					.renderNametable(id, plot);
+					.renderBackground(nameTableId, plot);
 			});
 		},
 

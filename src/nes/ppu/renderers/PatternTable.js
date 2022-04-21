@@ -6,7 +6,13 @@ const TILE_SIZE = 8;
 const TILE_SIZE_BYTES = 16;
 const TEST_PALETTE = [0xffffff, 0xcecece, 0x686868, 0x000000];
 
-/** Utility class to draw complete tiles from Pattern tables. */
+/**
+ * An area of memory which defines the shapes of tiles that make up backgrounds and sprites.
+ * Each tile is 16 bytes, made of two planes:
+ * - The first plane controls bit 0 of the color
+ * - The second plane controls bit 1 of the color.
+ * Any pixel whose color is 0 is background/transparent.
+ */
 export default class DebugPatternTable {
 	constructor() {
 		WithContext.apply(this);

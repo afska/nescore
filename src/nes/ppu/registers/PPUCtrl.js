@@ -9,7 +9,7 @@ export default class PPUCtrl extends InMemoryRegister {
 	constructor(memory, address) {
 		super(memory, address);
 
-		this.addField("baseNametableAddressId", 0, 2)
+		this.addField("baseNameTableAddressId", 0, 2)
 			.addField("vramAddressIncrement32", 2)
 			.addField("patternTableAddressIdFor8x8Sprites", 3)
 			.addField("patternTableAddressIdForBackground", 4)
@@ -23,9 +23,9 @@ export default class PPUCtrl extends InMemoryRegister {
 		return 0;
 	}
 
-	/** Returns the address of the base Nametable. */
-	get baseNametableAddress() {
-		switch (this.baseNametableAddressId) {
+	/** Returns the address of the base Name table. */
+	get baseNameTableAddress() {
+		switch (this.baseNameTableAddressId) {
 			case 1:
 				return 0x2400;
 			case 2:
