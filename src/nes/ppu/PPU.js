@@ -5,13 +5,7 @@ import { NameTable, PatternTable } from "./pipeline/renderers";
 import { getScanlineType } from "./constants";
 import { MemoryChunk } from "../memory";
 import { WithContext } from "../helpers";
-
-const SCREEN_WIDTH = 256;
-const SCREEN_HEIGHT = 240;
-const PRIMARY_OAM_SIZE = 256;
-const SECONDARY_OAM_SIZE = 32;
-const LAST_CYCLE = 340;
-const LAST_SCANLINE = 260;
+import constants from "../constants";
 
 /** The Picture Processing Unit. It generates a video signal of 256x240 pixels. */
 export default class PPU {
@@ -27,7 +21,7 @@ export default class PPU {
 		this.oamRam2 = null;
 		this.registers = null;
 
-		this.frameBuffer = new Uint32Array(SCREEN_WIDTH * SCREEN_HEIGHT);
+		this.frameBuffer = new Uint32Array(constants.TOTAL_PIXELS);
 		this.nameTable = new NameTable();
 		this.patternTable = new PatternTable();
 	}
@@ -35,11 +29,13 @@ export default class PPU {
 	/** When a context is loaded. */
 	onLoad(context) {
 		this.memory.loadContext(context);
-		this.oamRam = new MemoryChunk(PRIMARY_OAM_SIZE);
-		this.oamRam2 = new MemoryChunk(SECONDARY_OAM_SIZE);
+		this.oamRam = new MemoryChunk(constants.PRIMARY_OAM_SIZE);
+		this.oamRam2 = new MemoryChunk(constants.SECONDARY_OAM_SIZE);
 		this.registers = new PPURegisterSegment(context);
+
 		this.nameTable.loadContext(context);
 		this.patternTable.loadContext(context);
+
 		this._reset();
 	}
 
@@ -57,27 +53,29 @@ export default class PPU {
 
 	/** Draws a pixel in (`x`, `y`) using `color`. */
 	plot(x, y, color) {
-		this.frameBuffer[y * SCREEN_WIDTH + x] = color;
+		this.frameBuffer[y * constants.SCREEN_WIDTH + x] = color;
 	}
 
 	/** When the current context is unloaded. */
 	onUnload() {
 		this._reset();
+
 		this.memory.unloadContext();
 		this.oamRam = null;
 		this.oamRam2 = null;
 		this.registers = null;
+
 		this.nameTable.unloadContext();
 		this.patternTable.unloadContext();
 	}
 
 	_incrementCounters() {
 		this.cycle++;
-		if (this.cycle > LAST_CYCLE) {
+		if (this.cycle > constants.PPU_LAST_CYCLE) {
 			this.cycle = 0;
 			this.scanline++;
 
-			if (this.scanline > LAST_SCANLINE) {
+			if (this.scanline > constants.PPU_LAST_SCANLINE) {
 				this.scanline = -1;
 				this.frame++;
 			}

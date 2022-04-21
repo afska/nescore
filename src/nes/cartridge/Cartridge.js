@@ -1,19 +1,13 @@
 import { Byte } from "../helpers";
 import mappers from "./mappers";
-
-const MAGIC_NUMBER = "NES";
-const KB = 1024;
-const HEADER_SIZE = 16;
-const TRAINER_SIZE = 512;
-const PRG_ROM_PAGE_SIZE = 16 * KB;
-const CHR_ROM_PAGE_SIZE = 8 * KB;
+import constants from "../constants";
 
 /** The game cartridge (a file in iNES format). */
 export default class Cartridge {
 	constructor(bytes) {
 		this.bytes = bytes;
 
-		if (this.magicNumber !== MAGIC_NUMBER)
+		if (this.magicNumber !== constants.ROM_MAGIC_NUMBER)
 			throw new Error("Invalid ROM format.");
 	}
 
@@ -33,7 +27,7 @@ export default class Cartridge {
 	/** Returns the CHR ROM, which contains static tilesets, or null. */
 	get chrRom() {
 		const offset = this._programOffset + this._programSize;
-		const size = this.header.chrRomPages * CHR_ROM_PAGE_SIZE;
+		const size = this.header.chrRomPages * constants.CHR_ROM_PAGE_SIZE;
 
 		return size > 0 ? this._getBytes(offset, size) : null;
 	}
@@ -71,11 +65,12 @@ export default class Cartridge {
 
 	get _programOffset() {
 		return (
-			HEADER_SIZE + (this.header.hasTrainerBeforeProgram ? TRAINER_SIZE : 0)
+			constants.ROM_HEADER_SIZE +
+			(this.header.hasTrainerBeforeProgram ? constants.ROM_TRAINER_SIZE : 0)
 		);
 	}
 
 	get _programSize() {
-		return this.header.prgRomPages * PRG_ROM_PAGE_SIZE;
+		return this.header.prgRomPages * constants.PRG_ROM_PAGE_SIZE;
 	}
 }

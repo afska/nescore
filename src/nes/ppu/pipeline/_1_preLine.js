@@ -1,5 +1,6 @@
 import { getCycleType } from "../constants";
 
+/** Runs on virtual scanline -1, which prepares the PPU for rendering. */
 export default ({ ppu }) => {
 	const cycleType = getCycleType(ppu.cycle);
 

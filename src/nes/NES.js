@@ -3,8 +3,7 @@ import PPU from "./ppu";
 import { CPUBus, PPUBus } from "./memory/Bus";
 import Cartridge from "./cartridge";
 import { WithContext } from "./helpers";
-
-const PPU_CYCLES_PER_CPU_CYCLE = 3;
+import constants from "./constants";
 
 /** The NES Emulator. */
 export default class NES {
@@ -57,14 +56,15 @@ export default class NES {
 	/** Executes a step in the emulation. */
 	step() {
 		// (PPU clock is three times faster than CPU clock)
-		let ppuCycles = this.cpu.step() * PPU_CYCLES_PER_CPU_CYCLE;
+		let ppuCycles = this.cpu.step() * constants.PPU_CYCLES_PER_CPU_CYCLE;
 
 		while (ppuCycles > 0) {
 			const interrupt = this.ppu.step();
 			ppuCycles--;
 
 			if (interrupt)
-				ppuCycles += this.cpu.interrupt(interrupt) * PPU_CYCLES_PER_CPU_CYCLE;
+				ppuCycles +=
+					this.cpu.interrupt(interrupt) * constants.PPU_CYCLES_PER_CPU_CYCLE;
 		}
 	}
 

@@ -1,8 +1,5 @@
 import { WithContext } from "../../../helpers";
-
-const START_ADDRESS = 0x2000;
-const NAME_TABLE_SIZE = 1024;
-const TOTAL_TILES_X = 32;
+import constants from "../../../constants";
 
 /**
  * A Name table defines a background, living in VRAM.
@@ -17,11 +14,13 @@ export default class NameTable {
 
 	/** Returns a tile index to the background Pattern table that contains (`x`, `y`). */
 	getTileIdOf(nameTableId, x, y) {
-		const startAddress = START_ADDRESS + nameTableId * NAME_TABLE_SIZE;
+		const startAddress =
+			constants.NAME_TABLES_START_ADDRESS +
+			nameTableId * constants.NAME_TABLE_SIZE;
 
 		const tileX = Math.floor(x / 8);
 		const tileY = Math.floor(y / 8);
-		const tileIndex = tileY * TOTAL_TILES_X + tileX;
+		const tileIndex = tileY * constants.NAME_TABLE_TOTAL_TILES_X + tileX;
 
 		return this.context.memoryBus.ppu.readAt(startAddress + tileIndex);
 	}

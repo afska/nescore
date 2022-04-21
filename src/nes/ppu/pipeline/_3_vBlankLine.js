@@ -1,6 +1,7 @@
 import { getCycleType } from "../constants";
 import { interrupts } from "../../cpu/constants";
 
+/** Runs on scanline 241, which starts the VBlank period and can trigger NMIs. */
 export default ({ ppu }) => {
 	const cycleType = getCycleType(ppu.cycle);
 

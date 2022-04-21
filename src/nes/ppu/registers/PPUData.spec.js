@@ -33,6 +33,13 @@ describe("CPU/PPU registers interaction", () => {
 			memoryBus.cpu.readAt(ADDRESS).should.equal(92);
 		});
 
+		it("can read Palette RAM without delays", () => {
+			memoryBus.ppu.writeAt(0x3f10, 123);
+
+			ppu.registers.ppuAddr.value = 0x3f10;
+			memoryBus.cpu.readAt(ADDRESS).should.equal(123);
+		});
+
 		describe("PPUAddr increment", () => {
 			const run = (operation) => {
 				if (operation === "write") memoryBus.cpu.writeAt(ADDRESS, 24);

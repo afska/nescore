@@ -5,9 +5,7 @@ import {
 	MemoryMirror,
 	MemoryPadding
 } from "../../memory";
-
-const KB = 1024;
-const PRG_ROM_PAGE_SIZE = 16 * KB;
+import constants from "../../constants";
 
 /** The simplest mapper (also called "mapper 0"). */
 export default class NROM extends Mapper {
@@ -25,12 +23,15 @@ export default class NROM extends Mapper {
 	onLoad({ cartridge }) {
 		const unused = new MemoryPadding(0x3fe0);
 		const prgRomFirstPage = new MemoryChunk(
-			cartridge.prgRom.slice(0, PRG_ROM_PAGE_SIZE)
+			cartridge.prgRom.slice(0, constants.PRG_ROM_PAGE_SIZE)
 		);
 		const prgRomLastPage =
 			cartridge.header.prgRomPages === 2
 				? new MemoryChunk(
-						cartridge.prgRom.slice(PRG_ROM_PAGE_SIZE, PRG_ROM_PAGE_SIZE * 2)
+						cartridge.prgRom.slice(
+							constants.PRG_ROM_PAGE_SIZE,
+							constants.PRG_ROM_PAGE_SIZE * 2
+						)
 				  )
 				: new MemoryMirror(prgRomFirstPage, 0x4000);
 

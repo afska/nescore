@@ -1,6 +1,5 @@
 import { InMemoryRegister } from "../../registers";
-
-const PALETTE_RAM_START_ADDRESS = 0x3f00;
+import constants from "../../constants";
 
 /**
  * PPU Data Port (<> read/write)
@@ -22,7 +21,8 @@ export default class PPUData extends InMemoryRegister {
 		this.buffer = this.context.memoryBus.ppu.readAt(ppuAddress);
 
 		// (if the PPUAddr is inside Palette RAM area, skip the buffer)
-		if (ppuAddress > PALETTE_RAM_START_ADDRESS) data = this.buffer;
+		if (ppuAddress > constants.PPU_ADDRESSED_PALETTE_RAM_START_ADDRESS)
+			data = this.buffer;
 
 		// (reading increments PPUAddr as a side effect)
 		if (!this.context.isDebugging) this._incrementAddress();

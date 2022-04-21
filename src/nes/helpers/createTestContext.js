@@ -4,14 +4,12 @@ import PPUMemoryMap from "../ppu/PPUMemoryMap";
 import { PPURegisterSegment } from "../ppu/registers";
 import { MemoryChunk } from "../memory";
 import { WithContext } from "../helpers";
-
-const MAPPER_SIZE = 0xbfe0;
-const KB = 1024;
+import constants from "../constants";
 
 /** Creates a mocked test context for CPU testing. */
 export default (initializeMemory = () => {}) => {
 	const cpu = new CPU();
-	const memory = (cpu.memory = new MemoryChunk(64 * KB));
+	const memory = (cpu.memory = new MemoryChunk(constants.CPU_ADDRESSED_MEMORY));
 	WithContext.apply(memory);
 	const context = { cpu, memoryBus: { cpu: memory } };
 
@@ -28,7 +26,7 @@ export default (initializeMemory = () => {}) => {
 export const createTestContextForMemory = () => {
 	const context = {};
 	context.ppu = { registers: new PPURegisterSegment(context) };
-	context.mapper = new MemoryChunk(MAPPER_SIZE);
+	context.mapper = new MemoryChunk(constants.CPU_ADDRESSED_MAPPER_SIZE);
 	context.memoryBus = {
 		cpu: new CPUMemoryMap().loadContext(context),
 		ppu: new PPUMemoryMap().loadContext(context)
