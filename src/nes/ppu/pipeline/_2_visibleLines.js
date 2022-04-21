@@ -1,7 +1,5 @@
 import constants from "../../constants";
 
-const TEST_PALETTE = [0xffffff, 0xcecece, 0x686868, 0x000000];
-
 /** Runs for each visible scanline. Renders the image. */
 export default (context) => {
 	renderBackground(context);
@@ -13,13 +11,13 @@ const renderBackground = ({ ppu }) => {
 		const x = ppu.cycle;
 		const y = ppu.scanline;
 
-		const colorIndex = ppu.patternTable.getColorIndexOf(
+		const paletteIndex = ppu.patternTable.getPaletteIndexOf(
 			ppu.registers.ppuCtrl.patternTableAddressIdForBackground,
 			ppu.nameTable.getTileIdOf(0, x, y),
 			x % constants.TILE_SIZE,
 			y % constants.TILE_SIZE
 		);
 
-		ppu.plot(x, y, TEST_PALETTE[colorIndex]);
+		ppu.plot(x, y, ppu.framePalette.getColorOf(0, paletteIndex));
 	}
 };

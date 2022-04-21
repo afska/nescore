@@ -15,10 +15,10 @@ export default class PatternTable {
 	}
 
 	/**
-	 * Returns the color index of the pixel located in (`x`, `y`),
+	 * Returns the palette index of the pixel located in (`x`, `y`),
 	 * from tile `tileId` of `patternTableId`.
 	 */
-	getColorIndexOf(patternTableId, tileId, x, y) {
+	getPaletteIndexOf(patternTableId, tileId, x, y) {
 		const startAddress =
 			constants.PATTERN_TABLES_START_ADDRESS +
 			patternTableId * constants.PATTERN_TABLE_SIZE;
@@ -35,8 +35,7 @@ export default class PatternTable {
 		const column = constants.TILE_SIZE - 1 - x;
 		const lsb = Byte.getBit(rowLowBits, column);
 		const msb = Byte.getBit(rowHighBits, column);
-		const colorIndex = (msb << 1) | lsb;
 
-		return colorIndex;
+		return (msb << 1) | lsb;
 	}
 }
