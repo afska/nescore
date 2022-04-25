@@ -8,6 +8,7 @@ export default {
 		_.defaults(obj, _.omit(this, "apply", "createSegment"));
 		WithLittleEndian.apply(obj);
 		obj.chunks = null;
+		obj.lut = null;
 	},
 
 	/** Creates a composed memory segment with different `chunks`. */
@@ -21,6 +22,7 @@ export default {
 	/** Defines the `chunks` of the memory map. */
 	defineChunks(chunks) {
 		this.chunks = chunks;
+		this.lut = {};
 
 		let startAddress = 0;
 		for (let chunk of this.chunks) {
@@ -29,33 +31,39 @@ export default {
 		}
 
 		this.memorySize = startAddress;
+
+		this._generateLookUpTable(startAddress);
 	},
 
 	/** Reads a byte from `address`, using the correct `chunk`. */
 	readAt(address) {
-		const chunk = this._getChunkFor(address);
+		const chunk = this.lut[address] || this._throwUnreachable(address);
 		const offset = this._toRelativeAddress(address, chunk);
 		return chunk.readAt(offset);
 	},
 
 	/** Writes a `byte` to `address`, using the correct `chunk`. */
 	writeAt(address, byte) {
-		const chunk = this._getChunkFor(address);
+		const chunk = this.lut[address] || this._throwUnreachable(address);
 		const offset = this._toRelativeAddress(address, chunk);
 		return chunk.writeAt(offset, byte);
 	},
 
-	_getChunkFor(address) {
-		if (!this.chunks) throw new Error("Undefined chunks.");
+	_throwUnreachable(address) {
+		throw new Error(`Unreachable address: 0x${address.toString(16)}.`);
+	},
 
+	_generateLookUpTable(finalAddress) {
+		for (let i = 0; i < finalAddress; i++) this.lut[i] = this._getChunkFor(i);
+	},
+
+	_getChunkFor(address) {
 		for (let chunk of this.chunks) {
 			const startAddress = chunk.$memoryStartAddress;
 
 			if (address >= startAddress && address < startAddress + chunk.memorySize)
 				return chunk;
 		}
-
-		throw new Error(`Unreachable address: 0x${address.toString(16)}.`);
 	},
 
 	_toRelativeAddress(address, chunk) {
