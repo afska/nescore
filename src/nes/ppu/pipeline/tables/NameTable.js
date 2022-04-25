@@ -18,8 +18,8 @@ export default class NameTable {
 			constants.NAME_TABLES_START_ADDRESS +
 			nameTableId * constants.NAME_TABLE_SIZE;
 
-		const tileX = Math.floor(x / 8);
-		const tileY = Math.floor(y / 8);
+		const tileX = Math.floor(x / constants.TILE_SIZE);
+		const tileY = Math.floor(y / constants.TILE_SIZE);
 		const tileIndex = tileY * constants.NAME_TABLE_TOTAL_TILES_X + tileX;
 
 		return this.context.memoryBus.ppu.readAt(startAddress + tileIndex);
