@@ -1,7 +1,7 @@
 import { PPURegisterSegment } from "./registers";
 import PPUMemoryMap from "./PPUMemoryMap";
 import pipeline from "./pipeline";
-import { NameTable, PatternTable, FramePalette } from "./pipeline/renderers";
+import { NameTable, PatternTable, FramePalette } from "./pipeline/tables";
 import { getScanlineType } from "./constants";
 import { MemoryChunk } from "../memory";
 import { WithContext } from "../helpers";
