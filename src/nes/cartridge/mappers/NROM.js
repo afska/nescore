@@ -49,7 +49,7 @@ export default class NROM extends Mapper {
 	ppuReadAt(address) {
 		return address >= 0x0000 && address <= 0x1fff
 			? this._chrRom.readAt(address)
-			: super.ppuReadAt(address);
+			: this.context.ppu.memory.readAt(address);
 	}
 
 	/** When the current context is unloaded. */
