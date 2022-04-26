@@ -1,6 +1,6 @@
-import { Byte } from "../helpers";
 import mappers from "./mappers";
 import constants from "../constants";
+import { Byte } from "../helpers";
 
 /** The game cartridge (a file in iNES format). */
 export default class Cartridge {

@@ -104,6 +104,7 @@ export default class PPU {
 			this.frameBuffer[i] = 0;
 	}
 
+	// TODO: REMOVE IF UNUSED
 	get _isRenderingEnabled() {
 		return (
 			this.registers.ppuMask.showBackground ||

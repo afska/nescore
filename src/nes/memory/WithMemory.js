@@ -33,6 +33,6 @@ export default {
 	},
 
 	_throwInvalidAddressError(address) {
-		throw new Error(`Invalid memory access at 0x${address.toString(16)}`);
+		throw new Error(`Invalid memory access at 0x${address.toString(16)}.`);
 	}
 };

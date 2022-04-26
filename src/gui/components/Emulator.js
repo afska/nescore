@@ -4,6 +4,7 @@ import Screen from "./Screen";
 import FrameTimer from "../emulator/FrameTimer";
 import NES from "../../nes";
 /*import NESTestLogger from "../../nes/loggers/NESTestLogger";*/
+import gamepad from "../emulator/gamepad";
 import debug from "../emulator/debug";
 
 export default class Emulator extends Component {
@@ -27,6 +28,7 @@ export default class Emulator extends Component {
 
 	frame() {
 		try {
+			gamepad.updateInput(this.nes);
 			const frameBuffer = this.nes.frame();
 			this.screen.setBuffer(frameBuffer);
 		} catch (e) {

@@ -1,9 +1,9 @@
-import { WithContext } from "../helpers";
 import { Register8Bit, Register16Bit, FlagsRegister } from "./registers";
 import CPUMemoryMap from "./CPUMemoryMap";
 import Stack from "./Stack";
 import operations from "./operations";
 import { interrupts } from "./constants";
+import { WithContext } from "../helpers";
 
 const INITIAL_FLAGS = 0b00100100;
 const INTERRUPT_CYCLES = 7;
@@ -110,7 +110,8 @@ export default class CPU {
 	_readOperation() {
 		const opcode = this._memoryBus.readAt(this.pc.value);
 		const operation = operations[opcode];
-		if (!operation) throw new Error(`Unknown opcode: 0x${opcode.toString(16)}`);
+		if (!operation)
+			throw new Error(`Unknown opcode: 0x${opcode.toString(16)}.`);
 		this.pc.increment();
 
 		return operation;

@@ -2,6 +2,7 @@ import CPU from "./cpu";
 import PPU from "./ppu";
 import { CPUBus, PPUBus } from "./memory/Bus";
 import Cartridge from "./cartridge";
+import Controller from "./controller";
 import { WithContext } from "./helpers";
 import constants from "./constants";
 
@@ -35,6 +36,8 @@ export default class NES {
 			cartridge,
 			mapper,
 
+			controllers: [new Controller(), new Controller()],
+
 			inDebugMode(action) {
 				try {
 					this.isDebugging = true;
@@ -66,6 +69,24 @@ export default class NES {
 				ppuCycles +=
 					this.cpu.interrupt(interrupt) * constants.PPU_CYCLES_PER_CPU_CYCLE;
 		}
+	}
+
+	/** Sets the `button` state of `player` to `isPressed`. */
+	setButton(player, button, isPressed) {
+		this.requireContext();
+		if (player !== 1 && player !== 2)
+			throw new Error(`Invalid player: ${player}.`);
+
+		this.context.controllers[player - 1].update(button, isPressed);
+	}
+
+	/** Sets all buttons of `player` to a not pressed state. */
+	clearButtons(player) {
+		this.requireContext();
+		if (player !== 1 && player !== 2)
+			throw new Error(`Invalid player: ${player}.`);
+
+		this.context.controllers[player - 1].clear();
 	}
 
 	/** Unloads the current cartridge. */
