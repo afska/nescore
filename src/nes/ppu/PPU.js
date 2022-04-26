@@ -1,12 +1,12 @@
 import { PPURegisterSegment } from "./registers";
 import PPUMemoryMap from "./PPUMemoryMap";
-import pipeline from "./pipeline";
+import renderers from "./renderers";
 import {
 	NameTable,
 	AttributeTable,
 	PatternTable,
 	FramePalette
-} from "./pipeline/tables";
+} from "./renderers/tables";
 import { getScanlineType } from "./constants";
 import { MemoryChunk } from "../memory";
 import { WithContext } from "../helpers";
@@ -53,7 +53,7 @@ export default class PPU {
 		this.requireContext();
 
 		const scanlineType = getScanlineType(this.scanline);
-		const interrupt = pipeline[scanlineType](this.context);
+		const interrupt = renderers[scanlineType](this.context);
 
 		this._incrementCounters();
 
