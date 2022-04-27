@@ -5,7 +5,7 @@ import getValue from "./_getValue";
  * "Indirect" addressing mode.
  *
  * The parameter is an absolute memory address to look up another address.
- * The byte readed from memory gives the least significant byte of the final
+ * The byte read from memory gives the least significant byte of the final
  * address, and the following byte gives the most significant byte.
  *
  * This addressing mode has a bug:
