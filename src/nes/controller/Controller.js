@@ -29,7 +29,7 @@ export default class Controller {
 		};
 	}
 
-	/** Creates a pair of controller ports. */
+	/** Creates a pair of connected controller ports. */
 	static createPorts() {
 		const primary = new PrimaryControllerPort();
 		const secondary = new SecondaryControllerPort(primary);

@@ -1,6 +1,6 @@
 import { WithContext, Byte } from "../helpers";
 
-/** A 8-bit register with multiple status flags and values that live in RAM. */
+/** An 8-bit register with multiple status flags and values that live in RAM. */
 export default class InMemoryRegister {
 	constructor() {
 		WithContext.apply(this);

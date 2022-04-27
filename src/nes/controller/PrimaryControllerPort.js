@@ -30,6 +30,7 @@ export default class PrimaryControllerPort extends ControllerPort {
 	/** Writes the strobe flag, potentially resetting the cursor. */
 	writeAt(__, byte) {
 		this._strobe = Byte.getBit(byte, STROBE_BIT) === 1;
+
 		if (this._strobe) {
 			this.cursor = 0;
 			if (this._secondary) this._secondary.cursor = 0;
