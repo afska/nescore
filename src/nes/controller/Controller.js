@@ -1,4 +1,5 @@
-import ControllerPort from "./ControllerPort";
+import PrimaryControllerPort from "./PrimaryControllerPort";
+import SecondaryControllerPort from "./SecondaryControllerPort";
 
 const BITS = [
 	0b00000001,
@@ -13,8 +14,8 @@ const BITS = [
 
 /** Represents a NES controller. */
 export default class Controller {
-	constructor() {
-		this.port = new ControllerPort();
+	constructor(port) {
+		this.port = port;
 
 		this.buttons = {
 			BUTTON_A: false,
@@ -26,6 +27,15 @@ export default class Controller {
 			BUTTON_LEFT: false,
 			BUTTON_RIGHT: false
 		};
+	}
+
+	/** Creates a pair of controller ports. */
+	static createPorts() {
+		const primary = new PrimaryControllerPort();
+		const secondary = new SecondaryControllerPort(primary);
+		primary.setSecondary(secondary);
+
+		return { primary, secondary };
 	}
 
 	/** Updates the state of a `button`, and writes the controller port. */

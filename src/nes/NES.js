@@ -22,6 +22,8 @@ export default class NES {
 		const cartridge = new Cartridge(rom);
 		const mapper = cartridge.createMapper();
 
+		const controllerPorts = Controller.createPorts();
+
 		this.loadContext({
 			logger: this.logger,
 
@@ -36,7 +38,10 @@ export default class NES {
 			cartridge,
 			mapper,
 
-			controllers: [new Controller(), new Controller()],
+			controllers: [
+				new Controller(controllerPorts.primary),
+				new Controller(controllerPorts.secondary)
+			],
 
 			inDebugMode(action) {
 				try {
