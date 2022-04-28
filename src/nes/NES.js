@@ -3,8 +3,8 @@ import PPU from "./ppu";
 import { CPUBus, PPUBus } from "./memory/Bus";
 import Cartridge from "./cartridge";
 import Controller from "./controller";
-import { WithContext } from "./helpers";
 import constants from "./constants";
+import { WithContext } from "./helpers";
 
 /** The NES Emulator. */
 export default class NES {

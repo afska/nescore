@@ -1,6 +1,6 @@
-import { WithContext } from "../../../helpers";
 import palette from "../../constants/palette";
 import constants from "../../../constants";
+import { WithContext } from "../../../helpers";
 
 /**
  * An area of memory which defines eight 4-color palettes (4 for backgrounds, 4 for sprites).

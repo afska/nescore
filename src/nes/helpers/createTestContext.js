@@ -4,8 +4,8 @@ import PPUMemoryMap from "../ppu/PPUMemoryMap";
 import { PPURegisterSegment } from "../ppu/registers";
 import Controller from "../controller";
 import { MemoryChunk } from "../memory";
-import { WithContext } from "../helpers";
 import constants from "../constants";
+import { WithContext } from "../helpers";
 
 /** Creates a mocked test context for CPU testing. */
 export default (initializeMemory = () => {}) => {

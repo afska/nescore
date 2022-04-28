@@ -8,9 +8,9 @@ import {
 	FramePalette
 } from "./renderers/tables";
 import { getScanlineType } from "./constants";
+import constants from "../constants";
 import { MemoryChunk } from "../memory";
 import { WithContext } from "../helpers";
-import constants from "../constants";
 
 /** The Picture Processing Unit. It generates a video signal of 256x240 pixels. */
 export default class PPU {

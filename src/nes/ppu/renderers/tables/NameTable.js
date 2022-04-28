@@ -1,5 +1,5 @@
-import { WithContext } from "../../../helpers";
 import constants from "../../../constants";
+import { WithContext } from "../../../helpers";
 
 /**
  * An area of memory which defines a background. It's located at $2000 (VRAM).

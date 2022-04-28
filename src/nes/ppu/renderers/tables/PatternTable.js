@@ -1,5 +1,5 @@
-import { WithContext, Byte } from "../../../helpers";
 import constants from "../../../constants";
+import { WithContext, Byte } from "../../../helpers";
 
 /**
  * An area of memory which defines the shapes of tiles that make up backgrounds and sprites.
