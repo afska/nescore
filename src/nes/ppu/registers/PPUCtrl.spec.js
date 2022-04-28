@@ -56,10 +56,6 @@ describe("CPU/PPU registers interaction", () => {
 			register.patternTableAddressForBackground.should.equal(0x1000);
 		});
 
-		it("provides the sprite width", () => {
-			register.spriteWidth.should.equal(8);
-		});
-
 		it("provides the sprite height", () => {
 			memory.writeAt(ADDRESS, 0b00000000);
 			register.spriteHeight.should.equal(8);

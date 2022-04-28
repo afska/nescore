@@ -52,10 +52,7 @@ export default class PPUCtrl extends InMemoryRegister {
 		return this.patternTableAddressIdForBackground === 0 ? 0x0000 : 0x1000;
 	}
 
-	/** Returns the sprite width (constant). */
-	get spriteWidth() {
-		return 8;
-	}
+	// TODO: REMOVE THESE PATTERNTABLE HELPERS?
 
 	/** Returns the sprite height. */
 	get spriteHeight() {
