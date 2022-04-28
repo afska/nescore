@@ -15,6 +15,11 @@ export default class PPUStatus extends InMemoryRegister {
 			.addField("isInVBlankInterval", 7);
 	}
 
+	/** When a context is loaded. */
+	onLoad() {
+		this.value = 0b10000000;
+	}
+
 	/** Reads the status flags, with some side effects. */
 	readAt(address) {
 		const value = super.readAt(address);
@@ -33,9 +38,4 @@ export default class PPUStatus extends InMemoryRegister {
 
 	/** Writes nothing (read-only address). */
 	writeAt() {}
-
-	/** Resets the value. */
-	reset() {
-		this.value = 0b10000000;
-	}
 }

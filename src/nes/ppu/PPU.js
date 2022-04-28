@@ -95,8 +95,6 @@ export default class PPU {
 		this.scanline = -1;
 		this.cycle = 0;
 
-		this.registers.ppuStatus.reset();
-
 		for (let i = 0; i < this.frameBuffer.length - 1; i++)
 			this.frameBuffer[i] = 0;
 	}

@@ -1,4 +1,4 @@
-import { createTestContextForMemory } from "../../helpers/createTestContext";
+import createTestContext from "../../helpers/createTestContext";
 const should = require("chai").Should();
 
 const ADDRESS = 0x2002;
@@ -8,7 +8,7 @@ describe("CPU/PPU registers interaction", () => {
 		let ppu, memory, register;
 
 		beforeEach(() => {
-			({ ppu, memory } = createTestContextForMemory());
+			({ ppu, memory } = createTestContext());
 			register = ppu.registers.ppuStatus;
 		});
 
@@ -20,7 +20,7 @@ describe("CPU/PPU registers interaction", () => {
 		});
 
 		it("can read the register", () => {
-			memory.readAt(ADDRESS).should.equal(0);
+			memory.readAt(ADDRESS).should.equal(0b10000000);
 
 			register.spriteOverflow = 1;
 			register.sprite0Hit = 1;

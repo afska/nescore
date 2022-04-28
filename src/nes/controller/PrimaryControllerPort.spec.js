@@ -1,4 +1,4 @@
-import { createTestContextForMemory } from "../helpers/createTestContext";
+import createTestContext from "../helpers/createTestContext";
 const should = require("chai").Should();
 
 const ADDRESS = 0x4016;
@@ -9,7 +9,7 @@ describe("I/O registers interaction", () => {
 		let controllers, memory;
 
 		beforeEach(() => {
-			({ controllers, memory } = createTestContextForMemory());
+			({ controllers, memory } = createTestContext());
 		});
 
 		it("can read controller's input, one button at time", () => {

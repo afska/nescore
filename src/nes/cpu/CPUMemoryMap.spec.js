@@ -1,18 +1,19 @@
 import { Register8Bit } from "./registers";
-import { createTestContextForMemory } from "../helpers/createTestContext";
+import createTestContext from "../helpers/createTestContext";
 import _ from "lodash";
 const should = require("chai").Should();
 
+const RAM_MIRROR_ADDRESS = 0x0800;
 const MAPPER_START_ADDRESS = 0x4020;
 const MAPPER_SIZE = 0xbfe0;
 const KB = 1024;
 
 describe("memory", () => {
 	describe("CPUMemoryMap", () => {
-		let ppu, mapper, memory;
+		let memory;
 
 		beforeEach(() => {
-			({ ppu, mapper, memory } = createTestContextForMemory());
+			({ memory } = createTestContext());
 		});
 
 		it("stores the start address of each chunk", () => {
@@ -26,13 +27,13 @@ describe("memory", () => {
 		});
 
 		it("can write in the right chunk", () => {
-			memory.writeAt(MAPPER_START_ADDRESS + 1, 123);
-			mapper.readAt(1).should.equal(123);
+			memory.writeAt(RAM_MIRROR_ADDRESS + 3, 123);
+			memory.chunks[1].readAt(3).should.equal(123);
 		});
 
 		it("can read from the right chunk", () => {
-			mapper.writeAt(1, 123);
-			memory.readAt(MAPPER_START_ADDRESS + 1).should.equal(123);
+			memory.chunks[1].writeAt(3, 123);
+			memory.readAt(RAM_MIRROR_ADDRESS + 3).should.equal(123);
 		});
 
 		[123, 0].forEach((value) => {

@@ -1,48 +1,21 @@
-import CPU from "../cpu";
-import CPUMemoryMap from "../cpu/CPUMemoryMap";
-import PPUMemoryMap from "../ppu/PPUMemoryMap";
-import { PPURegisterSegment } from "../ppu/registers";
-import Controller from "../controller";
-import { MemoryChunk } from "../memory";
+import NES from "../NES";
 import constants from "../constants";
-import { WithContext } from "../helpers";
+import fs from "fs";
 
-/** Creates a mocked test context for CPU testing. */
-export default (initializeMemory = () => {}) => {
-	const cpu = new CPU();
-	const memory = (cpu.memory = new MemoryChunk(constants.CPU_ADDRESSED_MEMORY));
-	WithContext.apply(memory);
-	const context = { cpu, memoryBus: { cpu: memory } };
+/** Creates an execution context for testing. */
+export default (initialize = () => {}) => {
+	const romBytes = fs.readFileSync(constants.NESTEST_PATH);
+	const nes = new NES();
+	nes.load(romBytes);
 
-	initializeMemory(memory);
-	cpu.loadContext(context);
+	const context = nes.context;
 
-	context.memory = context.memoryBus.cpu;
+	initialize(context);
+
+	context.memory = context.cpu.memory;
 	context.context = context;
 
-	return context;
-};
-
-/** Creates a mocked test context for memory testing. */
-export const createTestContextForMemory = () => {
-	const context = {};
-	context.ppu = {
-		registers: new PPURegisterSegment(context),
-		oamRam: new MemoryChunk(constants.PPU_OAM_SIZE)
-	};
-	context.mapper = new MemoryChunk(constants.CPU_ADDRESSED_MAPPER_SIZE);
-	const controllerPorts = Controller.createPorts();
-	context.controllers = [
-		new Controller(controllerPorts.primary),
-		new Controller(controllerPorts.secondary)
-	];
-	context.memoryBus = {
-		cpu: new CPUMemoryMap().loadContext(context),
-		ppu: new PPUMemoryMap().loadContext(context)
-	};
-
-	context.memory = context.memoryBus.cpu;
-	context.context = context;
+	nes.onLoad(context);
 
 	return context;
 };

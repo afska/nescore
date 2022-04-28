@@ -1,4 +1,4 @@
-import { createTestContextForMemory } from "../../helpers/createTestContext";
+import createTestContext from "../../helpers/createTestContext";
 const should = require("chai").Should();
 
 const ADDRESS = 0x2000;
@@ -8,7 +8,7 @@ describe("CPU/PPU registers interaction", () => {
 		let ppu, memory, register;
 
 		beforeEach(() => {
-			({ ppu, memory } = createTestContextForMemory());
+			({ ppu, memory } = createTestContext());
 			register = ppu.registers.ppuCtrl;
 		});
 

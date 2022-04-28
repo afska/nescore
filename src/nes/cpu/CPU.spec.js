@@ -1,5 +1,8 @@
-import createTestContext from "../helpers/createTestContext";
+import { MemoryChunk } from "../memory";
 import { interrupts } from "./constants";
+import constants from "../constants";
+import createTestContext from "../helpers/createTestContext";
+import { WithContext } from "../helpers";
 import _ from "lodash";
 const should = require("chai").Should();
 
@@ -9,9 +12,13 @@ describe("CPU", () => {
 	let cpu, memory;
 
 	beforeEach(() => {
-		({ cpu, memory } = createTestContext((memory) => {
-			// Sample program: NOP ; LDA #$05 ; STA $0201
+		({ cpu, memory } = createTestContext((context) => {
+			// Mock the whole memory map
+			const memory = new MemoryChunk(constants.CPU_ADDRESSED_MEMORY);
+			WithContext.apply(memory);
+			context.cpu.memory = memory;
 
+			// Define sample program: NOP ; LDA #$05 ; STA $0201
 			memory.write2BytesAt(interrupts.RESET.vector, 0x1234);
 			[0xea, 0xa9, 0x05, 0x8d, 0x01, 0x02].forEach((byte, i) =>
 				memory.writeAt(0x1234 + i, byte)

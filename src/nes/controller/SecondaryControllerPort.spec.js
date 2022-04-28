@@ -1,4 +1,4 @@
-import { createTestContextForMemory } from "../helpers/createTestContext";
+import createTestContext from "../helpers/createTestContext";
 const should = require("chai").Should();
 
 const PRIMARY_ADDRESS = 0x4016;
@@ -10,7 +10,7 @@ describe("I/O registers interaction", () => {
 		let controllers, memory;
 
 		beforeEach(() => {
-			({ controllers, memory } = createTestContextForMemory());
+			({ controllers, memory } = createTestContext());
 		});
 
 		it("resets the cursor to A when writing 1 to the strobe flag of the primary controller", () => {
