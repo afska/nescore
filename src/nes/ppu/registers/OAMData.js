@@ -8,8 +8,10 @@ import { InMemoryRegister } from "../../registers";
 export default class OAMData extends InMemoryRegister {
 	/** Reads a value from PPU's internal OAM. */
 	readAt() {
-		const oamAddress = this.context.ppu.registers.oamAddr.value;
-		return this.context.ppu.oamRam.readAt(oamAddress);
+		const { ppu } = this.context;
+
+		const oamAddress = ppu.registers.oamAddr.value;
+		return ppu.oamRam.readAt(oamAddress);
 	}
 
 	/** Writes a `byte` to PPU's internal OAM and increments `OAMAddr`. */

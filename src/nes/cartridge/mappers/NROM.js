@@ -57,3 +57,5 @@ export default class NROM extends Mapper {
 		this.defineChunks(null);
 	}
 }
+
+// TODO: Probably, this shouldn't be a memory segment
