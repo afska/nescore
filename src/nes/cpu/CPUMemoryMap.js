@@ -1,5 +1,5 @@
 import {
-	WithComposedMemory,
+	WithCompositeMemory,
 	MemoryChunk,
 	MemoryMirror,
 	MemoryPadding
@@ -10,7 +10,7 @@ import { WithContext } from "../helpers";
 export default class CPUMemoryMap {
 	constructor() {
 		WithContext.apply(this);
-		WithComposedMemory.apply(this);
+		WithCompositeMemory.apply(this);
 	}
 
 	/** When a context is loaded. */
@@ -43,13 +43,13 @@ export default class CPUMemoryMap {
 	readAt(address) {
 		return address.value != null
 			? address.value
-			: WithComposedMemory.readAt.call(this, address);
+			: WithCompositeMemory.readAt.call(this, address);
 	}
 
 	/** Writes a `byte` to `address`, which can be a register or a memory address. */
 	writeAt(address, byte) {
 		if (address.value != null) address.value = byte;
-		else WithComposedMemory.writeAt.call(this, address, byte);
+		else WithCompositeMemory.writeAt.call(this, address, byte);
 	}
 
 	/** When the current context is unloaded. */

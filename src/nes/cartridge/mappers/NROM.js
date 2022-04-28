@@ -1,6 +1,6 @@
 import Mapper from "./Mapper";
 import {
-	WithComposedMemory,
+	WithCompositeMemory,
 	MemoryChunk,
 	MemoryMirror,
 	MemoryPadding
@@ -16,7 +16,7 @@ export default class NROM extends Mapper {
 	constructor() {
 		super();
 
-		WithComposedMemory.apply(this);
+		WithCompositeMemory.apply(this);
 	}
 
 	/** When a context is loaded. */

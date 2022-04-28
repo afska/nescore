@@ -1,5 +1,5 @@
 import WithMemory from "./WithMemory";
-import WithComposedMemory from "./WithComposedMemory";
+import WithCompositeMemory from "./WithCompositeMemory";
 import MemoryChunk from "./MemoryChunk";
 import MemoryMirror from "./MemoryMirror";
 import MemoryPadding from "./MemoryPadding";
@@ -14,13 +14,13 @@ import MemoryPadding from "./MemoryPadding";
  * - `write2BytesAt(address, value)`: writes 2 bytes in Little Endian
  * - `readBytesAt(address, length)`: read 1 or 2 bytes
  *
- * For mirroring or composed memory usage, define:
+ * For mirroring or composite memory usage, define:
  * - `memorySize`: how many bytes it contains
  */
 
 export {
 	WithMemory,
-	WithComposedMemory,
+	WithCompositeMemory,
 	MemoryChunk,
 	MemoryMirror,
 	MemoryPadding

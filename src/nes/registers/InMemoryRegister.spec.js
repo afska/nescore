@@ -1,5 +1,5 @@
 import { InMemoryRegister } from ".";
-import { WithComposedMemory } from "../memory";
+import { WithCompositeMemory } from "../memory";
 const should = require("chai").Should();
 
 describe("registers", () => {
@@ -7,7 +7,7 @@ describe("registers", () => {
 		let memory, register;
 
 		beforeEach(() => {
-			memory = WithComposedMemory.createSegment([
+			memory = WithCompositeMemory.createSegment([
 				new InMemoryRegister(), // byte 0
 				new InMemoryRegister(), // byte 1
 				new InMemoryRegister(), // byte 2

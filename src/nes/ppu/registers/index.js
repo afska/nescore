@@ -7,7 +7,7 @@ import PPUScroll from "./PPUScroll";
 import PPUAddr from "./PPUAddr";
 import PPUData from "./PPUData";
 import OAMDMA from "./OAMDMA";
-import { WithComposedMemory } from "../../memory";
+import { WithCompositeMemory } from "../../memory";
 
 /** Represents all the CPU-mapped PPU registers. */
 class PPURegisterSegment {
@@ -25,7 +25,7 @@ class PPURegisterSegment {
 
 	/** Creates a memory segment with the first 8 registers ($2000-$2007). */
 	toMemory() {
-		return WithComposedMemory.createSegment([
+		return WithCompositeMemory.createSegment([
 			this.ppuCtrl,
 			this.ppuMask,
 			this.ppuStatus,

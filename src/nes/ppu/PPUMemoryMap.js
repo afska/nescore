@@ -1,5 +1,5 @@
 import {
-	WithComposedMemory,
+	WithCompositeMemory,
 	MemoryChunk,
 	MemoryMirror,
 	MemoryPadding
@@ -10,7 +10,7 @@ import { WithContext } from "../helpers";
 export default class PPUMemoryMap {
 	constructor() {
 		WithContext.apply(this);
-		WithComposedMemory.apply(this);
+		WithCompositeMemory.apply(this);
 	}
 
 	/** When a context is loaded. */

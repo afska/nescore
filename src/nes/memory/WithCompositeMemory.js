@@ -1,7 +1,7 @@
 import WithLittleEndian from "./WithLittleEndian";
 import _ from "lodash";
 
-/** A mixin for composed memory handling, with multiple `chunks`. */
+/** A mixin for composite memory handling, with multiple `chunks`. */
 export default {
 	/** Applies the mixin. */
 	apply(obj) {
@@ -11,7 +11,7 @@ export default {
 		obj.lut = null;
 	},
 
-	/** Creates a composed memory segment with different `chunks`. */
+	/** Creates a composite memory segment with different `chunks`. */
 	createSegment(chunks) {
 		const memory = {};
 		this.apply(memory);
