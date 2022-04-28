@@ -41,16 +41,17 @@ export default class Controller {
 	/** Updates the state of a `button`, and writes the controller port. */
 	update(button, isPressed) {
 		this.buttons[button] = isPressed;
-		this.port.value = this._toByte();
+		this.port.value = this.toByte();
 	}
 
 	/** Clears the state of all buttons, and writes the controller port. */
 	clear() {
 		for (let button in this.buttons) this.buttons[button] = false;
-		this.port.value = this._toByte();
+		this.port.value = this.toByte();
 	}
 
-	_toByte() {
+	/** Returns a binary representation of the current state. */
+	toByte() {
 		return (
 			(this.buttons.BUTTON_A && BITS[0]) |
 			(this.buttons.BUTTON_B && BITS[1]) |
