@@ -23,7 +23,6 @@ export default class PPU {
 
 		this.memory = new PPUMemoryMap();
 		this.oamRam = null; // OAM = Object Attribute Memory (contains sprite data)
-		this.oamRam2 = null;
 		this.registers = null;
 
 		this.frameBuffer = new Uint32Array(constants.TOTAL_PIXELS);
@@ -36,8 +35,7 @@ export default class PPU {
 	/** When a context is loaded. */
 	onLoad(context) {
 		this.memory.loadContext(context);
-		this.oamRam = new MemoryChunk(constants.PRIMARY_OAM_SIZE);
-		this.oamRam2 = new MemoryChunk(constants.SECONDARY_OAM_SIZE);
+		this.oamRam = new MemoryChunk(constants.PPU_OAM_SIZE);
 		this.registers = new PPURegisterSegment(context);
 
 		this.nameTable.loadContext(context);
@@ -71,7 +69,6 @@ export default class PPU {
 
 		this.memory.unloadContext();
 		this.oamRam = null;
-		this.oamRam2 = null;
 		this.registers = null;
 
 		this.nameTable.unloadContext();

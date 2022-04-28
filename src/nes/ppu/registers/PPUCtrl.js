@@ -37,7 +37,7 @@ export default class PPUCtrl extends InMemoryRegister {
 		}
 	}
 
-	/** Returns the PPUAddr increment per CPU read/write of PPUData. */
+	/** Returns the `PPUAddr` increment per CPU read/write of `PPUData`. */
 	get vramAddressIncrement() {
 		return this.vramAddressIncrement32 === 1 ? 32 : 1;
 	}

@@ -12,15 +12,7 @@ export default (initializeMemory = () => {}) => {
 	const cpu = new CPU();
 	const memory = (cpu.memory = new MemoryChunk(constants.CPU_ADDRESSED_MEMORY));
 	WithContext.apply(memory);
-	const controllerPorts = Controller.createPorts();
-	const context = {
-		cpu,
-		memoryBus: { cpu: memory },
-		controllers: [
-			new Controller(controllerPorts.primary),
-			new Controller(controllerPorts.secondary)
-		]
-	};
+	const context = { cpu, memoryBus: { cpu: memory } };
 
 	initializeMemory(memory);
 	cpu.loadContext(context);
@@ -34,7 +26,10 @@ export default (initializeMemory = () => {}) => {
 /** Creates a mocked test context for memory testing. */
 export const createTestContextForMemory = () => {
 	const context = {};
-	context.ppu = { registers: new PPURegisterSegment(context) };
+	context.ppu = {
+		registers: new PPURegisterSegment(context),
+		oamRam: new MemoryChunk(constants.PPU_OAM_SIZE)
+	};
 	context.mapper = new MemoryChunk(constants.CPU_ADDRESSED_MAPPER_SIZE);
 	const controllerPorts = Controller.createPorts();
 	context.controllers = [
