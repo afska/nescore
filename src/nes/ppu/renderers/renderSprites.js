@@ -1,4 +1,5 @@
 import constants from "../../constants";
+import _ from "lodash";
 
 /** Renders the sprites from OAM. */
 export default (context) => {
@@ -15,31 +16,43 @@ const evaluateSprites = ({ ppu }) => {
 
 		if (
 			sprite.shouldRenderInScanline(ppu.scanline) &&
-			sprites.length < constants.MAX_SPRITES_PER_SCANLINE
-		)
-			sprites.push(sprite);
+			sprites.length < constants.MAX_SPRITES_PER_SCANLINE + 1
+		) {
+			if (sprites.length < constants.MAX_SPRITES_PER_SCANLINE)
+				sprites.push(sprite);
+			else ppu.registers.ppuStatus.spriteOverflow = 1;
+		}
 	}
 
-	return sprites;
+	// (sprites on lower addresses have greater priority)
+	return _.orderBy(sprites, ["id"], ["desc"]);
 };
 
 /** Draws a list of `sprites` on screen. */
 const drawSprites = ({ ppu }, sprites) => {
 	for (let sprite of sprites) {
-		const diffY = sprite.diffY(ppu.scanline);
+		const insideY = sprite.diffY(ppu.scanline);
 
 		for (let insideX = 0; insideX < constants.TILE_LENGTH; insideX++) {
+			const finalX = sprite.x + insideX;
+			const finalY = ppu.scanline;
+
 			const paletteId = sprite.paletteId;
 			const paletteIndex = ppu.patternTable.getPaletteIndexOf(
 				ppu.registers.ppuCtrl.patternTableAddressIdFor8x8Sprites,
 				sprite.tileId,
 				sprite.flipX ? constants.TILE_LENGTH - 1 - insideX : insideX,
-				sprite.flipY ? constants.TILE_LENGTH - 1 - diffY : diffY
+				sprite.flipY ? constants.TILE_LENGTH - 1 - insideY : insideY
 			);
 
-			if (paletteIndex > 0) {
+			const shouldDraw =
+				paletteIndex !== constants.COLOR_TRANSPARENT &&
+				(sprite.isInFrontOfBackground ||
+					ppu.paletteIndexOf(finalX, finalY) === constants.COLOR_TRANSPARENT);
+
+			if (shouldDraw) {
 				const color = ppu.framePalette.getColorOf(paletteId, paletteIndex);
-				ppu.plot(sprite.x + insideX, ppu.scanline, color);
+				ppu.plot(finalX, finalY, color);
 			}
 		}
 	}

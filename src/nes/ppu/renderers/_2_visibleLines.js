@@ -8,12 +8,16 @@ export default (context) => {
 
 	if (
 		ppu.cycle < constants.SCREEN_WIDTH &&
-		ppu.cycle % constants.PPU_RENDER_FREQUENCY === 0
-	) {
+		ppu.cycle % constants.PPU_RENDER_FREQUENCY === 0 &&
+		!!ppu.registers.ppuMask.showBackground
+	)
 		renderBackground(context);
-	}
 
-	if (ppu.cycle === constants.PPU_CYCLE_RENDER_SPRITES) {
+	if (
+		ppu.cycle === constants.PPU_LAST_CYCLE &&
+		!!ppu.registers.ppuMask.showSprites
+	)
 		renderSprites(context);
-	}
+
+	return null;
 };

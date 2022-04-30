@@ -17,8 +17,13 @@ export default ({ ppu }) => {
 			x % constants.TILE_LENGTH,
 			y % constants.TILE_LENGTH
 		);
-		const color = ppu.framePalette.getColorOf(paletteId, paletteIndex);
+
+		const color =
+			paletteIndex !== constants.COLOR_TRANSPARENT
+				? ppu.framePalette.getColorOf(paletteId, paletteIndex)
+				: ppu.framePalette.getColorOf(0, 0);
 
 		ppu.plot(x, y, color);
+		ppu.savePaletteIndex(x, y, paletteIndex);
 	}
 };

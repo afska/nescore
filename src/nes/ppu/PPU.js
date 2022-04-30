@@ -27,6 +27,7 @@ export default class PPU {
 		this.registers = null;
 
 		this.frameBuffer = new Uint32Array(constants.TOTAL_PIXELS);
+		this.paletteIndexes = new Uint8Array(constants.TOTAL_PIXELS);
 		this.nameTable = new NameTable();
 		this.attributeTable = new AttributeTable();
 		this.patternTable = new PatternTable();
@@ -61,9 +62,19 @@ export default class PPU {
 		return interrupt;
 	}
 
-	/** Draws a pixel in (`x`, `y`) using `color`. */
+	/** Draws a pixel in (`x`, `y`) using BGR `color`. */
 	plot(x, y, color) {
 		this.frameBuffer[y * constants.SCREEN_WIDTH + x] = color;
+	}
+
+	/** Saves the `paletteIndex` of (`x`, `y`). */
+	savePaletteIndex(x, y, paletteIndex) {
+		this.paletteIndexes[y * constants.SCREEN_WIDTH + x] = paletteIndex;
+	}
+
+	/** Returns the palette index of pixel (`x`, `y`). Used for sprite drawing. */
+	paletteIndexOf(x, y) {
+		return this.paletteIndexes[y * constants.SCREEN_WIDTH + x];
 	}
 
 	/** When the current context is unloaded. */
@@ -99,15 +110,9 @@ export default class PPU {
 		this.scanline = -1;
 		this.cycle = 0;
 
-		for (let i = 0; i < this.frameBuffer.length - 1; i++)
+		for (let i = 0; i < this.frameBuffer.length - 1; i++) {
 			this.frameBuffer[i] = 0;
-	}
-
-	// TODO: REMOVE IF UNUSED
-	get _isRenderingEnabled() {
-		return (
-			this.registers.ppuMask.showBackground ||
-			this.registers.ppuMask.showSprites
-		);
+			this.paletteIndexes[i] = 0;
+		}
 	}
 }
