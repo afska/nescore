@@ -12,16 +12,17 @@ import { WithContext } from "../../../helpers";
  *                                     ||+------ priority (0: in front of background, 1: behind background)
  *                                     |+------- horizontalFlip
  *                                     +-------- verticalFlip
+ * All sprites are either 8x8 or 8x16 (depending on `PPUCtrl`'s bit 5).
  */
 export default class OAM {
 	constructor() {
 		WithContext.apply(this);
 	}
 
-	/** Returns a new instance of sprite number `spriteId`. */
-	createSprite(spriteId) {
-		const { oamRam } = this.context.ppu;
-		const address = spriteId * constants.SPRITE_SIZE_BYTES;
+	/** Returns a new instance of the sprite #`id`. */
+	createSprite(id) {
+		const { oamRam, registers } = this.context.ppu;
+		const address = id * constants.SPRITE_SIZE_BYTES;
 
 		const y = oamRam.readAt(address + constants.SPRITE_BYTE_Y);
 		const tileId = oamRam.readAt(address + constants.SPRITE_BYTE_TILE_ID);
@@ -29,7 +30,8 @@ export default class OAM {
 			address + constants.SPRITE_BYTE_ATTRIBUTES
 		);
 		const x = oamRam.readAt(address + constants.SPRITE_BYTE_X);
+		const height = registers.ppuCtrl.spriteHeight;
 
-		return new Sprite(x, y, tileId, attributes);
+		return new Sprite(id, x, y, tileId, attributes, height);
 	}
 }
