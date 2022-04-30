@@ -3,7 +3,7 @@ import { WithContext } from "../../helpers";
 
 const START_ADDRESS = 0x2000;
 const NAME_TABLE_SIZE = 1024;
-const TILE_SIZE = 8;
+const TILE_LENGTH = 8;
 const TOTAL_TILES_X = 32;
 
 /** Utility class to draw complete backgrounds from Name tables. */
@@ -28,7 +28,13 @@ export default class DebugNameTable {
 
 				new DebugPatternTable()
 					.loadContext(this.context)
-					.renderTile(patternTableId, byte, plot, x * TILE_SIZE, y * TILE_SIZE);
+					.renderTile(
+						patternTableId,
+						byte,
+						plot,
+						x * TILE_LENGTH,
+						y * TILE_LENGTH
+					);
 			}
 		});
 	}

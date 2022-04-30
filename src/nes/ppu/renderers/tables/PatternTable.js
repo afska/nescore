@@ -22,8 +22,8 @@ export default class PatternTable {
 		const startAddress =
 			constants.PATTERN_TABLES_START_ADDRESS +
 			patternTableId * constants.PATTERN_TABLE_SIZE;
-		const firstPlane = tileId * constants.TILE_SIZE_BYTES;
-		const secondPlane = firstPlane + constants.TILE_SIZE_BYTES / 2;
+		const firstPlane = tileId * constants.TILE_SIZE;
+		const secondPlane = firstPlane + constants.TILE_SIZE / 2;
 
 		const rowLowBits = this.context.memoryBus.ppu.readAt(
 			startAddress + firstPlane + y
@@ -32,7 +32,7 @@ export default class PatternTable {
 			startAddress + secondPlane + y
 		);
 
-		const column = constants.TILE_SIZE - 1 - x;
+		const column = constants.TILE_LENGTH - 1 - x;
 		const lsb = Byte.getBit(rowLowBits, column);
 		const msb = Byte.getBit(rowHighBits, column);
 

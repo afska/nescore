@@ -3,7 +3,7 @@ import DebugPatternTable from "../../nes/ppu/debug/DebugPatternTable";
 
 const SCREEN_WIDTH = 256;
 const SCREEN_HEIGHT = 240;
-const TILE_SIZE = 8;
+const TILE_LENGTH = 8;
 
 /** Debug functions */
 export default (emulator) => {
@@ -15,9 +15,9 @@ export default (emulator) => {
 				let tile = 0;
 
 				const drawTile = () => {
-					const startX = (tile * TILE_SIZE) % SCREEN_WIDTH;
+					const startX = (tile * TILE_LENGTH) % SCREEN_WIDTH;
 					const startY =
-						Math.floor((tile * TILE_SIZE) / SCREEN_WIDTH) * TILE_SIZE;
+						Math.floor((tile * TILE_LENGTH) / SCREEN_WIDTH) * TILE_LENGTH;
 
 					new DebugPatternTable()
 						.loadContext(this.emulator.nes.context)

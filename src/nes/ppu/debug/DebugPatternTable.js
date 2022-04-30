@@ -2,8 +2,8 @@ import { WithContext, Byte } from "../../helpers";
 
 const START_ADDRESS = 0x0000;
 const PATTERN_TABLE_SIZE = 0x1000;
-const TILE_SIZE = 8;
-const TILE_SIZE_BYTES = 16;
+const TILE_LENGTH = 8;
+const TILE_SIZE = 16;
 const TEST_PALETTE = [0xffffff, 0xcecece, 0x686868, 0x000000];
 
 /** Utility class to draw complete tiles from Pattern tables. */
@@ -22,15 +22,15 @@ export default class DebugPatternTable {
 		this.context.inDebugMode(() => {
 			const startAddress = START_ADDRESS + patternTableId * PATTERN_TABLE_SIZE;
 			const memory = this.context.memoryBus.ppu;
-			const firstPlane = id * TILE_SIZE_BYTES;
-			const secondPlane = firstPlane + TILE_SIZE_BYTES / 2;
+			const firstPlane = id * TILE_SIZE;
+			const secondPlane = firstPlane + TILE_SIZE / 2;
 
-			for (let y = 0; y < TILE_SIZE; y++) {
+			for (let y = 0; y < TILE_LENGTH; y++) {
 				const row1 = memory.readAt(startAddress + firstPlane + y);
 				const row2 = memory.readAt(startAddress + secondPlane + y);
 
-				for (let x = 0; x < TILE_SIZE; x++) {
-					const column = TILE_SIZE - 1 - x;
+				for (let x = 0; x < TILE_LENGTH; x++) {
+					const column = TILE_LENGTH - 1 - x;
 					const lsb = Byte.getBit(row1, column);
 					const msb = Byte.getBit(row2, column);
 					const color = (msb << 1) | lsb;

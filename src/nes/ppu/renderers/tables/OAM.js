@@ -22,7 +22,7 @@ export default class OAM {
 	/** Returns a new instance of the sprite #`id`. */
 	createSprite(id) {
 		const { oamRam, registers } = this.context.ppu;
-		const address = id * constants.SPRITE_SIZE_BYTES;
+		const address = id * constants.SPRITE_SIZE;
 
 		const y = oamRam.readAt(address + constants.SPRITE_BYTE_Y);
 		const tileId = oamRam.readAt(address + constants.SPRITE_BYTE_TILE_ID);

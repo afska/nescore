@@ -14,8 +14,8 @@ export default ({ ppu }) => {
 		const paletteIndex = ppu.patternTable.getPaletteIndexOf(
 			ppu.registers.ppuCtrl.patternTableAddressIdForBackground,
 			tileId,
-			x % constants.TILE_SIZE,
-			y % constants.TILE_SIZE
+			x % constants.TILE_LENGTH,
+			y % constants.TILE_LENGTH
 		);
 		const color = ppu.framePalette.getColorOf(paletteId, paletteIndex);
 
