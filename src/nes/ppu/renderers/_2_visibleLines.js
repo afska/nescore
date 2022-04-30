@@ -1,5 +1,4 @@
 import constants from "../../constants";
-import { Byte } from "../../helpers"; // TODO: REMOVE
 
 const NAMETABLE_ID = 0;
 
@@ -19,42 +18,33 @@ export default (context) => {
 		const sprites = [];
 
 		// --evaluation--
-		let totalSprites = 0;
-		for (let spriteId = 0; spriteId < 64; spriteId++) {
-			const y = ppu.oamRam.readAt(spriteId * 4 + 0 /* y */);
-			const diffY = ppu.scanline - y;
+		for (let spriteId = 0; spriteId < constants.MAX_SPRITES; spriteId++) {
+			const sprite = ppu.oam.createSprite(spriteId);
+			const diffY = ppu.scanline - sprite.y; // TODO: MOVE TO Sprite
 
-			if (diffY >= 0 && diffY < 8 && totalSprites < 8) {
-				// TODO: Replace 8 with spriteHeight
-				sprites.push(spriteId);
-				totalSprites++;
-			}
+			if (
+				diffY >= 0 &&
+				diffY < 8 && // TODO: Replace 8 with spriteHeight
+				sprites.length < constants.MAX_SPRITES_PER_SCANLINE
+			)
+				sprites.push(sprite);
 		}
 
 		// --drawing--
-		for (let spriteId of sprites) {
-			const x = ppu.oamRam.readAt(spriteId * 4 + 3 /* x */);
-			const y = ppu.oamRam.readAt(spriteId * 4 + 0 /* y */);
-			const diffY = ppu.scanline - y;
+		for (let sprite of sprites) {
+			const diffY = ppu.scanline - sprite.y;
 
 			for (let insideX = 0; insideX < constants.TILE_SIZE; insideX++) {
-				const tileId = ppu.oamRam.readAt(spriteId * 4 + 1 /* tileId */);
-				const paletteId =
-					4 +
-					Byte.getSubNumber(
-						ppu.oamRam.readAt(spriteId * 4 + 2 /* attribute */),
-						0,
-						2
-					);
+				const paletteId = sprite.paletteId;
 				const paletteIndex = ppu.patternTable.getPaletteIndexOf(
 					ppu.registers.ppuCtrl.patternTableAddressIdFor8x8Sprites,
-					tileId,
+					sprite.tileId,
 					insideX,
 					diffY
 				);
 				const color = ppu.framePalette.getColorOf(paletteId, paletteIndex);
 
-				ppu.plot(x + insideX, ppu.scanline, color);
+				ppu.plot(sprite.x + insideX, ppu.scanline, color);
 			}
 		}
 	}

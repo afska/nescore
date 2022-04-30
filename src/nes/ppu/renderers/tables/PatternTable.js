@@ -4,7 +4,7 @@ import { WithContext, Byte } from "../../../helpers";
 /**
  * An area of memory which defines the shapes of tiles that make up backgrounds and sprites.
  * It's located at $0000, and it's usually mapped to CHR-ROM.
- * Each tile is 16 bytes, made of two planes:
+ * Each tile is 16 bytes, made of two bit planes:
  * - The first plane controls bit 0 of the color.
  * - The second plane controls bit 1 of the color.
  * Any pixel whose color is 0 is background/transparent.

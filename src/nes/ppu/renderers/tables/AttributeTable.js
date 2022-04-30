@@ -39,10 +39,13 @@ export default class AttributeTable {
 
 		const block = this.context.memoryBus.ppu.readAt(startAddress + blockIndex);
 
-		return Byte.getSubNumber(
-			block,
-			regionIndex * constants.ATTRIBUTE_TABLE_REGION_SIZE_BITS,
-			constants.ATTRIBUTE_TABLE_REGION_SIZE_BITS
+		return (
+			constants.PALETTE_BACKGROUND_START +
+			Byte.getSubNumber(
+				block,
+				regionIndex * constants.ATTRIBUTE_TABLE_REGION_SIZE_BITS,
+				constants.ATTRIBUTE_TABLE_REGION_SIZE_BITS
+			)
 		);
 	}
 }

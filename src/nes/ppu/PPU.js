@@ -5,7 +5,8 @@ import {
 	NameTable,
 	AttributeTable,
 	PatternTable,
-	FramePalette
+	FramePalette,
+	OAM
 } from "./renderers/tables";
 import { getScanlineType } from "./constants";
 import constants from "../constants";
@@ -22,7 +23,7 @@ export default class PPU {
 		this.cycle = 0;
 
 		this.memory = new PPUMemoryMap();
-		this.oamRam = null; // OAM = Object Attribute Memory (contains sprite data)
+		this.oamRam = null;
 		this.registers = null;
 
 		this.frameBuffer = new Uint32Array(constants.TOTAL_PIXELS);
@@ -30,6 +31,7 @@ export default class PPU {
 		this.attributeTable = new AttributeTable();
 		this.patternTable = new PatternTable();
 		this.framePalette = new FramePalette();
+		this.oam = new OAM();
 	}
 
 	/** When a context is loaded. */
@@ -42,6 +44,7 @@ export default class PPU {
 		this.attributeTable.loadContext(context);
 		this.patternTable.loadContext(context);
 		this.framePalette.loadContext(context);
+		this.oam.loadContext(context);
 
 		this._reset();
 	}
@@ -75,6 +78,7 @@ export default class PPU {
 		this.attributeTable.unloadContext();
 		this.patternTable.unloadContext();
 		this.framePalette.unloadContext();
+		this.oam.unloadContext();
 	}
 
 	_incrementCounters() {

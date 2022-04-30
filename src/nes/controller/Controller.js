@@ -12,7 +12,7 @@ const BITS = [
 	0b10000000
 ];
 
-/** Represents a NES controller. */
+/** An NES controller, which updates a `ControllerPort`. */
 export default class Controller {
 	constructor(port) {
 		this.port = port;

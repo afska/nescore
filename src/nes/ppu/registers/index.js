@@ -9,7 +9,7 @@ import PPUData from "./PPUData";
 import OAMDMA from "./OAMDMA";
 import { WithCompositeMemory } from "../../memory";
 
-/** Represents all the CPU-mapped PPU registers. */
+/** A collection of all the CPU-mapped PPU registers. */
 class PPURegisterSegment {
 	constructor(context) {
 		this.ppuCtrl = new PPUCtrl().loadContext(context);
