@@ -37,6 +37,7 @@ const drawSprites = ({ ppu }, sprites) => {
 			const finalX = sprite.x + insideX;
 			const finalY = ppu.scanline;
 
+			// color fetch
 			const paletteId = sprite.paletteId;
 			const paletteIndex = ppu.patternTable.getPaletteIndexOf(
 				ppu.registers.ppuCtrl.patternTableAddressIdFor8x8Sprites,
@@ -44,12 +45,25 @@ const drawSprites = ({ ppu }, sprites) => {
 				sprite.flipX ? constants.TILE_LENGTH - 1 - insideX : insideX,
 				sprite.flipY ? constants.TILE_LENGTH - 1 - insideY : insideY
 			);
+			const isSpritePixelTransparent =
+				paletteIndex === constants.COLOR_TRANSPARENT;
+			const isBackgroundPixelTransparent =
+				ppu.paletteIndexOf(finalX, finalY) === constants.COLOR_TRANSPARENT;
 
+			// sprite 0 hit
+			if (
+				sprite.id === 0 &&
+				!isSpritePixelTransparent &&
+				!isBackgroundPixelTransparent
+			)
+				ppu.registers.ppuStatus.sprite0Hit = 1;
+
+			// sprite/background priority
 			const shouldDraw =
-				paletteIndex !== constants.COLOR_TRANSPARENT &&
-				(sprite.isInFrontOfBackground ||
-					ppu.paletteIndexOf(finalX, finalY) === constants.COLOR_TRANSPARENT);
+				!isSpritePixelTransparent &&
+				(sprite.isInFrontOfBackground || isBackgroundPixelTransparent);
 
+			// actual drawing
 			if (shouldDraw) {
 				const color = ppu.framePalette.getColorOf(paletteId, paletteIndex);
 				ppu.plot(finalX, finalY, color);
