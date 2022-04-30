@@ -29,45 +29,50 @@ const evaluateSprites = ({ ppu }) => {
 };
 
 /** Draws a list of `sprites` on screen. */
-const drawSprites = ({ ppu }, sprites) => {
+const drawSprites = (context, sprites) => {
+	const { ppu } = context;
+
 	for (let sprite of sprites) {
 		const insideY = sprite.diffY(ppu.scanline);
 
-		for (let insideX = 0; insideX < constants.TILE_LENGTH; insideX++) {
-			const finalX = sprite.x + insideX;
-			const finalY = ppu.scanline;
+		for (let insideX = 0; insideX < constants.TILE_LENGTH; insideX++)
+			drawSpritePixel(context, sprite, insideX, insideY);
+	}
+};
 
-			// color fetch
-			const paletteId = sprite.paletteId;
-			const paletteIndex = ppu.patternTable.getPaletteIndexOf(
-				ppu.registers.ppuCtrl.patternTableAddressIdFor8x8Sprites,
-				sprite.tileId,
-				sprite.flipX ? constants.TILE_LENGTH - 1 - insideX : insideX,
-				sprite.flipY ? constants.TILE_LENGTH - 1 - insideY : insideY
-			);
-			const isSpritePixelTransparent =
-				paletteIndex === constants.COLOR_TRANSPARENT;
-			const isBackgroundPixelTransparent =
-				ppu.paletteIndexOf(finalX, finalY) === constants.COLOR_TRANSPARENT;
+/** Draws the (`insideX`, `insideY`) `sprite`'s pixel. */
+const drawSpritePixel = ({ ppu }, sprite, insideX, insideY) => {
+	const finalX = sprite.x + insideX;
+	const finalY = ppu.scanline;
 
-			// sprite 0 hit
-			if (
-				sprite.id === 0 &&
-				!isSpritePixelTransparent &&
-				!isBackgroundPixelTransparent
-			)
-				ppu.registers.ppuStatus.sprite0Hit = 1;
+	// color fetch
+	const paletteId = sprite.paletteId;
+	const paletteIndex = ppu.patternTable.getPaletteIndexOf(
+		ppu.registers.ppuCtrl.patternTableAddressIdFor8x8Sprites,
+		sprite.tileId,
+		sprite.flipX ? constants.TILE_LENGTH - 1 - insideX : insideX,
+		sprite.flipY ? constants.TILE_LENGTH - 1 - insideY : insideY
+	);
+	const isSpritePixelTransparent = paletteIndex === constants.COLOR_TRANSPARENT;
+	const isBackgroundPixelTransparent =
+		ppu.paletteIndexOf(finalX, finalY) === constants.COLOR_TRANSPARENT;
 
-			// sprite/background priority
-			const shouldDraw =
-				!isSpritePixelTransparent &&
-				(sprite.isInFrontOfBackground || isBackgroundPixelTransparent);
+	// sprite 0 hit
+	if (
+		sprite.id === 0 &&
+		!isSpritePixelTransparent &&
+		!isBackgroundPixelTransparent
+	)
+		ppu.registers.ppuStatus.sprite0Hit = 1;
 
-			// actual drawing
-			if (shouldDraw) {
-				const color = ppu.framePalette.getColorOf(paletteId, paletteIndex);
-				ppu.plot(finalX, finalY, color);
-			}
-		}
+	// sprite/background priority
+	const shouldDraw =
+		!isSpritePixelTransparent &&
+		(sprite.isInFrontOfBackground || isBackgroundPixelTransparent);
+
+	// actual drawing
+	if (shouldDraw) {
+		const color = ppu.framePalette.getColorOf(paletteId, paletteIndex);
+		ppu.plot(finalX, finalY, color);
 	}
 };
