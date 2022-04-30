@@ -34,7 +34,7 @@ const drawSprites = ({ ppu }, sprites) => {
 				ppu.registers.ppuCtrl.patternTableAddressIdFor8x8Sprites,
 				sprite.tileId,
 				sprite.flipX ? constants.TILE_LENGTH - 1 - insideX : insideX,
-				diffY
+				sprite.flipY ? constants.TILE_LENGTH - 1 - diffY : diffY
 			);
 
 			if (paletteIndex > 0) {
