@@ -9,12 +9,16 @@ export default ({ ppu }) => {
 	for (let i = 0; i < constants.PPU_RENDER_FREQUENCY; i++) {
 		let x = ppu.cycle + i;
 
-		const tileId = ppu.nameTable.getTileIdOf(nameTableId, x, y + scrollY);
+		const tileId = ppu.nameTable.getTileIdOf(
+			nameTableId,
+			x + scrollX,
+			y + scrollY
+		);
 		const paletteId = ppu.attributeTable.getPaletteIdOf(nameTableId, x, y);
 		const paletteIndex = ppu.patternTable.getPaletteIndexOf(
 			ppu.registers.ppuCtrl.patternTableAddressIdForBackground,
 			tileId,
-			x % constants.TILE_LENGTH,
+			(x + scrollX) % constants.TILE_LENGTH,
 			(y + scrollY) % constants.TILE_LENGTH
 		);
 
