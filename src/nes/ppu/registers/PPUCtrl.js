@@ -9,7 +9,7 @@ export default class PPUCtrl extends InMemoryRegister {
 	constructor(memory, address) {
 		super(memory, address);
 
-		this.addField("baseNameTableAddressId", 0, 2)
+		this.addField("baseNameTableId", 0, 2)
 			.addField("vramAddressIncrement32", 2)
 			.addField("patternTableAddressIdFor8x8Sprites", 3)
 			.addField("patternTableAddressIdForBackground", 4)
@@ -23,36 +23,10 @@ export default class PPUCtrl extends InMemoryRegister {
 		return 0;
 	}
 
-	/** Returns the address of the base Name table. */
-	get baseNameTableAddress() {
-		switch (this.baseNameTableAddressId) {
-			case 1:
-				return 0x2400;
-			case 2:
-				return 0x2800;
-			case 3:
-				return 0x2c00;
-			default:
-				return 0x2000;
-		}
-	}
-
 	/** Returns the `PPUAddr` increment per CPU read/write of `PPUData`. */
 	get vramAddressIncrement() {
 		return this.vramAddressIncrement32 === 1 ? 32 : 1;
 	}
-
-	/** Returns the Pattern table address for 8x8 sprites. */
-	get patternTableAddressFor8x8Sprites() {
-		return this.patternTableAddressIdFor8x8Sprites === 0 ? 0x0000 : 0x1000;
-	}
-
-	/** Returns the Pattern table address for background. */
-	get patternTableAddressForBackground() {
-		return this.patternTableAddressIdForBackground === 0 ? 0x0000 : 0x1000;
-	}
-
-	// TODO: REMOVE THESE PATTERNTABLE HELPERS?
 
 	/** Returns the sprite height. */
 	get spriteHeight() {
