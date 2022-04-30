@@ -1,4 +1,4 @@
-import { MemoryChunk } from ".";
+import MemoryChunk from "./MemoryChunk";
 import { Buffer } from "buffer";
 const should = require("chai").Should();
 
@@ -12,7 +12,7 @@ describe("memory", () => {
 		});
 
 		it("can create a chunk just passing the number of bytes", () => {
-			new MemoryChunk(5).getBytes().length.should.equal(5);
+			new MemoryChunk(5).bytes.length.should.equal(5);
 		});
 
 		it("can write and read bytes", () => {
@@ -30,10 +30,6 @@ describe("memory", () => {
 			chunk.readBytesAt(0, 2).should.equal(0xff20);
 			chunk.read2BytesAt(0).should.equal(0xff20);
 			chunk.read2BytesAt(2).should.equal(0xfe30);
-		});
-
-		it("can return the memory buffer", () => {
-			(chunk.getBytes() === buffer).should.ok;
 		});
 
 		it("can return the size of the buffer", () => {

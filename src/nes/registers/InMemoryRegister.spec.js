@@ -1,4 +1,4 @@
-import { InMemoryRegister } from ".";
+import InMemoryRegister from "./InMemoryRegister";
 import { WithCompositeMemory } from "../memory";
 const should = require("chai").Should();
 

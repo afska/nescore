@@ -1,4 +1,4 @@
-import { WithContext } from ".";
+import WithContext from "./WithContext";
 const should = require("chai").Should();
 
 describe("helpers", () => {

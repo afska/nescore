@@ -1,4 +1,4 @@
-import { Byte } from ".";
+import Byte from "./Byte";
 const should = require("chai").Should();
 
 describe("helpers", () => {

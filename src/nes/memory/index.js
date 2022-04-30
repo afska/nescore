@@ -1,8 +1,8 @@
-import WithMemory from "./WithMemory";
 import WithCompositeMemory from "./WithCompositeMemory";
 import MemoryChunk from "./MemoryChunk";
 import MemoryMirror from "./MemoryMirror";
 import MemoryPadding from "./MemoryPadding";
+import RewiredMemoryChunk from "./RewiredMemoryChunk";
 
 /**
  * A memory segment should have:
@@ -19,9 +19,9 @@ import MemoryPadding from "./MemoryPadding";
  */
 
 export {
-	WithMemory,
 	WithCompositeMemory,
 	MemoryChunk,
 	MemoryMirror,
-	MemoryPadding
+	MemoryPadding,
+	RewiredMemoryChunk
 };

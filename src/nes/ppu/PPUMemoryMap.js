@@ -2,7 +2,8 @@ import {
 	WithCompositeMemory,
 	MemoryChunk,
 	MemoryMirror,
-	MemoryPadding
+	MemoryPadding,
+	RewiredMemoryChunk
 } from "../memory";
 import { WithContext } from "../helpers";
 
@@ -18,7 +19,13 @@ export default class PPUMemoryMap {
 		const patternTables = new MemoryPadding(0x2000);
 		const nameTables = new MemoryChunk(0x1000);
 		const nameTablesMirror = new MemoryMirror(this, 0x0f00, 0x3000);
-		const paletteRam = new MemoryChunk(0x0020);
+		const paletteRam = new RewiredMemoryChunk(0x20, {
+			// ($3F10/$3F14/$3F18/$3F1C are mirrors of $3F00/$3F04/$3F08/$3F0C)
+			0x10: 0x00,
+			0x14: 0x04,
+			0x18: 0x08,
+			0x1c: 0x0c
+		});
 		const paletteRamMirror = new MemoryMirror(paletteRam, 0x00e0);
 
 		this.defineChunks([
