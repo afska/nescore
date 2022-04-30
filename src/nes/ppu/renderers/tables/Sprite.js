@@ -38,7 +38,7 @@ export default class Sprite {
 
 	/** Returns if the sprite is in front of background. */
 	get isInFrontOfBackground() {
-		return !!Byte.getBit(this.attributes, constants.SPRITE_ATTR_PRIORITY_BIT);
+		return !Byte.getBit(this.attributes, constants.SPRITE_ATTR_PRIORITY_BIT);
 	}
 
 	/** Returns if the sprite is horizontally flipped. */
