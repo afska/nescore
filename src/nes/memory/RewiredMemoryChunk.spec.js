@@ -19,14 +19,24 @@ describe("memory", () => {
 			rewiredChunk.readAt(0x02).should.equal(123);
 		});
 
-		it("translates read operations using mappings", () => {
+		it("translates read operations using mapping", () => {
 			rewiredChunk.writeAt(0x04, 123);
 			rewiredChunk.readAt(0x14).should.equal(123);
 		});
 
-		it("translates write operations using mappings", () => {
+		it("translates write operations using mapping", () => {
 			rewiredChunk.writeAt(0x18, 123);
 			rewiredChunk.readAt(0x08).should.equal(123);
+		});
+
+		it("can create a mapping from a range list", () => {
+			RewiredMemoryChunk.createMapping([
+				{
+					from: 10,
+					size: 5,
+					to: 1
+				}
+			]).should.eql({ 10: 1, 11: 2, 12: 3, 13: 4, 14: 5 });
 		});
 	});
 });

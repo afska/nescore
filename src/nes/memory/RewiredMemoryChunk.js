@@ -12,6 +12,22 @@ export default class RewiredMemoryChunk extends MemoryChunk {
 		this.mapping = mapping;
 	}
 
+	/**
+	 * Creates a mapping object from a `ranges` array.
+	 * For example:
+	 * The list [{ from: 10, size: 5, to: 1 }]...
+	 * ...creates the mapping { 10: 1, 11: 2, 12: 3, 13: 4, 14: 5 }
+	 */
+	static createMapping(ranges) {
+		const mapping = {};
+		for (let range of ranges) {
+			for (let i = 0; i < range.size; i++) {
+				mapping[range.from + i] = range.to + i;
+			}
+		}
+		return mapping;
+	}
+
 	/** Reads a byte from `address`, following mirroring rules. */
 	readAt(address) {
 		const mappedAddress = this.mapping[address];
