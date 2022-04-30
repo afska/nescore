@@ -36,9 +36,11 @@ const drawSprites = ({ ppu }, sprites) => {
 				insideX,
 				diffY
 			);
-			const color = ppu.framePalette.getColorOf(paletteId, paletteIndex);
 
-			ppu.plot(sprite.x + insideX, ppu.scanline, color);
+			if (paletteIndex > 0) {
+				const color = ppu.framePalette.getColorOf(paletteId, paletteIndex);
+				ppu.plot(sprite.x + insideX, ppu.scanline, color);
+			}
 		}
 	}
 };
