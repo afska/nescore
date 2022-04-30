@@ -4,17 +4,18 @@ import constants from "../../constants";
 export default ({ ppu }) => {
 	const y = ppu.scanline;
 	const nameTableId = ppu.registers.ppuCtrl.baseNameTableId;
+	const { x: scrollX, y: scrollY } = ppu.registers.ppuScroll;
 
 	for (let i = 0; i < constants.PPU_RENDER_FREQUENCY; i++) {
 		let x = ppu.cycle + i;
 
-		const tileId = ppu.nameTable.getTileIdOf(nameTableId, x, y);
+		const tileId = ppu.nameTable.getTileIdOf(nameTableId, x, y + scrollY);
 		const paletteId = ppu.attributeTable.getPaletteIdOf(nameTableId, x, y);
 		const paletteIndex = ppu.patternTable.getPaletteIndexOf(
 			ppu.registers.ppuCtrl.patternTableAddressIdForBackground,
 			tileId,
 			x % constants.TILE_LENGTH,
-			y % constants.TILE_LENGTH
+			(y + scrollY) % constants.TILE_LENGTH
 		);
 
 		const color =
