@@ -28,14 +28,12 @@ const drawSprites = ({ ppu }, sprites) => {
 	for (let sprite of sprites) {
 		const diffY = sprite.diffY(ppu.scanline);
 
-		for (let i = 0; i < constants.TILE_LENGTH; i++) {
-			const insideX = i;
-
+		for (let insideX = 0; insideX < constants.TILE_LENGTH; insideX++) {
 			const paletteId = sprite.paletteId;
 			const paletteIndex = ppu.patternTable.getPaletteIndexOf(
 				ppu.registers.ppuCtrl.patternTableAddressIdFor8x8Sprites,
 				sprite.tileId,
-				insideX,
+				sprite.flipX ? constants.TILE_LENGTH - 1 - insideX : insideX,
 				diffY
 			);
 
