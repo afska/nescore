@@ -12,16 +12,16 @@ export default class PPUAddr extends InMemoryRegister {
 		this.latch = false;
 	}
 
+	/** Reads nothing (write-only address). */
+	readAt() {
+		return 0;
+	}
+
 	/** Alternately writes the MSB and the LSB of the address. */
 	writeAt(__, byte) {
 		this.value = this.latch
 			? Byte.to16Bit(Byte.highPartOf(this.value), byte)
 			: Byte.to16Bit(byte, Byte.lowPartOf(this.value));
 		this.latch = !this.latch;
-	}
-
-	/** Reads nothing (write-only address). */
-	readAt() {
-		return 0;
 	}
 }
