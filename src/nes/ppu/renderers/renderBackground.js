@@ -3,23 +3,38 @@ import constants from "../../constants";
 /** Renders the background from the Name tables. */
 export default ({ ppu }) => {
 	const y = ppu.scanline;
-	const nameTableId = ppu.registers.ppuCtrl.baseNameTableId;
+	const baseNameTableId = ppu.registers.ppuCtrl.baseNameTableId;
 	const { x: scrollX, y: scrollY } = ppu.registers.ppuScroll;
 
 	for (let i = 0; i < constants.PPU_RENDER_FREQUENCY; i++) {
-		let x = ppu.cycle + i;
+		const x = ppu.cycle + i;
+
+		const scrolledX = x + scrollX;
+		const scrolledY = y + scrollY;
+
+		const nameTableId =
+			baseNameTableId +
+			Math.floor(scrolledX / constants.SCREEN_WIDTH) +
+			Math.floor(scrolledY / constants.SCREEN_HEIGHT) *
+				constants.NAME_TABLE_MATRIX_LENGTH;
+		const nameTableX = scrolledX % constants.SCREEN_WIDTH;
+		const nameTableY = scrolledY % constants.SCREEN_HEIGHT;
 
 		const tileId = ppu.nameTable.getTileIdOf(
 			nameTableId,
-			x + scrollX,
-			y + scrollY
+			nameTableX,
+			nameTableY
 		);
-		const paletteId = ppu.attributeTable.getPaletteIdOf(nameTableId, x, y);
+		const paletteId = ppu.attributeTable.getPaletteIdOf(
+			nameTableId,
+			nameTableX,
+			nameTableY
+		);
 		const paletteIndex = ppu.patternTable.getPaletteIndexOf(
 			ppu.registers.ppuCtrl.patternTableAddressIdForBackground,
 			tileId,
-			(x + scrollX) % constants.TILE_LENGTH,
-			(y + scrollY) % constants.TILE_LENGTH
+			nameTableX % constants.TILE_LENGTH,
+			nameTableY % constants.TILE_LENGTH
 		);
 
 		const color =
