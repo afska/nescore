@@ -26,9 +26,11 @@ export default class Emulator extends Component {
 		if (this.frameTimer) this.frameTimer.stop();
 	}
 
-	frame() {
+	frame(debugStep = false) {
 		try {
-			gamepad.updateInput(this.nes);
+			if (!debugStep) gamepad.updateInput(this);
+			if (this.isDebugging && !debugStep) return;
+
 			const frameBuffer = this.nes.frame();
 			this.screen.setBuffer(frameBuffer);
 		} catch (e) {
