@@ -24,12 +24,21 @@ export default class Cartridge {
 		return this._getBytes(this._programOffset, this._programSize);
 	}
 
-	/** Returns the CHR ROM, which contains static tilesets, or null. */
+	/**
+	 * Returns the CHR ROM buffer, which contains static tilesets, or a number.
+	 * A number indicates a CHR RAM size that should be used instead.
+	 */
 	get chrRom() {
 		const offset = this._programOffset + this._programSize;
 		const size = this.header.chrRomPages * constants.CHR_ROM_PAGE_SIZE;
 
-		return size > 0 ? this._getBytes(offset, size) : null;
+		return size > 0
+			? this._getBytes(offset, size)
+			: constants.CHR_RAM_PAGES * constants.CHR_ROM_PAGE_SIZE;
+	}
+
+	get usesChrRam() {
+		return this.header.chrRomPages === 0;
 	}
 
 	/** Returns the header data. */

@@ -52,6 +52,15 @@ export default class NROM extends Mapper {
 			: this.context.ppu.memory.readAt(address);
 	}
 
+	/** Maps a PPU write operation. */
+	ppuWriteAt(address, byte) {
+		return address >= 0x0000 &&
+			address <= 0x1fff &&
+			this.context.cartridge.usesChrRam
+			? this._chrRom.writeAt(address, byte)
+			: this.context.ppu.memory.writeAt(address, byte);
+	}
+
 	/** When the current context is unloaded. */
 	onUnload() {
 		this.defineChunks(null);
