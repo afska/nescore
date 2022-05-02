@@ -30,17 +30,11 @@ export default class RewiredMemoryChunk extends MemoryChunk {
 
 	/** Reads a byte from `address`, following mirroring rules. */
 	readAt(address) {
-		const mappedAddress = this.mapping[address];
-		address = mappedAddress != null ? mappedAddress : address;
-
-		return super.readAt(address);
+		return super.readAt(this.mapping[address] ?? address);
 	}
 
 	/** Writes a `byte` to `address`, following mirroring rules. */
 	writeAt(address, byte) {
-		const mappedAddress = this.mapping[address];
-		address = mappedAddress != null ? mappedAddress : address;
-
-		super.writeAt(address, byte);
+		super.writeAt(this.mapping[address] ?? address, byte);
 	}
 }
