@@ -1,4 +1,5 @@
 import { InMemoryRegister } from "../../registers";
+import { Byte } from "../../helpers";
 
 /**
  * OAM Data Port (<> read/write)
@@ -24,6 +25,7 @@ export default class OAMData extends InMemoryRegister {
 	}
 
 	_incrementAddress() {
-		this.context.ppu.registers.oamAddr.value++;
+		const { oamAddr } = this.context.ppu.registers;
+		oamAddr.value = Byte.force8Bit(oamAddr.value + 1);
 	}
 }

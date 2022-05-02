@@ -1,5 +1,6 @@
 import { InMemoryRegister } from "../../registers";
 import constants from "../../constants";
+import { Byte } from "../../helpers";
 
 /**
  * PPU Data Port (<> read/write)
@@ -17,7 +18,7 @@ export default class PPUData extends InMemoryRegister {
 	readAt() {
 		let data = this.buffer;
 
-		const ppuAddress = this.context.ppu.registers.ppuAddr.value;
+		const ppuAddress = this.context.ppu.registers.ppuAddr.address;
 		this.buffer = this.context.memoryBus.ppu.readAt(ppuAddress);
 
 		// (if the PPUAddr is inside Palette RAM area, skip the buffer)
@@ -32,13 +33,15 @@ export default class PPUData extends InMemoryRegister {
 
 	/** Writes a `byte` to PPU address space and increments `PPUAddr`. */
 	writeAt(__, byte) {
-		const ppuAddress = this.context.ppu.registers.ppuAddr.value;
+		const ppuAddress = this.context.ppu.registers.ppuAddr.address;
 		this.context.memoryBus.ppu.writeAt(ppuAddress, byte);
 		this._incrementAddress();
 	}
 
 	_incrementAddress() {
 		const { registers } = this.context.ppu;
-		registers.ppuAddr.value += registers.ppuCtrl.vramAddressIncrement;
+		registers.ppuAddr.address = Byte.force16Bit(
+			registers.ppuAddr.address + registers.ppuCtrl.vramAddressIncrement
+		);
 	}
 }

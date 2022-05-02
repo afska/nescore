@@ -9,6 +9,7 @@ import { Byte } from "../../helpers";
 export default class PPUAddr extends InMemoryRegister {
 	/** When a context is loaded. */
 	onLoad() {
+		this.address = 0;
 		this.latch = false;
 	}
 
@@ -19,9 +20,9 @@ export default class PPUAddr extends InMemoryRegister {
 
 	/** Alternately writes the MSB and the LSB of the address. */
 	writeAt(__, byte) {
-		this.value = this.latch
-			? Byte.to16Bit(Byte.highPartOf(this.value), byte)
-			: Byte.to16Bit(byte, Byte.lowPartOf(this.value));
+		this.address = this.latch
+			? Byte.to16Bit(Byte.highPartOf(this.address), byte)
+			: Byte.to16Bit(byte, Byte.lowPartOf(this.address));
 		this.latch = !this.latch;
 	}
 }
