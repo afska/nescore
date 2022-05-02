@@ -1,13 +1,16 @@
 const FPS = 60.098;
+const SECOND = 1000;
 
 export default class FrameTimer {
 	constructor(onFrame, fps = FPS) {
 		this.onFrame = onFrame;
 
 		this._fps = fps;
-		this._interval = 1000 / fps;
+		this._interval = SECOND / fps;
 		this._lastTime = Date.now();
 		this._startTime = this._lastTime;
+		this._lastSecondTime = Date.now();
+		this._lastSecondFrames = 0;
 		this._isRunning = false;
 	}
 
@@ -31,6 +34,17 @@ export default class FrameTimer {
 		if (elapsedTime > this._interval) {
 			this._lastTime = now - (elapsedTime % this._interval);
 			this.onFrame();
+			this._lastSecondFrames++;
+		}
+
+		const elapsedTimeSinceLastSecond = now - this._lastSecondTime;
+		if (elapsedTimeSinceLastSecond > SECOND) {
+			document.querySelector("#fps").textContent = `(fps: ${
+				this._lastSecondFrames
+			})`;
+
+			this._lastSecondTime = Date.now();
+			this._lastSecondFrames = 0;
 		}
 	};
 }

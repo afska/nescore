@@ -35,6 +35,8 @@ export default class App extends Component {
 						<TVNoise />
 					)}
 				</div>
+
+				<h6 id="fps">(fps: 0)</h6>
 			</div>
 		);
 	}
