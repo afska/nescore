@@ -1,5 +1,4 @@
 import WithLittleEndian from "./WithLittleEndian";
-import { Buffer } from "buffer";
 import _ from "lodash";
 
 /**
@@ -8,7 +7,7 @@ import _ from "lodash";
 export default class MemoryChunk {
 	constructor(bytes) {
 		WithLittleEndian.apply(this);
-		if (_.isFinite(bytes)) bytes = Buffer.alloc(bytes);
+		if (_.isFinite(bytes)) bytes = new Uint8Array(bytes);
 
 		this.bytes = bytes;
 		this.memorySize = bytes.length;
@@ -16,20 +15,18 @@ export default class MemoryChunk {
 
 	/** Reads a byte from `address`. */
 	readAt(address) {
-		try {
-			return this.bytes.readUInt8(address);
-		} catch (e) {
-			this._throwInvalidAddressError(address);
-		}
+		if (address < 0 || address > this.bytes.length)
+			return this._throwInvalidAddressError(address);
+
+		return this.bytes[address];
 	}
 
 	/** Writes a `byte` to `address`. */
 	writeAt(address, byte) {
-		try {
-			this.bytes.writeUInt8(byte, address);
-		} catch (e) {
-			this._throwInvalidAddressError(address);
-		}
+		if (address < 0 || address > this.bytes.length)
+			return this._throwInvalidAddressError(address);
+
+		this.bytes[address] = byte;
 	}
 
 	_throwInvalidAddressError(address) {

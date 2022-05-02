@@ -45,12 +45,12 @@ export default class Cartridge {
 	get header() {
 		if (this.__header) return this.__header;
 
-		const flags6 = this.bytes.readUInt8(6);
-		const flags7 = this.bytes.readUInt8(7);
+		const flags6 = this.bytes[6];
+		const flags7 = this.bytes[7];
 
 		return (this.__header = {
-			prgRomPages: this.bytes.readUInt8(4),
-			chrRomPages: this.bytes.readUInt8(5),
+			prgRomPages: this.bytes[4],
+			chrRomPages: this.bytes[5],
 			verticalNameTableMirroring: !!Byte.getBit(flags6, 0),
 			hasTrainerBeforeProgram: !!Byte.getBit(flags6, 2),
 			mapperId: Byte.setSubNumber(

@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { Buffer } from "buffer";
 import Screen from "./Screen";
 import FrameTimer from "../emulator/FrameTimer";
 import NES from "../../nes";
@@ -45,7 +44,7 @@ export default class Emulator extends Component {
 	_initialize(screen) {
 		const { rom /*, onLog*/ } = this.props;
 		if (!rom) return;
-		const bytes = Buffer.from(rom);
+		const bytes = new Uint8Array(rom);
 
 		this.stop();
 

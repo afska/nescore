@@ -1,5 +1,4 @@
 import MemoryChunk from "./MemoryChunk";
-import { Buffer } from "buffer";
 const should = require("chai").Should();
 
 describe("memory", () => {
@@ -7,7 +6,7 @@ describe("memory", () => {
 		let buffer, chunk;
 
 		beforeEach(() => {
-			buffer = Buffer.alloc(5);
+			buffer = new Uint8Array(5);
 			chunk = new MemoryChunk(buffer, 29);
 		});
 

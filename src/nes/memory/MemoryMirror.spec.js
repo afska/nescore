@@ -16,11 +16,18 @@ describe("memory", () => {
 			mirror.writeAt(12, 121);
 			mirror.writeAt(3, 33);
 			mirror.writeAt(4, 45);
-			chunk.bytes.toString().should.equal("hey!-");
+			Array.from(chunk.bytes)
+				.map((c) => String.fromCharCode(c))
+				.join("")
+				.should.equal("hey!-");
 		});
 
 		it("can mirror read operations", () => {
-			chunk.bytes.write("hey!-");
+			chunk.bytes[0] = 104;
+			chunk.bytes[1] = 101;
+			chunk.bytes[2] = 121;
+			chunk.bytes[3] = 33;
+			chunk.bytes[4] = 45;
 			[5, 6, 12, 3, 4]
 				.map((i) => mirror.readAt(i))
 				.map((c) => String.fromCharCode(c))
@@ -46,7 +53,11 @@ describe("memory", () => {
 
 		it("supports the startAt and mirroredSize parameters", () => {
 			const mirror = new MemoryMirror(chunk, 13, 1, 3);
-			chunk.bytes.write("BYTES");
+			chunk.bytes[0] = "B".charCodeAt(0);
+			chunk.bytes[1] = "Y".charCodeAt(0);
+			chunk.bytes[2] = "T".charCodeAt(0);
+			chunk.bytes[3] = "E".charCodeAt(0);
+			chunk.bytes[4] = "S".charCodeAt(0);
 			//                       012
 			//                       345 <<
 			mirror.readAt(5).should.equal("E".charCodeAt(0));
