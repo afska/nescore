@@ -21,7 +21,7 @@ export default class PPUStatus extends InMemoryRegister {
 	}
 
 	/** Reads the status flags, with some side effects. */
-	readAt(address) {
+	readAt() {
 		const value = this.value;
 
 		// this has two side effects:
@@ -30,6 +30,8 @@ export default class PPUStatus extends InMemoryRegister {
 			this.isInVBlankInterval = 0;
 
 			// - it resets the `PPUAddr`'s latch
+			// Loopy $2002 read
+			// w:                  <- 0
 			this.context.ppu.registers.ppuAddr.latch = false;
 		}
 

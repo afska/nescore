@@ -32,8 +32,6 @@ export default class InMemoryRegister {
 
 	/** Sets the actual value. */
 	writeAt(__, byte) {
-		byte = Byte.force8Bit(byte);
-
-		this.value = byte;
+		this.value = Byte.force8Bit(byte);
 	}
 }
