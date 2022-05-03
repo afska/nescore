@@ -7,7 +7,13 @@ import {
 } from "../../memory";
 import constants from "../../constants";
 
-/** The simplest mapper (also called "mapper 0"). */
+/**
+ * The simplest mapper (also called "mapper 0").
+ * It can have either one or two PRG-ROM of 16kb, that are mapped
+ * at ranges $8000-$BFFF and $C000-$FFFF of the CPU memory.
+ * It also has CHR-ROM which contains the tile and sprite data.
+ * This CHR-ROM is mapped to the PPU memory at addresses 0x0-0x2000.
+ * */
 export default class NROM extends Mapper {
 	static get id() {
 		return 0;

@@ -1,6 +1,9 @@
 import { WithContext } from "../../helpers";
 
-/** An abstract class that represents a generic mapper. */
+/**
+ * An abstract class that represents a generic mapper.
+ * It intercepts all CPU/PPU memory read/write operations.
+ * */
 export default class Mapper {
 	static get id() {
 		throw new Error("not_implemented");
