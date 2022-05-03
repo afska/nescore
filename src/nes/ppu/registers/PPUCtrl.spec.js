@@ -26,20 +26,6 @@ describe("CPU/PPU registers interaction", () => {
 			register.vramAddressIncrement.should.equal(32);
 		});
 
-		it("ignores changes on baseNameTableId when rendering is disabled", () => {
-			ppu.registers.ppuMask.showBackground = 1;
-			ppu.registers.ppuMask.showSprites = 0;
-
-			memory.writeAt(ADDRESS, 0b00000001);
-			register.baseNameTableId.should.equal(1);
-
-			ppu.registers.ppuMask.showBackground = 0;
-			ppu.registers.ppuMask.showSprites = 0;
-
-			memory.writeAt(ADDRESS, 0b00000000);
-			register.baseNameTableId.should.equal(1);
-		});
-
 		it("provides the sprite height", () => {
 			memory.writeAt(ADDRESS, 0b00000000);
 			register.spriteHeight.should.equal(8);

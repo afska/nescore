@@ -1,5 +1,4 @@
 import { InMemoryRegister } from "../../registers";
-import { Byte } from "../../helpers";
 
 /**
  * PPU Control Register (> write)
@@ -22,19 +21,6 @@ export default class PPUCtrl extends InMemoryRegister {
 	/** Reads nothing (write-only address). */
 	readAt() {
 		return 0;
-	}
-
-	/** Sets the actual value, ignoring changes on the first two bits if rendering is disabled. */
-	writeAt(__, byte) {
-		const baseNameTableId = this.baseNameTableId;
-
-		this.value = Byte.force8Bit(byte);
-
-		if (
-			this.baseNameTableId !== baseNameTableId &&
-			!this.context.ppu.registers.ppuMask.isRenderingEnabled
-		)
-			this.baseNameTableId = baseNameTableId;
 	}
 
 	/** Returns the `PPUAddr` increment per CPU read/write of `PPUData`. */
