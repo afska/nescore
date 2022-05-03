@@ -31,12 +31,6 @@ export default class FrameTimer {
 		const now = Date.now();
 		const elapsedTime = now - this._lastTime;
 
-		if (elapsedTime > this._interval) {
-			this._lastTime = now - (elapsedTime % this._interval);
-			this.onFrame();
-			this._lastSecondFrames++;
-		}
-
 		const elapsedTimeSinceLastSecond = now - this._lastSecondTime;
 		if (elapsedTimeSinceLastSecond > SECOND) {
 			document.querySelector("#fps").textContent = `(fps: ${
@@ -45,6 +39,12 @@ export default class FrameTimer {
 
 			this._lastSecondTime = Date.now();
 			this._lastSecondFrames = 0;
+		}
+
+		if (elapsedTime > this._interval) {
+			this._lastTime = now - (elapsedTime % this._interval);
+			this.onFrame();
+			this._lastSecondFrames++;
 		}
 	};
 }
