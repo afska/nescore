@@ -9,7 +9,7 @@ export default ({ ppu }) => {
 	const scrolledY =
 		y + tAddress.coarseY * constants.TILE_LENGTH + tAddress.fineY;
 
-	const baseNameTableId = ppu.registers.ppuCtrl.baseNameTableId;
+	const baseNameTableId = tAddress.baseNameTableId;
 	const nameTableId =
 		baseNameTableId +
 		Math.floor(scrolledX / constants.SCREEN_WIDTH) +
