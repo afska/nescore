@@ -17,6 +17,7 @@ export default class PPUMemoryMap {
 	onLoad({ cartridge }) {
 		const patternTables = new MemoryPadding(0x2000);
 		const nameTables = new RewiredMemoryChunk(
+			// (the system only has memory for two Name tables, the other two are mirrored)
 			0x1000,
 			cartridge.header.verticalNameTableMirroring
 				? VERTICAL_MIRROR_MAPPING
