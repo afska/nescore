@@ -23,4 +23,9 @@ export default class PPUMask extends InMemoryRegister {
 	readAt() {
 		return 0;
 	}
+
+	/** Returns if rendering is enabled (showing background or sprites). */
+	get isRenderingEnabled() {
+		return !!this.showBackground || !!this.showSprites;
+	}
 }
