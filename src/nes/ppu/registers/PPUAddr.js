@@ -31,9 +31,9 @@ export default class PPUAddr extends InMemoryRegister {
 	 * This also affects the scrolling metadata.
 	 */
 	writeAt(__, byte) {
-		this.address = this.latch
-			? Byte.to16Bit(Byte.highPartOf(this.address), byte)
-			: Byte.to16Bit(byte, Byte.lowPartOf(this.address));
+		this.address = !this.latch
+			? Byte.to16Bit(byte, Byte.lowPartOf(this.address))
+			: Byte.to16Bit(Byte.highPartOf(this.address), byte);
 
 		this._updateScrollingMetadata(byte);
 
@@ -48,15 +48,7 @@ export default class PPUAddr extends InMemoryRegister {
 		let coarseY = Math.floor(ppuScroll.y / constants.TILE_LENGTH);
 		let fineY = ppuScroll.y % constants.TILE_LENGTH;
 
-		if (this.latch) {
-			// Loopy $2006 second write (w is 1)
-			// t: ....... ABCDEFGH <- d: ABCDEFGH
-			// v: <...all bits...> <- t: <...all bits...>
-			// w:                  <- 0
-
-			coarseX = Byte.getSubNumber(byte, 0, 5); // DEFGH
-			coarseY = Byte.setSubNumber(coarseY, 0, 3, Byte.getSubNumber(byte, 5, 3)); // ABC
-		} else {
+		if (!this.latch) {
 			// Loopy $2006 first write (w is 0)
 			// t: .CDEFGH ........ <- d: ..CDEFGH
 			//        <unused>     <- d: AB......
@@ -68,6 +60,14 @@ export default class PPUAddr extends InMemoryRegister {
 			fineY = Byte.getSubNumber(byte, 4, 2);
 
 			ppuCtrl.baseNameTableId = baseNameTableId;
+		} else {
+			// Loopy $2006 second write (w is 1)
+			// t: ....... ABCDEFGH <- d: ABCDEFGH
+			// v: <...all bits...> <- t: <...all bits...>
+			// w:                  <- 0
+
+			coarseX = Byte.getSubNumber(byte, 0, 5); // DEFGH
+			coarseY = Byte.setSubNumber(coarseY, 0, 3, Byte.getSubNumber(byte, 5, 3)); // ABC
 		}
 
 		ppuScroll.x = coarseX * constants.TILE_LENGTH + fineX;

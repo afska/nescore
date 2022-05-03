@@ -23,8 +23,8 @@ export default class PPUScroll extends InMemoryRegister {
 	writeAt(__, byte) {
 		const { ppuAddr } = this.context.ppu.registers;
 
-		if (ppuAddr.latch) this.y = byte;
-		else this.x = byte;
+		if (!ppuAddr.latch) this.x = byte;
+		else this.y = byte;
 
 		ppuAddr.latch = !ppuAddr.latch;
 	}
