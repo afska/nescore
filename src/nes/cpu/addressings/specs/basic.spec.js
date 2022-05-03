@@ -13,8 +13,8 @@ describe("addressings", () => {
 	});
 
 	it("getValue method", () => {
-		memory.writeAt(0xfe9d, 123);
-		const addressingMock = { getAddress: () => 0xfe9d, getValue };
+		memory.writeAt(0x0765, 123);
+		const addressingMock = { getAddress: () => 0x0765, getValue };
 		addressingMock.getValue(context).should.equal(123);
 	});
 

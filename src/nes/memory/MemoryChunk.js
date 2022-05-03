@@ -11,6 +11,7 @@ export default class MemoryChunk {
 
 		this.bytes = bytes;
 		this.memorySize = bytes.length;
+		this.readOnly = false;
 	}
 
 	/** Reads a byte from `address`. */
@@ -23,6 +24,7 @@ export default class MemoryChunk {
 	/** Writes a `byte` to `address`. */
 	writeAt(address, byte) {
 		this._assertValidAddress(address);
+		if (this.readOnly) return;
 
 		this.bytes[address] = byte;
 	}

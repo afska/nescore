@@ -12,7 +12,7 @@ import constants from "../../constants";
  * It can have either one or two PRG-ROM of 16kb, that are mapped
  * at ranges $8000-$BFFF and $C000-$FFFF of the CPU memory.
  * It also has CHR-ROM which contains the tile and sprite data.
- * This CHR-ROM is mapped to the PPU memory at addresses 0x0-0x2000.
+ * This CHR-ROM is mapped to the PPU memory at addresses $0-$2000.
  * */
 export default class NROM extends Mapper {
 	static get id() {
@@ -49,22 +49,26 @@ export default class NROM extends Mapper {
 		]);
 
 		this._chrRom = new MemoryChunk(cartridge.chrRom);
+
+		prgRomFirstPage.readOnly = true;
+		prgRomLastPage.readOnly = true;
+		this._chrRom.readOnly = !this.context.cartridge.usesChrRam;
 	}
 
 	/** Maps a PPU read operation. */
 	ppuReadAt(address) {
-		return address >= 0x0000 && address <= 0x1fff
-			? this._chrRom.readAt(address)
-			: this.context.ppu.memory.readAt(address);
+		if (address >= 0x0000 && address < 0x2000)
+			return this._chrRom.readAt(address);
+
+		return this.context.ppu.memory.readAt(address);
 	}
 
 	/** Maps a PPU write operation. */
 	ppuWriteAt(address, byte) {
-		return address >= 0x0000 &&
-			address <= 0x1fff &&
-			this.context.cartridge.usesChrRam
-			? this._chrRom.writeAt(address, byte)
-			: this.context.ppu.memory.writeAt(address, byte);
+		if (address >= 0x0000 && address < 0x2000)
+			return this._chrRom.writeAt(address, byte);
+
+		this.context.ppu.memory.writeAt(address, byte);
 	}
 
 	/** When the current context is unloaded. */
