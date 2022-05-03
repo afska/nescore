@@ -18,7 +18,7 @@ class CPUBus extends Bus {
 
 	/** Writes a `byte` to `address`, using the mapper. */
 	writeAt(address, byte) {
-		return this.mapper.cpuWriteAt(address, byte);
+		this.mapper.cpuWriteAt(address, byte);
 	}
 }
 
@@ -31,7 +31,7 @@ class PPUBus extends Bus {
 
 	/** Writes a `byte` to `address`, using the mapper. */
 	writeAt(address, byte) {
-		return this.mapper.ppuWriteAt(address, byte);
+		this.mapper.ppuWriteAt(address, byte);
 	}
 }
 

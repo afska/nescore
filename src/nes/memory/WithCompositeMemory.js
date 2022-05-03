@@ -46,7 +46,7 @@ export default {
 	writeAt(address, byte) {
 		const chunk = this.lut[address] || this._throwUnreachable(address);
 		const offset = this._toRelativeAddress(address, chunk);
-		return chunk.writeAt(offset, byte);
+		chunk.writeAt(offset, byte);
 	},
 
 	_throwUnreachable(address) {
