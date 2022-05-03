@@ -15,18 +15,21 @@ export default class MemoryChunk {
 
 	/** Reads a byte from `address`. */
 	readAt(address) {
-		if (address < 0 || address > this.memorySize)
-			this._throwInvalidAddressError(address);
+		this._assertValidAddress(address);
 
 		return this.bytes[address];
 	}
 
 	/** Writes a `byte` to `address`. */
 	writeAt(address, byte) {
-		if (address < 0 || address > this.memorySize)
-			this._throwInvalidAddressError(address);
+		this._assertValidAddress(address);
 
 		this.bytes[address] = byte;
+	}
+
+	_assertValidAddress(address) {
+		if (address < 0 || address > this.memorySize)
+			this._throwInvalidAddressError(address);
 	}
 
 	_throwInvalidAddressError(address) {
