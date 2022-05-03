@@ -32,14 +32,8 @@ export default class PPUScroll extends InMemoryRegister {
 			// t: FGH..AB CDE..... <- d: ABCDEFGH
 			// w:                  <- 0
 
-			let number = this.tAddress.toNumber();
-			let high = Byte.highPartOf(number);
-			let low = Byte.lowPartOf(number);
-			low = Byte.setSubNumber(low, 5, 3, Byte.getSubNumber(byte, 3, 3));
-			high = Byte.setSubNumber(high, 0, 2, Byte.getSubNumber(byte, 6, 2));
-			high = Byte.setSubNumber(high, 4, 3, Byte.getSubNumber(byte, 0, 3));
-			number = Byte.to16Bit(high, low);
-			this.tAddress.fromNumber(number);
+			this.tAddress.coarseY = Byte.getSubNumber(byte, 3, 5);
+			this.tAddress.fineY = Byte.getSubNumber(byte, 0, 3);
 		} else {
 			// Loopy $2005 first write (w is 0)
 			// t: ....... ...ABCDE <- d: ABCDE...

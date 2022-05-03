@@ -4,10 +4,10 @@ import constants from "../../constants";
 export default ({ ppu }) => {
 	const x = ppu.cycle;
 	const y = ppu.scanline;
-	const { vAddress, fineX } = ppu.registers.ppuScroll;
-	const scrolledX = x + vAddress.coarseX * constants.TILE_LENGTH + fineX;
+	const { tAddress, fineX } = ppu.registers.ppuScroll;
+	const scrolledX = x + tAddress.coarseX * constants.TILE_LENGTH + fineX;
 	const scrolledY =
-		y + vAddress.coarseY * constants.TILE_LENGTH + vAddress.fineY;
+		y + tAddress.coarseY * constants.TILE_LENGTH + tAddress.fineY;
 
 	const baseNameTableId = ppu.registers.ppuCtrl.baseNameTableId;
 	const nameTableId =
