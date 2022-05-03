@@ -8,7 +8,6 @@ export default (context) => {
 
 	if (
 		ppu.cycle < constants.SCREEN_WIDTH &&
-		ppu.cycle % constants.PPU_RENDER_FREQUENCY === 0 &&
 		!!ppu.registers.ppuMask.showBackground
 	)
 		renderBackground(context);
