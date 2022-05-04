@@ -42,11 +42,6 @@ export default class PPUMemoryMap {
 			paletteRamMirror //  $3F20-$3FFF    $00E0    Mirrors of $3F00-$3F1F
 		]);
 	}
-
-	/** When the current context is unloaded. */
-	onUnload() {
-		this.defineChunks(null);
-	}
 }
 
 const HORIZONTAL_MIRROR_MAPPING = RewiredMemoryChunk.createMapping([

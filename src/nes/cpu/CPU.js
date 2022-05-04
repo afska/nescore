@@ -84,13 +84,6 @@ export default class CPU {
 		this.stack.push(this.flags.toByte() | (withB2Flag && 0b00010000));
 	}
 
-	/** When the current context is unloaded. */
-	onUnload() {
-		this._reset();
-		this.stack.unloadContext();
-		this.memory.unloadContext();
-	}
-
 	_reset() {
 		this.pc.reset();
 		this.sp.reset();

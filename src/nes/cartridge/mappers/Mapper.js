@@ -36,11 +36,6 @@ export default class Mapper {
 		this.context.ppu.memory.writeAt(address, byte);
 	}
 
-	/** When the current context is unloaded. */
-	onUnload() {
-		this.defineChunks(null);
-	}
-
 	_getProgramBytes(page) {
 		const { cartridge } = this.context;
 

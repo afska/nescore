@@ -107,11 +107,4 @@ export default class NES {
 		this.ppu.loadContext(context);
 		this.cpu.loadContext(context);
 	}
-
-	/** When the current context is unloaded. */
-	onUnload() {
-		this.cpu.unloadContext();
-		this.ppu.unloadContext();
-		this.context.mapper.unloadContext();
-	}
 }

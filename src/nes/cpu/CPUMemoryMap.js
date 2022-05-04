@@ -49,9 +49,4 @@ export default class CPUMemoryMap {
 		if (address.value != null) address.value = byte;
 		else WithCompositeMemory.writeAt.call(this, address, byte);
 	}
-
-	/** When the current context is unloaded. */
-	onUnload() {
-		this.defineChunks(null);
-	}
 }

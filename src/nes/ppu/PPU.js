@@ -75,21 +75,6 @@ export default class PPU {
 		return this.paletteIndexes[y * constants.SCREEN_WIDTH + x];
 	}
 
-	/** When the current context is unloaded. */
-	onUnload() {
-		this._reset();
-
-		this.memory.unloadContext();
-		this.oamRam = null;
-		this.registers = null;
-
-		this.nameTable.unloadContext();
-		this.attributeTable.unloadContext();
-		this.patternTable.unloadContext();
-		this.framePalette.unloadContext();
-		this.oam.unloadContext();
-	}
-
 	_incrementCounters() {
 		this.cycle++;
 		if (this.cycle > constants.PPU_LAST_CYCLE) {
