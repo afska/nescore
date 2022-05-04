@@ -26,13 +26,14 @@ export default class OAM {
 		const is8x16 = registers.ppuCtrl.isIn8x16Mode;
 
 		const address = id * constants.SPRITE_SIZE;
-		const y = oamRam.readAt(address + constants.SPRITE_BYTE_Y);
+		const yByte = oamRam.readAt(address + constants.SPRITE_BYTE_Y);
 		const tileIdByte = oamRam.readAt(address + constants.SPRITE_BYTE_TILE_ID);
 		const attributes = oamRam.readAt(
 			address + constants.SPRITE_BYTE_ATTRIBUTES
 		);
 		const x = oamRam.readAt(address + constants.SPRITE_BYTE_X);
 
+		const y = yByte + 1; // (sprite data is delayed by one scanline)
 		const patternTableId = is8x16
 			? tileIdByte & constants.SPRITE_8x16_PATTERN_TABLE_MASK
 			: registers.ppuCtrl.patternTableAddressIdFor8x8Sprites;
