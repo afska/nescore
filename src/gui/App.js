@@ -28,7 +28,6 @@ export default class App extends Component {
 						<Emulator
 							rom={rom}
 							onError={this._onError}
-							onLog={this._onLog}
 							ref={(ref) => (this.emulator = ref)}
 						/>
 					) : (
@@ -72,10 +71,6 @@ export default class App extends Component {
 		};
 
 		reader.readAsArrayBuffer(file);
-	};
-
-	_onLog = (log) => {
-		// console.log(log);
 	};
 
 	_onError = (error) => {

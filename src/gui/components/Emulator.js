@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import Screen from "./Screen";
 import FrameTimer from "../emulator/FrameTimer";
 import NES from "../../nes";
-/*import NESTestLogger from "../../nes/loggers/NESTestLogger";*/
 import gamepad from "../emulator/gamepad";
 import debug from "../emulator/debug";
 
@@ -42,19 +41,16 @@ export default class Emulator extends Component {
 	}
 
 	_initialize(screen) {
-		const { rom /*, onLog*/ } = this.props;
+		const { rom } = this.props;
 		if (!rom) return;
 		const bytes = new Uint8Array(rom);
 
 		this.stop();
 
-		// TODO: Logger decreases performance and crashes SMB. Fix.
-		/*const logger = new NESTestLogger();*/
 		this.screen = screen;
-		this.nes = new NES(/*logger*/);
+		this.nes = new NES();
 		this.frameTimer = new FrameTimer(() => {
 			this.frame();
-			// onLog(logger.lastLog);
 		});
 
 		try {
