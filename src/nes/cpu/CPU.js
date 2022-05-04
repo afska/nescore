@@ -40,8 +40,6 @@ export default class CPU {
 
 	/** Executes the next operation. */
 	step() {
-		this.requireContext();
-
 		const pc = this.pc.value;
 		const operation = this._readOperation();
 		const argument = this._readArgument(operation);

@@ -52,8 +52,6 @@ export default class PPU {
 
 	/** Executes the next operation. */
 	step() {
-		this.requireContext();
-
 		const scanlineType = getScanlineType(this.scanline);
 		const interrupt = renderers[scanlineType](this.context);
 

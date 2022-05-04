@@ -15,7 +15,7 @@ export default class Sprite {
 
 	/**
 	 * Returns the tile id for an `insideY` position.
-	 * The bottom part of 8x16 sprites uses the next tile index.
+	 * The bottom part of a 8x16 sprite uses the next tile index.
 	 */
 	tileIdFor(insideY) {
 		let index = +(insideY >= constants.TILE_LENGTH);
