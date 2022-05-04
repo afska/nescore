@@ -13,7 +13,7 @@ export default (context) => {
 		renderBackground(context);
 
 	if (
-		ppu.cycle === constants.PPU_LAST_CYCLE &&
+		ppu.cycle === constants.PPU_RENDER_SPRITES_CYCLE &&
 		!!ppu.registers.ppuMask.showSprites
 	)
 		renderSprites(context);
