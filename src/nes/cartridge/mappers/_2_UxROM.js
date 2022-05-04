@@ -25,10 +25,10 @@ export default class UxROM extends Mapper {
 		);
 
 		this.defineChunks([
-			//                      Address   Size      Description
-			unused, //              $4020     $3FE0     Unused space
-			prgRomSelectedPage, //  $8000     $4000     PRG-ROM (16 KB switchable PRG-ROM bank)
-			prgRomLastPage //       $C000     $4000     PRG-ROM (last 16 KB PRG ROM bank)
+			//                      Address range   Size      Description
+			unused, //              $4020-$7999     $3FE0     Unused space
+			prgRomSelectedPage, //  $8000-$BFFF     $4000     PRG-ROM (16 KB switchable PRG-ROM bank)
+			prgRomLastPage //       $C000-$FFFF     $4000     PRG-ROM (last 16 KB PRG ROM bank)
 		]);
 		this._chrRom = new MemoryChunk(cartridge.chrRom);
 		this._prgRomSelectedPage = prgRomSelectedPage;

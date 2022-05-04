@@ -23,10 +23,10 @@ export default class NROM extends Mapper {
 				: new MemoryMirror(prgRomFirstPage, 0x4000);
 
 		this.defineChunks([
-			//                   Address   Size      Description
-			unused, //           $4020     $3FE0     Unused space
-			prgRomFirstPage, //  $8000     $4000     PRG-ROM (first 16KB of ROM)
-			prgRomLastPage //    $C000     $4000     PRG-ROM (last 16KB of ROM or mirror)
+			//                   Address range   Size      Description
+			unused, //           $4020-$7999     $3FE0     Unused space
+			prgRomFirstPage, //  $8000-$BFFF     $4000     PRG-ROM (first 16KB of ROM)
+			prgRomLastPage //    $C000-$FFFF     $4000     PRG-ROM (last 16KB of ROM or mirror)
 		]);
 		this._chrRom = new MemoryChunk(cartridge.chrRom);
 
