@@ -49,6 +49,12 @@ export default class Emulator extends Component {
 
 		this.screen = screen;
 		this.nes = new NES();
+
+		window.bytes = bytes;
+		window.NES = NES;
+		window.nes = this.nes;
+		window.emu = this;
+
 		this.frameTimer = new FrameTimer(() => {
 			this.frame();
 		});

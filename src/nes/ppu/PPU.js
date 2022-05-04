@@ -37,6 +37,21 @@ export default class PPU {
 
 	/** When a context is loaded. */
 	onLoad(context) {
+		if (this.loaded) {
+			// this.memory.loadContext(context); // !!
+			this.oamRam = new MemoryChunk(constants.PPU_OAM_SIZE);
+			// this.registers = new PPURegisterSegment(context); // !!
+
+			this.nameTable.loadContext(context);
+			this.attributeTable.loadContext(context);
+			this.patternTable.loadContext(context);
+			this.framePalette.loadContext(context);
+			this.oam.loadContext(context);
+
+			this._reset();
+			return;
+		}
+		this.loaded = true;
 		this.memory.loadContext(context);
 		this.oamRam = new MemoryChunk(constants.PPU_OAM_SIZE);
 		this.registers = new PPURegisterSegment(context);
