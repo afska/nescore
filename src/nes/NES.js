@@ -19,11 +19,6 @@ export default class NES {
 
 	/** Loads a `rom` as the current cartridge. */
 	load(rom) {
-		if (this.context != null) {
-			this.loadContext(this.context);
-			return;
-		}
-
 		const cartridge = new Cartridge(rom);
 		const mapper = cartridge.createMapper();
 

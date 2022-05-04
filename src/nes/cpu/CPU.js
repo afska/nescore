@@ -33,10 +33,6 @@ export default class CPU {
 
 	/** When a context is loaded. */
 	onLoad(context) {
-		// if (this.loaded) {
-		// 	return;
-		// }
-		this.loaded = true;
 		this.memory.loadContext(context);
 		this.stack.loadContext(context);
 		this._reset();
