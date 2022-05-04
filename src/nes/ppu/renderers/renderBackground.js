@@ -1,7 +1,7 @@
 import constants from "../../constants";
 
 /** Renders the background from the Name tables. */
-export default ({ ppu }) => {
+export default function renderBackground({ ppu }) {
 	const { registers } = ppu;
 	const x = ppu.cycle;
 	const y = ppu.scanline;
@@ -45,4 +45,4 @@ export default ({ ppu }) => {
 
 	ppu.plot(x, y, color);
 	ppu.savePaletteIndex(x, y, paletteIndex);
-};
+}

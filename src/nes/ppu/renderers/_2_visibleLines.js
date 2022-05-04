@@ -3,7 +3,7 @@ import renderSprites from "./renderSprites";
 import constants from "../../constants";
 
 /** Runs for each visible scanline. Renders the image. */
-export default (context) => {
+export default function visibleLine(context) {
 	const { ppu } = context;
 
 	if (
@@ -19,4 +19,4 @@ export default (context) => {
 		renderSprites(context);
 
 	return null;
-};
+}

@@ -1,5 +1,5 @@
 /** Returns the type of `scanLine`. */
-export default (scanLine) => {
+export default function scanlineType(scanLine) {
 	if (scanLine === -1) {
 		return "PRELINE";
 	} else if (scanLine < 240) {
@@ -9,4 +9,4 @@ export default (scanLine) => {
 	} else {
 		return "IDLE";
 	}
-};
+}

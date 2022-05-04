@@ -2,10 +2,10 @@ import constants from "../../constants";
 import _ from "lodash";
 
 /** Renders the sprites from OAM. */
-export default (context) => {
+export default function renderSprites(context) {
 	const sprites = evaluateSprites(context);
 	drawSprites(context, sprites);
-};
+}
 
 /** Evaluates which sprites should be rendered in the current scanline. */
 const evaluateSprites = ({ ppu }) => {

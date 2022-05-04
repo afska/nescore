@@ -6,7 +6,7 @@ const SCREEN_HEIGHT = 240;
 const TILE_LENGTH = 8;
 
 /** Debug functions */
-export default (emulator) => {
+export default function debug(emulator) {
 	return {
 		emulator,
 
@@ -51,4 +51,4 @@ export default (emulator) => {
 			this.emulator.screen.setBuffer(frameBuffer);
 		}
 	};
-};
+}

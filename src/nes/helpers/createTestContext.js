@@ -3,7 +3,7 @@ import constants from "../constants";
 import fs from "fs";
 
 /** Creates an execution context for testing. */
-export default (initialize = () => {}) => {
+export default function createTestContext(initialize = () => {}) {
 	const romBytes = fs.readFileSync(constants.NESTEST_PATH);
 	const nes = new NES();
 	nes.load(romBytes);
@@ -18,4 +18,4 @@ export default (initialize = () => {}) => {
 	nes.onLoad(context);
 
 	return context;
-};
+}

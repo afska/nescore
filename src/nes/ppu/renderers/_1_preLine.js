@@ -1,7 +1,7 @@
 import constants from "../../constants";
 
 /** Runs on virtual scanline -1, which prepares the PPU for rendering. */
-export default ({ ppu }) => {
+export default function preLine({ ppu }) {
 	if (ppu.cycle === constants.PPU_CYCLE_CLEAR_FLAGS) {
 		const { ppuStatus } = ppu.registers;
 
@@ -11,4 +11,4 @@ export default ({ ppu }) => {
 	}
 
 	return null;
-};
+}
