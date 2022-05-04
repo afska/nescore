@@ -48,6 +48,9 @@ export default class Cartridge {
 		const flags6 = this.bytes[6];
 		const flags7 = this.bytes[7];
 
+		const prgRomPages = this.bytes[4];
+		if (prgRomPages === 0) throw new Error("Invalid header: No PRG-ROM pages!");
+
 		return (this.__header = {
 			prgRomPages: this.bytes[4],
 			chrRomPages: this.bytes[5],

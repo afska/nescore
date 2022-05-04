@@ -1,9 +1,11 @@
+import { WithCompositeMemory } from "../../memory";
+import constants from "../../constants";
 import { WithContext } from "../../helpers";
 
 /**
  * An abstract class that represents a generic mapper.
  * It intercepts all CPU/PPU memory read/write operations.
- * */
+ */
 export default class Mapper {
 	static get id() {
 		throw new Error("not_implemented");
@@ -11,6 +13,7 @@ export default class Mapper {
 
 	constructor() {
 		WithContext.apply(this);
+		WithCompositeMemory.apply(this);
 	}
 
 	/** Maps a CPU read operation. */
@@ -31,5 +34,17 @@ export default class Mapper {
 	/** Maps a PPU write operation. */
 	ppuWriteAt(address, byte) {
 		this.context.ppu.memory.writeAt(address, byte);
+	}
+
+	/** When the current context is unloaded. */
+	onUnload() {
+		this.defineChunks(null);
+	}
+
+	_getProgramBytes(page) {
+		const { cartridge } = this.context;
+
+		const offset = page * constants.PRG_ROM_PAGE_SIZE;
+		return cartridge.prgRom.slice(offset, offset + constants.PRG_ROM_PAGE_SIZE);
 	}
 }
