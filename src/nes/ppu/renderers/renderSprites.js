@@ -46,6 +46,9 @@ const drawSpritePixel = ({ ppu }, sprite, insideX, insideY) => {
 	const finalY = ppu.scanline;
 	const tileInsideY = insideY % constants.TILE_LENGTH;
 
+	if (!ppu.registers.ppuMask.showSpritesInLeftmost8PixelsOfScreen && finalX < 8)
+		return;
+
 	// color fetch
 	const paletteId = sprite.paletteId;
 	const paletteIndex = ppu.patternTable.getPaletteIndexOf(

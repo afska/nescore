@@ -8,6 +8,13 @@ export default ({ ppu }) => {
 	const scrolledX = x + scrollX;
 	const scrolledY = y + scrollY;
 
+	if (!ppu.registers.ppuMask.showBackgroundInLeftmost8PixelsOfScreen && x < 8) {
+		const color = ppu.framePalette.getColorOf(0, 0);
+		ppu.plot(x, y, color);
+		ppu.savePaletteIndex(x, y, paletteIndex);
+		return;
+	}
+
 	const baseNameTableId = ppu.registers.ppuCtrl.baseNameTableId;
 	const nameTableId =
 		baseNameTableId +
