@@ -42,12 +42,13 @@ const drawSprites = (context, sprites) => {
 
 /** Draws the (`insideX`, `insideY`) `sprite`'s pixel. */
 const drawSpritePixel = ({ ppu }, sprite, insideX, insideY) => {
+	const { ppuMask, ppuStatus } = ppu.registers;
+
 	const finalX = sprite.x + insideX;
 	const finalY = ppu.scanline;
 	const tileInsideY = insideY % constants.TILE_LENGTH;
 
-	if (!ppu.registers.ppuMask.showSpritesInLeftmost8PixelsOfScreen && finalX < 8)
-		return;
+	if (!ppuMask.showSpritesInLeftmost8PixelsOfScreen && finalX < 8) return;
 
 	// color fetch
 	const paletteId = sprite.paletteId;
@@ -66,10 +67,11 @@ const drawSpritePixel = ({ ppu }, sprite, insideX, insideY) => {
 		sprite.id === 0 &&
 		!isSpritePixelTransparent &&
 		!isBackgroundPixelTransparent &&
-		!!ppu.registers.ppuMask.showBackground &&
-		!!ppu.registers.ppuMask.showSprites
+		!!ppuMask.showBackground &&
+		!!ppuMask.showSprites &&
+		(finalX >= 8 || !!ppuMask.showBackgroundInLeftmost8PixelsOfScreen)
 	)
-		ppu.registers.ppuStatus.sprite0Hit = 1;
+		ppuStatus.sprite0Hit = 1;
 
 	// sprite/background priority
 	const shouldDraw =

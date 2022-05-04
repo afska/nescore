@@ -2,20 +2,21 @@ import constants from "../../constants";
 
 /** Renders the background from the Name tables. */
 export default ({ ppu }) => {
+	const { registers } = ppu;
 	const x = ppu.cycle;
 	const y = ppu.scanline;
-	const { x: scrollX, y: scrollY } = ppu.registers.ppuScroll;
+	const { x: scrollX, y: scrollY } = registers.ppuScroll;
 	const scrolledX = x + scrollX;
 	const scrolledY = y + scrollY;
 
-	if (!ppu.registers.ppuMask.showBackgroundInLeftmost8PixelsOfScreen && x < 8) {
+	if (!registers.ppuMask.showBackgroundInLeftmost8PixelsOfScreen && x < 8) {
 		const color = ppu.framePalette.getColorOf(0, 0);
 		ppu.plot(x, y, color);
-		ppu.savePaletteIndex(x, y, paletteIndex);
+		ppu.savePaletteIndex(x, y, 0);
 		return;
 	}
 
-	const baseNameTableId = ppu.registers.ppuCtrl.baseNameTableId;
+	const baseNameTableId = registers.ppuCtrl.baseNameTableId;
 	const nameTableId =
 		baseNameTableId +
 		Math.floor(scrolledX / constants.SCREEN_WIDTH) +
@@ -31,7 +32,7 @@ export default ({ ppu }) => {
 		nameTableY
 	);
 	const paletteIndex = ppu.patternTable.getPaletteIndexOf(
-		ppu.registers.ppuCtrl.patternTableAddressIdForBackground,
+		registers.ppuCtrl.patternTableAddressIdForBackground,
 		tileId,
 		nameTableX % constants.TILE_LENGTH,
 		nameTableY % constants.TILE_LENGTH
