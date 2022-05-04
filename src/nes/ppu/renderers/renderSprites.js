@@ -44,14 +44,15 @@ const drawSprites = (context, sprites) => {
 const drawSpritePixel = ({ ppu }, sprite, insideX, insideY) => {
 	const finalX = sprite.x + insideX;
 	const finalY = ppu.scanline;
+	const tileInsideY = insideY % constants.TILE_LENGTH;
 
 	// color fetch
 	const paletteId = sprite.paletteId;
 	const paletteIndex = ppu.patternTable.getPaletteIndexOf(
-		ppu.registers.ppuCtrl.patternTableAddressIdFor8x8Sprites,
-		sprite.tileId,
+		sprite.patternTableId,
+		sprite.tileIdFor(insideY),
 		sprite.flipX ? constants.TILE_LENGTH - 1 - insideX : insideX,
-		sprite.flipY ? constants.TILE_LENGTH - 1 - insideY : insideY
+		sprite.flipY ? constants.TILE_LENGTH - 1 - tileInsideY : tileInsideY
 	);
 	const isSpritePixelTransparent = paletteIndex === constants.COLOR_TRANSPARENT;
 	const isBackgroundPixelTransparent =

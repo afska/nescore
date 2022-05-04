@@ -26,12 +26,12 @@ describe("CPU/PPU registers interaction", () => {
 			register.vramAddressIncrement.should.equal(32);
 		});
 
-		it("provides the sprite height", () => {
+		it("provides the sprite mode", () => {
 			memory.writeAt(ADDRESS, 0b00000000);
-			register.spriteHeight.should.equal(8);
+			register.isIn8x16Mode.should.equal(false);
 
 			memory.writeAt(ADDRESS, 0b00100000);
-			register.spriteHeight.should.equal(16);
+			register.isIn8x16Mode.should.equal(true);
 		});
 	});
 });

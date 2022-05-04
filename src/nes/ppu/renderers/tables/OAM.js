@@ -13,6 +13,7 @@ import { WithContext } from "../../../helpers";
  *                                     |+------- horizontalFlip
  *                                     +-------- verticalFlip
  * All sprites are either 8x8 or 8x16 (depending on `PPUCtrl`'s bit 5).
+ * On 8x16 mode, the first bit of `tileId` indicates the pattern table (ignoring `PPUCtrl`'s bit 3).
  */
 export default class OAM {
 	constructor() {
@@ -22,16 +23,23 @@ export default class OAM {
 	/** Returns a new instance of the sprite #`id`. */
 	createSprite(id) {
 		const { oamRam, registers } = this.context.ppu;
-		const address = id * constants.SPRITE_SIZE;
+		const is8x16 = registers.ppuCtrl.isIn8x16Mode;
 
+		const address = id * constants.SPRITE_SIZE;
 		const y = oamRam.readAt(address + constants.SPRITE_BYTE_Y);
-		const tileId = oamRam.readAt(address + constants.SPRITE_BYTE_TILE_ID);
+		const tileIdByte = oamRam.readAt(address + constants.SPRITE_BYTE_TILE_ID);
 		const attributes = oamRam.readAt(
 			address + constants.SPRITE_BYTE_ATTRIBUTES
 		);
 		const x = oamRam.readAt(address + constants.SPRITE_BYTE_X);
-		const height = registers.ppuCtrl.spriteHeight;
 
-		return new Sprite(id, x, y, tileId, attributes, height);
+		const patternTableId = is8x16
+			? tileIdByte & constants.SPRITE_8x16_PATTERN_TABLE_MASK
+			: registers.ppuCtrl.patternTableAddressIdFor8x8Sprites;
+		const tileId = is8x16
+			? tileIdByte & constants.SPRITE_8x16_TILE_ID_MASK
+			: tileIdByte;
+
+		return new Sprite(id, x, y, patternTableId, tileId, attributes, is8x16);
 	}
 }
