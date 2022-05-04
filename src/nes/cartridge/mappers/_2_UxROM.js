@@ -42,7 +42,7 @@ export default class UxROM extends Mapper {
 	cpuWriteAt(address, byte) {
 		const { header } = this.context.cartridge;
 
-		if (address > 0x8000) {
+		if (address >= 0x8000) {
 			const page = byte % header.prgRomPages;
 			this._prgRomSelectedPage.bytes = this.banks[page];
 			return;
