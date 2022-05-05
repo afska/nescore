@@ -3,7 +3,7 @@ import Screen from "./Screen";
 import FrameTimer from "../emulator/FrameTimer";
 import NES from "../../nes";
 import gamepad from "../emulator/gamepad";
-import debug from "../emulator/debug";
+// import debug from "../emulator/debug"; // DEBUG
 
 export default class Emulator extends Component {
 	render() {
@@ -38,6 +38,10 @@ export default class Emulator extends Component {
 
 	componentWillUnmount() {
 		this.stop();
+
+		this.screen = null;
+		this.nes = null;
+		this.frameTimer = null;
 	}
 
 	_initialize(screen) {
@@ -59,8 +63,7 @@ export default class Emulator extends Component {
 			this._onError(e);
 		}
 
-		// DEBUG
-		window.debug = debug(this);
+		// window.debug = debug(this); // DEBUG
 	}
 
 	_onError(e) {
