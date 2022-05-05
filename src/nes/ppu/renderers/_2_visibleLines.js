@@ -7,7 +7,7 @@ export default function visibleLine(context) {
 	const { ppu } = context;
 
 	if (
-		ppu.cycle < constants.SCREEN_WIDTH &&
+		ppu.cycle === constants.PPU_RENDER_BACKGROUND_CYCLE &&
 		!!ppu.registers.ppuMask.showBackground
 	)
 		renderBackground(context);
