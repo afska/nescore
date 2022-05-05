@@ -2,8 +2,9 @@ const FPS = 60.098;
 const SECOND = 1000;
 
 export default class FrameTimer {
-	constructor(onFrame, fps = FPS) {
+	constructor(onFrame, onFps, fps = FPS) {
 		this.onFrame = onFrame;
+		this.onFps = onFps;
 
 		this._fps = fps;
 		this._interval = SECOND / fps;
@@ -33,9 +34,7 @@ export default class FrameTimer {
 
 		const elapsedTimeSinceLastSecond = now - this._lastSecondTime;
 		if (elapsedTimeSinceLastSecond > SECOND) {
-			document.querySelector("#fps").textContent = `(fps: ${
-				this._lastSecondFrames
-			})`;
+			this.onFps(this._lastSecondFrames);
 
 			this._lastSecondTime = Date.now();
 			this._lastSecondFrames = 0;

@@ -24,7 +24,7 @@ export default class Emulator extends Component {
 		if (this.frameTimer) this.frameTimer.stop();
 	}
 
-	frame(debugStep = false) {
+	frame = (debugStep = false) => {
 		try {
 			if (!debugStep) gamepad.updateInput(this);
 			if (this.isDebugging && !debugStep) return;
@@ -34,7 +34,7 @@ export default class Emulator extends Component {
 		} catch (e) {
 			this._onError(e);
 		}
-	}
+	};
 
 	componentWillUnmount() {
 		this.stop();
@@ -53,8 +53,8 @@ export default class Emulator extends Component {
 
 		this.screen = screen;
 		this.nes = new NES();
-		this.frameTimer = new FrameTimer(() => {
-			this.frame();
+		this.frameTimer = new FrameTimer(this.frame, (fps) => {
+			document.querySelector("#fps").textContent = `(fps: ${fps})`;
 		});
 
 		try {
