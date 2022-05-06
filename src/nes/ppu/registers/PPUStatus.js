@@ -21,7 +21,7 @@ export default class PPUStatus extends InMemoryRegister {
 	}
 
 	/** Reads the status flags, with some side effects. */
-	readAt(address) {
+	readAt() {
 		const value = this.value;
 
 		// this has two side effects:

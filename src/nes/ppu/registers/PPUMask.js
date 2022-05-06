@@ -21,24 +21,32 @@ export default class PPUMask extends InMemoryRegister {
 
 	/** Transforms a BGR `color` following the register's rules (grayscale or emphasize bits). */
 	transform(color) {
-		const r = (color >> 0) & 0xff;
-		const g = (color >> 8) & 0xff;
-		const b = (color >> 16) & 0xff;
+		let r = (color >> 0) & 0xff;
+		let g = (color >> 8) & 0xff;
+		let b = (color >> 16) & 0xff;
 
 		if (!!this.grayscale) {
 			const gray = Math.floor(r / 3) + Math.floor(g / 3) + Math.floor(b / 3);
-			return (gray << 0) | (gray << 8) | (gray << 16);
-		} else if (!!this.emphasizeRed)
-			return (r << 0) | (Math.floor(g / 3) << 8) | (Math.floor(b / 3) << 16);
-		else if (!!this.emphasizeGreen)
-			return (Math.floor(r / 3) << 0) | (g << 8) | (Math.floor(b / 3) << 16);
-		else if (!!this.emphasizeBlue)
-			return (Math.floor(r / 3) << 0) | (Math.floor(g / 3) << 8) | (b << 16);
-		else return color;
+			r = gray;
+			g = gray;
+			b = gray;
+		}
+		if (this.emphasizeAny) {
+			r = !!this.emphasizeRed ? r : Math.floor(r / 3);
+			g = !!this.emphasizeGreen ? g : Math.floor(g / 3);
+			b = !!this.emphasizeBlue ? b : Math.floor(b / 3);
+		}
+
+		return (r << 0) | (g << 8) | (b << 16);
 	}
 
 	/** Reads nothing (write-only address). */
 	readAt() {
 		return 0;
+	}
+
+	/** Returns true if any color emphasis is active. */
+	get emphasizeAny() {
+		return !!this.emphasizeRed || !!this.emphasizeGreen || !!this.emphasizeBlue;
 	}
 }

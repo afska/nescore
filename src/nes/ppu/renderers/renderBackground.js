@@ -76,6 +76,8 @@ export default function renderBackground({ ppu }) {
 			ppu.plot(x + i, y, color);
 			ppu.savePaletteIndex(x + i, y, paletteIndex);
 		}
+
+		// (the x++ of the for loop will do the last increment)
 		x += tilePixels - 1;
 	}
 }
