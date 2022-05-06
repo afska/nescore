@@ -6,8 +6,8 @@ import { InMemoryRegister } from "../../registers";
  * Controls the rendering of sprites and backgrounds, as well as colour effects.
  */
 export default class PPUMask extends InMemoryRegister {
-	constructor(memory, address) {
-		super(memory, address);
+	constructor() {
+		super();
 
 		this.addField("grayscale", 0)
 			.addField("showBackgroundInLeftmost8PixelsOfScreen", 1)

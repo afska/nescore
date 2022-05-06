@@ -6,8 +6,8 @@ import { InMemoryRegister } from "../../registers";
  * Contains various flags controlling PPU operation.
  */
 export default class PPUCtrl extends InMemoryRegister {
-	constructor(memory, address) {
-		super(memory, address);
+	constructor() {
+		super();
 
 		this.addField("baseNameTableId", 0, 2)
 			.addField("vramAddressIncrement32", 2)
