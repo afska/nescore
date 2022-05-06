@@ -4,6 +4,7 @@ import {
 	MemoryPadding,
 	RewiredMemoryChunk
 } from "../memory";
+import mirroring from "./mirroring";
 import { WithContext } from "../helpers";
 
 /** The PPU memory map. Address space size: 16KB. */
@@ -19,9 +20,9 @@ export default class PPUMemoryMap {
 		const nameTables = new RewiredMemoryChunk(
 			// (the system only has memory for two Name tables, the other two are mirrored)
 			0x1000,
-			cartridge.header.verticalNameTableMirroring
-				? VERTICAL_MIRROR_MAPPING
-				: HORIZONTAL_MIRROR_MAPPING
+			cartridge.header.verticalNameTableMirroring // TODO: EXTRACT
+				? mirroring.VERTICAL
+				: mirroring.HORIZONTAL
 		);
 		const nameTablesMirror = new MemoryMirror(nameTables, 0x0f00);
 		const paletteRam = new RewiredMemoryChunk(0x20, {
@@ -43,13 +44,3 @@ export default class PPUMemoryMap {
 		]);
 	}
 }
-
-const HORIZONTAL_MIRROR_MAPPING = RewiredMemoryChunk.createMapping([
-	{ from: 0x400, size: 0x400, to: 0x000 },
-	{ from: 0xc00, size: 0x400, to: 0x800 }
-]);
-
-const VERTICAL_MIRROR_MAPPING = RewiredMemoryChunk.createMapping([
-	{ from: 0x800, size: 0x400, to: 0x000 },
-	{ from: 0xc00, size: 0x400, to: 0x400 }
-]);
