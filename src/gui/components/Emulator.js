@@ -1,9 +1,10 @@
 import React, { Component } from "react";
 import Screen from "./Screen";
 import FrameTimer from "../emulator/FrameTimer";
-import NES from "../../nes";
 import gamepad from "../emulator/gamepad";
-// import debug from "../emulator/debug"; // DEBUG
+import WebWorker from "worker-loader!../emulator/webWorker";
+
+let webWorker = null;
 
 export default class Emulator extends Component {
 	render() {
@@ -22,26 +23,29 @@ export default class Emulator extends Component {
 
 	stop() {
 		if (this.frameTimer) this.frameTimer.stop();
+		if (webWorker) {
+			webWorker.terminate();
+			webWorker = null;
+		}
+		this.isWaiting = false;
+		this.setFps(0);
 	}
 
 	frame = (debugStep = false) => {
-		try {
-			if (!debugStep) gamepad.updateInput(this);
-			if (this.isDebugging && !debugStep) return;
+		if (this.isWaiting) return;
 
-			const frameBuffer = this.nes.frame();
-			this.screen.setBuffer(frameBuffer);
-		} catch (e) {
-			this._onError(e);
-		}
+		const input = !debugStep ? gamepad.getInput(this) : [{}, {}];
+		if (this.isDebugging && !debugStep) return;
+		webWorker.postMessage(input);
+		this.isWaiting = true;
+	};
+
+	setFps = (fps) => {
+		document.querySelector("#fps").textContent = `(fps: ${fps})`;
 	};
 
 	componentWillUnmount() {
 		this.stop();
-
-		this.screen = null;
-		this.nes = null;
-		this.frameTimer = null;
 	}
 
 	_initialize(screen) {
@@ -52,18 +56,20 @@ export default class Emulator extends Component {
 		this.stop();
 
 		this.screen = screen;
-		this.nes = new NES();
-		this.frameTimer = new FrameTimer(this.frame, (fps) => {
-			document.querySelector("#fps").textContent = `(fps: ${fps})`;
-		});
+		this.frameTimer = new FrameTimer(this.frame, this.setFps);
 
-		try {
-			this.nes.load(bytes);
-		} catch (e) {
-			this._onError(e);
-		}
-
-		// window.debug = debug(this); // DEBUG
+		webWorker = new WebWorker();
+		webWorker.postMessage(bytes);
+		webWorker.onmessage = ({ data }) => {
+			if (data instanceof Uint32Array) {
+				// frame data
+				this.screen.setBuffer(data);
+				this.isWaiting = false;
+			} else if (data?.id === "error") {
+				// error
+				this._onError(data.error);
+			}
+		};
 	}
 
 	_onError(e) {

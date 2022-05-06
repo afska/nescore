@@ -27,7 +27,8 @@
           "**/*.js?(x)"
         ],
         "rules": {
-          "import/no-anonymous-default-export": "off"
+          "import/no-anonymous-default-export": "off",
+          "import/no-webpack-loader-syntax": "off"
         }
       }
     ]
@@ -50,6 +51,7 @@
     "cross-env": "^7.0.3",
     "husky": "^1.3.1",
     "prettier": "^1.16.4",
-    "pretty-quick": "^1.10.0"
+    "pretty-quick": "^1.10.0",
+    "worker-loader": "^3.0.8"
   }
 }
