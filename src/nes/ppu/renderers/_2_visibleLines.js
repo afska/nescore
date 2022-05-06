@@ -8,13 +8,13 @@ export default function visibleLine(context) {
 
 	if (
 		ppu.cycle === constants.PPU_RENDER_BACKGROUND_CYCLE &&
-		!!ppu.registers.ppuMask.showBackground
+		ppu.registers.ppuMask.showBackground
 	)
 		renderBackground(context);
 
 	if (
 		ppu.cycle === constants.PPU_RENDER_SPRITES_CYCLE &&
-		!!ppu.registers.ppuMask.showSprites
+		ppu.registers.ppuMask.showSprites
 	)
 		renderSprites(context);
 

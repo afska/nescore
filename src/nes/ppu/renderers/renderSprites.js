@@ -67,9 +67,9 @@ const drawSpritePixel = ({ ppu }, sprite, insideX, insideY) => {
 		sprite.id === 0 &&
 		!isSpritePixelTransparent &&
 		!isBackgroundPixelTransparent &&
-		!!ppuMask.showBackground &&
-		!!ppuMask.showSprites &&
-		(finalX >= 8 || !!ppuMask.showBackgroundInLeftmost8PixelsOfScreen)
+		ppuMask.showBackground &&
+		ppuMask.showSprites &&
+		(finalX >= 8 || ppuMask.showBackgroundInLeftmost8PixelsOfScreen)
 	)
 		ppuStatus.sprite0Hit = 1;
 
