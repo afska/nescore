@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import Screen from "./Screen";
-import FrameTimer from "../emulator/FrameTimer";
 import gamepad from "../emulator/gamepad";
 import WebWorker from "worker-loader!../emulator/webWorker";
 
+const INPUT_POLL_INTERVAL = 10;
 let webWorker = null;
 
 export default class Emulator extends Component {
@@ -17,32 +17,22 @@ export default class Emulator extends Component {
 		);
 	}
 
-	start() {
-		if (this.frameTimer) this.frameTimer.start();
-	}
-
-	stop() {
-		if (this.frameTimer) this.frameTimer.stop();
-		if (webWorker) {
-			webWorker.terminate();
-			webWorker = null;
-		}
-		this.isWaiting = false;
-		this.setFps(0);
-	}
-
-	frame = (debugStep = false) => {
-		if (this.isWaiting) return;
-
-		const input = !debugStep ? gamepad.getInput(this) : [{}, {}];
-		if (this.isDebugging && !debugStep) return;
-		webWorker.postMessage(input);
-		this.isWaiting = true;
+	sendInput = () => {
+		webWorker.postMessage(gamepad.getInput());
 	};
 
 	setFps = (fps) => {
 		document.querySelector("#fps").textContent = `(fps: ${fps})`;
 	};
+
+	stop() {
+		clearInterval(this.interval);
+		if (webWorker) {
+			webWorker.terminate();
+			webWorker = null;
+		}
+		this.setFps(0);
+	}
 
 	componentWillUnmount() {
 		this.stop();
@@ -51,21 +41,21 @@ export default class Emulator extends Component {
 	_initialize(screen) {
 		const { rom } = this.props;
 		if (!rom) return;
-		const bytes = new Uint8Array(rom);
+		this.screen = screen;
 
 		this.stop();
+		this.interval = setInterval(this.sendInput, INPUT_POLL_INTERVAL);
 
-		this.screen = screen;
-		this.frameTimer = new FrameTimer(this.frame, this.setFps);
-
+		const bytes = new Uint8Array(rom);
 		webWorker = new WebWorker();
 		webWorker.postMessage(bytes);
 		webWorker.onmessage = ({ data }) => {
 			if (data instanceof Uint32Array) {
 				// frame data
 				this.screen.setBuffer(data);
-				this.frameTimer.countNewFrame();
-				this.isWaiting = false;
+			} else if (data?.id === "fps") {
+				// fps report
+				this.setFps(data.fps);
 			} else if (data?.id === "error") {
 				// error
 				this._onError(data.error);

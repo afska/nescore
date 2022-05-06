@@ -53,9 +53,7 @@ export default class App extends Component {
 	}
 
 	_loadRom(rom) {
-		this.setState({ rom }, () => {
-			this.emulator.start();
-		});
+		this.setState({ rom });
 	}
 
 	_onFileDrop = (e) => {

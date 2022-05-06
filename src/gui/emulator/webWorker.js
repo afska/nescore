@@ -4,22 +4,43 @@ if (process.env.NODE_ENV !== "production") {
 	global.$RefreshSig$ = () => () => {};
 }
 const NES = require("../../nes").default;
+const FrameTimer = require("./FrameTimer").default;
 
+let isDebugging = false;
+let isDebugStepRequested = false;
 const nes = new NES();
+const frameTimer = new FrameTimer(
+	() => {
+		if (isDebugging && !isDebugStepRequested) return;
+
+		const frameBuffer = nes.frame();
+		frameTimer.countNewFrame();
+		postMessage(frameBuffer);
+		isDebugStepRequested = false;
+	},
+	(fps) => {
+		postMessage({ id: "fps", fps });
+	}
+);
 
 onmessage = function({ data }) {
 	try {
 		if (data instanceof Uint8Array) {
 			// rom bytes
 			nes.load(data);
+			frameTimer.start();
 		} else if (Array.isArray(data)) {
-			// frame request (with controller input)
+			// controller input
 			for (let i = 0; i < 2; i++) {
+				if (i === 0) {
+					if (data[i].$startDebugging) isDebugging = true;
+					if (data[i].$stopDebugging) isDebugging = false;
+					if (data[i].$debugStep) isDebugStepRequested = true;
+				}
+
 				for (let button in data[i])
-					nes.setButton(i + 1, button, data[i][button]);
+					if (button[0] !== "$") nes.setButton(i + 1, button, data[i][button]);
 			}
-			const frameBuffer = nes.frame();
-			postMessage(frameBuffer);
 		}
 	} catch (error) {
 		postMessage({ id: "error", error });
