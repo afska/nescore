@@ -62,7 +62,9 @@ export default class PPU {
 
 	/** Draws a pixel in (`x`, `y`) using BGR `color`. */
 	plot(x, y, color) {
-		this.frameBuffer[y * constants.SCREEN_WIDTH + x] = color;
+		this.frameBuffer[
+			y * constants.SCREEN_WIDTH + x
+		] = this.registers.ppuMask.transform(color);
 	}
 
 	/** Saves the `paletteIndex` of (`x`, `y`). */
