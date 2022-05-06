@@ -19,14 +19,6 @@ export default class Screen extends Component {
 		);
 	}
 
-	componentWillUnmount() {
-		this.context = null;
-		this.imageData = null;
-		this.buf = null;
-		this.buf8 = null;
-		this.buf32 = null;
-	}
-
 	setBuffer = (buffer) => {
 		for (let y = 0; y < SCREEN_HEIGHT; ++y) {
 			for (let x = 0; x < SCREEN_WIDTH; ++x) {

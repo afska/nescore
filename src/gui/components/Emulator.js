@@ -1,12 +1,10 @@
 import React, { Component } from "react";
 import Screen from "./Screen";
 import FrameTimer from "../emulator/FrameTimer";
-import NES from "../../nes";
 import gamepad from "../emulator/gamepad";
-import MyWorker from "worker-loader!../emulator/worker";
-// import debug from "../emulator/debug"; // DEBUG
+import WebWorker from "worker-loader!../emulator/webWorker";
 
-window.worker = new MyWorker();
+let webWorker = null;
 
 export default class Emulator extends Component {
 	render() {
@@ -28,23 +26,13 @@ export default class Emulator extends Component {
 	}
 
 	frame = (debugStep = false) => {
-		window.worker.postMessage("frame");
-
-		// try {
-		// 	// // if (!debugStep) gamepad.updateInput(this);
-		// 	// if (this.isDebugging && !debugStep) return;
-		// 	// const frameBuffer = this.nes.frame();
-		// 	// this.screen.setBuffer(frameBuffer);
-		// } catch (e) {
-		// 	this._onError(e);
-		// }
+		const input = !debugStep ? gamepad.getInput(this) : [{}, {}];
+		if (this.isDebugging && !debugStep) return;
+		webWorker.postMessage(input);
 	};
 
 	componentWillUnmount() {
 		this.stop();
-
-		this.screen = null;
-		this.frameTimer = null;
 	}
 
 	_initialize(screen) {
@@ -59,22 +47,12 @@ export default class Emulator extends Component {
 			document.querySelector("#fps").textContent = `(fps: ${fps})`;
 		});
 
-		if (window.worker) {
-			window.worker.terminate();
-			window.worker = new MyWorker();
-		}
-
-		window.worker.onmessage = ({ data }) => {
+		if (webWorker) webWorker.terminate();
+		webWorker = new WebWorker();
+		webWorker.postMessage(bytes);
+		webWorker.onmessage = ({ data }) => {
 			this.screen.setBuffer(data);
 		};
-
-		try {
-			window.worker.postMessage(bytes);
-		} catch (e) {
-			this._onError(e);
-		}
-
-		// window.debug = debug(this); // DEBUG
 	}
 
 	_onError(e) {

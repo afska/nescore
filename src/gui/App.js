@@ -50,8 +50,6 @@ export default class App extends Component {
 		window.removeEventListener("dragover", this._ignore);
 		window.removeEventListener("dragenter", this._ignore);
 		window.removeEventListener("drop", this._onFileDrop);
-
-		this.emulator = null;
 	}
 
 	_loadRom(rom) {
