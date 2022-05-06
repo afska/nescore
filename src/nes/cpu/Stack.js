@@ -10,18 +10,14 @@ export default class Stack {
 
 	/** Pushes a `value` into the stack. */
 	push(value) {
-		this.requireContext();
-
-		this.context.memory.writeAt(this.currentAddress, value);
+		this.context.memoryBus.cpu.writeAt(this.currentAddress, value);
 		this.context.cpu.sp.decrement();
 	}
 
 	/** Pulls a value from the stack. */
 	pop() {
-		this.requireContext();
-
 		this.context.cpu.sp.increment();
-		return this.context.memory.readAt(this.currentAddress);
+		return this.context.memoryBus.cpu.readAt(this.currentAddress);
 	}
 
 	/** Pushes a 16-bit `value` into the stack. */

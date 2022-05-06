@@ -1,22 +1,40 @@
-import WithMemory from "./WithMemory";
-import { Buffer } from "buffer";
+import WithLittleEndian from "./WithLittleEndian";
 import _ from "lodash";
 
 /**
- * A memory chunk that can store `bytes`.
- * It's located at the `startAddress` of another memory structure.
+ * A memory chunk that can store `bytes` (it can be a number or a Buffer).
  */
 export default class MemoryChunk {
 	constructor(bytes) {
-		if (_.isFinite(bytes)) bytes = Buffer.alloc(bytes);
-		WithMemory.apply(this);
+		WithLittleEndian.apply(this);
+		if (_.isFinite(bytes)) bytes = new Uint8Array(bytes);
 
 		this.bytes = bytes;
 		this.memorySize = bytes.length;
+		this.readOnly = false;
 	}
 
-	/** Returns the memory bytes. */
-	getBytes() {
-		return this.bytes;
+	/** Reads a byte from `address`. */
+	readAt(address) {
+		this._assertValidAddress(address);
+
+		return this.bytes[address];
+	}
+
+	/** Writes a `byte` to `address`. */
+	writeAt(address, byte) {
+		this._assertValidAddress(address);
+		if (this.readOnly) return;
+
+		this.bytes[address] = byte;
+	}
+
+	_assertValidAddress(address) {
+		if (address < 0 || address > this.memorySize)
+			this._throwInvalidAddressError(address);
+	}
+
+	_throwInvalidAddressError(address) {
+		throw new Error(`Invalid memory access at 0x${address.toString(16)}.`);
 	}
 }

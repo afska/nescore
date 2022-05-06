@@ -1,25 +1,22 @@
-import { Byte } from "../helpers";
 import mappers from "./mappers";
-
-const MAGIC_NUMBER = "NES";
-const KB = 1024;
-const HEADER_SIZE = 16;
-const TRAINER_SIZE = 512;
-const PRG_ROM_PAGE_SIZE = 16 * KB;
-const CHR_ROM_PAGE_SIZE = 8 * KB;
+import constants from "../constants";
+import { Byte } from "../helpers";
 
 /** The game cartridge (a file in iNES format). */
 export default class Cartridge {
 	constructor(bytes) {
 		this.bytes = bytes;
 
-		if (this.magicNumber !== MAGIC_NUMBER)
+		if (this.magicNumber !== constants.ROM_MAGIC_NUMBER)
 			throw new Error("Invalid ROM format.");
 	}
 
 	/** Returns a new instance of the right mapper. */
 	createMapper() {
-		return new mappers[this.header.mapperId](this);
+		const mapperId = this.header.mapperId;
+		const Mapper = mappers[mapperId];
+		if (!Mapper) throw new Error(`Unknown mapper: ${mapperId}.`);
+		return new Mapper();
 	}
 
 	/** Returns the PRG ROM, which contains the game's code. */
@@ -27,24 +24,37 @@ export default class Cartridge {
 		return this._getBytes(this._programOffset, this._programSize);
 	}
 
-	/** Returns the CHR ROM, which contains static tilesets, or null. */
+	/**
+	 * Returns the CHR ROM buffer, which contains static tilesets, or a number.
+	 * A number indicates a CHR RAM size that should be used instead.
+	 */
 	get chrRom() {
 		const offset = this._programOffset + this._programSize;
-		const size = this.header.chrRomPages * CHR_ROM_PAGE_SIZE;
+		const size = this.header.chrRomPages * constants.CHR_ROM_PAGE_SIZE;
 
-		return size > 0 ? this._getBytes(offset, size) : null;
+		return size > 0
+			? this._getBytes(offset, size)
+			: constants.CHR_RAM_PAGES * constants.CHR_ROM_PAGE_SIZE;
+	}
+
+	get usesChrRam() {
+		return this.header.chrRomPages === 0;
 	}
 
 	/** Returns the header data. */
 	get header() {
 		if (this.__header) return this.__header;
 
-		const flags6 = this.bytes.readUInt8(6);
-		const flags7 = this.bytes.readUInt8(7);
+		const flags6 = this.bytes[6];
+		const flags7 = this.bytes[7];
+
+		const prgRomPages = this.bytes[4];
+		if (prgRomPages === 0) throw new Error("Invalid header: No PRG-ROM pages!");
 
 		return (this.__header = {
-			prgRomPages: this.bytes.readUInt8(4),
-			chrRomPages: this.bytes.readUInt8(5),
+			prgRomPages: this.bytes[4],
+			chrRomPages: this.bytes[5],
+			verticalNameTableMirroring: !!Byte.getBit(flags6, 0),
 			hasTrainerBeforeProgram: !!Byte.getBit(flags6, 2),
 			mapperId: Byte.setSubNumber(
 				Byte.getSubNumber(flags6, 4, 4),
@@ -68,11 +78,12 @@ export default class Cartridge {
 
 	get _programOffset() {
 		return (
-			HEADER_SIZE + (this.header.hasTrainerBeforeProgram ? TRAINER_SIZE : 0)
+			constants.ROM_HEADER_SIZE +
+			(this.header.hasTrainerBeforeProgram ? constants.ROM_TRAINER_SIZE : 0)
 		);
 	}
 
 	get _programSize() {
-		return this.header.prgRomPages * PRG_ROM_PAGE_SIZE;
+		return this.header.prgRomPages * constants.PRG_ROM_PAGE_SIZE;
 	}
 }

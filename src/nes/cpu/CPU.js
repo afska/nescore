@@ -1,15 +1,14 @@
-import { WithContext } from "../helpers";
-import { Register8Bit, Register16Bit } from "../registers";
-import FlagsRegister from "./FlagsRegister";
+import { Register8Bit, Register16Bit, FlagsRegister } from "./registers";
 import CPUMemoryMap from "./CPUMemoryMap";
 import Stack from "./Stack";
 import operations from "./operations";
 import { interrupts } from "./constants";
+import { WithContext } from "../helpers";
 
 const INITIAL_FLAGS = 0b00100100;
 const INTERRUPT_CYCLES = 7;
 
-/** The Center Process Unit. It runs programs. */
+/** The Center Processing Unit. It runs programs. */
 export default class CPU {
 	constructor() {
 		WithContext.apply(this);
@@ -29,7 +28,7 @@ export default class CPU {
 		this.memory = new CPUMemoryMap();
 		this.stack = new Stack();
 
-		this._parameter = null;
+		this._argument = null;
 	}
 
 	/** When a context is loaded. */
@@ -41,24 +40,25 @@ export default class CPU {
 
 	/** Executes the next operation. */
 	step() {
-		this.requireContext();
-
 		const pc = this.pc.value;
 		const operation = this._readOperation();
-		const parameter = this._readParameter(operation);
+		const argument = this._readArgument(operation);
 
 		if (this.context.logger)
 			this.context.logger.log({
 				context: this.context,
 				pc,
 				operation,
-				initialParameter: this._parameter,
-				finalParameter: parameter
+				initialArgument: this._argument,
+				finalArgument: argument
 			});
 
-		operation.instruction.execute(this.context, parameter);
-		this.cycle += operation.cycles + this.extraCycles;
+		operation.instruction.execute(this.context, argument);
+		const cycles = operation.cycles + this.extraCycles;
+		this.cycle += cycles;
 		this.extraCycles = 0;
+
+		return cycles;
 	}
 
 	/** Pushes the context to the stack and jumps to the interrupt handler. */
@@ -72,6 +72,8 @@ export default class CPU {
 
 		this.flags.i = true; // (to make sure handler doesn't get interrupted)
 		this._jumpToInterruptHandler(interrupt);
+
+		return INTERRUPT_CYCLES;
 	}
 
 	/**
@@ -80,13 +82,6 @@ export default class CPU {
 	 */
 	pushFlags(withB2Flag = false) {
 		this.stack.push(this.flags.toByte() | (withB2Flag && 0b00010000));
-	}
-
-	/** When the current context is unloaded. */
-	onUnload() {
-		this._reset();
-		this.stack.unloadContext();
-		this.memory.unloadContext();
 	}
 
 	_reset() {
@@ -98,35 +93,40 @@ export default class CPU {
 		this.registers.a.reset();
 		this.registers.x.reset();
 		this.registers.y.reset();
-		this._parameter = null;
+		this._argument = null;
 
 		this.interrupt(interrupts.RESET);
 	}
 
 	_readOperation() {
-		const opcode = this.memory.readAt(this.pc.value);
+		const opcode = this._memoryBus.readAt(this.pc.value);
 		const operation = operations[opcode];
-		if (!operation) throw new Error(`Unknown opcode: 0x${opcode.toString(16)}`);
+		if (!operation)
+			throw new Error(`Unknown opcode: 0x${opcode.toString(16)}.`);
 		this.pc.increment();
 
 		return operation;
 	}
 
-	_readParameter({ instruction, addressing, canTakeExtraCycles }) {
-		const parameter = this.memory.readBytesAt(
+	_readArgument({ instruction, addressing, canTakeExtraCycles }) {
+		const argument = this._memoryBus.readBytesAt(
 			this.pc.value,
 			addressing.parameterSize
 		);
 		this.pc.value += addressing.parameterSize;
-		this._parameter = parameter;
+		this._argument = argument;
 
 		return instruction.needsValue
-			? addressing.getValue(this.context, parameter, canTakeExtraCycles)
-			: addressing.getAddress(this.context, parameter, canTakeExtraCycles);
+			? addressing.getValue(this.context, argument, canTakeExtraCycles)
+			: addressing.getAddress(this.context, argument, canTakeExtraCycles);
 	}
 
 	_jumpToInterruptHandler(interrupt) {
-		this.pc.value = this.memory.read2BytesAt(interrupt.vector);
+		this.pc.value = this._memoryBus.read2BytesAt(interrupt.vector);
+	}
+
+	get _memoryBus() {
+		return this.context.memoryBus.cpu;
 	}
 
 	get _areInterruptsEnabled() {

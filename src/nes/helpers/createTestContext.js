@@ -1,18 +1,21 @@
-import CPU from "../cpu";
-import { MemoryChunk } from "../memory";
-import { WithContext } from "../helpers";
+import NES from "../NES";
+import constants from "../constants";
+import fs from "fs";
 
-const KB = 1024;
+/** Creates an execution context for testing. */
+export default function createTestContext(initialize = () => {}) {
+	const romBytes = fs.readFileSync(constants.NESTEST_PATH);
+	const nes = new NES();
+	nes.load(romBytes);
 
-export default (initializeMemory = () => {}) => {
-	const cpu = new CPU();
-	const memory = (cpu.memory = new MemoryChunk(64 * KB));
-	WithContext.apply(memory);
-	const context = { cpu, memory };
+	const context = nes.context;
 
-	initializeMemory(memory);
-	cpu.loadContext(context);
+	initialize(context);
+
+	context.memory = context.cpu.memory;
 	context.context = context;
 
+	nes.onLoad(context);
+
 	return context;
-};
+}

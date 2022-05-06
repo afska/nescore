@@ -263,9 +263,9 @@ const LD_ = (registerName) => {
 };
 
 const ST_ = (registerName) => {
-	return ({ cpu, memory }, address) => {
+	return ({ cpu, memoryBus }, address) => {
 		const value = cpu.registers[registerName].value;
-		memory.writeAt(address, value);
+		memoryBus.cpu.writeAt(address, value);
 	};
 };
 

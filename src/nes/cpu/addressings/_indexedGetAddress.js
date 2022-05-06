@@ -1,6 +1,6 @@
 import { Byte } from "../../helpers";
 
-export default (register) => {
+export default function indexedGetAddress(register) {
 	return function({ cpu }, address, canTakeExtraCycles) {
 		const newAddress = address + cpu.registers[register].value;
 		const pageCrossed =
@@ -10,4 +10,4 @@ export default (register) => {
 
 		return Byte.force16Bit(newAddress);
 	};
-};
+}

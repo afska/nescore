@@ -1,5 +1,5 @@
-import { InMemoryRegister } from ".";
-import { MemoryChunk } from "../memory";
+import InMemoryRegister from "./InMemoryRegister";
+import { WithCompositeMemory } from "../memory";
 const should = require("chai").Should();
 
 describe("registers", () => {
@@ -7,12 +7,15 @@ describe("registers", () => {
 		let memory, register;
 
 		beforeEach(() => {
-			memory = new MemoryChunk(5);
-			register = new InMemoryRegister(3)
-				.addField("booleanBit2", 2)
-				.addField("shortNumberBit5", 5, 2)
-				.addField("longNumberBit4", 4, 4)
-				.loadContext(memory);
+			memory = WithCompositeMemory.createSegment([
+				new InMemoryRegister(), // byte 0
+				new InMemoryRegister(), // byte 1
+				new InMemoryRegister(), // byte 2
+				(register = new InMemoryRegister() // byte 3
+					.addField("booleanBit2", 2)
+					.addField("shortNumberBit5", 5, 2)
+					.addField("longNumberBit4", 4, 4))
+			]);
 		});
 
 		it("allows reading subfields", () => {
@@ -30,16 +33,6 @@ describe("registers", () => {
 			memory.readAt(3).should.equal(0b11010100);
 			register.shortNumberBit5 = 0b01;
 			memory.readAt(3).should.equal(0b10110100);
-		});
-
-		it("allows a onChange callback", (done) => {
-			const finish = (value) => {
-				value.should.equal(8);
-				done();
-			};
-
-			const register = new InMemoryRegister(3, finish).loadContext(memory);
-			register.value = 8;
 		});
 	});
 });

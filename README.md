@@ -1,6 +1,6 @@
 # nescore
 
-A NES CPU Emulator made for educational purposes.
+A NES Emulator made for educational purposes.
 
 ## Install
 
@@ -32,3 +32,5 @@ npm run build
 - Easy 6502: https://skilldrick.github.io/easy6502/
 - Opcodes: http://www.obelisk.me.uk/6502/reference.html
 - NesDev CPU: https://wiki.nesdev.com/w/index.php/CPU
+- NES Rendering: https://austinmorlan.com/posts/nes_rendering_overview
+- NES Ebook: https://bugzmanov.github.io/nes_ebook/chapter_1.html

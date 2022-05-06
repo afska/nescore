@@ -3,11 +3,11 @@ import createTestContext from "../helpers/createTestContext";
 const should = require("chai").Should();
 
 describe("Stack", () => {
-	let cpu, memory, stack;
+	let cpu, memory, context, stack;
 
 	beforeEach(() => {
-		({ cpu, memory } = createTestContext());
-		stack = new Stack().loadContext({ cpu, memory });
+		({ cpu, memory, context } = createTestContext());
+		stack = new Stack().loadContext(context);
 		cpu.sp.value = 0xff;
 	});
 

@@ -1,4 +1,4 @@
-import { Byte } from "../helpers";
+import { Byte } from "../../helpers";
 
 const N_BIT /*  */ = 0b10000000;
 const V_BIT /*  */ = 0b01000000;

@@ -13,8 +13,8 @@ describe("addressings", () => {
 	});
 
 	it("getValue method", () => {
-		memory.writeAt(0xfe9d, 123);
-		const addressingMock = { getAddress: () => 0xfe9d, getValue };
+		memory.writeAt(0x0765, 123);
+		const addressingMock = { getAddress: () => 0x0765, getValue };
 		addressingMock.getValue(context).should.equal(123);
 	});
 
@@ -56,9 +56,9 @@ describe("addressings", () => {
 		});
 
 		it("emulates the page boundary bug", () => {
-			memory.writeAt(0x25ff, 0x12);
-			memory.writeAt(0x2500, 0xcd);
-			addressings.INDIRECT.getAddress(context, 0x25ff).should.equal(0xcd12);
+			memory.writeAt(0x04ff, 0x12);
+			memory.writeAt(0x0400, 0xcd);
+			addressings.INDIRECT.getAddress(context, 0x04ff).should.equal(0xcd12);
 		});
 	});
 

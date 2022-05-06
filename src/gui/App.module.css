@@ -1,0 +1,12 @@
+.app {
+	padding: 10px;
+	text-align: center;
+}
+
+.gameContainer {
+	height: 75vh;
+	padding: 0 !important;
+	margin-left: auto !important;
+	margin-right: auto !important;
+	aspect-ratio: 256/240;
+}
