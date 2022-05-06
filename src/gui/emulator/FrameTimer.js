@@ -1,4 +1,4 @@
-const FPS = 144; //60.098;
+const FPS = 60.098;
 const SECOND = 1000;
 
 export default class FrameTimer {
