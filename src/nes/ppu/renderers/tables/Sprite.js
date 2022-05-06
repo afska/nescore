@@ -24,7 +24,7 @@ export default class Sprite {
 		return this.tileId + index;
 	}
 
-	/** Returns if it should appear in a certain `scanline`. */
+	/** Returns whether it should appear in a certain `scanline` or not. */
 	shouldRenderInScanline(scanline) {
 		const diffY = this.diffY(scanline);
 
@@ -48,12 +48,12 @@ export default class Sprite {
 		);
 	}
 
-	/** Returns if the sprite is in front of background. */
+	/** Returns whether the sprite is in front of background or not. */
 	get isInFrontOfBackground() {
 		return !Byte.getBit(this.attributes, constants.SPRITE_ATTR_PRIORITY_BIT);
 	}
 
-	/** Returns if the sprite is horizontally flipped. */
+	/** Returns whether the sprite is horizontally flipped or not. */
 	get flipX() {
 		return !!Byte.getBit(
 			this.attributes,
@@ -61,7 +61,7 @@ export default class Sprite {
 		);
 	}
 
-	/** Returns if the sprite is vertically flipped. */
+	/** Returns whether the sprite is vertically flipped or not. */
 	get flipY() {
 		return !!Byte.getBit(
 			this.attributes,

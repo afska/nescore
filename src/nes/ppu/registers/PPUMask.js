@@ -45,7 +45,7 @@ export default class PPUMask extends InMemoryRegister {
 		return 0;
 	}
 
-	/** Returns true if any color emphasis is active. */
+	/** Returns whether any color emphasis is active or not. */
 	get emphasizeAny() {
 		return this.emphasizeRed || this.emphasizeGreen || this.emphasizeBlue;
 	}

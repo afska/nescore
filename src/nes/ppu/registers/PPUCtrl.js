@@ -27,7 +27,7 @@ export default class PPUCtrl extends InMemoryRegister {
 		return this.vramAddressIncrement32 === 1 ? 32 : 1;
 	}
 
-	/** Returns if sprites should be 8x16. Otherwise, they're 8x8. */
+	/** Returns true if sprites are 8x16. Otherwise, they're 8x8. */
 	get isIn8x16Mode() {
 		return this.spriteSizeId === 1;
 	}

@@ -18,17 +18,17 @@ export default {
 		return number < 0 ? number + SIZE : number;
 	},
 
-	/** Returns if `value` can be represented as a single byte. */
+	/** Returns whether `value` can be represented as a single byte or not. */
 	hasOverflow(value) {
 		return value >= SIZE;
 	},
 
-	/** Returns if `value` is positive. */
+	/** Returns whether `value` is positive or not. */
 	isPositive(byte) {
 		return !this.isNegative(byte);
 	},
 
-	/** Returns if `value` is negative. */
+	/** Returns whether `value` is negative or not. */
 	isNegative(byte) {
 		return !!this.getBit(byte, 7);
 	},
