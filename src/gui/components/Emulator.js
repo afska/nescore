@@ -64,6 +64,7 @@ export default class Emulator extends Component {
 			if (data instanceof Uint32Array) {
 				// frame data
 				this.screen.setBuffer(data);
+				this.frameTimer.countNewFrame();
 				this.isWaiting = false;
 			} else if (data?.id === "error") {
 				// error

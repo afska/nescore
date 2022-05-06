@@ -25,6 +25,10 @@ export default class FrameTimer {
 		cancelAnimationFrame(this._frameId);
 	}
 
+	countNewFrame() {
+		this._lastSecondFrames++;
+	}
+
 	_run = () => {
 		if (!this._isRunning) return;
 		this._frameId = requestAnimationFrame(this._run);
@@ -43,7 +47,6 @@ export default class FrameTimer {
 		if (elapsedTime > this._interval) {
 			this._lastTime = now - (elapsedTime % this._interval);
 			this.onFrame();
-			this._lastSecondFrames++;
 		}
 	};
 }
