@@ -14,7 +14,6 @@ export default class PPUCtrl extends InMemoryRegister {
 			.addField("patternTableAddressIdFor8x8Sprites", 3)
 			.addField("patternTableAddressIdForBackground", 4)
 			.addField("spriteSizeId", 5)
-			.addField("masterSlaveSelect", 6)
 			.addField("generateNmiAtStartOfVBlank", 7);
 	}
 
