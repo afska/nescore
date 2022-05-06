@@ -3,7 +3,10 @@ import Screen from "./Screen";
 import FrameTimer from "../emulator/FrameTimer";
 import NES from "../../nes";
 import gamepad from "../emulator/gamepad";
+import MyWorker from "worker-loader!../emulator/worker";
 // import debug from "../emulator/debug"; // DEBUG
+
+window.worker = new MyWorker();
 
 export default class Emulator extends Component {
 	render() {
@@ -25,22 +28,22 @@ export default class Emulator extends Component {
 	}
 
 	frame = (debugStep = false) => {
-		try {
-			if (!debugStep) gamepad.updateInput(this);
-			if (this.isDebugging && !debugStep) return;
+		window.worker.postMessage("frame");
 
-			const frameBuffer = this.nes.frame();
-			this.screen.setBuffer(frameBuffer);
-		} catch (e) {
-			this._onError(e);
-		}
+		// try {
+		// 	// // if (!debugStep) gamepad.updateInput(this);
+		// 	// if (this.isDebugging && !debugStep) return;
+		// 	// const frameBuffer = this.nes.frame();
+		// 	// this.screen.setBuffer(frameBuffer);
+		// } catch (e) {
+		// 	this._onError(e);
+		// }
 	};
 
 	componentWillUnmount() {
 		this.stop();
 
 		this.screen = null;
-		this.nes = null;
 		this.frameTimer = null;
 	}
 
@@ -52,13 +55,21 @@ export default class Emulator extends Component {
 		this.stop();
 
 		this.screen = screen;
-		this.nes = new NES();
 		this.frameTimer = new FrameTimer(this.frame, (fps) => {
 			document.querySelector("#fps").textContent = `(fps: ${fps})`;
 		});
 
+		if (window.worker) {
+			window.worker.terminate();
+			window.worker = new MyWorker();
+		}
+
+		window.worker.onmessage = ({ data }) => {
+			this.screen.setBuffer(data);
+		};
+
 		try {
-			this.nes.load(bytes);
+			window.worker.postMessage(bytes);
 		} catch (e) {
 			this._onError(e);
 		}
