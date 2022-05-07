@@ -10,8 +10,8 @@ import {
  * The simplest mapper (also called "mapper 0").
  * It can have either one or two PRG ROM of 16KB, that are mapped
  * at ranges $8000-$BFFF and $C000-$FFFF of the CPU memory.
- * It also has CHR-ROM which contains the tile and sprite data.
- * This CHR-ROM is mapped to the PPU memory at addresses $0000-$1FFF.
+ * It also has CHR ROM which contains the tile and sprite data.
+ * This CHR ROM is mapped to the PPU memory at addresses $0000-$1FFF.
  */
 export default class NROM extends Mapper {
 	static get id() {
@@ -32,8 +32,8 @@ export default class NROM extends Mapper {
 		return WithCompositeMemory.createSegment([
 			//                   Address range   Size      Description
 			unused, //           $4020-$7999     $3FE0     Unused space
-			prgRomFirstPage, //  $8000-$BFFF     $4000     PRG-ROM (first 16KB of ROM)
-			prgRomLastPage //    $C000-$FFFF     $4000     PRG-ROM (last 16KB of ROM or mirror)
+			prgRomFirstPage, //  $8000-$BFFF     $4000     PRG ROM (first 16KB of ROM)
+			prgRomLastPage //    $C000-$FFFF     $4000     PRG ROM (last 16KB of ROM or mirror)
 		]);
 	}
 

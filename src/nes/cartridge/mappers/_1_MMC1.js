@@ -19,6 +19,10 @@ export default class MMC1 extends Mapper {
 		return 1;
 	}
 
+	constructor() {
+		super(constants.PRG_ROM_PAGE_SIZE, 4 * constants.KB);
+	}
+
 	/** Creates a memory segment for CPU range $4020-$FFFF. */
 	createCPUSegment() {
 		const unused = new MemoryPadding(0x1fe0);
@@ -36,26 +40,35 @@ export default class MMC1 extends Mapper {
 		this._registers = {
 			load: new LoadRegister(),
 			control: new ControlRegister(),
-			chrBank0Register: new CHRBank0Register(),
-			chrBank1Register: new CHRBank1Register(),
-			prgBankRegister: new PRGBankRegister()
+			chrBank0: new CHRBank0Register(),
+			chrBank1: new CHRBank1Register(),
+			prgBank: new PRGBankRegister()
 		};
 
 		return WithCompositeMemory.createSegment([
 			//                      Address range   Size      Description
 			unused, //              $4020-$5FFF     $1FE0     Unused space
-			enabledPrgRam, //       $6000-$7FFF     $2000     PRG-RAM (optional)
-			prgRomBank0, //         $8000-$BFFF     $4000     PRG-ROM (switchable or fixed to first bank)
-			prgRomBank1 //          $C000-$FFFF     $4000     PRG-ROM (switchable or fixed to last bank)
+			enabledPrgRam, //       $6000-$7FFF     $2000     PRG RAM (optional)
+			prgRomBank0, //         $8000-$BFFF     $4000     PRG ROM (switchable or fixed to first bank)
+			prgRomBank1 //          $C000-$FFFF     $4000     PRG ROM (switchable or fixed to last bank)
 		]);
 	}
 
 	/** Creates a memory segment for PPU range $0000-$1FFF. */
 	createPPUSegment({ cartridge }) {
-		const chrRom = new MemoryChunk(this.chrPages[0]);
-		chrRom.readOnly = !cartridge.header.usesChrRam;
+		const chrRomBank0 = new MemoryChunk(_.first(this.chrPages));
+		const chrRomBank1 = new MemoryChunk(_.last(this.chrPages));
+		chrRomBank0.readOnly = !cartridge.header.usesChrRam;
+		chrRomBank1.readOnly = !cartridge.header.usesChrRam;
 
-		return chrRom;
+		this._chrRomBank0 = chrRomBank0;
+		this._chrRomBank1 = chrRomBank1;
+
+		return WithCompositeMemory.createSegment([
+			//                      Address range   Size      Description
+			chrRomBank0, //         $0000-$0FFF     $1000     CHR ROM (switchable)
+			chrRomBank1 //          $1000-$1FFF     $1000     CHR ROM (switchable)
+		]);
 	}
 
 	/** Maps a CPU write operation. */
@@ -70,12 +83,12 @@ export default class MMC1 extends Mapper {
 					this._registers.control.mirroring
 				);
 			} else if (address >= 0xa000 && address < 0xc000) {
-				this._registers.chrBank0Register.value = value;
+				this._registers.chrBank0.value = value;
 			} else if (address >= 0xc000 && address < 0xe000) {
-				this._registers.chrBank1Register.value = value;
+				this._registers.chrBank1.value = value;
 			} else {
-				this._registers.prgBankRegister.value = value;
-				this._prgRam = this._registers.prgBankRegister.prgRamEnable
+				this._registers.prgBank.value = value;
+				this._prgRam = this._registers.prgBank.prgRamEnable
 					? this._enabledPrgRam
 					: this._disabledPrgRam;
 			}
@@ -88,7 +101,33 @@ export default class MMC1 extends Mapper {
 	}
 
 	_loadBanks() {
-		// TODO: ASD
+		const { control, chrBank0, chrBank1, prgBank } = this._registers;
+
+		if (control.isPrgRom32Kb) {
+			// 32KB PRG
+			const page = prgBank.prgRomBankId & 0b1110;
+			this._prgRomBank0.bytes = this.prgPages[page];
+			this._prgRomBank1.bytes = this.prgPages[page + 1];
+		} else {
+			// 16KB PRG
+			this._prgRomBank0.bytes = control.isFirstPrgAreaSwitchable
+				? this.prgPages[prgBank.prgRomBankId]
+				: _.first(this.prgPages);
+			this._prgRomBank1.bytes = control.isSecondPrgAreaSwitchable
+				? this.prgPages[prgBank.prgRomBankId]
+				: _.last(this.prgPages);
+		}
+
+		if (control.isChrRom8Kb) {
+			// 8KB CHR
+			const page = chrBank0.value & 0b11110;
+			this._chrRomBank0.bytes = this.chrPages[page];
+			this._chrRomBank0.bytes = this.chrPages[page + 1];
+		} else {
+			// 4KB CHR
+			this._chrRomBank0.bytes = this.chrPages[chrBank0.value];
+			this._chrRomBank1.bytes = this.chrPages[chrBank1.value];
+		}
 	}
 
 	get _prgRam() {
@@ -176,9 +215,14 @@ class ControlRegister extends InMemoryRegister {
 		}
 	}
 
-	/** Returns the selected size of a PRG ROM bank. */
-	get prgRomBankSize() {
-		return (this.prgRomBankMode <= 1 ? 32 : 16) * constants.KB;
+	/** Returns whether the PRG ROM area is 32KB or not (16KB otherwise). */
+	get isPrgRom32Kb() {
+		return this.prgRomBankMode <= 1;
+	}
+
+	/** Returns whether the CHR ROM area is 8KB or not (4KB otherwise). */
+	get isChrRom8Kb() {
+		return this.chrRomBankMode === 0;
 	}
 
 	/** Returns true if the first PRG ROM area ($8000-$BFFF) is switchable. Otherwise, it's fixed to first bank. */
@@ -189,11 +233,6 @@ class ControlRegister extends InMemoryRegister {
 	/** Returns true if the second PRG ROM area ($C000-$FFFF) is switchable. Otherwise, it's fixed to last bank. */
 	get isSecondPrgAreaSwitchable() {
 		return this.prgRomBankMode !== 3;
-	}
-
-	/** Returns the selected size of a CHR ROM bank. */
-	get chrRomBankSize() {
-		return (this.chrRomBankMode === 0 ? 8 : 4) * constants.KB;
 	}
 }
 

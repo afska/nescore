@@ -4,6 +4,9 @@ import _ from "lodash";
 
 /**
  * An abstract class that represents a generic mapper.
+ * It has two memory segments:
+ * - One mapped at CPU $4020-$FFFF (for PRG ROM, PRG RAM, and mapper registers)
+ * - One mapped at PPU $0000-$1FFF (for CHR ROM / Pattern tables)
  * It intercepts all CPU/PPU memory read/write operations.
  */
 export default class Mapper {
@@ -11,8 +14,14 @@ export default class Mapper {
 		throw new Error("not_implemented");
 	}
 
-	constructor() {
+	constructor(
+		prgRomPageSize = constants.PRG_ROM_PAGE_SIZE,
+		chrRomPageSize = constants.CHR_ROM_PAGE_SIZE
+	) {
 		WithContext.apply(this);
+
+		this.prgRomPageSize = prgRomPageSize;
+		this.chrRomPageSize = chrRomPageSize;
 	}
 
 	/** When a context is loaded. */
@@ -23,10 +32,10 @@ export default class Mapper {
 		const chr = cartridge.chrRom;
 
 		this.prgPages = _.range(0, cartridge.header.prgRomPages).map((page) =>
-			this._getPage(prg, constants.PRG_ROM_PAGE_SIZE, page)
+			this._getPage(prg, this.prgRomPageSize, page)
 		);
 		this.chrPages = _.range(0, cartridge.header.chrRomPages).map((page) =>
-			this._getPage(chr, constants.CHR_ROM_PAGE_SIZE, page)
+			this._getPage(chr, this.chrRomPageSize, page)
 		);
 
 		this.segments = {
