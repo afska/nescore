@@ -12,11 +12,15 @@ const nes = new NES();
 const frameTimer = new FrameTimer(
 	() => {
 		if (isDebugging && !isDebugStepRequested) return;
-
-		const frameBuffer = nes.frame();
-		frameTimer.countNewFrame();
-		postMessage(frameBuffer);
 		isDebugStepRequested = false;
+
+		try {
+			const frameBuffer = nes.frame();
+			frameTimer.countNewFrame();
+			postMessage(frameBuffer);
+		} catch (error) {
+			postMessage({ id: "error", error });
+		}
 	},
 	(fps) => {
 		postMessage({ id: "fps", fps });
