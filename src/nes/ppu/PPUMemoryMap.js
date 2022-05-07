@@ -15,12 +15,12 @@ export default class PPUMemoryMap {
 
 	/** When a context is loaded. */
 	onLoad({ cartridge, mapper }) {
-		const nameTables = new RewiredMemoryChunk(
+		this.nameTables = new RewiredMemoryChunk(
 			// (the system only has memory for two Name tables, the other two are mirrored)
 			0x1000,
 			mirroring[cartridge.header.mirroring]
 		);
-		const nameTablesMirror = new MemoryMirror(nameTables, 0x0f00);
+		const nameTablesMirror = new MemoryMirror(this.nameTables, 0x0f00);
 		const paletteRam = new RewiredMemoryChunk(0x20, {
 			// ($3F10/$3F14/$3F18/$3F1C are mirrors of $3F00/$3F04/$3F08/$3F0C)
 			0x10: 0x00,
@@ -33,10 +33,14 @@ export default class PPUMemoryMap {
 		this.defineChunks([
 			//                      Address range  Size     Device
 			mapper.segments.ppu, // $0000-$1FFF    $2000    Pattern tables 0 and 1 (mapper)
-			nameTables, //          $2000-$2FFF    $1000    Name tables 0 to 3 (VRAM + mirror)
+			this.nameTables, //     $2000-$2FFF    $1000    Name tables 0 to 3 (VRAM + mirror)
 			nameTablesMirror, //    $3000-$3EFF    $0F00    Mirrors of $2000-$2EFF
 			paletteRam, //          $3F00-$3F1F    $0020    Palette RAM indexes
 			paletteRamMirror //     $3F20-$3FFF    $00E0    Mirrors of $3F00-$3F1F
 		]);
+	}
+
+	changeNameTablesMirroringTo(mirroringType) {
+		this.nameTables.mapping = mirroring[mirroringType];
 	}
 }

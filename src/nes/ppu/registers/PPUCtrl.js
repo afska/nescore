@@ -24,7 +24,7 @@ export default class PPUCtrl extends InMemoryRegister {
 
 	/** Returns the `PPUAddr` increment per CPU read/write of `PPUData`. */
 	get vramAddressIncrement() {
-		return this.vramAddressIncrement32 === 1 ? 32 : 1;
+		return this.vramAddressIncrement32 ? 32 : 1;
 	}
 
 	/** Returns true if sprites are 8x16. Otherwise, they're 8x8. */

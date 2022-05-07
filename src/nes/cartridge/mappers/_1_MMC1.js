@@ -66,18 +66,29 @@ export default class MMC1 extends Mapper {
 
 			if (address >= 0x8000 && address < 0xa000) {
 				this._registers.control.value = value;
+				this.context.ppu.memory.changeNameTablesMirroringTo(
+					this._registers.control.mirroring
+				);
 			} else if (address >= 0xa000 && address < 0xc000) {
 				this._registers.chrBank0Register.value = value;
 			} else if (address >= 0xc000 && address < 0xe000) {
 				this._registers.chrBank1Register.value = value;
 			} else {
 				this._registers.prgBankRegister.value = value;
+				this._prgRam = this._registers.prgBankRegister.prgRamEnable
+					? this._enabledPrgRam
+					: this._disabledPrgRam;
 			}
 
-			// TODO: UPDATE MEMORY
+			this._loadBanks();
+			return;
 		}
 
 		this.context.cpu.memory.writeAt(address, byte);
+	}
+
+	_loadBanks() {
+		// TODO: ASD
 	}
 
 	get _prgRam() {
