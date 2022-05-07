@@ -54,7 +54,7 @@ export default class Cartridge {
 		return (this.__header = {
 			prgRomPages: this.bytes[4],
 			chrRomPages: this.bytes[5],
-			verticalNameTableMirroring: !!Byte.getBit(flags6, 0),
+			mirroring: Byte.getBit(flags6, 0) === 1 ? "VERTICAL" : "HORIZONTAL",
 			hasTrainerBeforeProgram: !!Byte.getBit(flags6, 2),
 			mapperId: Byte.setSubNumber(
 				Byte.getSubNumber(flags6, 4, 4),

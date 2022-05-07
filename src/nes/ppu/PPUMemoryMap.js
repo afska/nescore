@@ -20,9 +20,7 @@ export default class PPUMemoryMap {
 		const nameTables = new RewiredMemoryChunk(
 			// (the system only has memory for two Name tables, the other two are mirrored)
 			0x1000,
-			cartridge.header.verticalNameTableMirroring // TODO: EXTRACT
-				? mirroring.VERTICAL
-				: mirroring.HORIZONTAL
+			mirroring[cartridge.header.mirroring]
 		);
 		const nameTablesMirror = new MemoryMirror(nameTables, 0x0f00);
 		const paletteRam = new RewiredMemoryChunk(0x20, {

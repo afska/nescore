@@ -15,7 +15,7 @@ describe("Cartridge", () => {
 		new Cartridge(bytes).header.should.eql({
 			prgRomPages: 1,
 			chrRomPages: 1,
-			verticalNameTableMirroring: false,
+			mirroring: "HORIZONTAL",
 			hasTrainerBeforeProgram: false,
 			mapperId: 0
 		});
