@@ -121,10 +121,22 @@ export default class MMC1 extends Mapper {
 		if (control.isChrRom8Kb) {
 			// 8KB CHR
 			const page = chrBank0.value & 0b11110;
-			this._chrRomBank0.bytes = this.chrPages[page];
-			this._chrRomBank0.bytes = this.chrPages[page + 1];
+			console.log("PAGE", page, "OF", this.chrPages.length); // TODO: REMOVE
+			this._chrRomBank0.bytes = this.chrPages[page % this.chrPages.length];
+			this._chrRomBank1.bytes = this.chrPages[
+				(page + 1) % this.chrPages.length
+			];
 		} else {
 			// 4KB CHR
+			console.log(
+				// TODO: REMOVE
+				"PAGES",
+				chrBank0.value,
+				"AND",
+				chrBank1.value,
+				"OF",
+				this.chrPages.length
+			);
 			this._chrRomBank0.bytes = this.chrPages[chrBank0.value];
 			this._chrRomBank1.bytes = this.chrPages[chrBank1.value];
 		}
@@ -148,7 +160,6 @@ export default class MMC1 extends Mapper {
  */
 class LoadRegister {
 	constructor() {
-		this._value = 0;
 		this._shiftRegister = 0;
 		this._writeCounter = 0;
 	}
@@ -169,9 +180,10 @@ class LoadRegister {
 			this._writeCounter++;
 
 			if (this._writeCounter === 5) {
+				const value = this._shiftRegister;
 				this._shiftRegister = 0;
 				this._writeCounter = 0;
-				return this._value;
+				return value;
 			}
 
 			return null;
