@@ -42,17 +42,10 @@ export default class UxROM extends Mapper {
 	/** Maps a CPU write operation. */
 	cpuWriteAt(address, byte) {
 		if (address >= 0x8000) {
-			this._bankSwitch(byte);
+			this._prgRomSwitchableBank.bytes = this._getPrgPage(byte);
 			return;
 		}
 
 		this.context.cpu.memory.writeAt(address, byte);
-	}
-
-	_bankSwitch(byte) {
-		const { header } = this.context.cartridge;
-
-		const page = byte % header.prgRomPages;
-		this._prgRomSwitchableBank.bytes = this.prgPages[page];
 	}
 }

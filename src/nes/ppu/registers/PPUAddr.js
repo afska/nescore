@@ -35,6 +35,7 @@ export default class PPUAddr extends InMemoryRegister {
 			? Byte.to16Bit(byte, Byte.lowPartOf(this.address))
 			: Byte.to16Bit(Byte.highPartOf(this.address), byte);
 
+		// (writing `PPUAddr` affects `PPUScroll` in a weird way)
 		this._updateScrollingMetadata(byte);
 
 		this.latch = !this.latch;

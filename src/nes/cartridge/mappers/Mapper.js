@@ -30,11 +30,13 @@ export default class Mapper {
 
 		const prg = cartridge.prgRom;
 		const chr = cartridge.chrRom;
+		const prgPages = Math.floor(prg.length / this.prgRomPageSize);
+		const chrPages = Math.floor(chr.length / this.chrRomPageSize);
 
-		this.prgPages = _.range(0, cartridge.header.prgRomPages).map((page) =>
+		this.prgPages = _.range(0, prgPages).map((page) =>
 			this._getPage(prg, this.prgRomPageSize, page)
 		);
-		this.chrPages = _.range(0, cartridge.header.chrRomPages).map((page) =>
+		this.chrPages = _.range(0, chrPages).map((page) =>
 			this._getPage(chr, this.chrRomPageSize, page)
 		);
 
@@ -62,6 +64,14 @@ export default class Mapper {
 	/** Maps a PPU write operation. */
 	ppuWriteAt(address, byte) {
 		this.context.ppu.memory.writeAt(address, byte);
+	}
+
+	_getPrgPage(page) {
+		return this.prgPages[page % this.prgPages.length];
+	}
+
+	_getChrPage(page) {
+		return this.chrPages[page % this.chrPages.length];
 	}
 
 	_getPage(memory, pageSize, page) {

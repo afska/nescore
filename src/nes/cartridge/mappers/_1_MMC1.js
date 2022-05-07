@@ -74,19 +74,24 @@ export default class MMC1 extends Mapper {
 	/** Maps a CPU write operation. */
 	cpuWriteAt(address, byte) {
 		if (address >= 0x8000) {
+			// Load
 			const value = this._registers.load.write(byte);
 			if (value == null) return;
 
 			if (address >= 0x8000 && address < 0xa000) {
+				// Control
 				this._registers.control.value = value;
 				this.context.ppu.memory.changeNameTablesMirroringTo(
 					this._registers.control.mirroring
 				);
 			} else if (address >= 0xa000 && address < 0xc000) {
+				// CHR bank 0
 				this._registers.chrBank0.value = value;
 			} else if (address >= 0xc000 && address < 0xe000) {
+				// CHR bank 1
 				this._registers.chrBank1.value = value;
 			} else {
+				// PRG bank
 				this._registers.prgBank.value = value;
 				this._prgRam = this._registers.prgBank.prgRamEnable
 					? this._enabledPrgRam
@@ -106,39 +111,27 @@ export default class MMC1 extends Mapper {
 		if (control.isPrgRom32Kb) {
 			// 32KB PRG
 			const page = prgBank.prgRomBankId & 0b1110;
-			this._prgRomBank0.bytes = this.prgPages[page];
-			this._prgRomBank1.bytes = this.prgPages[page + 1];
+			this._prgRomBank0.bytes = this._getPrgPage(page);
+			this._prgRomBank1.bytes = this._getPrgPage(page + 1);
 		} else {
 			// 16KB PRG
 			this._prgRomBank0.bytes = control.isFirstPrgAreaSwitchable
-				? this.prgPages[prgBank.prgRomBankId]
+				? this._getPrgPage(prgBank.prgRomBankId)
 				: _.first(this.prgPages);
 			this._prgRomBank1.bytes = control.isSecondPrgAreaSwitchable
-				? this.prgPages[prgBank.prgRomBankId]
+				? this._getPrgPage(prgBank.prgRomBankId)
 				: _.last(this.prgPages);
 		}
 
 		if (control.isChrRom8Kb) {
 			// 8KB CHR
 			const page = chrBank0.value & 0b11110;
-			console.log("PAGE", page, "OF", this.chrPages.length); // TODO: REMOVE
-			this._chrRomBank0.bytes = this.chrPages[page % this.chrPages.length];
-			this._chrRomBank1.bytes = this.chrPages[
-				(page + 1) % this.chrPages.length
-			];
+			this._chrRomBank0.bytes = this._getChrPage(page);
+			this._chrRomBank1.bytes = this._getChrPage(page + 1);
 		} else {
 			// 4KB CHR
-			console.log(
-				// TODO: REMOVE
-				"PAGES",
-				chrBank0.value,
-				"AND",
-				chrBank1.value,
-				"OF",
-				this.chrPages.length
-			);
-			this._chrRomBank0.bytes = this.chrPages[chrBank0.value];
-			this._chrRomBank1.bytes = this.chrPages[chrBank1.value];
+			this._chrRomBank0.bytes = this._getChrPage(chrBank0.value);
+			this._chrRomBank1.bytes = this._getChrPage(chrBank1.value);
 		}
 	}
 
