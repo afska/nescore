@@ -24,21 +24,14 @@ export default class Cartridge {
 		return this._getBytes(this._programOffset, this._programSize);
 	}
 
-	/**
-	 * Returns the CHR ROM buffer, which contains static tilesets, or a number.
-	 * A number indicates a CHR RAM size that should be used instead.
-	 */
+	/** Returns the CHR ROM buffer (which contains static tilesets) or a CHR RAM buffer. */
 	get chrRom() {
 		const offset = this._programOffset + this._programSize;
 		const size = this.header.chrRomPages * constants.CHR_ROM_PAGE_SIZE;
 
-		return size > 0
+		return !this.header.usesChrRam
 			? this._getBytes(offset, size)
-			: constants.CHR_RAM_PAGES * constants.CHR_ROM_PAGE_SIZE;
-	}
-
-	get usesChrRam() {
-		return this.header.chrRomPages === 0;
+			: new Uint8Array(constants.CHR_RAM_PAGES * constants.CHR_ROM_PAGE_SIZE);
 	}
 
 	/** Returns the header data. */
@@ -49,11 +42,13 @@ export default class Cartridge {
 		const flags7 = this.bytes[7];
 
 		const prgRomPages = this.bytes[4];
+		const chrRomPages = this.bytes[5];
 		if (prgRomPages === 0) throw new Error("Invalid header: No PRG-ROM pages!");
 
 		return (this.__header = {
-			prgRomPages: this.bytes[4],
-			chrRomPages: this.bytes[5],
+			prgRomPages,
+			chrRomPages: chrRomPages || constants.CHR_RAM_PAGES,
+			usesChrRam: chrRomPages === 0,
 			mirroring: Byte.getBit(flags6, 0) === 1 ? "VERTICAL" : "HORIZONTAL",
 			hasTrainerBeforeProgram: !!Byte.getBit(flags6, 2),
 			mapperId: Byte.setSubNumber(

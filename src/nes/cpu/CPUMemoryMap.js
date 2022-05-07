@@ -35,7 +35,7 @@ export default class CPUMemoryMap {
 			controllers[0].port, //  $4016-$4016    $0001    Controller port 1
 			controllers[1].port, //  $4017-$4017    $0001    Controller port 2
 			cpuTestModeRegisters, // $4018-$401F    $0008	   APU and I/O functionality that is normally disabled
-			mapper //                $4020-$FFFF    $BFE0	   Cartridge space: PRG ROM, PRG RAM, and mapper registers
+			mapper.segments.cpu //   $4020-$FFFF    $BFE0	   Cartridge space: PRG ROM, PRG RAM, and mapper registers
 		]);
 	}
 

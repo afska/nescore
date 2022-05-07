@@ -1,5 +1,10 @@
 import Mapper from "./Mapper";
-import { MemoryChunk, MemoryMirror, MemoryPadding } from "../../memory";
+import {
+	MemoryChunk,
+	MemoryMirror,
+	MemoryPadding,
+	WithCompositeMemory
+} from "../../memory";
 
 /**
  * The simplest mapper (also called "mapper 0").
@@ -13,41 +18,30 @@ export default class NROM extends Mapper {
 		return 0;
 	}
 
-	/** When a context is loaded. */
-	onLoad({ cartridge }) {
+	/** Creates a memory segment for CPU range $4020-$FFFF. */
+	createCPUSegment({ cartridge }) {
 		const unused = new MemoryPadding(0x3fe0);
-		const prgRomFirstPage = new MemoryChunk(this._getProgramBytes(0));
+		const prgRomFirstPage = new MemoryChunk(this.prgPages[0]);
 		const prgRomLastPage =
 			cartridge.header.prgRomPages === 2
-				? new MemoryChunk(this._getProgramBytes(1))
+				? new MemoryChunk(this.prgPages[1])
 				: new MemoryMirror(prgRomFirstPage, 0x4000);
+		prgRomFirstPage.readOnly = true;
+		prgRomLastPage.readOnly = true;
 
-		this.defineChunks([
+		return WithCompositeMemory.createSegment([
 			//                   Address range   Size      Description
 			unused, //           $4020-$7999     $3FE0     Unused space
 			prgRomFirstPage, //  $8000-$BFFF     $4000     PRG-ROM (first 16KB of ROM)
 			prgRomLastPage //    $C000-$FFFF     $4000     PRG-ROM (last 16KB of ROM or mirror)
 		]);
-		this._chrRom = new MemoryChunk(cartridge.chrRom);
-
-		prgRomFirstPage.readOnly = true;
-		prgRomLastPage.readOnly = true;
-		this._chrRom.readOnly = !this.context.cartridge.usesChrRam;
 	}
 
-	/** Maps a PPU read operation. */
-	ppuReadAt(address) {
-		if (address >= 0x0000 && address < 0x2000)
-			return this._chrRom.readAt(address);
+	/** Creates a memory segment for PPU range $0000-$1FFF. */
+	createPPUSegment({ cartridge }) {
+		const chrRom = new MemoryChunk(this.chrPages[0]);
+		chrRom.readOnly = !cartridge.header.usesChrRam;
 
-		return this.context.ppu.memory.readAt(address);
-	}
-
-	/** Maps a PPU write operation. */
-	ppuWriteAt(address, byte) {
-		if (address >= 0x0000 && address < 0x2000)
-			return this._chrRom.writeAt(address, byte);
-
-		this.context.ppu.memory.writeAt(address, byte);
+		return chrRom;
 	}
 }

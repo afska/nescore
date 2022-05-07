@@ -1,10 +1,8 @@
 import Mapper from "./Mapper";
-import { MemoryChunk, MemoryPadding } from "../../memory";
+import { MemoryChunk, MemoryPadding, WithCompositeMemory } from "../../memory";
 import { InMemoryRegister } from "../../registers";
 import constants from "../../constants";
 import _ from "lodash";
-
-// TODO: FINISH
 
 /**
  * It provides bank-switching for PRG and CHR ROM.
@@ -21,54 +19,59 @@ export default class MMC1 extends Mapper {
 		return 1;
 	}
 
-	/** When a context is loaded. */
-	onLoad({ cartridge }) {
-		this.banks = _.range(0, cartridge.header.prgRomPages - 1).map((page) =>
-			this._getProgramBytes(page)
-		);
+	/** Creates a memory segment for CPU range $4020-$FFFF. */
+	createCPUSegment() {
+		const unused = new MemoryPadding(0x1fe0);
+		const disabledPrgRam = new MemoryPadding(0x2000);
+		const enabledPrgRam = new MemoryChunk(0x2000);
+		const prgRomBank0 = new MemoryChunk(_.first(this.prgPages));
+		const prgRomBank1 = new MemoryChunk(_.last(this.prgPages));
+		prgRomBank0.readOnly = true;
+		prgRomBank1.readOnly = true;
 
-		const unused = new MemoryPadding(0x3fe0);
-		const prgRomSelectedPage = new MemoryChunk(this.banks[0]);
-		const prgRomLastPage = new MemoryChunk(
-			this._getProgramBytes(cartridge.header.prgRomPages - 1)
-		);
-
-		this.defineChunks([
-			//                      Address range   Size      Description
-			unused, //              $4020-$7999     $3FE0     Unused space
-			prgRomSelectedPage, //  $8000-$BFFF     $4000     PRG-ROM (16 KB switchable PRG-ROM bank)
-			prgRomLastPage //       $C000-$FFFF     $4000     PRG-ROM (last 16 KB PRG ROM bank)
-		]);
-		this._chrRom = new MemoryChunk(cartridge.chrRom);
-		this._prgRomSelectedPage = prgRomSelectedPage;
-
-		prgRomSelectedPage.readOnly = true;
-		prgRomLastPage.readOnly = true;
-		this._chrRom.readOnly = !this.context.cartridge.usesChrRam;
-
-		this.registers = {
+		this._disabledPrgRam = disabledPrgRam;
+		this._enabledPrgRam = enabledPrgRam;
+		this._prgRomBank0 = prgRomBank0;
+		this._prgRomBank1 = prgRomBank1;
+		this._registers = {
 			load: new LoadRegister(),
 			control: new ControlRegister(),
 			chrBank0Register: new CHRBank0Register(),
 			chrBank1Register: new CHRBank1Register(),
 			prgBankRegister: new PRGBankRegister()
 		};
+
+		return WithCompositeMemory.createSegment([
+			//                      Address range   Size      Description
+			unused, //              $4020-$5FFF     $1FE0     Unused space
+			enabledPrgRam, //       $6000-$7FFF     $2000     PRG-RAM (optional)
+			prgRomBank0, //         $8000-$BFFF     $4000     PRG-ROM (switchable or fixed to first bank)
+			prgRomBank1 //          $C000-$FFFF     $4000     PRG-ROM (switchable or fixed to last bank)
+		]);
+	}
+
+	/** Creates a memory segment for PPU range $0000-$1FFF. */
+	createPPUSegment({ cartridge }) {
+		const chrRom = new MemoryChunk(this.chrPages[0]);
+		chrRom.readOnly = !cartridge.header.usesChrRam;
+
+		return chrRom;
 	}
 
 	/** Maps a CPU write operation. */
 	cpuWriteAt(address, byte) {
 		if (address >= 0x8000) {
-			const value = this.registers.load.write(byte);
+			const value = this._registers.load.write(byte);
 			if (value == null) return;
 
 			if (address >= 0x8000 && address < 0xa000) {
-				this.registers.control.value = value;
+				this._registers.control.value = value;
 			} else if (address >= 0xa000 && address < 0xc000) {
-				this.registers.chrBank0Register.value = value;
+				this._registers.chrBank0Register.value = value;
 			} else if (address >= 0xc000 && address < 0xe000) {
-				this.registers.chrBank1Register.value = value;
+				this._registers.chrBank1Register.value = value;
 			} else {
-				this.registers.prgBankRegister.value = value;
+				this._registers.prgBankRegister.value = value;
 			}
 
 			// TODO: UPDATE MEMORY
@@ -77,20 +80,12 @@ export default class MMC1 extends Mapper {
 		this.context.cpu.memory.writeAt(address, byte);
 	}
 
-	/** Maps a PPU read operation. */
-	ppuReadAt(address) {
-		if (address >= 0x0000 && address < 0x2000)
-			return this._chrRom.readAt(address);
-
-		return this.context.ppu.memory.readAt(address);
+	get _prgRam() {
+		return this.segments.cpu.chunks[1];
 	}
 
-	/** Maps a PPU write operation. */
-	ppuWriteAt(address, byte) {
-		if (address >= 0x0000 && address < 0x2000)
-			return this._chrRom.writeAt(address, byte);
-
-		this.context.ppu.memory.writeAt(address, byte);
+	set _prgRam(value) {
+		this.segments.cpu.chunks[1] = value;
 	}
 }
 

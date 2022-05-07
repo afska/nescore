@@ -1,6 +1,6 @@
-import { WithCompositeMemory } from "../../memory";
 import constants from "../../constants";
 import { WithContext } from "../../helpers";
+import _ from "lodash";
 
 /**
  * An abstract class that represents a generic mapper.
@@ -13,7 +13,26 @@ export default class Mapper {
 
 	constructor() {
 		WithContext.apply(this);
-		WithCompositeMemory.apply(this);
+	}
+
+	/** When a context is loaded. */
+	onLoad(context) {
+		const { cartridge } = context;
+
+		const prg = cartridge.prgRom;
+		const chr = cartridge.chrRom;
+
+		this.prgPages = _.range(0, cartridge.header.prgRomPages).map((page) =>
+			this._getPage(prg, constants.PRG_ROM_PAGE_SIZE, page)
+		);
+		this.chrPages = _.range(0, cartridge.header.chrRomPages).map((page) =>
+			this._getPage(chr, constants.CHR_ROM_PAGE_SIZE, page)
+		);
+
+		this.segments = {
+			cpu: this.createCPUSegment(context),
+			ppu: this.createPPUSegment(context)
+		};
 	}
 
 	/** Maps a CPU read operation. */
@@ -36,10 +55,8 @@ export default class Mapper {
 		this.context.ppu.memory.writeAt(address, byte);
 	}
 
-	_getProgramBytes(page) {
-		const { cartridge } = this.context;
-
-		const offset = page * constants.PRG_ROM_PAGE_SIZE;
-		return cartridge.prgRom.slice(offset, offset + constants.PRG_ROM_PAGE_SIZE);
+	_getPage(memory, pageSize, page) {
+		const offset = page * pageSize;
+		return memory.slice(offset, offset + pageSize);
 	}
 }

@@ -1,11 +1,11 @@
 import Mapper from "./Mapper";
-import { MemoryChunk, MemoryPadding } from "../../memory";
+import { MemoryChunk, MemoryPadding, WithCompositeMemory } from "../../memory";
 import _ from "lodash";
 
 /**
  * It provide bank-switching capabilities, just by writing a byte to any address on PRG-ROM space.
  * CPU $8000-$BFFF: 16 KB switchable PRG-ROM bank
- * CPU $C000-$FFFF: 16 KB PRG ROM bank, fixed to the last bank
+ * CPU $C000-$FFFF: 16 KB PRG-ROM bank, fixed to the last page
  * The CHR memory is usually RAM, mapped at PPU addresses $0000-$1FFF.
  */
 export default class UxROM extends Mapper {
@@ -13,30 +13,30 @@ export default class UxROM extends Mapper {
 		return 2;
 	}
 
-	/** When a context is loaded. */
-	onLoad({ cartridge }) {
-		this.banks = _.range(0, cartridge.header.prgRomPages - 1).map((page) =>
-			this._getProgramBytes(page)
-		);
-
+	/** Creates a memory segment for CPU range $4020-$FFFF. */
+	createCPUSegment() {
 		const unused = new MemoryPadding(0x3fe0);
-		const prgRomSelectedPage = new MemoryChunk(this.banks[0]);
-		const prgRomLastPage = new MemoryChunk(
-			this._getProgramBytes(cartridge.header.prgRomPages - 1)
-		);
-
-		this.defineChunks([
-			//                      Address range   Size      Description
-			unused, //              $4020-$7999     $3FE0     Unused space
-			prgRomSelectedPage, //  $8000-$BFFF     $4000     PRG-ROM (16 KB switchable PRG-ROM bank)
-			prgRomLastPage //       $C000-$FFFF     $4000     PRG-ROM (last 16 KB PRG ROM bank)
-		]);
-		this._chrRom = new MemoryChunk(cartridge.chrRom);
-		this._prgRomSelectedPage = prgRomSelectedPage;
-
+		const prgRomSelectedPage = new MemoryChunk(_.first(this.prgPages));
+		const prgRomLastPage = new MemoryChunk(_.last(this.prgPages));
 		prgRomSelectedPage.readOnly = true;
 		prgRomLastPage.readOnly = true;
-		this._chrRom.readOnly = !this.context.cartridge.usesChrRam;
+
+		this._prgRomSwitchableBank = prgRomSelectedPage;
+
+		return WithCompositeMemory.createSegment([
+			//                      Address range   Size      Description
+			unused, //              $4020-$7999     $3FE0     Unused space
+			prgRomSelectedPage, //  $8000-$BFFF     $4000     PRG-ROM (switchable)
+			prgRomLastPage //       $C000-$FFFF     $4000     PRG-ROM (fixed to last bank)
+		]);
+	}
+
+	/** Creates a memory segment for PPU range $0000-$1FFF. */
+	createPPUSegment({ cartridge }) {
+		const chrRom = new MemoryChunk(this.chrPages[0]);
+		chrRom.readOnly = !cartridge.header.usesChrRam;
+
+		return chrRom;
 	}
 
 	/** Maps a CPU write operation. */
@@ -49,26 +49,10 @@ export default class UxROM extends Mapper {
 		this.context.cpu.memory.writeAt(address, byte);
 	}
 
-	/** Maps a PPU read operation. */
-	ppuReadAt(address) {
-		if (address >= 0x0000 && address < 0x2000)
-			return this._chrRom.readAt(address);
-
-		return this.context.ppu.memory.readAt(address);
-	}
-
-	/** Maps a PPU write operation. */
-	ppuWriteAt(address, byte) {
-		if (address >= 0x0000 && address < 0x2000)
-			return this._chrRom.writeAt(address, byte);
-
-		this.context.ppu.memory.writeAt(address, byte);
-	}
-
 	_bankSwitch(byte) {
 		const { header } = this.context.cartridge;
 
 		const page = byte % header.prgRomPages;
-		this._prgRomSelectedPage.bytes = this.banks[page];
+		this._prgRomSwitchableBank.bytes = this.prgPages[page];
 	}
 }

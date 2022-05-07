@@ -1,7 +1,6 @@
 import {
 	WithCompositeMemory,
 	MemoryMirror,
-	MemoryPadding,
 	RewiredMemoryChunk
 } from "../memory";
 import mirroring from "./mirroring";
@@ -15,8 +14,7 @@ export default class PPUMemoryMap {
 	}
 
 	/** When a context is loaded. */
-	onLoad({ cartridge }) {
-		const patternTables = new MemoryPadding(0x2000);
+	onLoad({ cartridge, mapper }) {
 		const nameTables = new RewiredMemoryChunk(
 			// (the system only has memory for two Name tables, the other two are mirrored)
 			0x1000,
@@ -33,12 +31,12 @@ export default class PPUMemoryMap {
 		const paletteRamMirror = new MemoryMirror(paletteRam, 0x00e0);
 
 		this.defineChunks([
-			//                   Address range  Size     Device
-			patternTables, //    $0000-$1FFF    $2000    Pattern tables 0 and 1 (mapper)
-			nameTables, //       $2000-$2FFF    $1000    Name tables 0 to 3 (VRAM + mirror)
-			nameTablesMirror, // $3000-$3EFF    $0F00    Mirrors of $2000-$2EFF
-			paletteRam, //       $3F00-$3F1F    $0020    Palette RAM indexes
-			paletteRamMirror //  $3F20-$3FFF    $00E0    Mirrors of $3F00-$3F1F
+			//                      Address range  Size     Device
+			mapper.segments.ppu, // $0000-$1FFF    $2000    Pattern tables 0 and 1 (mapper)
+			nameTables, //          $2000-$2FFF    $1000    Name tables 0 to 3 (VRAM + mirror)
+			nameTablesMirror, //    $3000-$3EFF    $0F00    Mirrors of $2000-$2EFF
+			paletteRam, //          $3F00-$3F1F    $0020    Palette RAM indexes
+			paletteRamMirror //     $3F20-$3FFF    $00E0    Mirrors of $3F00-$3F1F
 		]);
 	}
 }
