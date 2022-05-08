@@ -49,7 +49,12 @@ export default class Cartridge {
 			prgRomPages,
 			chrRomPages: chrRomPages || constants.CHR_RAM_PAGES,
 			usesChrRam: chrRomPages === 0,
-			mirroring: Byte.getBit(flags6, 0) === 1 ? "VERTICAL" : "HORIZONTAL",
+			mirroring:
+				Byte.getBit(flags6, 4) === 1
+					? "FOUR_SCREENS"
+					: Byte.getBit(flags6, 0) === 1
+					? "VERTICAL"
+					: "HORIZONTAL",
 			hasTrainerBeforeProgram: !!Byte.getBit(flags6, 2),
 			mapperId: Byte.setSubNumber(
 				Byte.getSubNumber(flags6, 4, 4),

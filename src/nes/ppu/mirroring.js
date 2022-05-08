@@ -25,9 +25,12 @@ const ONE_SCREEN_UPPER_BANK = RewiredMemoryChunk.createMapping([
 	{ from: 0xc00, size: 0x400, to: 0x400 } // bottom-right (A mirror)
 ]);
 
+const FOUR_SCREENS = {}; // (the complete 4KB area is available)
+
 export default {
 	HORIZONTAL,
 	VERTICAL,
 	ONE_SCREEN_LOWER_BANK,
-	ONE_SCREEN_UPPER_BANK
+	ONE_SCREEN_UPPER_BANK,
+	FOUR_SCREENS
 };
