@@ -48,8 +48,7 @@ export default class MMC3 extends Mapper {
 			bankData: [0, 0, 0, 0, 0, 0, 0],
 			irqEnabled: false,
 			irqLatch: 0,
-			irqCountdown: 0,
-			irqReloadPending: false
+			irqCountdown: 0
 		};
 
 		return WithCompositeMemory.createSegment([
@@ -116,7 +115,6 @@ export default class MMC3 extends Mapper {
 				// IRQ reload
 				// This register resets the actual scanline counter, and will push the
 				// IRQ latch value to the counter in the next scanline.
-				this._state.irqReloadPending = true;
 				this._state.irqCountdown = 0;
 			}
 		} else if (address >= 0xe000) {
@@ -138,13 +136,14 @@ export default class MMC3 extends Mapper {
 	tick() {
 		if (!this.context.ppu.registers.ppuMask.isRenderingEnabled) return null;
 
-		if (this._state.irqCountdown === 0 || this._state.irqReloadPending) {
+		if (this._state.irqCountdown === 0)
 			this._state.irqCountdown = this._state.irqLatch;
-			this._state.irqReloadPending = false;
-		} else this._state.irqCountdown--;
+		else {
+			this._state.irqCountdown--;
 
-		if (this._state.irqCountdown === 0 && this._state.irqEnabled)
-			return interrupts.IRQ;
+			if (this._state.irqCountdown === 0 && this._state.irqEnabled)
+				return interrupts.IRQ;
+		}
 
 		return null;
 	}
