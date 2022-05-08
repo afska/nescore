@@ -4,7 +4,8 @@ import _ from "lodash";
 /** Renders the sprites from OAM. */
 export default function renderSprites(context) {
 	const sprites = evaluateSprites(context);
-	drawSprites(context, sprites);
+	const buffer = drawSpritesIntoBuffer(context, sprites);
+	drawSprites(context, buffer);
 }
 
 /** Evaluates which sprites should be rendered in the current scanline. */
@@ -28,15 +29,13 @@ const evaluateSprites = ({ ppu }) => {
 	return _.orderBy(sprites, ["id"], ["desc"]);
 };
 
-/** Draws a list of `sprites` on the current scanline. */
-const drawSprites = (context, sprites) => {
+/** Draws a list of `sprites` into a buffer. */
+const drawSpritesIntoBuffer = (context, sprites) => {
 	const { ppu } = context;
 	const { ppuMask, ppuStatus } = ppu.registers;
 	const finalY = ppu.scanline;
 
-	const colors = [];
-	const priorities = [];
-	const xs = [];
+	const buffer = { colors: [], priorities: [], xs: [] };
 
 	for (let sprite of sprites) {
 		const insideY = sprite.diffY(finalY);
@@ -69,12 +68,20 @@ const drawSprites = (context, sprites) => {
 
 			// add to drawing buffer
 			if (isSpritePixelOpaque) {
-				colors[finalX] = ppu.framePalette.getColorOf(paletteId, paletteIndex);
-				priorities[finalX] = sprite.isInFrontOfBackground;
-				xs[finalX] = finalX;
+				const color = ppu.framePalette.getColorOf(paletteId, paletteIndex);
+				buffer.colors[finalX] = color;
+				buffer.priorities[finalX] = sprite.isInFrontOfBackground;
+				buffer.xs[finalX] = finalX;
 			}
 		}
 	}
+
+	return buffer;
+};
+
+/** Draws a `buffer` using the PPU, in the right layer. */
+const drawSprites = ({ ppu }, { colors, priorities, xs }) => {
+	const finalY = ppu.scanline;
 
 	for (let finalX of xs) {
 		const isInFrontOfBackground = priorities[finalX];
