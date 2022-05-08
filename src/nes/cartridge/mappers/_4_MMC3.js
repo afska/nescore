@@ -2,7 +2,6 @@ import Mapper from "./Mapper";
 import { MemoryChunk, MemoryPadding, WithCompositeMemory } from "../../memory";
 import { InMemoryRegister } from "../../registers";
 import constants from "../../constants";
-import _ from "lodash";
 
 /**
  * It provides bank-switching for PRG and CHR ROM.
@@ -34,10 +33,10 @@ export default class MMC3 extends Mapper {
 	createCPUSegment() {
 		const unused = new MemoryPadding(0x1fe0);
 		const prgRam = new MemoryChunk(0x2000);
-		const prgRomBank0 = new MemoryChunk(_.first(this.prgPages)).asReadOnly();
-		const prgRomBank1 = new MemoryChunk(_.first(this.prgPages)).asReadOnly();
-		const prgRomBank2 = new MemoryChunk(_.first(this.prgPages)).asReadOnly();
-		const prgRomBank3 = new MemoryChunk(_.last(this.prgPages)).asReadOnly();
+		const prgRomBank0 = this._newPrgBank();
+		const prgRomBank1 = this._newPrgBank();
+		const prgRomBank2 = this._newPrgBank();
+		const prgRomBank3 = this._newPrgBank(this.prgPages.length - 1);
 
 		this._prgRomBank0 = prgRomBank0;
 		this._prgRomBank1 = prgRomBank1;
@@ -49,46 +48,38 @@ export default class MMC3 extends Mapper {
 		};
 
 		return WithCompositeMemory.createSegment([
-			//                      Address range   Size      Description
-			unused, //              $4020-$5FFF     $1FE0     Unused space
-			prgRam, //              $6000-$7FFF     $2000     PRG RAM (optional)
-			prgRomBank0, //         $8000-$9FFF     $4000     PRG ROM (switchable or fixed to second-last bank)
-			prgRomBank1, //         $A000-$BFFF     $4000     PRG ROM (switchable)
-			prgRomBank2, //         $C000-$DFFF     $4000     PRG ROM (switchable or fixed to second-last bank)
-			prgRomBank3 //          $E000-$FFFF     $4000     PRG ROM (fixed to last bank)
+			//              Address range   Size      Description
+			unused, //      $4020-$5FFF     $1FE0     Unused space
+			prgRam, //      $6000-$7FFF     $2000     PRG RAM (optional)
+			prgRomBank0, // $8000-$9FFF     $2000     PRG ROM (switchable or fixed to second-last bank)
+			prgRomBank1, // $A000-$BFFF     $2000     PRG ROM (switchable)
+			prgRomBank2, // $C000-$DFFF     $2000     PRG ROM (switchable or fixed to second-last bank)
+			prgRomBank3 //  $E000-$FFFF     $2000     PRG ROM (fixed to last bank)
 		]);
 	}
 
 	/** Creates a memory segment for PPU range $0000-$1FFF. */
 	createPPUSegment({ cartridge }) {
+		this._chrRomBank0 = this._newChrBank(cartridge);
+		this._chrRomBank1 = this._newChrBank(cartridge);
+		this._chrRomBank2 = this._newChrBank(cartridge);
+		this._chrRomBank3 = this._newChrBank(cartridge);
+		this._chrRomBank4 = this._newChrBank(cartridge);
+		this._chrRomBank5 = this._newChrBank(cartridge);
+		this._chrRomBank6 = this._newChrBank(cartridge);
+		this._chrRomBank7 = this._newChrBank(cartridge);
+
 		return WithCompositeMemory.createSegment([
-			new MemoryChunk(_.first(this.chrPages)).asReadOnly(true),
-			new MemoryChunk(_.first(this.chrPages)).asReadOnly(true),
-			new MemoryChunk(_.first(this.chrPages)).asReadOnly(true),
-			new MemoryChunk(_.first(this.chrPages)).asReadOnly(true),
-			new MemoryChunk(_.first(this.chrPages)).asReadOnly(true),
-			new MemoryChunk(_.first(this.chrPages)).asReadOnly(true),
-			new MemoryChunk(_.first(this.chrPages)).asReadOnly(true),
-			new MemoryChunk(_.first(this.chrPages)).asReadOnly(true)
+			//                    Address range   Size      Description
+			this._chrRomBank0, // $0000-$03FF     $400      CHR ROM (switchable)
+			this._chrRomBank1, // $0400-$07FF     $400      CHR ROM (switchable)
+			this._chrRomBank2, // $0800-$0BFF     $400      CHR ROM (switchable)
+			this._chrRomBank3, // $0C00-$0FFF     $400      CHR ROM (switchable)
+			this._chrRomBank4, // $1000-$13FF     $400      CHR ROM (switchable)
+			this._chrRomBank5, // $1400-$17FF     $400      CHR ROM (switchable)
+			this._chrRomBank6, // $1800-$1BFF     $400      CHR ROM (switchable)
+			this._chrRomBank7 //  $1C00-$1FFF     $400      CHR ROM (switchable)
 		]);
-		// TODO: IMPLEMENT CHR
-
-		// const isReadOnly = !cartridge.header.usesChrRam;
-		// const chrRomBank0 = new MemoryChunk(_.first(this.chrPages)).asReadOnly(
-		// 	isReadOnly
-		// );
-		// const chrRomBank1 = new MemoryChunk(_.last(this.chrPages)).asReadOnly(
-		// 	isReadOnly
-		// );
-
-		// this._chrRomBank0 = chrRomBank0;
-		// this._chrRomBank1 = chrRomBank1;
-
-		// return WithCompositeMemory.createSegment([
-		// 	//                      Address range   Size      Description
-		// 	chrRomBank0, //         $0000-$0FFF     $1000     CHR ROM (switchable)
-		// 	chrRomBank1 //          $1000-$1FFF     $1000     CHR ROM (switchable)
-		// ]);
 	}
 
 	/** Maps a CPU write operation. */
@@ -146,7 +137,28 @@ export default class MMC3 extends Mapper {
 	_loadCHRBanks() {
 		const { bankSelect, bankData } = this._registers;
 
-		// TODO: IMPLEMENT
+		const r0 = bankData[0] & 0b11111110;
+		const r1 = bankData[1] & 0b11111110;
+
+		if (bankSelect.chrRomA12Inversion === 0) {
+			this._chrRomBank0.bytes = this._getChrPage(r0);
+			this._chrRomBank1.bytes = this._getChrPage(r0 + 1);
+			this._chrRomBank2.bytes = this._getChrPage(r1);
+			this._chrRomBank3.bytes = this._getChrPage(r1 + 1);
+			this._chrRomBank4.bytes = this._getChrPage(bankData[2]);
+			this._chrRomBank5.bytes = this._getChrPage(bankData[3]);
+			this._chrRomBank6.bytes = this._getChrPage(bankData[4]);
+			this._chrRomBank7.bytes = this._getChrPage(bankData[5]);
+		} else {
+			this._chrRomBank0.bytes = this._getChrPage(bankData[2]);
+			this._chrRomBank1.bytes = this._getChrPage(bankData[3]);
+			this._chrRomBank2.bytes = this._getChrPage(bankData[4]);
+			this._chrRomBank3.bytes = this._getChrPage(bankData[5]);
+			this._chrRomBank4.bytes = this._getChrPage(r0);
+			this._chrRomBank5.bytes = this._getChrPage(r0 + 1);
+			this._chrRomBank6.bytes = this._getChrPage(r1);
+			this._chrRomBank7.bytes = this._getChrPage(r1 + 1);
+		}
 
 		/**
 		 * CHR map mode | $8000.D7 = 0 | $8000.D7 = 1

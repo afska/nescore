@@ -1,3 +1,4 @@
+import { MemoryChunk } from "../../memory";
 import constants from "../../constants";
 import { WithContext } from "../../helpers";
 import _ from "lodash";
@@ -74,6 +75,16 @@ export default class Mapper {
 	/** Maps a PPU write operation. */
 	ppuWriteAt(address, byte) {
 		this.context.ppu.memory.writeAt(address, byte);
+	}
+
+	_newPrgBank(id = 0) {
+		return new MemoryChunk(this.prgPages[id]).asReadOnly();
+	}
+
+	_newChrBank(cartridge, id = 0) {
+		return new MemoryChunk(this.chrPages[id]).asReadOnly(
+			!cartridge.header.usesChrRam
+		);
 	}
 
 	_getPrgPage(page) {

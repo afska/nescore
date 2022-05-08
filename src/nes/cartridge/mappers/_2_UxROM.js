@@ -1,6 +1,5 @@
 import Mapper from "./Mapper";
-import { MemoryChunk, MemoryPadding, WithCompositeMemory } from "../../memory";
-import _ from "lodash";
+import { MemoryPadding, WithCompositeMemory } from "../../memory";
 
 /**
  * It provide bank-switching capabilities, just by writing a byte to any address on PRG ROM space.
@@ -16,26 +15,22 @@ export default class UxROM extends Mapper {
 	/** Creates a memory segment for CPU range $4020-$FFFF. */
 	createCPUSegment() {
 		const unused = new MemoryPadding(0x3fe0);
-		const prgRomSelectedPage = new MemoryChunk(
-			_.first(this.prgPages)
-		).asReadOnly();
-		const prgRomLastPage = new MemoryChunk(_.last(this.prgPages)).asReadOnly();
+		const prgRomSelectedPage = this._newPrgBank();
+		const prgRomLastPage = this._newPrgBank(this.prgPages.length - 1);
 
 		this._prgRomSwitchableBank = prgRomSelectedPage;
 
 		return WithCompositeMemory.createSegment([
-			//                      Address range   Size      Description
-			unused, //              $4020-$7999     $3FE0     Unused space
-			prgRomSelectedPage, //  $8000-$BFFF     $4000     PRG ROM (switchable)
-			prgRomLastPage //       $C000-$FFFF     $4000     PRG ROM (fixed to last bank)
+			//                     Address range   Size      Description
+			unused, //             $4020-$7999     $3FE0     Unused space
+			prgRomSelectedPage, // $8000-$BFFF     $4000     PRG ROM (switchable)
+			prgRomLastPage //      $C000-$FFFF     $4000     PRG ROM (fixed to last bank)
 		]);
 	}
 
 	/** Creates a memory segment for PPU range $0000-$1FFF. */
 	createPPUSegment({ cartridge }) {
-		return new MemoryChunk(this.chrPages[0]).asReadOnly(
-			!cartridge.header.usesChrRam
-		);
+		return this._newChrBank(cartridge);
 	}
 
 	/** Maps a CPU write operation. */
