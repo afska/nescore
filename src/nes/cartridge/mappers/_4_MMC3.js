@@ -1,4 +1,5 @@
 import Mapper from "./Mapper";
+import { interrupts } from "../../cpu/constants";
 import { MemoryChunk, MemoryPadding, WithCompositeMemory } from "../../memory";
 import { InMemoryRegister } from "../../registers";
 import constants from "../../constants";
@@ -44,7 +45,11 @@ export default class MMC3 extends Mapper {
 
 		this._state = {
 			bankSelect: new BankSelectRegister(),
-			bankData: [0, 0, 0, 0, 0, 0, 0]
+			bankData: [0, 0, 0, 0, 0, 0, 0],
+			irqEnabled: false,
+			irqLatch: 0,
+			irqCountdown: 0,
+			irqReloadPending: false
 		};
 
 		return WithCompositeMemory.createSegment([
@@ -84,12 +89,13 @@ export default class MMC3 extends Mapper {
 
 	/** Maps a CPU write operation. */
 	cpuWriteAt(address, byte) {
+		// (the writes are differentiated in even and odd, depending on `address`)
+		const isEven = address % 2 === 0;
+
 		if (address >= 0x8000 && address < 0x9fef) {
-			// Bank select
-			// (the writes are differentiated in even and odd, depending on `address`)
 			const { bankSelect } = this._state;
 
-			if (address % 2 === 0) {
+			if (isEven) {
 				// even = writes to Bank select register
 				bankSelect.value = byte;
 			} else {
@@ -100,9 +106,47 @@ export default class MMC3 extends Mapper {
 			this._loadPRGBanks();
 			this._loadCHRBanks();
 			return;
+		} else if (address >= 0xc000 && address < 0xe000) {
+			if (isEven) {
+				// IRQ latch
+				// This register holds the value, that will be loaded into the actual
+				// scanline counter when a reload is forced, or when the counter reached zero.
+				this._state.irqLatch = byte;
+			} else {
+				// IRQ reload
+				// This register resets the actual scanline counter, and will push the
+				// IRQ latch value to the counter in the next scanline.
+				this._state.irqReloadPending = true;
+				this._state.irqCountdown = 0;
+			}
+		} else if (address >= 0xe000) {
+			if (isEven) {
+				// IRQ disable
+				// Writing to this register will disable the IRQ generation.
+				this._state.irqEnabled = false;
+			} else {
+				// IRQ enable
+				// Writing to this address area will enable IRQ generation again.
+				this._state.irqEnabled = true;
+			}
 		}
 
 		this.context.cpu.memory.writeAt(address, byte);
+	}
+
+	/** Runs at cycle 260 of every scanline (including preline). Returns a CPU interrupt or null. */
+	tick() {
+		if (!this.context.ppu.registers.ppuMask.isRenderingEnabled) return null;
+
+		if (this._state.irqCountdown === 0 || this._state.irqReloadPending) {
+			this._state.irqCountdown = this._state.irqLatch;
+			this._state.irqReloadPending = false;
+		} else this._state.irqCountdown--;
+
+		if (this._state.irqCountdown === 0 && this._state.irqEnabled)
+			return interrupts.IRQ;
+
+		return null;
 	}
 
 	_loadPRGBanks() {

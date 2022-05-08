@@ -49,4 +49,9 @@ export default class PPUMask extends InMemoryRegister {
 	get emphasizeAny() {
 		return this.emphasizeRed || this.emphasizeGreen || this.emphasizeBlue;
 	}
+
+	/** Returns whether any rendering (background or sprites) is active or not. */
+	get isRenderingEnabled() {
+		return this.showBackground || this.showSprites;
+	}
 }
