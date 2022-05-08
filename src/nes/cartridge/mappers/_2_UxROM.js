@@ -16,10 +16,10 @@ export default class UxROM extends Mapper {
 	/** Creates a memory segment for CPU range $4020-$FFFF. */
 	createCPUSegment() {
 		const unused = new MemoryPadding(0x3fe0);
-		const prgRomSelectedPage = new MemoryChunk(_.first(this.prgPages));
-		const prgRomLastPage = new MemoryChunk(_.last(this.prgPages));
-		prgRomSelectedPage.readOnly = true;
-		prgRomLastPage.readOnly = true;
+		const prgRomSelectedPage = new MemoryChunk(
+			_.first(this.prgPages)
+		).asReadOnly();
+		const prgRomLastPage = new MemoryChunk(_.last(this.prgPages)).asReadOnly();
 
 		this._prgRomSwitchableBank = prgRomSelectedPage;
 
@@ -33,10 +33,9 @@ export default class UxROM extends Mapper {
 
 	/** Creates a memory segment for PPU range $0000-$1FFF. */
 	createPPUSegment({ cartridge }) {
-		const chrRom = new MemoryChunk(this.chrPages[0]);
-		chrRom.readOnly = !cartridge.header.usesChrRam;
-
-		return chrRom;
+		return new MemoryChunk(this.chrPages[0]).asReadOnly(
+			!cartridge.header.usesChrRam
+		);
 	}
 
 	/** Maps a CPU write operation. */

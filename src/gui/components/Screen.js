@@ -24,7 +24,7 @@ export default class Screen extends Component {
 			for (let x = 0; x < SCREEN_WIDTH; ++x) {
 				const i = y * SCREEN_WIDTH + x;
 
-				// Convert pixel from NES BGR to canvas ABGR
+				// convert pixel from NES BGR to canvas ABGR
 				this.buf32[i] = FULL_ALPHA | buffer[i];
 			}
 		}
@@ -46,18 +46,18 @@ export default class Screen extends Component {
 			SCREEN_HEIGHT
 		);
 
-		// Set alpha to opaque
+		// set alpha to opaque
 		this.context.fillStyle = "black";
 		this.context.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-		// Buffer to write on next animation frame
+		// buffer to write on next animation frame
 		this.buf = new ArrayBuffer(this.imageData.data.length);
 
-		// Get the canvas buffer in 8bit and 32bit
+		// get the canvas buffer in 8bit and 32bit
 		this.buf8 = new Uint8ClampedArray(this.buf);
 		this.buf32 = new Uint32Array(this.buf);
 
-		// Set alpha
+		// set alpha
 		for (let i = 0; i < this.buf32.length; ++i) this.buf32[i] = FULL_ALPHA;
 	}
 }

@@ -24,6 +24,16 @@ export default class Mapper {
 		this.chrRomPageSize = chrRomPageSize;
 	}
 
+	/** Creates a memory segment for CPU range $4020-$FFFF. */
+	createCPUSegment(context) {
+		throw new Error("not_implemented");
+	}
+
+	/** Creates a memory segment for PPU range $0000-$1FFF. */
+	createPPUSegment(context) {
+		throw new Error("not_implemented");
+	}
+
 	/** When a context is loaded. */
 	onLoad(context) {
 		const { cartridge } = context;
@@ -67,11 +77,11 @@ export default class Mapper {
 	}
 
 	_getPrgPage(page) {
-		return this.prgPages[page % this.prgPages.length];
+		return this.prgPages[Math.max(0, page % this.prgPages.length)];
 	}
 
 	_getChrPage(page) {
-		return this.chrPages[page % this.chrPages.length];
+		return this.chrPages[Math.max(0, page % this.chrPages.length)];
 	}
 
 	_getPage(memory, pageSize, page) {

@@ -21,13 +21,11 @@ export default class NROM extends Mapper {
 	/** Creates a memory segment for CPU range $4020-$FFFF. */
 	createCPUSegment({ cartridge }) {
 		const unused = new MemoryPadding(0x3fe0);
-		const prgRomFirstPage = new MemoryChunk(this.prgPages[0]);
+		const prgRomFirstPage = new MemoryChunk(this.prgPages[0]).asReadOnly();
 		const prgRomLastPage =
 			cartridge.header.prgRomPages === 2
-				? new MemoryChunk(this.prgPages[1])
+				? new MemoryChunk(this.prgPages[1]).asReadOnly()
 				: new MemoryMirror(prgRomFirstPage, 0x4000);
-		prgRomFirstPage.readOnly = true;
-		prgRomLastPage.readOnly = true;
 
 		return WithCompositeMemory.createSegment([
 			//                   Address range   Size      Description
@@ -39,9 +37,8 @@ export default class NROM extends Mapper {
 
 	/** Creates a memory segment for PPU range $0000-$1FFF. */
 	createPPUSegment({ cartridge }) {
-		const chrRom = new MemoryChunk(this.chrPages[0]);
-		chrRom.readOnly = !cartridge.header.usesChrRam;
-
-		return chrRom;
+		return new MemoryChunk(this.chrPages[0]).asReadOnly(
+			!cartridge.header.usesChrRam
+		);
 	}
 }

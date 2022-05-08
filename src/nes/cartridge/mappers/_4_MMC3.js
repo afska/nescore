@@ -1,0 +1,200 @@
+import Mapper from "./Mapper";
+import { MemoryChunk, MemoryPadding, WithCompositeMemory } from "../../memory";
+import { InMemoryRegister } from "../../registers";
+import constants from "../../constants";
+import _ from "lodash";
+
+/**
+ * It provides bank-switching for PRG and CHR ROM.
+ * CPU $6000-$7FFF: 8 KB PRG RAM bank (optional)
+ * CPU $8000-$9FFF (or $C000-$DFFF): 8 KB switchable PRG ROM bank
+ * CPU $A000-$BFFF: 8 KB switchable PRG ROM bank
+ * CPU $C000-$DFFF (or $8000-$9FFF): 8 KB PRG ROM bank, fixed to the second-last bank
+ * CPU $E000-$FFFF: 8 KB PRG ROM bank, fixed to the last bank
+ * PPU $0000-$07FF (or $1000-$17FF): 2 KB switchable CHR bank
+ * PPU $0800-$0FFF (or $1800-$1FFF): 2 KB switchable CHR bank
+ * PPU $1000-$13FF (or $0000-$03FF): 1 KB switchable CHR bank
+ * PPU $1400-$17FF (or $0400-$07FF): 1 KB switchable CHR bank
+ * PPU $1800-$1BFF (or $0800-$0BFF): 1 KB switchable CHR bank
+ * PPU $1C00-$1FFF (or $0C00-$0FFF): 1 KB switchable CHR bank
+ * This mapper allows even more PRG and CHR banks to be selected, but doesn’t have the
+ * 5-write-quirk of MMC1. It does, though, have a scanline counter, which can trigger
+ * an IRQ on decrementing.
+ */
+export default class MMC3 extends Mapper {
+	static get id() {
+		return 4;
+	}
+
+	constructor() {
+		super(8 * constants.KB, 1 * constants.KB);
+	}
+
+	/** Creates a memory segment for CPU range $4020-$FFFF. */
+	createCPUSegment() {
+		const unused = new MemoryPadding(0x1fe0);
+		const prgRam = new MemoryChunk(0x2000);
+		const prgRomBank0 = new MemoryChunk(_.first(this.prgPages)).asReadOnly();
+		const prgRomBank1 = new MemoryChunk(_.first(this.prgPages)).asReadOnly();
+		const prgRomBank2 = new MemoryChunk(_.first(this.prgPages)).asReadOnly();
+		const prgRomBank3 = new MemoryChunk(_.last(this.prgPages)).asReadOnly();
+
+		this._prgRomBank0 = prgRomBank0;
+		this._prgRomBank1 = prgRomBank1;
+		this._prgRomBank2 = prgRomBank2;
+
+		this._registers = {
+			bankSelect: new BankSelectRegister(),
+			bankData: [0, 0, 0, 0, 0, 0, 0]
+		};
+
+		return WithCompositeMemory.createSegment([
+			//                      Address range   Size      Description
+			unused, //              $4020-$5FFF     $1FE0     Unused space
+			prgRam, //              $6000-$7FFF     $2000     PRG RAM (optional)
+			prgRomBank0, //         $8000-$9FFF     $4000     PRG ROM (switchable or fixed to second-last bank)
+			prgRomBank1, //         $A000-$BFFF     $4000     PRG ROM (switchable)
+			prgRomBank2, //         $C000-$DFFF     $4000     PRG ROM (switchable or fixed to second-last bank)
+			prgRomBank3 //          $E000-$FFFF     $4000     PRG ROM (fixed to last bank)
+		]);
+	}
+
+	/** Creates a memory segment for PPU range $0000-$1FFF. */
+	createPPUSegment({ cartridge }) {
+		return WithCompositeMemory.createSegment([
+			new MemoryChunk(_.first(this.chrPages)).asReadOnly(true),
+			new MemoryChunk(_.first(this.chrPages)).asReadOnly(true),
+			new MemoryChunk(_.first(this.chrPages)).asReadOnly(true),
+			new MemoryChunk(_.first(this.chrPages)).asReadOnly(true),
+			new MemoryChunk(_.first(this.chrPages)).asReadOnly(true),
+			new MemoryChunk(_.first(this.chrPages)).asReadOnly(true),
+			new MemoryChunk(_.first(this.chrPages)).asReadOnly(true),
+			new MemoryChunk(_.first(this.chrPages)).asReadOnly(true)
+		]);
+		// TODO: IMPLEMENT CHR
+
+		// const isReadOnly = !cartridge.header.usesChrRam;
+		// const chrRomBank0 = new MemoryChunk(_.first(this.chrPages)).asReadOnly(
+		// 	isReadOnly
+		// );
+		// const chrRomBank1 = new MemoryChunk(_.last(this.chrPages)).asReadOnly(
+		// 	isReadOnly
+		// );
+
+		// this._chrRomBank0 = chrRomBank0;
+		// this._chrRomBank1 = chrRomBank1;
+
+		// return WithCompositeMemory.createSegment([
+		// 	//                      Address range   Size      Description
+		// 	chrRomBank0, //         $0000-$0FFF     $1000     CHR ROM (switchable)
+		// 	chrRomBank1 //          $1000-$1FFF     $1000     CHR ROM (switchable)
+		// ]);
+	}
+
+	/** Maps a CPU write operation. */
+	cpuWriteAt(address, byte) {
+		if (address >= 0x8000 && address < 0x9fef) {
+			// Bank select
+			// (the writes are differentiated in even and odd, depending on `address`)
+
+			if (address % 2 === 0) {
+				// even = writes to Bank select register
+				this._registers.bankSelect.value = byte;
+			} else {
+				// odd = writes the page of the bank that was select with the even write before
+				this._registers.bankData[
+					this._registers.bankSelect.bankRegister
+				] = byte;
+			}
+
+			this._loadPRGBanks();
+			this._loadCHRBanks();
+			return;
+		}
+
+		this.context.cpu.memory.writeAt(address, byte);
+	}
+
+	_loadPRGBanks() {
+		const { bankSelect, bankData } = this._registers;
+
+		if (bankSelect.prgRomBankMode === 0) {
+			this._prgRomBank0.bytes = this._getPrgPage(bankData[6]);
+			this._prgRomBank1.bytes = this._getPrgPage(bankData[7]);
+			this._prgRomBank2.bytes = this._getPrgPage(this.prgPages.length - 2);
+		} else {
+			this._prgRomBank0.bytes = this._getPrgPage(this.prgPages.length - 2);
+			this._prgRomBank1.bytes = this._getPrgPage(bankData[7]);
+			this._prgRomBank2.bytes = this._getPrgPage(bankData[6]);
+		}
+
+		/**
+		 * PRG map mode | $8000.D6 = 0 | $8000.D6 = 1
+		 * ------------------------------------------
+		 * CPU Bank     | Value of MMC3 register
+		 * ------------------------------------------
+		 * $8000-$9FFF  | R6           | (-2)
+		 * $A000-$BFFF  | R7           | R7
+		 * $C000-$DFFF  | (-2)         | R6
+		 * $E000-$FFFF  | (-1)         | (-1)
+		 *
+		 * (-1) : the last bank
+		 * (-2) : the second last bank
+		 */
+	}
+
+	_loadCHRBanks() {
+		const { bankSelect, bankData } = this._registers;
+
+		// TODO: IMPLEMENT
+
+		/**
+		 * CHR map mode | $8000.D7 = 0 | $8000.D7 = 1
+		 * ------------------------------------------
+		 * PPU Bank	    | Value of MMC3 register
+		 * ------------------------------------------
+		 * $0000-$03FF  | R0           | R2
+		 * $0400-$07FF  | ^^           | R3
+		 * $0800-$0BFF  | R1           | R4
+		 * $0C00-$0FFF  | ^^           | R5
+		 * $1000-$13FF  | R2           | R0
+		 * $1400-$17FF  | R3           | ^^
+		 * $1800-$1BFF  | R4           | R1
+		 * $1C00-$1FFF  | R5           | ^^
+		 */
+	}
+}
+
+/**
+ * Bank select ($8000-$9FEE, even address)
+ * ---- ----
+ * CPMx xRRR
+ * |||   |||
+ * |||   +++- Specify which bank register to update on next write to Bank Data register
+ * |||          000: R0: Select 2 KB CHR bank at PPU $0000-$07FF (or $1000-$17FF)
+ * |||          001: R1: Select 2 KB CHR bank at PPU $0800-$0FFF (or $1800-$1FFF)
+ * |||          010: R2: Select 1 KB CHR bank at PPU $1000-$13FF (or $0000-$03FF)
+ * |||          011: R3: Select 1 KB CHR bank at PPU $1400-$17FF (or $0400-$07FF)
+ * |||          100: R4: Select 1 KB CHR bank at PPU $1800-$1BFF (or $0800-$0BFF)
+ * |||          101: R5: Select 1 KB CHR bank at PPU $1C00-$1FFF (or $0C00-$0FFF)
+ * |||          110: R6: Select 8 KB PRG ROM bank at $8000-$9FFF (or $C000-$DFFF)
+ * |||          111: R7: Select 8 KB PRG ROM bank at $A000-$BFFF
+ * ||+------- Nothing on the MMC3, see MMC6
+ * |+-------- PRG ROM bank mode (0: $8000-$9FFF swappable,
+ * |                                $C000-$DFFF fixed to second-last bank;
+ * |                             1: $C000-$DFFF swappable,
+ * |                                $8000-$9FFF fixed to second-last bank)
+ * +--------- CHR A12 inversion (0: two 2 KB banks at $0000-$0FFF,
+                                 four 1 KB banks at $1000-$1FFF;
+                              1: two 2 KB banks at $1000-$1FFF,
+                                 four 1 KB banks at $0000-$0FFF)
+ */
+class BankSelectRegister extends InMemoryRegister {
+	constructor() {
+		super();
+
+		this.addField("bankRegister", 0, 3)
+			.addField("prgRomBankMode", 6)
+			.addField("chrRomA12Inversion", 7);
+	}
+}

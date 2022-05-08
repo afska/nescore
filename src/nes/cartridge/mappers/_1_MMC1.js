@@ -28,10 +28,8 @@ export default class MMC1 extends Mapper {
 		const unused = new MemoryPadding(0x1fe0);
 		const disabledPrgRam = new MemoryPadding(0x2000);
 		const enabledPrgRam = new MemoryChunk(0x2000);
-		const prgRomBank0 = new MemoryChunk(_.first(this.prgPages));
-		const prgRomBank1 = new MemoryChunk(_.last(this.prgPages));
-		prgRomBank0.readOnly = true;
-		prgRomBank1.readOnly = true;
+		const prgRomBank0 = new MemoryChunk(_.first(this.prgPages)).asReadOnly();
+		const prgRomBank1 = new MemoryChunk(_.last(this.prgPages)).asReadOnly();
 
 		this._disabledPrgRam = disabledPrgRam;
 		this._enabledPrgRam = enabledPrgRam;
@@ -56,10 +54,13 @@ export default class MMC1 extends Mapper {
 
 	/** Creates a memory segment for PPU range $0000-$1FFF. */
 	createPPUSegment({ cartridge }) {
-		const chrRomBank0 = new MemoryChunk(_.first(this.chrPages));
-		const chrRomBank1 = new MemoryChunk(_.last(this.chrPages));
-		chrRomBank0.readOnly = !cartridge.header.usesChrRam;
-		chrRomBank1.readOnly = !cartridge.header.usesChrRam;
+		const isReadOnly = !cartridge.header.usesChrRam;
+		const chrRomBank0 = new MemoryChunk(_.first(this.chrPages)).asReadOnly(
+			isReadOnly
+		);
+		const chrRomBank1 = new MemoryChunk(_.last(this.chrPages)).asReadOnly(
+			isReadOnly
+		);
 
 		this._chrRomBank0 = chrRomBank0;
 		this._chrRomBank1 = chrRomBank1;

@@ -29,6 +29,12 @@ export default class MemoryChunk {
 		this.bytes[address] = byte;
 	}
 
+	/** Sets the chunk's `readOnly` state. */
+	asReadOnly(readOnly = true) {
+		this.readOnly = readOnly;
+		return this;
+	}
+
 	_assertValidAddress(address) {
 		if (address < 0 || address > this.memorySize)
 			this._throwInvalidAddressError(address);
