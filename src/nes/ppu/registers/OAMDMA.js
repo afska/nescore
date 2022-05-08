@@ -24,6 +24,6 @@ export default class OAMDMA extends InMemoryRegister {
 			ppu.oamRam.writeAt(i, value);
 		}
 
-		cpu.extraCycles += constants.OAMDMA_CYCLES + (cpu.cycle % 2 === 1);
+		cpu.extraCycles += constants.OAMDMA_CPU_CYCLES + (cpu.cycle % 2 === 1);
 	}
 }
