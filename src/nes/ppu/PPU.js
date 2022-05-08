@@ -52,8 +52,6 @@ export default class PPU {
 
 	/** Executes the next operation. */
 	step() {
-		this.requireContext();
-
 		const scanlineType = getScanlineType(this.scanline);
 		const interrupt = renderers[scanlineType](this.context);
 
@@ -64,7 +62,9 @@ export default class PPU {
 
 	/** Draws a pixel in (`x`, `y`) using BGR `color`. */
 	plot(x, y, color) {
-		this.frameBuffer[y * constants.SCREEN_WIDTH + x] = color;
+		this.frameBuffer[
+			y * constants.SCREEN_WIDTH + x
+		] = this.registers.ppuMask.transform(color);
 	}
 
 	/** Saves the `paletteIndex` of (`x`, `y`). */
@@ -75,21 +75,6 @@ export default class PPU {
 	/** Returns the palette index of pixel (`x`, `y`). Used for sprite drawing. */
 	paletteIndexOf(x, y) {
 		return this.paletteIndexes[y * constants.SCREEN_WIDTH + x];
-	}
-
-	/** When the current context is unloaded. */
-	onUnload() {
-		this._reset();
-
-		this.memory.unloadContext();
-		this.oamRam = null;
-		this.registers = null;
-
-		this.nameTable.unloadContext();
-		this.attributeTable.unloadContext();
-		this.patternTable.unloadContext();
-		this.framePalette.unloadContext();
-		this.oam.unloadContext();
 	}
 
 	_incrementCounters() {

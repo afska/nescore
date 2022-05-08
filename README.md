@@ -1,6 +1,6 @@
 # nescore
 
-A NES CPU Emulator made for educational purposes.
+A NES Emulator made for educational purposes.
 
 ## Install
 

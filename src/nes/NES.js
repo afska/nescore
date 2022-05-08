@@ -63,6 +63,8 @@ export default class NES {
 
 	/** Executes a step in the emulation. */
 	step() {
+		this.requireContext();
+
 		// (PPU clock is three times faster than CPU clock)
 		let ppuCycles = this.cpu.step() * constants.PPU_CYCLES_PER_CPU_CYCLE;
 
@@ -104,12 +106,5 @@ export default class NES {
 		context.mapper.loadContext(context);
 		this.ppu.loadContext(context);
 		this.cpu.loadContext(context);
-	}
-
-	/** When the current context is unloaded. */
-	onUnload() {
-		this.cpu.unloadContext();
-		this.ppu.unloadContext();
-		this.context.mapper.unloadContext();
 	}
 }

@@ -2,10 +2,10 @@ import constants from "../../constants";
 import _ from "lodash";
 
 /** Renders the sprites from OAM. */
-export default (context) => {
+export default function renderSprites(context) {
 	const sprites = evaluateSprites(context);
 	drawSprites(context, sprites);
-};
+}
 
 /** Evaluates which sprites should be rendered in the current scanline. */
 const evaluateSprites = ({ ppu }) => {
@@ -42,16 +42,21 @@ const drawSprites = (context, sprites) => {
 
 /** Draws the (`insideX`, `insideY`) `sprite`'s pixel. */
 const drawSpritePixel = ({ ppu }, sprite, insideX, insideY) => {
+	const { ppuMask, ppuStatus } = ppu.registers;
+
 	const finalX = sprite.x + insideX;
 	const finalY = ppu.scanline;
+	const tileInsideY = insideY % constants.TILE_LENGTH;
+
+	if (!ppuMask.showSpritesInLeftmost8PixelsOfScreen && finalX < 8) return;
 
 	// color fetch
 	const paletteId = sprite.paletteId;
 	const paletteIndex = ppu.patternTable.getPaletteIndexOf(
-		ppu.registers.ppuCtrl.patternTableAddressIdFor8x8Sprites,
-		sprite.tileId,
+		sprite.patternTableId,
+		sprite.tileIdFor(insideY),
 		sprite.flipX ? constants.TILE_LENGTH - 1 - insideX : insideX,
-		sprite.flipY ? constants.TILE_LENGTH - 1 - insideY : insideY
+		sprite.flipY ? constants.TILE_LENGTH - 1 - tileInsideY : tileInsideY
 	);
 	const isSpritePixelTransparent = paletteIndex === constants.COLOR_TRANSPARENT;
 	const isBackgroundPixelTransparent =
@@ -62,10 +67,11 @@ const drawSpritePixel = ({ ppu }, sprite, insideX, insideY) => {
 		sprite.id === 0 &&
 		!isSpritePixelTransparent &&
 		!isBackgroundPixelTransparent &&
-		!!ppu.registers.ppuMask.showBackground &&
-		!!ppu.registers.ppuMask.showSprites
+		ppuMask.showBackground &&
+		ppuMask.showSprites &&
+		(finalX >= 8 || ppuMask.showBackgroundInLeftmost8PixelsOfScreen)
 	)
-		ppu.registers.ppuStatus.sprite0Hit = 1;
+		ppuStatus.sprite0Hit = 1;
 
 	// sprite/background priority
 	const shouldDraw =

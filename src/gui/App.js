@@ -13,8 +13,8 @@ export default class App extends Component {
 
 		return (
 			<div className={styles.app}>
-				<h1>NesCore</h1>
 				<h6>(drag a NES ROM here)</h6>
+				<br />
 
 				<div
 					className={classNames(
@@ -28,7 +28,6 @@ export default class App extends Component {
 						<Emulator
 							rom={rom}
 							onError={this._onError}
-							onLog={this._onLog}
 							ref={(ref) => (this.emulator = ref)}
 						/>
 					) : (
@@ -54,9 +53,7 @@ export default class App extends Component {
 	}
 
 	_loadRom(rom) {
-		this.setState({ rom }, () => {
-			this.emulator.start();
-		});
+		this.setState({ rom });
 	}
 
 	_onFileDrop = (e) => {
@@ -72,10 +69,6 @@ export default class App extends Component {
 		};
 
 		reader.readAsArrayBuffer(file);
-	};
-
-	_onLog = (log) => {
-		// console.log(log);
 	};
 
 	_onError = (error) => {

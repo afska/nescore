@@ -17,15 +17,6 @@ export default {
 		return this;
 	},
 
-	/** Unloads the current execution context. */
-	unloadContext() {
-		this.requireContext();
-
-		if (this.onUnload) this.onUnload();
-		this.context = null;
-		return this;
-	},
-
 	/** Asserts that a current context exists. */
 	requireContext() {
 		if (!this.context) throw new Error("Execution context not found.");

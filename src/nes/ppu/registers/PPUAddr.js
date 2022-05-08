@@ -1,10 +1,18 @@
 import { InMemoryRegister } from "../../registers";
+import constants from "../../constants";
 import { Byte } from "../../helpers";
 
 /**
  * PPU Address Register (>> write twice, upper byte first)
  *
  * Write the PPU address you want to access here, then write in `PPUData`.
+ *
+ * This address is connected to the scrolling metadata.
+ * yyy NN YYYYY XXXXX
+ * ||| || ||||| +++++-- coarse X scroll
+ * ||| || +++++-------- coarse Y scroll
+ * ||| ++-------------- nametable select
+ * +++----------------- fine Y scroll
  */
 export default class PPUAddr extends InMemoryRegister {
 	/** When a context is loaded. */

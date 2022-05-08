@@ -6,12 +6,6 @@ const SCREEN_HEIGHT = 240;
 const FULL_ALPHA = 0xff000000;
 
 export default class Screen extends Component {
-	constructor(props) {
-		super(props);
-
-		this.setBuffer = this.setBuffer.bind(this);
-	}
-
 	render() {
 		return (
 			<canvas
@@ -25,18 +19,18 @@ export default class Screen extends Component {
 		);
 	}
 
-	setBuffer(buffer) {
+	setBuffer = (buffer) => {
 		for (let y = 0; y < SCREEN_HEIGHT; ++y) {
 			for (let x = 0; x < SCREEN_WIDTH; ++x) {
-				const i = y * 256 + x;
+				const i = y * SCREEN_WIDTH + x;
 
-				// Convert pixel from NES BGR to canvas ABGR
+				// convert pixel from NES BGR to canvas ABGR
 				this.buf32[i] = FULL_ALPHA | buffer[i];
 			}
 		}
 
 		this._writeBuffer();
-	}
+	};
 
 	_writeBuffer() {
 		this.imageData.data.set(this.buf8);
@@ -52,18 +46,18 @@ export default class Screen extends Component {
 			SCREEN_HEIGHT
 		);
 
-		// Set alpha to opaque
+		// set alpha to opaque
 		this.context.fillStyle = "black";
 		this.context.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-		// Buffer to write on next animation frame
+		// buffer to write on next animation frame
 		this.buf = new ArrayBuffer(this.imageData.data.length);
 
-		// Get the canvas buffer in 8bit and 32bit
+		// get the canvas buffer in 8bit and 32bit
 		this.buf8 = new Uint8ClampedArray(this.buf);
 		this.buf32 = new Uint32Array(this.buf);
 
-		// Set alpha
+		// set alpha
 		for (let i = 0; i < this.buf32.length; ++i) this.buf32[i] = FULL_ALPHA;
 	}
 }

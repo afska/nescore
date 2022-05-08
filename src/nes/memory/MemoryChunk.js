@@ -10,6 +10,7 @@ export default class MemoryChunk {
 		if (_.isFinite(bytes)) bytes = new Uint8Array(bytes);
 
 		this.bytes = bytes;
+		this.readOnly = false;
 		this.memorySize = bytes.length;
 	}
 
@@ -23,8 +24,15 @@ export default class MemoryChunk {
 	/** Writes a `byte` to `address`. */
 	writeAt(address, byte) {
 		this._assertValidAddress(address);
+		if (this.readOnly) return;
 
 		this.bytes[address] = byte;
+	}
+
+	/** Sets the chunk's `readOnly` state. */
+	asReadOnly(readOnly = true) {
+		this.readOnly = readOnly;
+		return this;
 	}
 
 	_assertValidAddress(address) {

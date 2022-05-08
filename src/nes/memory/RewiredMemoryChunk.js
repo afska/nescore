@@ -1,4 +1,4 @@
-import { MemoryChunk } from "../memory";
+import MemoryChunk from "./MemoryChunk";
 
 /**
  * A memory segment that accepts a `mapping` object which translates internal addresses.
@@ -30,7 +30,7 @@ export default class RewiredMemoryChunk extends MemoryChunk {
 
 	/** Reads a byte from `address`, following mirroring rules. */
 	readAt(address) {
-		address = this.mapping[address] ?? address;
+		if (this.mapping[address] != null) address = this.mapping[address];
 		this._assertValidAddress(address);
 
 		return this.bytes[address];
@@ -38,7 +38,7 @@ export default class RewiredMemoryChunk extends MemoryChunk {
 
 	/** Writes a `byte` to `address`, following mirroring rules. */
 	writeAt(address, byte) {
-		address = this.mapping[address] ?? address;
+		if (this.mapping[address] != null) address = this.mapping[address];
 		this._assertValidAddress(address);
 
 		this.bytes[address] = byte;

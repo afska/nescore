@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import Screen from "./Screen";
-import FrameTimer from "../emulator/FrameTimer";
-import NES from "../../nes";
-/*import NESTestLogger from "../../nes/loggers/NESTestLogger";*/
 import gamepad from "../emulator/gamepad";
-import debug from "../emulator/debug";
+import WebWorker from "worker-loader!../emulator/webWorker";
+
+const INPUT_POLL_INTERVAL = 10;
+let webWorker = null;
 
 export default class Emulator extends Component {
 	render() {
@@ -17,24 +17,21 @@ export default class Emulator extends Component {
 		);
 	}
 
-	start() {
-		if (this.frameTimer) this.frameTimer.start();
-	}
+	sendInput = () => {
+		webWorker.postMessage(gamepad.getInput());
+	};
+
+	setFps = (fps) => {
+		document.querySelector("#fps").textContent = `(fps: ${fps})`;
+	};
 
 	stop() {
-		if (this.frameTimer) this.frameTimer.stop();
-	}
-
-	frame(debugStep = false) {
-		try {
-			if (!debugStep) gamepad.updateInput(this);
-			if (this.isDebugging && !debugStep) return;
-
-			const frameBuffer = this.nes.frame();
-			this.screen.setBuffer(frameBuffer);
-		} catch (e) {
-			this._onError(e);
+		clearInterval(this.interval);
+		if (webWorker) {
+			webWorker.terminate();
+			webWorker = null;
 		}
+		this.setFps(0);
 	}
 
 	componentWillUnmount() {
@@ -42,29 +39,28 @@ export default class Emulator extends Component {
 	}
 
 	_initialize(screen) {
-		const { rom /*, onLog*/ } = this.props;
+		const { rom } = this.props;
 		if (!rom) return;
-		const bytes = new Uint8Array(rom);
+		this.screen = screen;
 
 		this.stop();
+		this.interval = setInterval(this.sendInput, INPUT_POLL_INTERVAL);
 
-		// TODO: Logger decreases performance and crashes SMB. Fix.
-		/*const logger = new NESTestLogger();*/
-		this.screen = screen;
-		this.nes = new NES(/*logger*/);
-		this.frameTimer = new FrameTimer(() => {
-			this.frame();
-			// onLog(logger.lastLog);
-		});
-
-		try {
-			this.nes.load(bytes);
-		} catch (e) {
-			this._onError(e);
-		}
-
-		// DEBUG
-		window.debug = debug(this);
+		const bytes = new Uint8Array(rom);
+		webWorker = new WebWorker();
+		webWorker.postMessage(bytes);
+		webWorker.onmessage = ({ data }) => {
+			if (data instanceof Uint32Array) {
+				// frame data
+				this.screen.setBuffer(data);
+			} else if (data?.id === "fps") {
+				// fps report
+				this.setFps(data.fps);
+			} else if (data?.id === "error") {
+				// error
+				this._onError(data.error);
+			}
+		};
 	}
 
 	_onError(e) {

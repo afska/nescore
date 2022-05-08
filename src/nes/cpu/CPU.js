@@ -40,8 +40,6 @@ export default class CPU {
 
 	/** Executes the next operation. */
 	step() {
-		this.requireContext();
-
 		const pc = this.pc.value;
 		const operation = this._readOperation();
 		const argument = this._readArgument(operation);
@@ -84,13 +82,6 @@ export default class CPU {
 	 */
 	pushFlags(withB2Flag = false) {
 		this.stack.push(this.flags.toByte() | (withB2Flag && 0b00010000));
-	}
-
-	/** When the current context is unloaded. */
-	onUnload() {
-		this._reset();
-		this.stack.unloadContext();
-		this.memory.unloadContext();
 	}
 
 	_reset() {

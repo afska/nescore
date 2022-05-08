@@ -3,16 +3,28 @@ import { Byte } from "../../../helpers";
 
 /** A sprite containing an id, position, height, a tile id and some attributes.  */
 export default class Sprite {
-	constructor(id, x, y, tileId, attributes, height) {
+	constructor(id, x, y, patternTableId, tileId, attributes, is8x16) {
 		this.id = id;
 		this.x = x;
 		this.y = y;
+		this.patternTableId = patternTableId;
 		this.tileId = tileId;
 		this.attributes = attributes;
-		this.height = height;
+		this.is8x16 = is8x16;
 	}
 
-	/** Returns if it should appear in a certain `scanline`. */
+	/**
+	 * Returns the tile id for an `insideY` position.
+	 * The bottom part of a 8x16 sprite uses the next tile index.
+	 */
+	tileIdFor(insideY) {
+		let index = +(insideY >= constants.TILE_LENGTH);
+		if (this.is8x16 && this.flipY) index = +!index;
+
+		return this.tileId + index;
+	}
+
+	/** Returns whether it should appear in a certain `scanline` or not. */
 	shouldRenderInScanline(scanline) {
 		const diffY = this.diffY(scanline);
 
@@ -36,12 +48,12 @@ export default class Sprite {
 		);
 	}
 
-	/** Returns if the sprite is in front of background. */
+	/** Returns whether the sprite is in front of background or not. */
 	get isInFrontOfBackground() {
 		return !Byte.getBit(this.attributes, constants.SPRITE_ATTR_PRIORITY_BIT);
 	}
 
-	/** Returns if the sprite is horizontally flipped. */
+	/** Returns whether the sprite is horizontally flipped or not. */
 	get flipX() {
 		return !!Byte.getBit(
 			this.attributes,
@@ -49,11 +61,16 @@ export default class Sprite {
 		);
 	}
 
-	/** Returns if the sprite is vertically flipped. */
+	/** Returns whether the sprite is vertically flipped or not. */
 	get flipY() {
 		return !!Byte.getBit(
 			this.attributes,
 			constants.SPRITE_ATTR_VERTICAL_FLIP_BIT
 		);
+	}
+
+	/** Returns the sprite height. */
+	get height() {
+		return this.is8x16 ? 16 : 8;
 	}
 }
