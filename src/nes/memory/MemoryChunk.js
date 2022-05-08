@@ -10,8 +10,8 @@ export default class MemoryChunk {
 		if (_.isFinite(bytes)) bytes = new Uint8Array(bytes);
 
 		this.bytes = bytes;
-		this.memorySize = bytes.length;
 		this.readOnly = false;
+		this.memorySize = bytes.length;
 	}
 
 	/** Reads a byte from `address`. */

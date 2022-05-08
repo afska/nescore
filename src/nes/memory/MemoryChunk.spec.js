@@ -35,6 +35,15 @@ describe("memory", () => {
 			chunk.memorySize.should.equal(5);
 		});
 
+		it("ignores write operations when the read only flag is active", () => {
+			const chunk = new MemoryChunk(5).asReadOnly();
+			chunk.writeAt(1, 25);
+			chunk.bytes[1].should.equal(0);
+			chunk.asReadOnly(false);
+			chunk.writeAt(1, 26);
+			chunk.bytes[1].should.equal(26);
+		});
+
 		it("throws an exception when the address is out of bounds", () => {
 			(() => chunk.writeAt(9, 123)).should.throw(
 				"Invalid memory access at 0x9"
