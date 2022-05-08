@@ -4,11 +4,12 @@ import DebugPatternTable from "./DebugPatternTable";
 const SCREEN_WIDTH = 256;
 const SCREEN_HEIGHT = 240;
 const TILE_LENGTH = 8;
+const TILES_PER_PATTERN_TABLE = 256;
 
 /** Debug functions */
 // debug.nes
-// debug.drawTiles();
-// debug.drawBackground();
+// debug.tiles();
+// debug.background();
 // debug.stop();
 // debug.resume();
 export default function debug(emulator, webWorker) {
@@ -26,7 +27,10 @@ export default function debug(emulator, webWorker) {
 			this.frameTimer.start();
 		},
 
-		drawTiles(patternTableId = 0) {
+		tiles(patternTableId = 0) {
+			if (!(patternTableId >= 0 && patternTableId <= 1))
+				throw new Error(`Invalid Pattern table id: ${patternTableId}`);
+
 			this.stop();
 
 			this.draw((plot) => {
@@ -44,13 +48,14 @@ export default function debug(emulator, webWorker) {
 					tile++;
 				};
 
-				try {
-					while (true) drawTile();
-				} catch (e) {}
+				for (let i = 0; i < TILES_PER_PATTERN_TABLE; i++) drawTile();
 			});
 		},
 
-		drawBackground(nameTableId = 0) {
+		background(nameTableId = 0) {
+			if (!(nameTableId >= 0 && nameTableId <= 3))
+				throw new Error(`Invalid Name table id: ${nameTableId}`);
+
 			this.stop();
 
 			this.draw((plot) => {
