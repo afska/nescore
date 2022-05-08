@@ -42,7 +42,7 @@ export default class MMC3 extends Mapper {
 		this._prgRomBank1 = prgRomBank1;
 		this._prgRomBank2 = prgRomBank2;
 
-		this._registers = {
+		this._state = {
 			bankSelect: new BankSelectRegister(),
 			bankData: [0, 0, 0, 0, 0, 0, 0]
 		};
@@ -87,15 +87,14 @@ export default class MMC3 extends Mapper {
 		if (address >= 0x8000 && address < 0x9fef) {
 			// Bank select
 			// (the writes are differentiated in even and odd, depending on `address`)
+			const { bankSelect } = this._state;
 
 			if (address % 2 === 0) {
 				// even = writes to Bank select register
-				this._registers.bankSelect.value = byte;
+				bankSelect.value = byte;
 			} else {
 				// odd = writes the page of the bank that was select with the even write before
-				this._registers.bankData[
-					this._registers.bankSelect.bankRegister
-				] = byte;
+				this._state.bankData[bankSelect.bankRegister] = byte;
 			}
 
 			this._loadPRGBanks();
@@ -107,7 +106,7 @@ export default class MMC3 extends Mapper {
 	}
 
 	_loadPRGBanks() {
-		const { bankSelect, bankData } = this._registers;
+		const { bankSelect, bankData } = this._state;
 
 		if (bankSelect.prgRomBankMode === 0) {
 			this._prgRomBank0.bytes = this._getPrgPage(bankData[6]);
@@ -135,7 +134,7 @@ export default class MMC3 extends Mapper {
 	}
 
 	_loadCHRBanks() {
-		const { bankSelect, bankData } = this._registers;
+		const { bankSelect, bankData } = this._state;
 
 		const r0 = bankData[0] & 0b11111110;
 		const r1 = bankData[1] & 0b11111110;

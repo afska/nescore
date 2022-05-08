@@ -77,6 +77,11 @@ export default class Mapper {
 		this.context.ppu.memory.writeAt(address, byte);
 	}
 
+	/** Runs at cycle 260 of every scanline (including preline). Returns a CPU interrupt or null. */
+	tick() {
+		return null;
+	}
+
 	_newPrgBank(id = 0) {
 		return new MemoryChunk(this.prgPages[id]).asReadOnly();
 	}

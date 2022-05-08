@@ -20,6 +20,8 @@ export default class UxROM extends Mapper {
 
 		this._prgRomSwitchableBank = prgRomSelectedPage;
 
+		this._state = { page: 0 };
+
 		return WithCompositeMemory.createSegment([
 			//                     Address range   Size      Description
 			unused, //             $4020-$7999     $3FE0     Unused space
@@ -36,10 +38,15 @@ export default class UxROM extends Mapper {
 	/** Maps a CPU write operation. */
 	cpuWriteAt(address, byte) {
 		if (address >= 0x8000) {
-			this._prgRomSwitchableBank.bytes = this._getPrgPage(byte);
+			this._state.page = byte;
+			this._loadBanks();
 			return;
 		}
 
 		this.context.cpu.memory.writeAt(address, byte);
+	}
+
+	_loadBanks() {
+		this._prgRomSwitchableBank.bytes = this._getPrgPage(this._state.page);
 	}
 }

@@ -4,7 +4,7 @@ import constants from "../../constants";
 
 /** Runs for each visible scanline. Renders the image. */
 export default function visibleLine(context) {
-	const { ppu } = context;
+	const { ppu, mapper } = context;
 
 	if (
 		ppu.cycle === constants.PPU_RENDER_BACKGROUND_CYCLE &&
@@ -18,5 +18,5 @@ export default function visibleLine(context) {
 	)
 		renderSprites(context);
 
-	return null;
+	return ppu.cycle === constants.PPU_MAPPER_TICK_CYCLE ? mapper.tick() : null;
 }

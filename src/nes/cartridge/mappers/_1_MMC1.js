@@ -34,7 +34,7 @@ export default class MMC1 extends Mapper {
 		this._enabledPrgRam = enabledPrgRam;
 		this._prgRomBank0 = prgRomBank0;
 		this._prgRomBank1 = prgRomBank1;
-		this._registers = {
+		this._state = {
 			load: new LoadRegister(),
 			control: new ControlRegister(),
 			chrBank0: new CHRBank0Register(),
@@ -67,25 +67,25 @@ export default class MMC1 extends Mapper {
 	cpuWriteAt(address, byte) {
 		if (address >= 0x8000) {
 			// Load
-			const value = this._registers.load.write(byte);
+			const value = this._state.load.write(byte);
 			if (value == null) return;
 
 			if (address >= 0x8000 && address < 0xa000) {
 				// Control
-				this._registers.control.value = value;
+				this._state.control.value = value;
 				this.context.ppu.memory.changeNameTablesMirroringTo(
-					this._registers.control.mirroring
+					this._state.control.mirroring
 				);
 			} else if (address >= 0xa000 && address < 0xc000) {
 				// CHR bank 0
-				this._registers.chrBank0.value = value;
+				this._state.chrBank0.value = value;
 			} else if (address >= 0xc000 && address < 0xe000) {
 				// CHR bank 1
-				this._registers.chrBank1.value = value;
+				this._state.chrBank1.value = value;
 			} else {
 				// PRG bank
-				this._registers.prgBank.value = value;
-				this._prgRam = this._registers.prgBank.prgRamEnable
+				this._state.prgBank.value = value;
+				this._prgRam = this._state.prgBank.prgRamEnable
 					? this._enabledPrgRam
 					: this._disabledPrgRam;
 			}
@@ -98,7 +98,7 @@ export default class MMC1 extends Mapper {
 	}
 
 	_loadBanks() {
-		const { control, chrBank0, chrBank1, prgBank } = this._registers;
+		const { control, chrBank0, chrBank1, prgBank } = this._state;
 
 		if (control.isPrgRom32Kb) {
 			// 32KB PRG
