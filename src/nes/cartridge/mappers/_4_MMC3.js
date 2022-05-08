@@ -95,16 +95,24 @@ export default class MMC3 extends Mapper {
 			const { bankSelect } = this._state;
 
 			if (isEven) {
-				// even = writes to Bank select register
+				// Writes to Bank select register
 				bankSelect.value = byte;
 			} else {
-				// odd = writes the page of the bank that was select with the even write before
+				// Writes the page of the bank that was select with the even write before
 				this._state.bankData[bankSelect.bankRegister] = byte;
 			}
 
 			this._loadPRGBanks();
 			this._loadCHRBanks();
 			return;
+		} else if (address >= 0xa000 && address < 0xbfff) {
+			if (isEven) {
+				// Mirroring
+				// This changes the Name table mirroring type.
+				this.context.ppu.memory.changeNameTablesMirroringTo(
+					byte & 1 ? "HORIZONTAL" : "VERTICAL"
+				);
+			}
 		} else if (address >= 0xc000 && address < 0xe000) {
 			if (isEven) {
 				// IRQ latch
