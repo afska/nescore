@@ -27,14 +27,7 @@ export default class PPUScroll extends InMemoryRegister {
 	writeAt(__, byte) {
 		const { ppuAddr } = this.context.ppu.registers;
 
-		if (ppuAddr.latch) {
-			// Loopy $2005 second write (w is 1)
-			// t: FGH..AB CDE..... <- d: ABCDEFGH
-			// w:                  <- 0
-
-			this.tAddress.coarseY = Byte.getSubNumber(byte, 3, 5);
-			this.tAddress.fineY = Byte.getSubNumber(byte, 0, 3);
-		} else {
+		if (!ppuAddr.latch) {
 			// Loopy $2005 first write (w is 0)
 			// t: ....... ...ABCDE <- d: ABCDE...
 			// x:              FGH <- d: .....FGH
@@ -42,6 +35,13 @@ export default class PPUScroll extends InMemoryRegister {
 
 			this.tAddress.coarseX = Byte.getSubNumber(byte, 3, 5);
 			this.fineX = Byte.getSubNumber(byte, 0, 3);
+		} else {
+			// Loopy $2005 second write (w is 1)
+			// t: FGH..AB CDE..... <- d: ABCDEFGH
+			// w:                  <- 0
+
+			this.tAddress.coarseY = Byte.getSubNumber(byte, 3, 5);
+			this.tAddress.fineY = Byte.getSubNumber(byte, 0, 3);
 		}
 
 		ppuAddr.latch = !ppuAddr.latch;

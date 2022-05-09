@@ -40,17 +40,7 @@ export default class PPUAddr extends InMemoryRegister {
 	_updateLoopyRegisters(byte) {
 		const { ppuScroll } = this.context.ppu.registers;
 
-		if (this.latch) {
-			// Loopy $2006 second write (w is 1)
-			// t: ....... ABCDEFGH <- d: ABCDEFGH
-			// v: <...all bits...> <- t: <...all bits...>
-			// w:                  <- 0
-
-			let number = ppuScroll.tAddress.toNumber();
-			number = Byte.to16Bit(Byte.highPartOf(number), byte);
-			ppuScroll.tAddress.fromNumber(number);
-			ppuScroll.vAddress.fromNumber(number);
-		} else {
+		if (!this.latch) {
 			// Loopy $2006 first write (w is 0)
 			// t: .CDEFGH ........ <- d: ..CDEFGH
 			//        <unused>     <- d: AB......
@@ -63,6 +53,16 @@ export default class PPUAddr extends InMemoryRegister {
 			high = Byte.setSubNumber(high, 7, 1, 0);
 			number = Byte.to16Bit(high, Byte.lowPartOf(number));
 			ppuScroll.tAddress.fromNumber(number);
+		} else {
+			// Loopy $2006 second write (w is 1)
+			// t: ....... ABCDEFGH <- d: ABCDEFGH
+			// v: <...all bits...> <- t: <...all bits...>
+			// w:                  <- 0
+
+			let number = ppuScroll.tAddress.toNumber();
+			number = Byte.to16Bit(Byte.highPartOf(number), byte);
+			ppuScroll.tAddress.fromNumber(number);
+			ppuScroll.vAddress.fromNumber(number);
 		}
 	}
 }
