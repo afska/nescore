@@ -5,11 +5,12 @@ export default function renderBackground({ ppu }) {
 	const { registers } = ppu;
 	const y = ppu.scanline;
 	const { tAddress, fineX } = ppu.registers.ppuScroll;
+	const vAddress = tAddress; // TODO: FINISH
 
 	for (let x = 0; x < constants.SCREEN_WIDTH; x++) {
-		const scrolledX = x + tAddress.coarseX * constants.TILE_LENGTH + fineX;
+		const scrolledX = x + vAddress.coarseX * constants.TILE_LENGTH + fineX;
 		const scrolledY =
-			y + tAddress.coarseY * constants.TILE_LENGTH + tAddress.fineY;
+			y + vAddress.coarseY * constants.TILE_LENGTH + vAddress.fineY;
 
 		// skip masked pixels
 		if (!registers.ppuMask.showBackgroundInLeftmost8PixelsOfScreen && x < 8) {
@@ -20,7 +21,7 @@ export default function renderBackground({ ppu }) {
 		}
 
 		// background coordinates based on scroll
-		const baseNameTableId = registers.ppuCtrl.baseNameTableId;
+		const baseNameTableId = vAddress.baseNameTableId;
 		const nameTableId =
 			baseNameTableId +
 			Math.floor(scrolledX / constants.SCREEN_WIDTH) +
