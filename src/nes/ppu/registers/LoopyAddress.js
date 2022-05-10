@@ -66,6 +66,15 @@ export default class LoopyAddress {
 		this.update(v);
 	}
 
+	/**
+	 * Returns the value as a 14-bit number.
+	 * The v register has 15 bits, but the PPU memory space is only 14 bits wide.
+	 * The highest bit is unused for access through $2007.
+	 */
+	to14BitNumber() {
+		return this.toNumber() & 0b11111111111111;
+	}
+
 	/** Converts the address to a 15-bit number. */
 	toNumber() {
 		return (

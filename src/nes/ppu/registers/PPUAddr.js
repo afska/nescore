@@ -1,5 +1,4 @@
 import { InMemoryRegister } from "../../registers";
-import { Byte } from "../../helpers";
 
 /**
  * PPU Address Register (>> write twice, upper byte first)
@@ -8,11 +7,6 @@ import { Byte } from "../../helpers";
  * Connected to `LoopyRegister`.
  */
 export default class PPUAddr extends InMemoryRegister {
-	/** When a context is loaded. */
-	onLoad() {
-		this.address = 0;
-	}
-
 	/** Reads nothing (write-only address). */
 	readAt() {
 		return 0;
@@ -20,11 +14,17 @@ export default class PPUAddr extends InMemoryRegister {
 
 	/** Alternately writes the MSB and the LSB of the address, and updates scrolling metadata. */
 	writeAt(__, byte) {
-		this.address = this.latch
-			? Byte.to16Bit(Byte.highPartOf(this.address), byte)
-			: Byte.to16Bit(byte, Byte.lowPartOf(this.address));
-
 		this.context.ppu.loopy.onPPUAddrWrite(byte);
+	}
+
+	/** Returns the address. */
+	get address() {
+		return this.context.ppu.loopy.vAddress.to14BitNumber();
+	}
+
+	/** Sets the address. */
+	set address(value) {
+		this.context.ppu.loopy.vAddress.update(value);
 	}
 
 	/** Write latch. */
