@@ -82,10 +82,8 @@ export default class LoopyRegister {
 		this.latch = !this.latch;
 	}
 
-	/** Executed on each pre line. */
+	/** Executed multiple times for each pre line. */
 	onPreLine(cycle) {
-		this.onLine(cycle);
-
 		/**
 		 * During dots 280 to 304 of the pre-render scanline (end of vblank)
 		 * If rendering is enabled, at the end of vblank, shortly after the horizontal bits are copied
@@ -96,7 +94,7 @@ export default class LoopyRegister {
 		if (cycle >= 280 && cycle <= 304) this._copyY();
 	}
 
-	/** Executed on each visible line. */
+	/** Executed multiple times for each visible line (prefetch dots were ignored). */
 	onVisibleLine(cycle) {
 		/**
 		 * Between dot 328 of a scanline, and 256 of the next scanline
@@ -108,11 +106,9 @@ export default class LoopyRegister {
 		 */
 		if (cycle >= 8 && cycle <= 256 && cycle % 8 === 0)
 			this.vAddress.incrementX();
-
-		this.onLine(cycle);
 	}
 
-	/** Executed on each line. */
+	/** Executed multiple times for each line. */
 	onLine(cycle) {
 		/**
 		 * At dot 256 of each scanline

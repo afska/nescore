@@ -8,7 +8,7 @@ export default function visibleLines(context) {
 	if (!ppu.registers.ppuMask.isRenderingEnabled) return null;
 
 	if (
-		ppu.cycle <= constants.SCREEN_WIDTH &&
+		ppu.cycle === constants.PPU_RENDER_BACKGROUND_CYCLE &&
 		ppu.registers.ppuMask.showBackground
 	)
 		renderBackground(context);
@@ -19,7 +19,7 @@ export default function visibleLines(context) {
 	)
 		renderSprites(context);
 
-	ppu.loopy.onVisibleLine(ppu.cycle);
+	ppu.loopy.onLine(ppu.cycle);
 
 	return ppu.cycle === constants.PPU_MAPPER_TICK_CYCLE ? mapper.tick() : null;
 }
