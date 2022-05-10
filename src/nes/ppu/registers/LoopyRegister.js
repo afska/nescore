@@ -130,20 +130,6 @@ export default class LoopyRegister {
 		if (cycle === 257) this._copyX();
 	}
 
-	/** Executed on `PPUData` read/writes, when rendering is active. */
-	onPPUDataAccessDuringRender() {
-		/**
-		 * Outside of rendering, reads from or writes to $2007 will add either 1 or 32 to v
-		 * depending on the VRAM increment bit set via $2000. During rendering (on the pre-render line
-		 * and the visible lines 0-239, provided either background or sprite rendering is enabled),
-		 * it will update v in an odd way, triggering a coarse X increment and a Y increment
-		 * simultaneously (with normal wrapping behavior).
-		 */
-
-		this.vAddress.incrementX();
-		this.vAddress.incrementY();
-	}
-
 	_copyX() {
 		// (copies all bits related to horizontal position from `t` to `v`)
 		const v = this.vAddress.toNumber();
