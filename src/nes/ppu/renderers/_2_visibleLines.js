@@ -8,6 +8,7 @@ export default function visibleLine(context) {
 	if (!ppu.registers.ppuMask.isRenderingEnabled) return null; // TODO: REMOVE IS RENDERING CHECKS
 
 	if (
+		ppu.cycle <= 256 &&
 		// ppu.cycle === constants.PPU_RENDER_BACKGROUND_CYCLE &&
 		ppu.registers.ppuMask.showBackground
 	)
@@ -19,12 +20,8 @@ export default function visibleLine(context) {
 	)
 		renderSprites(context);
 
-	// visible, or prefetch
-	if (
-		((ppu.cycle >= 8 && ppu.cycle <= 256) ||
-			(ppu.cycle >= 328 && ppu.cycle <= 336)) &&
-		ppu.cycle % 8 === 0
-	) {
+	// visible
+	if (ppu.cycle >= 8 && ppu.cycle <= 256 && ppu.cycle % 8 === 0) {
 		ppu.registers.ppuScroll.updateX();
 	}
 

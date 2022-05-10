@@ -1,7 +1,5 @@
 import constants from "../../constants";
 
-let counter = 0;
-
 /** Renders the background from the Name tables. */
 export default function renderBackground({ ppu }) {
 	const { registers } = ppu;
@@ -14,11 +12,9 @@ export default function renderBackground({ ppu }) {
 		const x = ppu.cycle - 1;
 		const scrollX = vAddress.coarseX * constants.TILE_LENGTH + fineX;
 		const scrollY = vAddress.coarseY * constants.TILE_LENGTH + vAddress.fineY;
-		const scrolledX = Math.max(0, scrollX + (x % 8) - 16);
+		const scrolledX = scrollX + (x % 8);
 		const scrolledY = scrollY; // (ya contiene y)
 
-		counter++;
-		// if (counter % 1 === 0) {
 		// console.log(
 		// 	"LINE:",
 		// 	ppu.scanline,
@@ -27,10 +23,13 @@ export default function renderBackground({ ppu }) {
 		// 	"SCROLLX",
 		// 	scrollX,
 		// 	"SCROLLY",
-		// 	scrollY
+		// 	scrollY,
+		// 	"SCROLLED_X",
+		// 	scrolledX,
+		// 	"SCROLLED_Y",
+		// 	scrolledY
 		// );
 		// debugger;
-		// }
 
 		// skip masked pixels
 		if (!registers.ppuMask.showBackgroundInLeftmost8PixelsOfScreen && x < 8) {
