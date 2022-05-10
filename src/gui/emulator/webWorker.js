@@ -1,52 +1,67 @@
-if (process.env.NODE_ENV !== "production") {
-	// HACK: WebWorkers/Webpack integration fix
-	global.$RefreshReg$ = () => {};
-	global.$RefreshSig$ = () => () => {};
-}
-const NES = require("../../nes").default;
-const FrameTimer = require("./FrameTimer").default;
+import NES from "../../nes";
+import FrameTimer from "./FrameTimer";
 
-let isDebugging = false;
-let isDebugStepRequested = false;
-const nes = new NES();
-const frameTimer = new FrameTimer(
-	() => {
-		if (isDebugging && !isDebugStepRequested) return;
-		isDebugStepRequested = false;
+/**
+ * An emulator instance running inside a Web Worker.
+ * This contains the communication logic between `Emulator` and `webWorkerRunner`.
+ */
+export default class WebWorker {
+	constructor(postMessage) {
+		this.$postMessage = postMessage;
 
-		try {
-			const frameBuffer = nes.frame();
-			frameTimer.countNewFrame();
-			postMessage(frameBuffer);
-		} catch (error) {
-			postMessage({ id: "error", error });
-		}
-	},
-	(fps) => {
-		postMessage({ id: "fps", fps });
-	}
-);
+		this.isDebugging = false;
+		this.isDebugStepRequested = false;
 
-onmessage = function({ data }) {
-	try {
-		if (data instanceof Uint8Array) {
-			// rom bytes
-			nes.load(data);
-			frameTimer.start();
-		} else if (Array.isArray(data)) {
-			// controller input
-			for (let i = 0; i < 2; i++) {
-				if (i === 0) {
-					if (data[i].$startDebugging) isDebugging = true;
-					if (data[i].$stopDebugging) isDebugging = false;
-					if (data[i].$debugStep) isDebugStepRequested = true;
+		this.nes = new NES();
+		this.frameTimer = new FrameTimer(
+			() => {
+				if (this.isDebugging && !this.isDebugStepRequested) return;
+				this.isDebugStepRequested = false;
+
+				try {
+					const frameBuffer = this.nes.frame();
+					this.frameTimer.countNewFrame();
+					this.$postMessage(frameBuffer);
+				} catch (error) {
+					this.$postMessage({ id: "error", error });
 				}
-
-				for (let button in data[i])
-					if (button[0] !== "$") nes.setButton(i + 1, button, data[i][button]);
+			},
+			(fps) => {
+				this.$postMessage({ id: "fps", fps });
 			}
-		}
-	} catch (error) {
-		postMessage({ id: "error", error });
+		);
 	}
-};
+
+	terminate = () => {
+		this.frameTimer.stop();
+	};
+
+	postMessage = (data) => {
+		this.$onMessage({ data });
+	};
+
+	$onMessage = ({ data }) => {
+		try {
+			if (data instanceof Uint8Array) {
+				// rom bytes
+				this.nes.load(data);
+				this.frameTimer.start();
+			} else if (Array.isArray(data)) {
+				// controller input
+				for (let i = 0; i < 2; i++) {
+					if (i === 0) {
+						if (data[i].$startDebugging) this.isDebugging = true;
+						if (data[i].$stopDebugging) this.isDebugging = false;
+						if (data[i].$debugStep) this.isDebugStepRequested = true;
+					}
+
+					for (let button in data[i])
+						if (button[0] !== "$")
+							this.nes.setButton(i + 1, button, data[i][button]);
+				}
+			}
+		} catch (error) {
+			this.$postMessage({ id: "error", error });
+		}
+	};
+}

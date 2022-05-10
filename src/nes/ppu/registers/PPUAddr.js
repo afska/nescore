@@ -1,5 +1,4 @@
 import { InMemoryRegister } from "../../registers";
-import constants from "../../constants";
 import { Byte } from "../../helpers";
 
 /**

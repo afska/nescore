@@ -48,8 +48,7 @@ export default class MMC3 extends Mapper {
 			bankData: [0, 0, 0, 0, 0, 0, 0],
 			irqEnabled: false,
 			irqLatch: 0,
-			irqCountdown: 0,
-			irqReloadPending: false
+			irqCountdown: 0
 		};
 
 		return WithCompositeMemory.createSegment([
@@ -96,16 +95,24 @@ export default class MMC3 extends Mapper {
 			const { bankSelect } = this._state;
 
 			if (isEven) {
-				// even = writes to Bank select register
+				// Writes to Bank select register
 				bankSelect.value = byte;
 			} else {
-				// odd = writes the page of the bank that was select with the even write before
+				// Writes the page of the bank that was select with the even write before
 				this._state.bankData[bankSelect.bankRegister] = byte;
 			}
 
 			this._loadPRGBanks();
 			this._loadCHRBanks();
 			return;
+		} else if (address >= 0xa000 && address < 0xbfff) {
+			if (isEven) {
+				// Mirroring
+				// This changes the Name table mirroring type.
+				this.context.ppu.memory.changeNameTablesMirroringTo(
+					byte & 1 ? "HORIZONTAL" : "VERTICAL"
+				);
+			}
 		} else if (address >= 0xc000 && address < 0xe000) {
 			if (isEven) {
 				// IRQ latch
@@ -116,7 +123,6 @@ export default class MMC3 extends Mapper {
 				// IRQ reload
 				// This register resets the actual scanline counter, and will push the
 				// IRQ latch value to the counter in the next scanline.
-				this._state.irqReloadPending = true;
 				this._state.irqCountdown = 0;
 			}
 		} else if (address >= 0xe000) {
@@ -138,13 +144,14 @@ export default class MMC3 extends Mapper {
 	tick() {
 		if (!this.context.ppu.registers.ppuMask.isRenderingEnabled) return null;
 
-		if (this._state.irqCountdown === 0 || this._state.irqReloadPending) {
+		if (this._state.irqCountdown === 0)
 			this._state.irqCountdown = this._state.irqLatch;
-			this._state.irqReloadPending = false;
-		} else this._state.irqCountdown--;
+		else {
+			this._state.irqCountdown--;
 
-		if (this._state.irqCountdown === 0 && this._state.irqEnabled)
-			return interrupts.IRQ;
+			if (this._state.irqCountdown === 0 && this._state.irqEnabled)
+				return interrupts.IRQ;
+		}
 
 		return null;
 	}
