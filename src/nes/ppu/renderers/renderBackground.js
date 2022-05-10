@@ -1,16 +1,36 @@
 import constants from "../../constants";
 
+let counter = 0;
+
 /** Renders the background from the Name tables. */
 export default function renderBackground({ ppu }) {
 	const { registers } = ppu;
 	const y = ppu.scanline;
-	const { tAddress, fineX } = ppu.registers.ppuScroll;
-	const vAddress = tAddress; // TODO: FINISH
+	const { vAddress, fineX } = ppu.registers.ppuScroll;
 
-	for (let x = 0; x < constants.SCREEN_WIDTH; x++) {
-		const scrolledX = x + vAddress.coarseX * constants.TILE_LENGTH + fineX;
-		const scrolledY =
-			y + vAddress.coarseY * constants.TILE_LENGTH + vAddress.fineY;
+	if (ppu.cycle === 0) return;
+
+	for (let xxx = 0; xxx < 1 /*constants.SCREEN_WIDTH*/; xxx++) {
+		const x = ppu.cycle - 1;
+		const scrollX = vAddress.coarseX * constants.TILE_LENGTH + fineX;
+		const scrollY = vAddress.coarseY * constants.TILE_LENGTH + vAddress.fineY;
+		const scrolledX = Math.max(0, scrollX + (x % 8) - 16);
+		const scrolledY = scrollY; // (ya contiene y)
+
+		counter++;
+		// if (counter % 1 === 0) {
+		// console.log(
+		// 	"LINE:",
+		// 	ppu.scanline,
+		// 	"X:",
+		// 	x,
+		// 	"SCROLLX",
+		// 	scrollX,
+		// 	"SCROLLY",
+		// 	scrollY
+		// );
+		// debugger;
+		// }
 
 		// skip masked pixels
 		if (!registers.ppuMask.showBackgroundInLeftmost8PixelsOfScreen && x < 8) {
@@ -59,10 +79,10 @@ export default function renderBackground({ ppu }) {
 
 		// partially draw tile (from `tileStartX` until its end or the end of the Name table)
 		const remainingNameTablePixels = constants.SCREEN_WIDTH - nameTableX;
-		const tilePixels = Math.min(
+		const tilePixels = 1; /*Math.min(
 			constants.TILE_LENGTH - tileStartX,
 			remainingNameTablePixels
-		);
+		);*/
 		for (let i = 0; i < tilePixels; i++) {
 			const paletteIndex = ppu.patternTable.getPaletteIndexFromBytes(
 				patternLowByte,
@@ -80,6 +100,6 @@ export default function renderBackground({ ppu }) {
 		}
 
 		// (the x++ of the for loop will do the last increment)
-		x += tilePixels - 1;
+		// x += tilePixels - 1;
 	}
 }

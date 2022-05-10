@@ -16,8 +16,18 @@ import { Byte } from "../../helpers";
 export default class PPUAddr extends InMemoryRegister {
 	/** When a context is loaded. */
 	onLoad() {
-		this.address = 0;
+		this._address = 0; // TODO: REMOVE?
 		this.latch = false;
+	}
+
+	get address() {
+		return this._address;
+		// return this.context.ppu.registers.ppuScroll.vAddress.toNumber();
+	}
+
+	set address(value) {
+		this._address = value;
+		return this.context.ppu.registers.ppuScroll.vAddress.fromNumber(value);
 	}
 
 	/** Reads nothing (write-only address). */
@@ -27,9 +37,9 @@ export default class PPUAddr extends InMemoryRegister {
 
 	/** Alternately writes the MSB and the LSB of the address, and updates scrolling metadata. */
 	writeAt(__, byte) {
-		this.address = this.latch
-			? Byte.to16Bit(Byte.highPartOf(this.address), byte)
-			: Byte.to16Bit(byte, Byte.lowPartOf(this.address));
+		this._address = this.latch
+			? Byte.to16Bit(Byte.highPartOf(this._address), byte)
+			: Byte.to16Bit(byte, Byte.lowPartOf(this._address)); // TODO: REMOVE?
 
 		this._updateLoopyRegisters(byte);
 
