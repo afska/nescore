@@ -142,8 +142,6 @@ export default class MMC3 extends Mapper {
 
 	/** Runs at cycle 260 of every scanline (including preline). Returns a CPU interrupt or null. */
 	tick() {
-		if (!this.context.ppu.registers.ppuMask.isRenderingEnabled) return null;
-
 		if (this._state.irqCountdown === 0)
 			this._state.irqCountdown = this._state.irqLatch;
 		else {

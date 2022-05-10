@@ -39,18 +39,19 @@ export default class PPUData extends InMemoryRegister {
 	}
 
 	_incrementAddress() {
-		const { registers } = this.context.ppu;
+		const { loopy, registers } = this.context.ppu;
 
-		if (
-			this.context.ppu.scanline < 240 &&
-			this.context.ppu.registers.ppuMask.isRenderingEnabled
-		) {
-			registers.ppuScroll.updateX();
-			registers.ppuScroll.updateY();
-		} else {
-			registers.ppuAddr.address = Byte.force16Bit(
+		const isRendering =
+			this.context.ppu.scanline < constants.SCREEN_HEIGHT &&
+			registers.ppuMask.isRenderingEnabled;
+
+		if (isRendering) loopy.onPPUDataAccessDuringRender();
+		else {
+			const newAddress = Byte.force16Bit(
 				registers.ppuAddr.address + registers.ppuCtrl.vramAddressIncrement
 			);
+			registers.ppuAddr.address = newAddress;
+			loopy.vAddress.update(newAddress);
 		}
 	}
 }

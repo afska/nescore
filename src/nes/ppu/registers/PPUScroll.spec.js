@@ -17,19 +17,16 @@ describe("CPU/PPU registers interaction", () => {
 			memory.readAt(ADDRESS).should.equal(0);
 		});
 
-		// TODO: FIX AND USE LOOPY
-		// it("writes X first, then Y", () => {
-		// 	memory.writeAt(ADDRESS, 13);
-		// 	register.x.should.equal(13);
-		// 	register.y.should.equal(0);
+		it("writes X first, then Y", () => {
+			memory.writeAt(ADDRESS, 13);
+			memory.writeAt(ADDRESS, 58);
 
-		// 	memory.writeAt(ADDRESS, 58);
-		// 	register.x.should.equal(13);
-		// 	register.y.should.equal(58);
+			// (copy temporal address to current address)
+			ppu.loopy._copyX();
+			ppu.loopy._copyY();
 
-		// 	memory.writeAt(ADDRESS, 29);
-		// 	register.x.should.equal(29);
-		// 	register.y.should.equal(58);
-		// });
+			register.scrolledX(0).should.equal(13);
+			register.scrolledY().should.equal(58);
+		});
 	});
 });

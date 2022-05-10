@@ -29,10 +29,8 @@ export default class PPUStatus extends InMemoryRegister {
 			// - it resets the vertical blank flag
 			this.isInVBlankInterval = 0;
 
-			// - it resets the `PPUAddr`'s latch
-			// Loopy $2002 read
-			// w:                  <- 0
-			this.context.ppu.registers.ppuAddr.latch = false;
+			// - it resets the write latch
+			this.context.ppu.loopy.onPPUStatusRead();
 		}
 
 		return value;

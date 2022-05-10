@@ -12,7 +12,7 @@ export default class FramePalette {
 		WithContext.apply(this);
 	}
 
-	/** Returns the BGR color of `paletteIndex` from `paletteId` */
+	/** Returns the BGR color of `paletteIndex` from `paletteId`. */
 	getColorOf(paletteId, paletteIndex) {
 		const startAddress =
 			constants.PPU_ADDRESSED_PALETTE_RAM_START_ADDRESS +

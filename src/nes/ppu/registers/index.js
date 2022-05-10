@@ -7,6 +7,7 @@ import PPUScroll from "./PPUScroll";
 import PPUAddr from "./PPUAddr";
 import PPUData from "./PPUData";
 import OAMDMA from "./OAMDMA";
+import LoopyRegister from "./LoopyRegister";
 import { WithCompositeMemory } from "../../memory";
 
 /** A collection of all the CPU-mapped PPU registers. */
@@ -48,5 +49,6 @@ export {
 	PPUAddr,
 	PPUData,
 	OAMDMA,
-	PPURegisterSegment
+	PPURegisterSegment,
+	LoopyRegister
 };
