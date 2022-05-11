@@ -93,15 +93,6 @@ export default class PPU {
 				this.frame++;
 			}
 		}
-
-		// (with rendering enabled, each odd PPU frame is one PPU clock shorter than normal)
-		if (
-			this.scanline === 0 &&
-			this.cycle === 0 &&
-			this.frame % 2 === 1 &&
-			this.registers.ppuMask.isRenderingEnabled
-		)
-			this.cycle++;
 	}
 
 	_reset() {
