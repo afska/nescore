@@ -7,9 +7,8 @@ export default function renderBackground({ ppu }) {
 	const { registers } = ppu;
 	const y = ppu.scanline;
 
-	for (let x = 0; x < 1; x++) {
-		const cycle = ppu.cycle;
-		const x = cycle - 1;
+	for (let x = 0; x < constants.SCREEN_WIDTH; x++) {
+		const cycle = x + 1;
 		const scrolledX = registers.ppuScroll.scrolledX(x);
 		const scrolledY = registers.ppuScroll.scrolledY();
 
@@ -61,10 +60,10 @@ export default function renderBackground({ ppu }) {
 
 		// partially draw tile (from `tileStartX` until its end or the end of the Name table)
 		const remainingNameTablePixels = constants.SCREEN_WIDTH - nameTableX;
-		const tilePixels = 1; /*Math.min(
+		const tilePixels = Math.min(
 			constants.TILE_LENGTH - tileStartX,
 			remainingNameTablePixels
-		);*/
+		);
 		for (let i = 0; i < tilePixels; i++) {
 			const finalX = x + i;
 
@@ -90,6 +89,6 @@ export default function renderBackground({ ppu }) {
 		}
 
 		// (the x++ of the for loop will do the last increment)
-		// x += tilePixels - 1;
+		x += tilePixels - 1;
 	}
 }
