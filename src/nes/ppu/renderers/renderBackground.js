@@ -65,19 +65,26 @@ export default function renderBackground({ ppu }) {
 			remainingNameTablePixels
 		);
 		for (let i = 0; i < tilePixels; i++) {
+			const finalX = x + i;
+
+			// color fetch
 			const paletteIndex = ppu.patternTable.getPaletteIndexFromBytes(
 				patternLowByte,
 				patternHighByte,
 				tileStartX + i
 			);
+			const isOpaque = paletteIndex !== constants.COLOR_TRANSPARENT;
+			const color = isOpaque
+				? ppu.framePalette.getColorOf(paletteId, paletteIndex)
+				: ppu.framePalette.getColorOf(0, 0);
 
-			const color =
-				paletteIndex !== constants.COLOR_TRANSPARENT
-					? ppu.framePalette.getColorOf(paletteId, paletteIndex)
-					: ppu.framePalette.getColorOf(0, 0);
+			// sprite 0 hit
+			if (isOpaque && ppu.sprite0HitPixels.includes(finalX))
+				registers.ppuStatus.sprite0Hit = 1;
 
-			ppu.plot(x + i, y, color);
-			ppu.savePaletteIndex(x + i, y, paletteIndex);
+			// actual drawing
+			ppu.plot(finalX, y, color);
+			ppu.savePaletteIndex(finalX, y, paletteIndex);
 			ppu.loopy.onVisibleLine(cycle + i);
 		}
 
