@@ -15,5 +15,5 @@ export default function preLine({ ppu, mapper }) {
 	ppu.loopy.onPreLine(ppu.cycle);
 	ppu.loopy.onLine(ppu.cycle);
 
-	return ppu.cycle === constants.PPU_MAPPER_TICK_CYCLE ? mapper.tick() : null;
+	return ppu.cycle === constants.PPU_CYCLE_MAPPER_TICK ? mapper.tick() : null;
 }

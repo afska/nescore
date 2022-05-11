@@ -8,18 +8,18 @@ export default function visibleLines(context) {
 	if (!ppu.registers.ppuMask.isRenderingEnabled) return null;
 
 	if (
-		ppu.cycle === constants.PPU_RENDER_BACKGROUND_CYCLE &&
+		ppu.cycle === constants.PPU_CYCLE_RENDER_BACKGROUND &&
 		ppu.registers.ppuMask.showBackground
 	)
 		renderBackground(context);
 
 	if (
-		ppu.cycle === constants.PPU_RENDER_SPRITES_CYCLE &&
+		ppu.cycle === constants.PPU_CYCLE_RENDER_SPRITES &&
 		ppu.registers.ppuMask.showSprites
 	)
 		renderSprites(context);
 
 	ppu.loopy.onLine(ppu.cycle);
 
-	return ppu.cycle === constants.PPU_MAPPER_TICK_CYCLE ? mapper.tick() : null;
+	return ppu.cycle === constants.PPU_CYCLE_MAPPER_TICK ? mapper.tick() : null;
 }
