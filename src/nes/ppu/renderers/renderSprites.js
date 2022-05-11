@@ -32,7 +32,7 @@ const evaluateSprites = ({ ppu }) => {
 /** Draws a list of `sprites` into a buffer. */
 const drawSpritesIntoBuffer = (context, sprites) => {
 	const { ppu } = context;
-	const { ppuMask } = ppu.registers;
+	const { ppuMask, ppuStatus } = ppu.registers;
 	const finalY = ppu.scanline;
 
 	const buffer = { colors: [], priorities: [], xs: [] };
@@ -52,10 +52,22 @@ const drawSpritesIntoBuffer = (context, sprites) => {
 				insideX,
 				insideY
 			);
-			const isOpaque = paletteIndex !== constants.COLOR_TRANSPARENT;
+			const isSpritePixelOpaque = paletteIndex !== constants.COLOR_TRANSPARENT;
+			const isBackgroundPixelOpaque =
+				ppu.paletteIndexOf(finalX, finalY) !== constants.COLOR_TRANSPARENT;
+
+			// sprite 0 hit
+			if (
+				sprite.id === 0 &&
+				isSpritePixelOpaque &&
+				isBackgroundPixelOpaque &&
+				ppuMask.showBackground &&
+				ppuMask.showSprites
+			)
+				ppuStatus.sprite0Hit = 1;
 
 			// add to drawing buffer
-			if (isOpaque) {
+			if (isSpritePixelOpaque) {
 				const color = ppu.framePalette.getColorOf(paletteId, paletteIndex);
 				buffer.colors[finalX] = color;
 				buffer.priorities[finalX] = sprite.isInFrontOfBackground;
@@ -96,28 +108,3 @@ const getSpritePixelPaletteIndex = ({ ppu }, sprite, insideX, insideY) => {
 		sprite.flipY ? constants.TILE_LENGTH - 1 - tileInsideY : tileInsideY
 	);
 };
-
-/** Fetches the opaque sprite 0 pixels and stores them in the PPU. */
-export function fetchSprite0HitPixels(context) {
-	const { ppu } = context;
-	const { ppuStatus, ppuMask } = ppu.registers;
-
-	ppu.sprite0HitPixels = [];
-
-	const sprite0 = ppu.oam.createSprite(0);
-	const isVisible = sprite0.shouldRenderInScanline(ppu.scanline);
-	if (!isVisible || ppuStatus.sprite0Hit === 1) return;
-
-	const insideY = sprite0.diffY(ppu.scanline);
-	for (let insideX = 0; insideX < constants.TILE_LENGTH; insideX++) {
-		const finalX = sprite0.x + insideX;
-		if (!ppuMask.showSpritesInLeftmost8PixelsOfScreen && finalX < 8) continue;
-
-		const isOpaque =
-			getSpritePixelPaletteIndex(context, sprite0, insideX, insideY) !==
-			constants.COLOR_TRANSPARENT;
-
-		if (isOpaque && finalX !== constants.SPRITE_0_HIT_IGNORED_X)
-			ppu.sprite0HitPixels.push(finalX);
-	}
-}

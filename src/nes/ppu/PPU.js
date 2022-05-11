@@ -26,7 +26,6 @@ export default class PPU {
 		this.oamRam = null;
 		this.registers = null;
 		this.loopy = null;
-		this.sprite0HitPixels = null;
 
 		this.frameBuffer = new Uint32Array(constants.TOTAL_PIXELS);
 		this.paletteIndexes = new Uint8Array(constants.TOTAL_PIXELS);
@@ -43,7 +42,6 @@ export default class PPU {
 		this.oamRam = new MemoryChunk(constants.PPU_OAM_SIZE);
 		this.registers = new PPURegisterSegment(context);
 		this.loopy = new LoopyRegister();
-		this.sprite0HitPixels = [];
 
 		this.nameTable.loadContext(context);
 		this.attributeTable.loadContext(context);
@@ -83,7 +81,6 @@ export default class PPU {
 
 	_incrementCounters() {
 		this.cycle++;
-
 		if (this.cycle > constants.PPU_LAST_CYCLE) {
 			this.cycle = 0;
 			this.scanline++;
