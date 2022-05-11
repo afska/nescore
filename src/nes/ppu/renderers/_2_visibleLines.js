@@ -14,7 +14,8 @@ export default function visibleLines(context) {
 		fetchSprite0HitPixels(context);
 
 	if (
-		ppu.cycle === constants.PPU_RENDER_BACKGROUND_CYCLE &&
+		ppu.cycle <= 256 &&
+		//ppu.cycle === constants.PPU_RENDER_BACKGROUND_CYCLE &&
 		ppu.registers.ppuMask.showBackground
 	)
 		renderBackground(context);
