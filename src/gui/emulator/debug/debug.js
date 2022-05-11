@@ -6,7 +6,7 @@ const SCREEN_HEIGHT = 240;
 const TILE_LENGTH = 8;
 const TILES_PER_PATTERN_TABLE = 256;
 
-/** Debug functions */
+/** Debug functions. */
 // debug.nes
 // debug.tiles();
 // debug.background();

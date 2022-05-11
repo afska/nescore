@@ -1,16 +1,17 @@
 import { InMemoryRegister } from "../../registers";
+import { Byte } from "../../helpers";
 
 /**
  * PPU Control Register (> write)
  *
  * Contains various flags controlling PPU operation.
+ * Connected to `LoopyRegister`.
  */
 export default class PPUCtrl extends InMemoryRegister {
 	constructor() {
 		super();
 
-		this.addField("baseNameTableId", 0, 2)
-			.addField("vramAddressIncrement32", 2)
+		this.addField("vramAddressIncrement32", 2)
 			.addField("patternTableAddressIdFor8x8Sprites", 3)
 			.addField("patternTableAddressIdForBackground", 4)
 			.addField("spriteSizeId", 5)
@@ -20,6 +21,18 @@ export default class PPUCtrl extends InMemoryRegister {
 	/** Reads nothing (write-only address). */
 	readAt() {
 		return 0;
+	}
+
+	/** Sets the actual value and updates scrolling metadata. */
+	writeAt(__, byte) {
+		this.value = Byte.force8Bit(byte);
+
+		this.context.ppu.loopy.onPPUCtrlWrite(byte);
+	}
+
+	/** Returns the base Name table id. */
+	get baseNameTableId() {
+		return this.context.ppu.loopy.vAddress.baseNameTableId;
 	}
 
 	/** Returns the `PPUAddr` increment per CPU read/write of `PPUData`. */

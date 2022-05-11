@@ -18,14 +18,9 @@ describe("CPU/PPU registers interaction", () => {
 		});
 
 		it("writes the MSB first, then the LSB", () => {
-			memory.writeAt(ADDRESS, 0xd3);
-			register.address.should.equal(0xd300);
-
-			memory.writeAt(ADDRESS, 0xb8);
-			register.address.should.equal(0xd3b8);
-
-			memory.writeAt(ADDRESS, 0x9f);
-			register.address.should.equal(0x9fb8);
+			memory.writeAt(ADDRESS, 0x12);
+			memory.writeAt(ADDRESS, 0x24);
+			register.address.should.equal(0x1224);
 		});
 	});
 });

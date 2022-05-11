@@ -1,4 +1,4 @@
-import { PPURegisterSegment } from "./registers";
+import { PPURegisterSegment, LoopyRegister } from "./registers";
 import PPUMemoryMap from "./PPUMemoryMap";
 import renderers from "./renderers";
 import {
@@ -25,6 +25,7 @@ export default class PPU {
 		this.memory = new PPUMemoryMap();
 		this.oamRam = null;
 		this.registers = null;
+		this.loopy = null;
 
 		this.frameBuffer = new Uint32Array(constants.TOTAL_PIXELS);
 		this.paletteIndexes = new Uint8Array(constants.TOTAL_PIXELS);
@@ -40,6 +41,7 @@ export default class PPU {
 		this.memory.loadContext(context);
 		this.oamRam = new MemoryChunk(constants.PPU_OAM_SIZE);
 		this.registers = new PPURegisterSegment(context);
+		this.loopy = new LoopyRegister();
 
 		this.nameTable.loadContext(context);
 		this.attributeTable.loadContext(context);

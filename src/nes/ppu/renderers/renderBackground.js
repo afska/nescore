@@ -2,19 +2,22 @@ import constants from "../../constants";
 
 /** Renders the background from the Name tables. */
 export default function renderBackground({ ppu }) {
+	if (ppu.cycle === 0) return ppu.loopy.onVisibleLine(0);
+
 	const { registers } = ppu;
 	const y = ppu.scanline;
-	const { x: scrollX, y: scrollY } = registers.ppuScroll;
 
 	for (let x = 0; x < constants.SCREEN_WIDTH; x++) {
-		const scrolledX = x + scrollX;
-		const scrolledY = y + scrollY;
+		const cycle = x + 1;
+		const scrolledX = registers.ppuScroll.scrolledX(x);
+		const scrolledY = registers.ppuScroll.scrolledY();
 
 		// skip masked pixels
 		if (!registers.ppuMask.showBackgroundInLeftmost8PixelsOfScreen && x < 8) {
 			const color = ppu.framePalette.getColorOf(0, 0);
 			ppu.plot(x, y, color);
 			ppu.savePaletteIndex(x, y, 0);
+			ppu.loopy.onVisibleLine(cycle);
 			continue;
 		}
 
@@ -75,6 +78,7 @@ export default function renderBackground({ ppu }) {
 
 			ppu.plot(x + i, y, color);
 			ppu.savePaletteIndex(x + i, y, paletteIndex);
+			ppu.loopy.onVisibleLine(cycle + i);
 		}
 
 		// (the x++ of the for loop will do the last increment)

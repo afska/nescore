@@ -38,7 +38,7 @@ describe("CPU/PPU registers interaction", () => {
 			});
 
 			it("resets PPUAddr's latch on every read", () => {
-				ppu.registers.ppuAddr.latch = true;
+				ppu.loopy.latch = true;
 
 				memory.readAt(ADDRESS);
 
