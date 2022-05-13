@@ -5,7 +5,7 @@ import WebWorker from "../emulator/WebWorker";
 import WebWorkerRunner from "worker-loader!../emulator/webWorkerRunner";
 import debug from "../emulator/debug";
 
-const DEBUG = true;
+const DEBUG = false;
 const INPUT_POLL_INTERVAL = 10;
 let webWorker = null;
 
