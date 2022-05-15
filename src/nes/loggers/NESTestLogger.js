@@ -103,7 +103,7 @@ export default class NESTestLogger {
 							)}`;
 						case "INDEXED_INDIRECT_Y":
 							return `($${$initialArgument}),Y = ${hex(
-								getIndirectAddress(context, initialArgument, Byte.force8Bit),
+								getIndirectAddress(context, initialArgument),
 								4
 							)} @ ${hex(finalAddress, 4)} = ${hex(
 								memory.readAt(finalAddress),

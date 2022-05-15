@@ -1,4 +1,3 @@
-import { Byte } from "../../helpers";
 import { getIndirectAddress } from "./indirect";
 import getValue from "./_getValue";
 
@@ -12,11 +11,7 @@ export default {
 	id: "INDEXED_INDIRECT_X",
 	parameterSize: 1,
 	getAddress: (context, address) => {
-		return getIndirectAddress(
-			context,
-			address + context.cpu.registers.x.value,
-			Byte.force8Bit
-		);
+		return getIndirectAddress(context, address + context.cpu.registers.x.value);
 	},
 	getValue
 };

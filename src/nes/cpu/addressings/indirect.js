@@ -28,13 +28,9 @@ export default {
 	getValue
 };
 
-export const getIndirectAddress = (
-	{ memoryBus },
-	address,
-	transform = (it) => it
-) => {
-	const start = transform(address);
-	const end = transform(start + 1);
+export const getIndirectAddress = ({ memoryBus }, address) => {
+	const start = Byte.force8Bit(address);
+	const end = Byte.force8Bit(start + 1);
 	const low = memoryBus.cpu.readAt(start);
 	const high = memoryBus.cpu.readAt(end);
 
