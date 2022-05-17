@@ -1,5 +1,6 @@
 import CPU from "./cpu";
 import PPU from "./ppu";
+import APU from "./apu";
 import { CPUBus, PPUBus } from "./memory/Bus";
 import Cartridge from "./cartridge";
 import Controller from "./controller";
@@ -15,6 +16,7 @@ export default class NES {
 
 		this.cpu = new CPU();
 		this.ppu = new PPU();
+		this.apu = new APU();
 	}
 
 	/** Loads a `rom` as the current cartridge. */
@@ -29,6 +31,7 @@ export default class NES {
 
 			cpu: this.cpu,
 			ppu: this.ppu,
+			apu: this.apu,
 
 			memoryBus: {
 				cpu: new CPUBus(mapper),
@@ -101,5 +104,6 @@ export default class NES {
 		context.mapper.loadContext(context);
 		this.ppu.loadContext(context);
 		this.cpu.loadContext(context);
+		this.apu.loadContext(context);
 	}
 }
