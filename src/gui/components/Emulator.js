@@ -1,11 +1,12 @@
 import React, { Component } from "react";
 import Screen from "./Screen";
 import gamepad from "../emulator/gamepad";
+import Speaker from "../emulator/Speaker";
 import WebWorker from "../emulator/WebWorker";
 import WebWorkerRunner from "worker-loader!../emulator/webWorkerRunner";
 import debug from "../emulator/debug";
 
-const DEBUG = false;
+const DEBUG = true;
 const INPUT_POLL_INTERVAL = 10;
 let webWorker = null;
 
@@ -42,11 +43,17 @@ export default class Emulator extends Component {
 	};
 
 	stop() {
-		clearInterval(this.interval);
+		clearInterval(this.inputInterval);
+		this.inputInterval = null;
+
+		if (this.speaker) this.speaker.stop();
+		this.speaker = null;
+
 		if (webWorker) {
 			webWorker.terminate();
 			webWorker = null;
 		}
+
 		this.setFps(0);
 	}
 
@@ -60,7 +67,9 @@ export default class Emulator extends Component {
 		this.screen = screen;
 
 		this.stop();
-		this.interval = setInterval(this.sendInput, INPUT_POLL_INTERVAL);
+		this.inputInterval = setInterval(this.sendInput, INPUT_POLL_INTERVAL);
+		this.speaker = new Speaker();
+		this.speaker.start();
 
 		const bytes = new Uint8Array(rom);
 

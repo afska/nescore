@@ -29,14 +29,14 @@ export default class Speaker {
 		return sampleRate;
 	}
 
-	writeSample(sample) {
+	writeSample = (sample) => {
 		if (this._buffer.size() >= this._bufferSize) {
 			// buffer overrun
 			this._buffer.deqN(this._bufferSize);
 		}
 
 		this._buffer.enq(sample);
-	}
+	};
 
 	stop() {
 		if (this._audioCtx) {

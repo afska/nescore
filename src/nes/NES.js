@@ -82,7 +82,7 @@ export default class NES {
 			}
 		}
 
-		const apuCycles = cycles * constants.APU_CYCLES_PER_CPU_CYCLE;
+		let apuCycles = cycles * constants.APU_CYCLES_PER_CPU_CYCLE;
 		while (apuCycles > 0) {
 			this.apu.step(onAudioSample);
 			apuCycles--;
