@@ -10,15 +10,29 @@ export default class APU {
 	onLoad(context) {
 		this._reset();
 		this.cycle = 0;
+		this.count = 0;
 	}
 
 	/** Executes the next operation (1 cycle). */
 	step(onAudioSample) {
 		// TODO: IMPLEMENT
 
+		// 1789773 steps per second
+		// 1789773 / 44100 = 40.58 (generate a sample every 40.58 cycles)
+
 		this.cycle++;
+		if (this.cycle >= 40) {
+			this.cycle = 0;
+			this.count++;
+		}
+
 		const volume = 0.15;
-		onAudioSample((Math.random() * 2 - 1) * volume);
+
+		if (this.cycle === 0) {
+			const time = this.count / 44100;
+			const sample = Math.sin(2 * Math.PI * 440 * time) * volume;
+			onAudioSample(sample);
+		}
 	}
 
 	_reset() {}

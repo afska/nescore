@@ -7,13 +7,15 @@ const CHANNELS = 2;
 
 export default class Speaker {
 	constructor() {
-		this._bufferSize = BUFFER_SIZE;
-		this._buffer = new RingBuffer(this._bufferSize);
+		this._buffer = new RingBuffer(BUFFER_SIZE);
 	}
 
 	start() {
 		if (this._audioCtx) return;
 		if (!window.AudioContext) return;
+
+		console.log("SAMPLE RATE", this.getSampleRate());
+		// TODO: REMOVE
 
 		this._audioCtx = new window.AudioContext();
 		this._scriptNode = this._audioCtx.createScriptProcessor(
@@ -37,6 +39,12 @@ export default class Speaker {
 	}
 
 	writeSample = (sample) => {
+		if (this._buffer.size() >= BUFFER_SIZE) {
+			// buffer overrun
+			console.log("OVER"); // TODO: REMOVE
+			this._buffer.deqN(BUFFER_SIZE);
+		}
+
 		this._buffer.enq(sample);
 	};
 
@@ -67,6 +75,7 @@ export default class Speaker {
 			// buffer underrun (needed {size}, got {this._buffer.size()})
 			// ignore empty buffers... assume audio has just stopped
 
+			console.log("UNDER"); // TODO: REMOVE
 			for (let i = 0; i < size; i++) {
 				left[i] = right[i] = 0;
 			}
