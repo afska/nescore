@@ -37,11 +37,6 @@ export default class Speaker {
 	}
 
 	writeSample = (sample) => {
-		if (this._buffer.size() >= this._bufferSize) {
-			// buffer overrun
-			this._buffer.deqN(this._bufferSize);
-		}
-
 		this._buffer.enq(sample);
 	};
 
@@ -66,16 +61,14 @@ export default class Speaker {
 			const samples = this._buffer.deqN(size);
 
 			for (let i = 0; i < size; i++) {
-				left[i] = samples[i];
-				right[i] = samples[i];
+				left[i] = right[i] = samples[i];
 			}
 		} catch (e) {
 			// buffer underrun (needed {size}, got {this._buffer.size()})
 			// ignore empty buffers... assume audio has just stopped
 
 			for (let i = 0; i < size; i++) {
-				left[i] = 0;
-				right[i] = 0;
+				left[i] = right[i] = 0;
 			}
 		}
 	};

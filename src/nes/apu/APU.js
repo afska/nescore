@@ -17,7 +17,8 @@ export default class APU {
 		// TODO: IMPLEMENT
 
 		this.cycle++;
-		onAudioSample((Math.random() * 2 - 1) * 0.5); // noise
+		const volume = 0.15;
+		onAudioSample((Math.random() * 2 - 1) * volume);
 	}
 
 	_reset() {}
