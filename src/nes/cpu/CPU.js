@@ -3,10 +3,8 @@ import CPUMemoryMap from "./CPUMemoryMap";
 import Stack from "./Stack";
 import operations from "./operations";
 import { interrupts } from "./constants";
+import constants from "../constants";
 import { WithContext } from "../helpers";
-
-const INITIAL_FLAGS = 0b00100100;
-const INTERRUPT_CYCLES = 7;
 
 /** The Center Processing Unit. It runs programs. */
 export default class CPU {
@@ -68,12 +66,12 @@ export default class CPU {
 		this.stack.push2Bytes(this.pc.value);
 		this.pushFlags(withB2Flag);
 
-		this.cycle += INTERRUPT_CYCLES;
+		this.cycle += constants.CPU_INTERRUPT_CYCLES;
 
 		this.flags.i = true; // (to make sure handler doesn't get interrupted)
 		this._jumpToInterruptHandler(interrupt);
 
-		return INTERRUPT_CYCLES;
+		return constants.CPU_INTERRUPT_CYCLES;
 	}
 
 	/**
@@ -87,7 +85,7 @@ export default class CPU {
 	_reset() {
 		this.pc.reset();
 		this.sp.reset();
-		this.flags.load(INITIAL_FLAGS);
+		this.flags.load(constants.CPU_INITIAL_FLAGS);
 		this.cycle = 0;
 		this.extraCycles = 0;
 		this.registers.a.reset();
