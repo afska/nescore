@@ -58,14 +58,14 @@ export default class NES {
 	}
 
 	/** Executes a whole frame in the emulation. */
-	frame() {
+	frame(onAudioSample) {
 		const currentFrame = this.ppu.frame;
-		while (this.ppu.frame === currentFrame) this.step();
+		while (this.ppu.frame === currentFrame) this.step(onAudioSample);
 		return this.ppu.frameBuffer;
 	}
 
 	/** Executes a step in the emulation. */
-	step() {
+	step(onAudioSample = () => {}) {
 		this.requireContext();
 
 		let cycles = this.cpu.step();
@@ -84,7 +84,7 @@ export default class NES {
 
 		const apuCycles = cycles * constants.APU_CYCLES_PER_CPU_CYCLE;
 		while (apuCycles > 0) {
-			this.apu.step();
+			this.apu.step(onAudioSample);
 			apuCycles--;
 		}
 	}
