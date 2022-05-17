@@ -96,11 +96,6 @@ export default class NES {
 		this.context.controllers[player - 1].clear();
 	}
 
-	/** Unloads the current cartridge. */
-	unload() {
-		this.unloadContext();
-	}
-
 	/** When a context is loaded. */
 	onLoad(context) {
 		context.mapper.loadContext(context);
