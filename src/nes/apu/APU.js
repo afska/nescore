@@ -11,7 +11,7 @@ export default class APU {
 		this._reset();
 	}
 
-	/** Executes the next operation. */
+	/** Executes the next operation (1 cycle). */
 	step() {}
 
 	_reset() {}

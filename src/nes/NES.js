@@ -68,16 +68,24 @@ export default class NES {
 	step() {
 		this.requireContext();
 
-		// (PPU clock is three times faster than CPU clock)
-		let ppuCycles = this.cpu.step() * constants.PPU_CYCLES_PER_CPU_CYCLE;
+		let cycles = this.cpu.step();
 
+		let ppuCycles = cycles * constants.PPU_CYCLES_PER_CPU_CYCLE;
 		while (ppuCycles > 0) {
 			const interrupt = this.ppu.step();
 			ppuCycles--;
 
-			if (interrupt)
-				ppuCycles +=
-					this.cpu.interrupt(interrupt) * constants.PPU_CYCLES_PER_CPU_CYCLE;
+			if (interrupt) {
+				const newCycles = this.cpu.interrupt(interrupt);
+				cycles += newCycles;
+				ppuCycles += newCycles * constants.PPU_CYCLES_PER_CPU_CYCLE;
+			}
+		}
+
+		const apuCycles = cycles * constants.APU_CYCLES_PER_CPU_CYCLE;
+		while (apuCycles > 0) {
+			this.apu.step();
+			apuCycles--;
 		}
 	}
 

@@ -52,7 +52,7 @@ export default class PPU {
 		this._reset();
 	}
 
-	/** Executes the next operation. */
+	/** Executes the next operation (1 cycle). Returns an interrupt or null. */
 	step() {
 		const scanlineType = getScanlineType(this.scanline);
 		const interrupt = renderers[scanlineType](this.context);
