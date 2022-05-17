@@ -6,7 +6,8 @@ import FrameTimer from "./FrameTimer";
  * This contains the communication logic between `Emulator` and `webWorkerRunner`.
  */
 export default class WebWorker {
-	constructor(postMessage) {
+	// TODO: MOVE onAudio to message
+	constructor(postMessage, onAudio) {
 		this.$postMessage = postMessage;
 
 		this.isDebugging = false;
@@ -19,7 +20,7 @@ export default class WebWorker {
 				this.isDebugStepRequested = false;
 
 				try {
-					const frameBuffer = this.nes.frame();
+					const frameBuffer = this.nes.frame(onAudio);
 					this.frameTimer.countNewFrame();
 					this.$postMessage(frameBuffer);
 				} catch (error) {

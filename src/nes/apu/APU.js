@@ -13,7 +13,7 @@ export default class APU {
 
 	/** Executes the next operation (1 cycle). */
 	step(onAudioSample) {
-		// asdasd
+		// TODO: IMPLEMENT
 	}
 
 	_reset() {}

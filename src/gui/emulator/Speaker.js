@@ -1,7 +1,9 @@
 import RingBuffer from "ringbufferjs";
 
 const BUFFER_SIZE = 8192;
+const WEBAUDIO_BUFFER_SIZE = 1024;
 const DEFAULT_SAMPLE_RATE = 44100;
+const CHANNELS = 2;
 
 export default class Speaker {
 	constructor() {
@@ -14,9 +16,14 @@ export default class Speaker {
 		if (!window.AudioContext) return;
 
 		this._audioCtx = new window.AudioContext();
-		this._scriptNode = this._audioCtx.createScriptProcessor(1024, 0, 2);
+		this._scriptNode = this._audioCtx.createScriptProcessor(
+			WEBAUDIO_BUFFER_SIZE,
+			0,
+			CHANNELS
+		);
 
 		this._scriptNode.onaudioprocess = this._onAudioProcess;
+		this._scriptNode.connect(this._audioCtx.destination);
 	}
 
 	getSampleRate() {

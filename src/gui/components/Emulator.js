@@ -75,7 +75,10 @@ export default class Emulator extends Component {
 
 		// (web workers are hard to debug, a mock is used in development mode)
 		webWorker = DEBUG
-			? new WebWorker((data) => this.onWorkerMessage({ data }))
+			? new WebWorker(
+					(data) => this.onWorkerMessage({ data }),
+					this.speaker.writeSample
+			  )
 			: new WebWorkerRunner();
 
 		if (DEBUG) window.debug = debug(this, webWorker);
