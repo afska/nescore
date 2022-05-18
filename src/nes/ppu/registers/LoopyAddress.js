@@ -18,52 +18,30 @@ export default class LoopyAddress {
 
 	/** Increments X, wrapping when needed. */
 	incrementX() {
-		let v = this.toNumber();
-
-		// if coarse X === 31
-		if ((v & 0x001f) === 31) {
-			// coarse X = 0
-			v = v & 0xffe0;
-			// switch horizontal nametable
-			v = v ^ 0x0400;
+		if (this.coarseX === 31) {
+			this.coarseX = 0;
+			this._switchHorizontalNameTable();
 		} else {
-			// increment coarse X
-			v++;
+			this.coarseX++;
 		}
-
-		this.update(v);
 	}
 
 	/** Increments Y, wrapping when needed. */
 	incrementY() {
-		let v = this.toNumber();
-
-		// if fine Y < 7
-		if ((v & 0x7000) !== 0x7000) {
-			// increment fine Y
-			v += 0x1000;
+		if (this.fineY < 7) {
+			this.fineY++;
 		} else {
-			// fine Y = 0
-			v = v & 0x8fff;
-			// let y = coarse Y
-			let y = (v & 0x03e0) >> 5;
-			if (y === 29) {
-				// coarse Y = 0
-				y = 0;
-				// switch vertical nametable
-				v = v ^ 0x0800;
-			} else if (y === 31) {
-				// coarse Y = 0, nametable not switched
-				y = 0;
-			} else {
-				// increment coarse Y
-				y++;
-			}
-			// put coarse Y back into v
-			v = (v & 0xfc1f) | (y << 5);
-		}
+			this.fineY = 0;
 
-		this.update(v);
+			if (this.coarseY === 29) {
+				this.coarseY = 0;
+				this._switchVerticalNameTable();
+			} else if (this.coarseY === 31) {
+				this.coarseY = 0;
+			} else {
+				this.coarseY++;
+			}
+		}
 	}
 
 	/**
@@ -99,5 +77,13 @@ export default class LoopyAddress {
 		this.fineY =
 			(number >> constants.LOOPY_ADDR_FINE_Y_OFFSET) &
 			constants.LOOPY_ADDR_FINE_Y_MASK;
+	}
+
+	_switchHorizontalNameTable() {
+		this.baseNameTableId = this.baseNameTableId ^ 0b1;
+	}
+
+	_switchVerticalNameTable() {
+		this.baseNameTableId = this.baseNameTableId ^ 0b10;
 	}
 }
