@@ -113,6 +113,7 @@ export default class MMC3 extends Mapper {
 					byte & 1 ? "HORIZONTAL" : "VERTICAL"
 				);
 			}
+			return;
 		} else if (address >= 0xc000 && address < 0xe000) {
 			if (isEven) {
 				// IRQ latch
@@ -125,6 +126,7 @@ export default class MMC3 extends Mapper {
 				// IRQ latch value to the counter in the next scanline.
 				this._state.irqCountdown = 0;
 			}
+			return;
 		} else if (address >= 0xe000) {
 			if (isEven) {
 				// IRQ disable
@@ -135,6 +137,7 @@ export default class MMC3 extends Mapper {
 				// Writing to this address area will enable IRQ generation again.
 				this._state.irqEnabled = true;
 			}
+			return;
 		}
 
 		this.context.cpu.memory.writeAt(address, byte);
