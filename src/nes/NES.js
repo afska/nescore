@@ -111,7 +111,7 @@ export default class NES {
 	onLoad(context) {
 		context.mapper.loadContext(context);
 		this.ppu.loadContext(context);
-		this.cpu.loadContext(context);
 		this.apu.loadContext(context);
+		this.cpu.loadContext(context);
 	}
 }

@@ -1,5 +1,5 @@
 import Mapper from "./Mapper";
-import { MemoryChunk, MemoryPadding, WithCompositeMemory } from "../../memory";
+import { WithCompositeMemory, MemoryChunk, MemoryPadding } from "../../memory";
 import { InMemoryRegister } from "../../registers";
 import constants from "../../constants";
 

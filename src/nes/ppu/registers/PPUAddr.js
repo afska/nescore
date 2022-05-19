@@ -1,4 +1,4 @@
-import { InMemoryRegister } from "../../registers";
+import { WriteOnlyInMemoryRegister } from "../../registers";
 
 /**
  * PPU Address Register (>> write twice, upper byte first)
@@ -6,12 +6,7 @@ import { InMemoryRegister } from "../../registers";
  * Write the PPU address you want to access here, then write in `PPUData`.
  * Connected to `LoopyRegister`.
  */
-export default class PPUAddr extends InMemoryRegister {
-	/** Reads nothing (write-only address). */
-	readAt() {
-		return 0;
-	}
-
+export default class PPUAddr extends WriteOnlyInMemoryRegister {
 	/** Alternately writes the MSB and the LSB of the address, and updates scrolling metadata. */
 	writeAt(__, byte) {
 		this.context.ppu.loopy.onPPUAddrWrite(byte);

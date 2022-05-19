@@ -1,14 +1,21 @@
+import { APURegisterSegment } from "./registers";
 import { WithContext } from "../helpers";
 
 /** The Audio Processing Unit. It generates audio samples. */
 export default class APU {
 	constructor() {
 		WithContext.apply(this);
+
+		this.registers = null;
 	}
 
 	/** When a context is loaded. */
 	onLoad(context) {
+		this.registers = new APURegisterSegment(context);
+
 		this._reset();
+
+		// TODO: REMOVE
 		this.cycle = 0;
 		this.count = 0;
 	}

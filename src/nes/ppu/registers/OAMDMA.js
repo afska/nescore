@@ -1,4 +1,4 @@
-import { InMemoryRegister } from "../../registers";
+import { WriteOnlyInMemoryRegister } from "../../registers";
 import constants from "../../constants";
 import { Byte } from "../../helpers";
 
@@ -8,12 +8,7 @@ import { Byte } from "../../helpers";
  * Writing XX here will upload 256 bytes of data from CPU page $XX00-$XXFF to the internal PPU OAM.
  * This process takes 513 CPU cycles (+1 if on an odd cycle). The CPU is suspended during the operation.
  */
-export default class OAMDMA extends InMemoryRegister {
-	/** Reads nothing (write-only address). */
-	readAt() {
-		return 0;
-	}
-
+export default class OAMDMA extends WriteOnlyInMemoryRegister {
 	/** Writes 256 bytes from page $`byte` to PPU's internal OAM. */
 	writeAt(__, byte) {
 		const { cpu, ppu, memoryBus } = this.context;
