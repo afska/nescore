@@ -1,4 +1,5 @@
 import { APURegisterSegment } from "./registers";
+import Oscillator from "./synthesis/Oscillator";
 import constants from "../constants";
 import { WithContext } from "../helpers";
 
@@ -6,6 +7,8 @@ import { WithContext } from "../helpers";
 export default class APU {
 	constructor() {
 		WithContext.apply(this);
+
+		this.oscillator = new Oscillator();
 
 		this.registers = null;
 		this.clockCounter = 0;
@@ -81,11 +84,15 @@ export default class APU {
 			this.count++;
 		}
 
-		const volume = 0.15;
-
 		if (this.cycle === 0) {
 			const time = this.count / 44100;
-			const sample = Math.sin(2 * Math.PI * 440 * time) * volume;
+
+			this.oscillator.amplitude = 0.15;
+			this.oscillator.harmonics = 20;
+			this.oscillator.dutyCycle = 0.5;
+			this.oscillator.frequency = 440;
+
+			const sample = this.oscillator.sample(time);
 			onAudioSample(sample);
 		}
 	}
