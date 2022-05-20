@@ -21,15 +21,15 @@ export default class APU {
 		this.count = 0;
 	}
 
-	/** Executes the next operation (1 cycle). */
+	/** Executes the next operation (1 APU cycle). */
 	step(onAudioSample) {
 		// TODO: IMPLEMENT
 
-		// 1789773 steps per second
-		// 1789773 / 44100 = 40.58 (generate a sample every 40.58 cycles)
+		// 1789773 / 2 steps per second = 894886.5
+		// 894886.5 / 44100 = 20.29 (generate a sample every 20.29 cycles)
 
 		this.cycle++;
-		if (this.cycle >= 40) {
+		if (this.cycle >= 20) {
 			this.cycle = 0;
 			this.count++;
 		}
