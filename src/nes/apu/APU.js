@@ -7,6 +7,7 @@ export default class APU {
 		WithContext.apply(this);
 
 		this.registers = null;
+		this.pendingCycles = 0;
 	}
 
 	/** When a context is loaded. */
@@ -42,5 +43,7 @@ export default class APU {
 		}
 	}
 
-	_reset() {}
+	_reset() {
+		this.pendingCycles = 0;
+	}
 }
