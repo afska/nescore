@@ -36,7 +36,7 @@ export default class CPU {
 		this._reset();
 	}
 
-	/** Executes the next operation. Returns the number of consumed cycles. */
+	/** Executes the next step (1 step = 1 instruction = N cycles). Returns N. */
 	step() {
 		const pc = this.pc.value;
 		const operation = this._readOperation();

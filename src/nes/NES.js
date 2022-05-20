@@ -64,7 +64,7 @@ export default class NES {
 		return this.ppu.frameBuffer;
 	}
 
-	/** Executes a step in the emulation. */
+	/** Executes a step in the emulation (1 CPU instruction). */
 	step(onAudioSample = () => {}) {
 		this.requireContext();
 
@@ -116,15 +116,10 @@ export default class NES {
 	}
 
 	_clockAPU(cpuCycles, onAudioSample) {
-		const floatApuCycles =
-			cpuCycles * constants.APU_CYCLES_PER_CPU_CYCLE + this.apu.pendingCycles;
-		const intApuCycles = Math.ceil(floatApuCycles);
-		this.apu.pendingCycles = -(intApuCycles - floatApuCycles);
-
-		let apuCycles = intApuCycles;
-		while (apuCycles > 0) {
+		let apuSteps = cpuCycles * constants.APU_STEPS_PER_CPU_CYCLE;
+		while (apuSteps > 0) {
 			this.apu.step(onAudioSample);
-			apuCycles--;
+			apuSteps--;
 		}
 	}
 }

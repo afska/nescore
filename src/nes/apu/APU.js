@@ -7,7 +7,6 @@ export default class APU {
 		WithContext.apply(this);
 
 		this.registers = null;
-		this.pendingCycles = 0;
 	}
 
 	/** When a context is loaded. */
@@ -21,15 +20,18 @@ export default class APU {
 		this.count = 0;
 	}
 
-	/** Executes the next operation (1 APU cycle). */
+	/**
+	 * Executes the next step (1 step = 1 PPU cycle = 0.16 APU cycles).
+	 * It calls `onAudioSample` when it successfully generates a new sample.
+	 */
 	step(onAudioSample) {
 		// TODO: IMPLEMENT
 
-		// 1789773 / 2 steps per second = 894886.5
-		// 894886.5 / 44100 = 20.29 (generate a sample every 20.29 cycles)
+		// 5369318 steps per second
+		// 5369318 / 44100 = 121.75 (generate a sample every 121 cycles)
 
 		this.cycle++;
-		if (this.cycle >= 20) {
+		if (this.cycle >= 121) {
 			this.cycle = 0;
 			this.count++;
 		}
@@ -43,7 +45,5 @@ export default class APU {
 		}
 	}
 
-	_reset() {
-		this.pendingCycles = 0;
-	}
+	_reset() {}
 }
