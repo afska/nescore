@@ -88,7 +88,9 @@ export default class APU {
 					? 0.5
 					: 0.75;
 			this.oscillator.frequency = fCPU / (16 * (timer1 + 1));
-			const sample1 = this.oscillator.sample(this.time);
+			const sample1 = this.registers.apuControl.enablePulse1
+				? this.oscillator.sample(this.time)
+				: 0;
 
 			const timer2 = Byte.to16Bit(
 				this.registers.pulses[1].lclTimerHigh.timerHigh,
@@ -105,7 +107,9 @@ export default class APU {
 					? 0.5
 					: 0.75;
 			this.oscillator2.frequency = fCPU / (16 * (timer2 + 1));
-			const sample2 = this.oscillator2.sample(this.time);
+			const sample2 = this.registers.apuControl.enablePulse2
+				? this.oscillator2.sample(this.time)
+				: 0;
 
 			onAudioSample(0.5 * (sample1 + sample2));
 
