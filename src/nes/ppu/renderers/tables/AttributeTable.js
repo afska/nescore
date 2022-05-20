@@ -1,5 +1,5 @@
 import constants from "../../../constants";
-import { Byte, WithContext } from "../../../helpers";
+import { WithContext, Byte } from "../../../helpers";
 
 /**
  * An area of memory which defines what palette (0~3) each background tile uses.
