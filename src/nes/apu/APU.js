@@ -69,8 +69,6 @@ export default class APU {
 			// pulse1_sample = pulse1_osc.sample(dGlobalTime);
 
 			// new sample
-			this.count++; // TODO?
-			this.time += 1 / 44100;
 			const fCPU = 1789773; // from nesdev: f = CPU / (16 * (t + 1))
 
 			const timer1 = Byte.to16Bit(
@@ -111,7 +109,7 @@ export default class APU {
 				? this.oscillator2.sample(this.time)
 				: 0;
 
-			onAudioSample(0.5 * (sample1 + sample2));
+			this.output = 0.5 * (sample1 + sample2);
 
 			// if (pulse1_lc.counter > 0 && pulse1_seq.timer >= 8 && !pulse1_sweep.mute && pulse1_env.output > 2)
 			// 	pulse1_output += (pulse1_sample - pulse1_output) * 0.5;
@@ -127,26 +125,17 @@ export default class APU {
 
 		// TODO: IMPLEMENT
 
-		// 5369318 steps per second
+		// 5369318 steps per second (PPU clock speed)
 		// 5369318 / 44100 = 121.75 (generate a sample every 121 cycles)
 
-		// this.cycle++;
-		// if (this.cycle >= 121) {
-		// 	this.cycle = 0;
-		// 	this.count++;
-		// }
+		this.cycle++;
+		if (this.cycle >= 121) {
+			this.cycle = 0;
+			this.count++;
+			this.time += 1 / 44100;
+		}
 
-		// if (this.cycle === 0) {
-		// 	const time = this.count / 44100;
-
-		// 	this.oscillator.amplitude = 0.15;
-		// 	this.oscillator.harmonics = 20;
-		// 	this.oscillator.dutyCycle = 0.5;
-		// 	this.oscillator.frequency = 440;
-
-		// 	const sample = this.oscillator.sample(time);
-		// 	onAudioSample(sample);
-		// }
+		if (this.cycle === 0) onAudioSample(this.output);
 	}
 
 	_reset() {
