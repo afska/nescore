@@ -6,10 +6,12 @@ export default class MixedInMemoryRegister {
 		this.memorySize = 1;
 	}
 
+	/** Returns the actual value. */
 	readAt(address) {
 		return this.readRegister.readAt(address);
 	}
 
+	/** Sets the actual value. */
 	writeAt(address, byte) {
 		this.writeRegister.writeAt(address, byte);
 	}

@@ -1,4 +1,4 @@
 import Oscillator from "./Oscillator";
-import LengthCounter from "./LengthCounter";
+import Counter from "./Counter";
 
-export { Oscillator, LengthCounter };
+export { Oscillator, Counter };

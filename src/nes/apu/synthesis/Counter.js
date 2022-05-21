@@ -1,4 +1,4 @@
-export default class LengthCounter {
+export default class Counter {
 	constructor() {
 		this.counter = 0;
 	}
