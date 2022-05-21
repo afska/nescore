@@ -15,7 +15,6 @@ export default class PPUAddr extends InMemoryRegister {
 	/** Alternately writes the MSB and the LSB of the address, and updates scrolling metadata. */
 	writeAt(__, byte) {
 		this.context.ppu.loopy.onPPUAddrWrite(byte);
-		this._writeReadOnlyFields();
 	}
 
 	/** Returns the address. */
