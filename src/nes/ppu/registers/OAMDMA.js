@@ -20,5 +20,6 @@ export default class OAMDMA extends WriteOnlyInMemoryRegister {
 		}
 
 		cpu.extraCycles += constants.OAMDMA_CPU_CYCLES + (cpu.cycle % 2 === 1);
+		this._writeReadOnlyFields();
 	}
 }

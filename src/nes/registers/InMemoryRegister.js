@@ -7,6 +7,7 @@ export default class InMemoryRegister {
 
 		this.memorySize = 1;
 		this.value = 0;
+		this._readOnlyFields = [];
 	}
 
 	/** Adds a field of `size` bits named `named`, starting at `startPosition`. */
@@ -25,6 +26,21 @@ export default class InMemoryRegister {
 		return this;
 	}
 
+	/** Adds a read-only field of `size` bits named `named`, starting at `startPosition`. */
+	addReadOnlyField(name, startPosition, size = 1) {
+		// (this performs better than `addField`)
+		this._readOnlyFields.push({ name, startPosition, size });
+		this[name] = 0;
+
+		return this;
+	}
+
+	/** Sets the value manually (updating internal accessors). */
+	setValue(value) {
+		this.value = value;
+		this._writeReadOnlyFields();
+	}
+
 	/** Returns the actual value. */
 	readAt() {
 		return this.value;
@@ -33,5 +49,11 @@ export default class InMemoryRegister {
 	/** Sets the actual value. */
 	writeAt(__, byte) {
 		this.value = Byte.force8Bit(byte);
+		this._writeReadOnlyFields();
+	}
+
+	_writeReadOnlyFields() {
+		for (let { name, startPosition, size } of this._readOnlyFields)
+			this[name] = Byte.getSubNumber(this.value, startPosition, size);
 	}
 }

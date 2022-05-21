@@ -4,10 +4,10 @@ export default class APUControl extends InMemoryRegister {
 	constructor() {
 		super();
 
-		this.addField("enablePulse1", 0)
-			.addField("enablePulse2", 1)
-			.addField("enableTriangle", 2)
-			.addField("enableNoise", 3)
-			.addField("enableDMC", 4);
+		this.addReadOnlyField("enablePulse1", 0)
+			.addReadOnlyField("enablePulse2", 1)
+			.addReadOnlyField("enableTriangle", 2)
+			.addReadOnlyField("enableNoise", 3)
+			.addReadOnlyField("enableDMC", 4);
 	}
 }

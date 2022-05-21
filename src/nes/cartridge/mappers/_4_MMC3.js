@@ -96,7 +96,7 @@ export default class MMC3 extends Mapper {
 
 			if (isEven) {
 				// Writes to Bank select register
-				bankSelect.value = byte;
+				bankSelect.setValue(byte);
 			} else {
 				// Writes the page of the bank that was select with the even write before
 				this._state.bankData[bankSelect.bankRegister] = byte;
@@ -256,8 +256,8 @@ class BankSelectRegister extends InMemoryRegister {
 	constructor() {
 		super();
 
-		this.addField("bankRegister", 0, 3)
-			.addField("prgRomBankMode", 6)
-			.addField("chrRomA12Inversion", 7);
+		this.addReadOnlyField("bankRegister", 0, 3)
+			.addReadOnlyField("prgRomBankMode", 6)
+			.addReadOnlyField("chrRomA12Inversion", 7);
 	}
 }

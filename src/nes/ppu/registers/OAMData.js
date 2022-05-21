@@ -22,10 +22,11 @@ export default class OAMData extends InMemoryRegister {
 		const oamAddress = ppu.registers.oamAddr.value;
 		ppu.oamRam.writeAt(oamAddress, byte);
 		this._incrementAddress();
+		this._writeReadOnlyFields();
 	}
 
 	_incrementAddress() {
 		const { oamAddr } = this.context.ppu.registers;
-		oamAddr.value = Byte.force8Bit(oamAddr.value + 1);
+		oamAddr.setValue(Byte.force8Bit(oamAddr.value + 1));
 	}
 }

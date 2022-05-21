@@ -13,7 +13,7 @@ describe("CPU/PPU registers interaction", () => {
 		});
 
 		it("can write OAM, incrementing OAMAddr", () => {
-			ppu.registers.oamAddr.value = 3;
+			ppu.registers.oamAddr.setValue(3);
 
 			memory.writeAt(ADDRESS, 24);
 
@@ -24,7 +24,7 @@ describe("CPU/PPU registers interaction", () => {
 		it("can read OAM", () => {
 			ppu.oamRam.writeAt(3, 84);
 
-			ppu.registers.oamAddr.value = 3;
+			ppu.registers.oamAddr.setValue(3);
 			memory.readAt(ADDRESS).should.equal(84);
 		});
 	});

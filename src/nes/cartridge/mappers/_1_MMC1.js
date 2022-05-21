@@ -72,19 +72,19 @@ export default class MMC1 extends Mapper {
 
 			if (address >= 0x8000 && address < 0xa000) {
 				// Control
-				this._state.control.value = value;
+				this._state.control.setValue(value);
 				this.context.ppu.memory.changeNameTablesMirroringTo(
 					this._state.control.mirroring
 				);
 			} else if (address >= 0xa000 && address < 0xc000) {
 				// CHR bank 0
-				this._state.chrBank0.value = value;
+				this._state.chrBank0.setValue(value);
 			} else if (address >= 0xc000 && address < 0xe000) {
 				// CHR bank 1
-				this._state.chrBank1.value = value;
+				this._state.chrBank1.setValue(value);
 			} else {
 				// PRG bank
-				this._state.prgBank.value = value;
+				this._state.prgBank.setValue(value);
 				this._prgRam = this._state.prgBank.prgRamEnable
 					? this._enabledPrgRam
 					: this._disabledPrgRam;
@@ -194,9 +194,9 @@ class ControlRegister extends InMemoryRegister {
 	constructor() {
 		super();
 
-		this.addField("mirroringId", 0, 2)
-			.addField("prgRomBankMode", 2, 2)
-			.addField("chrRomBankMode", 4);
+		this.addReadOnlyField("mirroringId", 0, 2)
+			.addReadOnlyField("prgRomBankMode", 2, 2)
+			.addReadOnlyField("chrRomBankMode", 4);
 	}
 
 	/** Returns the mirroring type. */
@@ -265,6 +265,9 @@ class PRGBankRegister extends InMemoryRegister {
 	constructor() {
 		super();
 
-		this.addField("prgRomBankId", 0, 4).addField("prgRamEnable", 4);
+		this.addReadOnlyField("prgRomBankId", 0, 4).addReadOnlyField(
+			"prgRamEnable",
+			4
+		);
 	}
 }
