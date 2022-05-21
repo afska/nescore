@@ -19,11 +19,11 @@ import { WithCompositeMemory, MemoryPadding } from "../../memory";
 /** A collection of all the CPU-mapped APU registers. */
 class APURegisterSegment {
 	constructor(context) {
-		this.pulses = [0, 1].map(() => ({
-			control: new PulseControl().loadContext(context), //             $4000/$4004
-			sweep: new PulseSweep().loadContext(context), //                 $4001/$4005
-			timerLow: new PulseTimerLow().loadContext(context), //           $4002/$4006
-			lclTimerHigh: new PulseLCLTimerHigh().loadContext(context) //    $4003/$4007
+		this.pulses = [0, 1].map((id) => ({
+			control: new PulseControl(id).loadContext(context), //           $4000/$4004
+			sweep: new PulseSweep(id).loadContext(context), //               $4001/$4005
+			timerLow: new PulseTimerLow(id).loadContext(context), //         $4002/$4006
+			lclTimerHigh: new PulseLCLTimerHigh(id).loadContext(context) //  $4003/$4007
 		}));
 
 		this.triangle = {

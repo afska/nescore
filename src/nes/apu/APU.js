@@ -1,5 +1,5 @@
 import { APURegisterSegment } from "./registers";
-import Oscillator from "./synthesis/Oscillator";
+import { Oscillator, LengthCounter } from "./synthesis";
 import constants from "../constants";
 import { WithContext, Byte } from "../helpers";
 
@@ -10,6 +10,7 @@ export default class APU {
 
 		this.oscillator = new Oscillator();
 		this.oscillator2 = new Oscillator();
+		this.lengthCounters = [new LengthCounter(), new LengthCounter()];
 
 		this.registers = null;
 		this.clockCounter = 0;
@@ -56,8 +57,16 @@ export default class APU {
 
 			// half frame "beats" adjust the note length and frequency sweepers
 			if (isHalf) {
-				// pulse1_lc.clock(pulse1_enable, pulse1_halt);
-				// pulse2_lc.clock(pulse2_enable, pulse2_halt);
+				this.lengthCounters[0].clock(
+					this.registers.apuControl.enablePulse1,
+					this.registers.pulses[0].control.halt
+				);
+				this.lengthCounters[1].clock(
+					this.registers.apuControl.enablePulse2,
+					this.registers.pulses[1].control.halt
+				);
+				// pulse1_lc.clock(pulse1_enable, pulse1_halt); OK
+				// pulse2_lc.clock(pulse2_enable, pulse2_halt); OK
 				// noise_lc.clock(noise_enable, noise_halt);
 				// pulse1_sweep.clock(pulse1_seq.reload, 0);
 				// pulse2_sweep.clock(pulse2_seq.reload, 1);
@@ -86,9 +95,11 @@ export default class APU {
 					? 0.5
 					: 0.75;
 			this.oscillator.frequency = fCPU / (16 * (timer1 + 1));
-			const sample1 = this.registers.apuControl.enablePulse1
-				? this.oscillator.sample(this.time)
-				: 0;
+			const sample1 =
+				this.registers.apuControl.enablePulse1 &&
+				!this.lengthCounters[0].hasDone
+					? this.oscillator.sample(this.time)
+					: 0;
 
 			const timer2 = Byte.to16Bit(
 				this.registers.pulses[1].lclTimerHigh.timerHigh,
@@ -105,9 +116,11 @@ export default class APU {
 					? 0.5
 					: 0.75;
 			this.oscillator2.frequency = fCPU / (16 * (timer2 + 1));
-			const sample2 = this.registers.apuControl.enablePulse2
-				? this.oscillator2.sample(this.time)
-				: 0;
+			const sample2 =
+				this.registers.apuControl.enablePulse2 &&
+				!this.lengthCounters[1].hasDone
+					? this.oscillator2.sample(this.time)
+					: 0;
 
 			this.output = 0.5 * (sample1 + sample2);
 

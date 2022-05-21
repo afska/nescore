@@ -6,7 +6,7 @@ export default class PulseControl extends WriteOnlyInMemoryRegister {
 
 		this.addReadOnlyField("volumeOrEnvelopePeriod", 0, 4)
 			.addReadOnlyField("constantVolume", 4)
-			.addReadOnlyField("lengthCounterHalt", 5)
+			.addReadOnlyField("halt", 5)
 			.addReadOnlyField("dutyCycle", 6, 2);
 	}
 }
