@@ -1,5 +1,4 @@
 import { WriteOnlyInMemoryRegister } from "../../registers";
-import { Byte } from "../../helpers";
 
 /**
  * PPU Control Register (> write)
@@ -20,10 +19,9 @@ export default class PPUCtrl extends WriteOnlyInMemoryRegister {
 
 	/** Sets the actual value and updates scrolling metadata. */
 	writeAt(__, byte) {
-		this.value = Byte.force8Bit(byte);
+		this.setValue(byte);
 
 		this.context.ppu.loopy.onPPUCtrlWrite(byte);
-		this._writeReadOnlyFields();
 	}
 
 	/** Returns the base Name table id. */

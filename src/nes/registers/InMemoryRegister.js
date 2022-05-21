@@ -37,7 +37,7 @@ export default class InMemoryRegister {
 
 	/** Sets the value manually (updating internal accessors). */
 	setValue(value) {
-		this.value = value;
+		this.value = Byte.force8Bit(value);
 		this._writeReadOnlyFields();
 	}
 
@@ -48,8 +48,7 @@ export default class InMemoryRegister {
 
 	/** Sets the actual value. */
 	writeAt(__, byte) {
-		this.value = Byte.force8Bit(byte);
-		this._writeReadOnlyFields();
+		this.setValue(byte);
 	}
 
 	_writeReadOnlyFields() {

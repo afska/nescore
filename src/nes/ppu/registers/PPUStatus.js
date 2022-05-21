@@ -17,8 +17,7 @@ export default class PPUStatus extends InMemoryRegister {
 
 	/** When a context is loaded. */
 	onLoad() {
-		this.value = 0b10000000;
-		this._writeReadOnlyFields();
+		this.setValue(0b10000000);
 	}
 
 	/** Reads the status flags, with some side effects. */

@@ -30,6 +30,5 @@ export default class PPUScroll extends WriteOnlyInMemoryRegister {
 	/** Alternately writes the X and the Y coordinates of the scroll. */
 	writeAt(__, byte) {
 		this.context.ppu.loopy.onPPUScrollWrite(byte);
-		this._writeReadOnlyFields();
 	}
 }
