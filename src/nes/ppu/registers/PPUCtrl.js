@@ -11,11 +11,11 @@ export default class PPUCtrl extends InMemoryRegister {
 	constructor() {
 		super();
 
-		this.addField("vramAddressIncrement32", 2)
-			.addField("patternTableAddressIdFor8x8Sprites", 3)
-			.addField("patternTableAddressIdForBackground", 4)
-			.addField("spriteSizeId", 5)
-			.addField("generateNmiAtStartOfVBlank", 7);
+		this.addReadOnlyField("vramAddressIncrement32", 2)
+			.addReadOnlyField("patternTableAddressIdFor8x8Sprites", 3)
+			.addReadOnlyField("patternTableAddressIdForBackground", 4)
+			.addReadOnlyField("spriteSizeId", 5)
+			.addReadOnlyField("generateNmiAtStartOfVBlank", 7);
 	}
 
 	/** Reads nothing (write-only address). */
@@ -28,6 +28,7 @@ export default class PPUCtrl extends InMemoryRegister {
 		this.value = Byte.force8Bit(byte);
 
 		this.context.ppu.loopy.onPPUCtrlWrite(byte);
+		this._writeReadOnlyFields();
 	}
 
 	/** Returns the base Name table id. */

@@ -13,7 +13,7 @@ describe("registers", () => {
 				new InMemoryRegister(), // byte 2
 				(register = new InMemoryRegister() // byte 3
 					.addField("booleanBit2", 2)
-					.addField("shortNumberBit5", 5, 2)
+					.addReadOnlyField("shortNumberBit5", 5, 2)
 					.addField("longNumberBit4", 4, 4))
 			]);
 		});
@@ -31,8 +31,6 @@ describe("registers", () => {
 			memory.readAt(3).should.equal(0b00000100);
 			register.longNumberBit4 = 0b1101;
 			memory.readAt(3).should.equal(0b11010100);
-			register.shortNumberBit5 = 0b01;
-			memory.readAt(3).should.equal(0b10110100);
 		});
 	});
 });

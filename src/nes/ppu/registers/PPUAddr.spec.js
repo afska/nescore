@@ -13,7 +13,7 @@ describe("CPU/PPU registers interaction", () => {
 		});
 
 		it("is write-only", () => {
-			register.value = 123;
+			register.setValue(123);
 			memory.readAt(ADDRESS).should.equal(0);
 		});
 

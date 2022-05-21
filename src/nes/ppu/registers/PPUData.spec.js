@@ -48,7 +48,7 @@ describe("CPU/PPU registers interaction", () => {
 
 			["write", "read"].forEach((operation) => {
 				it(`${operation}: increments PPUAddr by 1 if bit 2 of PPUCtrl is 0`, () => {
-					ppu.registers.ppuCtrl.value = 0b00000000;
+					ppu.registers.ppuCtrl.setValue(0b00000000);
 					ppu.registers.ppuAddr.address = 0x2016;
 
 					run(operation);
@@ -57,7 +57,7 @@ describe("CPU/PPU registers interaction", () => {
 				});
 
 				it(`${operation}: increments PPUAddr by 32 if bit 2 of PPUCtrl is 1`, () => {
-					ppu.registers.ppuCtrl.value = 0b00000100;
+					ppu.registers.ppuCtrl.setValue(0b00000100);
 					ppu.registers.ppuAddr.address = 0x2016;
 
 					run(operation);

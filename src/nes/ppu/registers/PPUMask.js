@@ -9,14 +9,14 @@ export default class PPUMask extends InMemoryRegister {
 	constructor() {
 		super();
 
-		this.addField("grayscale", 0)
-			.addField("showBackgroundInLeftmost8PixelsOfScreen", 1)
-			.addField("showSpritesInLeftmost8PixelsOfScreen", 2)
-			.addField("showBackground", 3)
-			.addField("showSprites", 4)
-			.addField("emphasizeRed", 5)
-			.addField("emphasizeGreen", 6)
-			.addField("emphasizeBlue", 7);
+		this.addReadOnlyField("grayscale", 0)
+			.addReadOnlyField("showBackgroundInLeftmost8PixelsOfScreen", 1)
+			.addReadOnlyField("showSpritesInLeftmost8PixelsOfScreen", 2)
+			.addReadOnlyField("showBackground", 3)
+			.addReadOnlyField("showSprites", 4)
+			.addReadOnlyField("emphasizeRed", 5)
+			.addReadOnlyField("emphasizeGreen", 6)
+			.addReadOnlyField("emphasizeBlue", 7);
 	}
 
 	/** Transforms a BGR `color` following the register's rules (grayscale or emphasize bits). */
