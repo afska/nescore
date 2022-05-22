@@ -1,4 +1,4 @@
-import { LengthCounter, VolumeEnvelope } from "../synthesis";
+import { NoiseOscillator, LengthCounter, VolumeEnvelope } from "../synthesis";
 import constants from "../../constants";
 import { WithContext } from "../../helpers";
 
@@ -11,6 +11,7 @@ export default class NoiseChannel {
 	constructor() {
 		WithContext.apply(this);
 
+		this.oscillator = new NoiseOscillator();
 		this.lengthCounter = new LengthCounter();
 		this.volumeEnvelope = new VolumeEnvelope();
 	}
@@ -23,10 +24,9 @@ export default class NoiseChannel {
 		const volume = this.registers.control.constantVolume
 			? this.registers.control.volumeOrEnvelopePeriod
 			: this.volumeEnvelope.volume;
+		this.oscillator.amplitude = volume / constants.APU_MAX_VOLUME;
 
-		return !this.lengthCounter.didFinish
-			? (Math.random() * 2 - 1) * 0.3 * (volume / constants.APU_MAX_VOLUME)
-			: 0;
+		return !this.lengthCounter.didFinish ? this.oscillator.sample() : 0;
 	}
 
 	/** Updates the envelope. */
