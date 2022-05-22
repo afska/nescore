@@ -33,11 +33,6 @@ export default class PulseChannel {
 		const { apu } = this.context;
 		if (!this.isEnabled) return 0;
 
-		if (this.timer < 8) {
-			// (if t < 8, the pulse channel is silenced)
-			return 0;
-		}
-
 		this.oscillator.dutyCycle = this.registers.control.dutyCycle;
 		this.oscillator.frequency = constants.FREQ_CPU_HZ / (16 * (this.timer + 1));
 		// from nesdev: f = fCPU / (16 * (t + 1))
@@ -47,7 +42,14 @@ export default class PulseChannel {
 			: this.volumeEnvelope.volume;
 		this.oscillator.amplitude = volume / constants.APU_MAX_VOLUME;
 
-		return !this.lengthCounter.didFinish ? this.oscillator.sample(apu.time) : 0;
+		return !this.lengthCounter.didFinish && !this.frequencySweeper.mute
+			? this.oscillator.sample(apu.time)
+			: 0;
+	}
+
+	/** Updates the sweeper. */
+	updateSweeper() {
+		this.frequencySweeper.track(this);
 	}
 
 	/** Updates the envelope. */
@@ -64,7 +66,7 @@ export default class PulseChannel {
 			this.isEnabled,
 			this.registers.control.envelopeLoopOrLengthCounterHalt
 		);
-		// TODO: UPDATE SWEEP: pulse1_sweep.clock(pulse1_seq.reload, 0);
+		this.frequencySweeper.clock(this);
 	}
 
 	/** Returns whether the channel is enabled or not. */

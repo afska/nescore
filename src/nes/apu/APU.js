@@ -47,9 +47,9 @@ export default class APU {
 	step(onAudioSample) {
 		if (this.clockCounter === 0) this._onNewCycle();
 
-		// Frequency sweepers change at high frequency
-		// pulse1_sweep.track(pulse1_seq.reload);
-		// pulse2_sweep.track(pulse2_seq.reload);
+		// (frequency sweepers change at high frequency)
+		this.channels.pulses[0].updateSweeper();
+		this.channels.pulses[1].updateSweeper();
 
 		this._incrementCounters();
 
