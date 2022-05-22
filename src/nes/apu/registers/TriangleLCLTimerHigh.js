@@ -1,4 +1,5 @@
 import { WriteOnlyInMemoryRegister } from "../../registers";
+import { lengthTable } from "../constants";
 
 export default class TriangleLCLTimerHigh extends WriteOnlyInMemoryRegister {
 	constructor() {
@@ -15,6 +16,7 @@ export default class TriangleLCLTimerHigh extends WriteOnlyInMemoryRegister {
 	writeAt(__, byte) {
 		this.setValue(byte);
 
-		this.context.apu.channels.triangle.lengthCounter.counter = this.lengthCounterLoad;
+		this.context.apu.channels.triangle.lengthCounter.counter =
+			lengthTable[this.lengthCounterLoad];
 	}
 }

@@ -33,7 +33,7 @@ export default class TriangleChannel {
 		// (the pitch is one octave below the pulse channels with an equivalent timer value)
 		// (i.e. use the formula above but divide the resulting frequency by two).
 
-		return !this.lengthCounter.didFinish || !this.linearLengthCounter.didFinish
+		return !this.lengthCounter.didFinish && !this.linearLengthCounter.didFinish
 			? this.oscillator.sample(apu.time)
 			: 0;
 	}
