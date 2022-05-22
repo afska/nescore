@@ -34,7 +34,7 @@ class APURegisterSegment {
 
 		this.noise = {
 			control: new NoiseControl().loadContext(context), //             $400C
-			form: new NoiseForm().loadContext(context), //                $400E
+			form: new NoiseForm().loadContext(context), //                   $400E
 			lcl: new NoiseLCL().loadContext(context) //                      $400F
 		};
 

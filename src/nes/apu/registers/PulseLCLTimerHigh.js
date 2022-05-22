@@ -1,5 +1,5 @@
-import { lengthTable } from "../constants";
 import { WriteOnlyInMemoryRegister } from "../../registers";
+import { lengthTable } from "../constants";
 
 export default class PulseLCLTimerHigh extends WriteOnlyInMemoryRegister {
 	constructor(id) {

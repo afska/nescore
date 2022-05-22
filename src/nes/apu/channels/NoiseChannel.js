@@ -18,8 +18,7 @@ export default class NoiseChannel {
 		// const { apu } = this.context;
 		if (!this.isEnabled) return 0;
 
-		return 0;
-		// return !this.lengthCounter.didFinish ? this.oscillator.sample(apu.time) : 0;
+		return !this.lengthCounter.didFinish ? (Math.random() * 2 - 1) * 0.3 : 0;
 	}
 
 	/** Updates length counter and sweep values. */
