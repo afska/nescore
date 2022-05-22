@@ -1,9 +1,7 @@
 import WithLittleEndian from "./WithLittleEndian";
 import _ from "lodash";
 
-/**
- * A memory chunk that can store `bytes` (it can be a number or a Buffer).
- */
+/** A memory chunk that can store `bytes` (it can be a number or a Buffer). */
 export default class MemoryChunk {
 	constructor(bytes) {
 		WithLittleEndian.apply(this);

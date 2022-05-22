@@ -25,6 +25,7 @@ export default class APU {
 			triangle: new TriangleChannel(),
 			noise: new NoiseChannel()
 		};
+		// TODO: DMC CHANNEL
 	}
 
 	/** When a context is loaded. */
@@ -68,11 +69,6 @@ export default class APU {
 		const triangle = this.channels.triangle.sample();
 		const noise = this.channels.noise.sample();
 		this.sample = 0.5 * (pulse1 + pulse2 + triangle + noise);
-
-		// if (pulse1_lc.counter > 0 && pulse1_seq.timer >= 8 && !pulse1_sweep.mute && pulse1_env.output > 2)
-		// 	pulse1_output += (pulse1_sample - pulse1_output) * 0.5;
-		// else
-		// 	pulse1_output = 0;
 	};
 
 	_onQuarter = () => {
@@ -81,7 +77,7 @@ export default class APU {
 		this.channels.pulses[0].fastClock();
 		this.channels.pulses[1].fastClock();
 		this.channels.triangle.fastClock();
-		// noise_env.clock(noise_halt);
+		this.channels.noise.fastClock();
 	};
 
 	_onHalf = () => {
@@ -91,7 +87,6 @@ export default class APU {
 		this.channels.pulses[1].clock();
 		this.channels.triangle.clock();
 		this.channels.noise.clock();
-		// TODO: DMC
 	};
 
 	_onEnd = () => {

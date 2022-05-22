@@ -1,4 +1,5 @@
-import { Counter } from "../synthesis";
+import { Counter, Envelope } from "../synthesis";
+import constants from "../../constants";
 import { WithContext } from "../../helpers";
 
 /**
@@ -11,6 +12,7 @@ export default class NoiseChannel {
 		WithContext.apply(this);
 
 		this.lengthCounter = new Counter();
+		this.envelope = new Envelope();
 	}
 
 	/** Generates a new sample. */
@@ -18,7 +20,19 @@ export default class NoiseChannel {
 		// const { apu } = this.context;
 		if (!this.isEnabled) return 0;
 
-		return !this.lengthCounter.didFinish ? (Math.random() * 2 - 1) * 0.3 : 0;
+		const volume = this.registers.control.constantVolume
+			? this.registers.control.volumeOrEnvelopePeriod
+			: this.envelope.volume;
+
+		return !this.lengthCounter.didFinish
+			? (Math.random() * 2 - 1) * 0.3 * (volume / constants.APU_MAX_VOLUME)
+			: 0;
+	}
+
+	/** Updates the envelope. */
+	fastClock() {
+		this.envelope.period = this.registers.control.volumeOrEnvelopePeriod;
+		this.envelope.clock(this.registers.control.envelopeLoopOrLengthCounterHalt);
 	}
 
 	/** Updates length counter and sweep values. */
