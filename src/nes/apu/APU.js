@@ -1,5 +1,5 @@
 import { APURegisterSegment } from "./registers";
-import { PulseChannel, TriangleChannel } from "./channels";
+import { PulseChannel, TriangleChannel, NoiseChannel } from "./channels";
 import { frameClockTime } from "./constants";
 import constants from "../constants";
 import { WithContext } from "../helpers";
@@ -22,7 +22,8 @@ export default class APU {
 				new PulseChannel(0, "enablePulse1"),
 				new PulseChannel(1, "enablePulse2")
 			],
-			triangle: new TriangleChannel()
+			triangle: new TriangleChannel(),
+			noise: new NoiseChannel()
 		};
 	}
 
@@ -33,6 +34,7 @@ export default class APU {
 		this.channels.pulses[0].loadContext(context);
 		this.channels.pulses[1].loadContext(context);
 		this.channels.triangle.loadContext(context);
+		this.channels.noise.loadContext(context);
 
 		this._reset();
 	}
@@ -64,7 +66,8 @@ export default class APU {
 		const pulse1 = this.channels.pulses[0].sample();
 		const pulse2 = this.channels.pulses[1].sample();
 		const triangle = this.channels.triangle.sample();
-		this.sample = 0.5 * (pulse1 + pulse2 + triangle);
+		const noise = this.channels.noise.sample();
+		this.sample = 0.5 * (pulse1 + pulse2 + triangle + noise);
 
 		// if (pulse1_lc.counter > 0 && pulse1_seq.timer >= 8 && !pulse1_sweep.mute && pulse1_env.output > 2)
 		// 	pulse1_output += (pulse1_sample - pulse1_output) * 0.5;
@@ -87,8 +90,8 @@ export default class APU {
 		this.channels.pulses[0].clock();
 		this.channels.pulses[1].clock();
 		this.channels.triangle.clock();
-		// TODO: TRIANGLE, NOISE, DMC
-		// noise_lc.clock(noise_enable, noise_halt);
+		this.channels.noise.clock();
+		// TODO: DMC
 	};
 
 	_onEnd = () => {

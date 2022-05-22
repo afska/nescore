@@ -3,7 +3,7 @@ import constants from "../../constants";
 import { WithContext, Byte } from "../../helpers";
 
 /**
- * Pulse wave channel. It supports:
+ * The pulse channels produce a variable-width pulse signal. They support:
  *   - different duty cycles
  *   - note lengths
  *   - volume envelope / constant volume

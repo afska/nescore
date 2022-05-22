@@ -5,8 +5,8 @@ import PulseLCLTimerHigh from "./PulseLCLTimerHigh";
 import TriangleLinearLCL from "./TriangleLinearLCL";
 import TriangleTimerLow from "./TriangleTimerLow";
 import TriangleLCLTimerHigh from "./TriangleLCLTimerHigh";
-import NoiseControl1 from "./NoiseControl1";
-import NoiseControl2 from "./NoiseControl2";
+import NoiseControl from "./NoiseControl";
+import NoiseForm from "./NoiseForm";
 import NoiseLCL from "./NoiseLCL";
 import DMCControl from "./DMCControl";
 import DMCLoad from "./DMCLoad";
@@ -33,8 +33,8 @@ class APURegisterSegment {
 		};
 
 		this.noise = {
-			control1: new NoiseControl1().loadContext(context), //           $400C
-			control2: new NoiseControl2().loadContext(context), //           $400E
+			control: new NoiseControl().loadContext(context), //             $400C
+			form: new NoiseForm().loadContext(context), //                $400E
 			lcl: new NoiseLCL().loadContext(context) //                      $400F
 		};
 
@@ -67,9 +67,9 @@ class APURegisterSegment {
 			this.triangle.timerLow,
 			this.triangle.lclTimerHigh,
 
-			this.noise.control1,
+			this.noise.control,
 			new MemoryPadding(1),
-			this.noise.control2,
+			this.noise.form,
 			this.noise.lcl,
 
 			this.dmc.control,

@@ -3,9 +3,9 @@ import constants from "../../constants";
 import { WithContext, Byte } from "../../helpers";
 
 /**
- * Triangle wave channel. It supports:
+ * The triangle channel produces a quantized triangle wave. It supports:
  *   - note lengths
- *   - a high-resolution ("linear") length counter
+ *   - an extra high-resolution ("linear") length counter
  */
 export default class TriangleChannel {
 	constructor() {

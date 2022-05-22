@@ -8,7 +8,7 @@ export default class PulseLCLTimerHigh extends WriteOnlyInMemoryRegister {
 		this.id = id;
 		this.addReadOnlyField("timerHigh", 0, 3).addReadOnlyField(
 			"lengthCounterLoad",
-			4,
+			3,
 			5
 		);
 	}

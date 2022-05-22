@@ -1,13 +1,12 @@
 import { WriteOnlyInMemoryRegister } from "../../registers";
 
-export default class LCLTimerHigh extends WriteOnlyInMemoryRegister {
-	constructor(id) {
+export default class TriangleLCLTimerHigh extends WriteOnlyInMemoryRegister {
+	constructor() {
 		super();
 
-		this.id = id;
 		this.addReadOnlyField("timerHigh", 0, 3).addReadOnlyField(
 			"lengthCounterLoad",
-			4,
+			3,
 			5
 		);
 	}
