@@ -1,9 +1,6 @@
-import { Oscillator, Counter } from "../synthesis";
+import { PulseOscillator, Counter } from "../synthesis";
 import constants from "../../constants";
 import { WithContext, Byte } from "../../helpers";
-
-const AMPLITUDE = 0.15;
-const HARMONICS = 20;
 
 /** Square wave channel. It supports different duty cycles, and frequency sweeping. */
 export default class PulseChannel {
@@ -13,7 +10,7 @@ export default class PulseChannel {
 		this.id = id;
 		this.enableFlagName = enableFlagName;
 
-		this.oscillator = new Oscillator(AMPLITUDE, HARMONICS);
+		this.oscillator = new PulseOscillator();
 		this.lengthCounter = new Counter();
 	}
 

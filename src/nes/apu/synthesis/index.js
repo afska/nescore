@@ -1,4 +1,5 @@
-import Oscillator from "./Oscillator";
+import PulseOscillator from "./PulseOscillator";
+import TriangleOscillator from "./TriangleOscillator";
 import Counter from "./Counter";
 
-export { Oscillator, Counter };
+export { PulseOscillator, TriangleOscillator, Counter };
