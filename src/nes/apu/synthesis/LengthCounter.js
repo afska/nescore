@@ -1,5 +1,5 @@
-/** A length counter. It can be clocked to decrease its value and notify when it finishes. */
-export default class Counter {
+/** A note length counter. It can be clocked to decrease its value and notify when it finishes. */
+export default class LengthCounter {
 	constructor() {
 		this.counter = 0;
 	}

@@ -1,6 +1,6 @@
 import PulseOscillator from "./PulseOscillator";
 import TriangleOscillator from "./TriangleOscillator";
-import Counter from "./Counter";
+import LengthCounter from "./LengthCounter";
 import Envelope from "./Envelope";
 
-export { PulseOscillator, TriangleOscillator, Counter, Envelope };
+export { PulseOscillator, TriangleOscillator, LengthCounter, Envelope };

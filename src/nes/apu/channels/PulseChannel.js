@@ -1,4 +1,4 @@
-import { PulseOscillator, Counter, Envelope } from "../synthesis";
+import { PulseOscillator, LengthCounter, Envelope } from "../synthesis";
 import constants from "../../constants";
 import { WithContext, Byte } from "../../helpers";
 
@@ -17,7 +17,7 @@ export default class PulseChannel {
 		this.enableFlagName = enableFlagName;
 
 		this.oscillator = new PulseOscillator();
-		this.lengthCounter = new Counter();
+		this.lengthCounter = new LengthCounter();
 		this.envelope = new Envelope();
 	}
 

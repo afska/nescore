@@ -1,4 +1,4 @@
-import { TriangleOscillator, Counter } from "../synthesis";
+import { TriangleOscillator, LengthCounter } from "../synthesis";
 import constants from "../../constants";
 import { WithContext, Byte } from "../../helpers";
 
@@ -12,8 +12,8 @@ export default class TriangleChannel {
 		WithContext.apply(this);
 
 		this.oscillator = new TriangleOscillator();
-		this.lengthCounter = new Counter();
-		this.linearLengthCounter = new Counter();
+		this.lengthCounter = new LengthCounter();
+		this.linearLengthCounter = new LengthCounter();
 	}
 
 	/** Generates a new sample. */

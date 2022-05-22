@@ -1,4 +1,4 @@
-import { Counter, Envelope } from "../synthesis";
+import { LengthCounter, Envelope } from "../synthesis";
 import constants from "../../constants";
 import { WithContext } from "../../helpers";
 
@@ -11,7 +11,7 @@ export default class NoiseChannel {
 	constructor() {
 		WithContext.apply(this);
 
-		this.lengthCounter = new Counter();
+		this.lengthCounter = new LengthCounter();
 		this.envelope = new Envelope();
 	}
 

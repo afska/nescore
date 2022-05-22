@@ -1,4 +1,4 @@
-/** Length Counter Table. Registers use its values to initialize length counters (LCL). */
+/** Length counter table. Registers use its values to initialize length counters (LCL). */
 export default [
 	10,
 	254,
