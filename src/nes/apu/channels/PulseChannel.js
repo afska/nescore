@@ -5,7 +5,7 @@ import {
 	FrequencySweeper
 } from "../synthesis";
 import constants from "../../constants";
-import { WithContext } from "../../helpers";
+import { WithContext, Byte } from "../../helpers";
 
 /**
  * The pulse channels produce a variable-width pulse signal. They support:
@@ -45,6 +45,14 @@ export default class PulseChannel {
 		return !this.lengthCounter.didFinish && !this.frequencySweeper.mute
 			? this.oscillator.sample(apu.time)
 			: 0;
+	}
+
+	/** Updates the full timer value from the registers. */
+	updateTimer() {
+		this.timer = Byte.to16Bit(
+			this.registers.lclTimerHigh.timerHigh,
+			this.registers.timerLow.value
+		);
 	}
 
 	/** Updates the sweeper. */

@@ -25,6 +25,11 @@ export default class FrequencySweeper {
 	clock(channel) {
 		const register = channel.registers.sweep;
 
+		if (!register.enabledFlag) {
+			channel.updateTimer();
+			return;
+		}
+
 		/**
 		 * The sweep unit continuously calculates each channel's target period in this way:
 		 * - A barrel shifter shifts the channel's 11-bit raw timer period right by the shift count, producing the change amount.
@@ -32,12 +37,7 @@ export default class FrequencySweeper {
 		 * - The target period is the sum of the current period and the change amount.
 		 */
 
-		if (
-			this.dividerCount === 0 &&
-			register.enabledFlag &&
-			register.shiftCount > 0 &&
-			!this.mute
-		)
+		if (this.dividerCount === 0 && register.shiftCount > 0 && !this.mute)
 			channel.timer += this.change * (register.negateFlag ? -1 : 1);
 
 		if (this.dividerCount === 0 || this.startFlag) {
