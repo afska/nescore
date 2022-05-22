@@ -1,5 +1,6 @@
 import { WriteOnlyInMemoryRegister } from "../../registers";
 import { lengthTable } from "../constants";
+import { Byte } from "../../helpers";
 
 export default class PulseLCLTimerHigh extends WriteOnlyInMemoryRegister {
 	constructor(id) {
@@ -18,6 +19,10 @@ export default class PulseLCLTimerHigh extends WriteOnlyInMemoryRegister {
 		this.setValue(byte);
 
 		const channel = this.context.apu.channels.pulses[this.id];
+		channel.timer = Byte.to16Bit(
+			channel.registers.lclTimerHigh.timerHigh,
+			channel.registers.timerLow.value
+		);
 		channel.lengthCounter.counter = lengthTable[this.lengthCounterLoad];
 		channel.volumeEnvelope.startFlag = true;
 	}

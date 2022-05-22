@@ -5,7 +5,7 @@ import {
 	FrequencySweeper
 } from "../synthesis";
 import constants from "../../constants";
-import { WithContext, Byte } from "../../helpers";
+import { WithContext } from "../../helpers";
 
 /**
  * The pulse channels produce a variable-width pulse signal. They support:
@@ -25,6 +25,7 @@ export default class PulseChannel {
 		this.lengthCounter = new LengthCounter();
 		this.volumeEnvelope = new VolumeEnvelope();
 		this.frequencySweeper = new FrequencySweeper();
+		this.timer = 0;
 	}
 
 	/** Generates a new sample. */
@@ -32,18 +33,13 @@ export default class PulseChannel {
 		const { apu } = this.context;
 		if (!this.isEnabled) return 0;
 
-		const timer = Byte.to16Bit(
-			this.registers.lclTimerHigh.timerHigh,
-			this.registers.timerLow.value
-		);
-
-		if (timer < 8) {
+		if (this.timer < 8) {
 			// (if t < 8, the pulse channel is silenced)
 			return 0;
 		}
 
 		this.oscillator.dutyCycle = this.registers.control.dutyCycle;
-		this.oscillator.frequency = constants.FREQ_CPU_HZ / (16 * (timer + 1));
+		this.oscillator.frequency = constants.FREQ_CPU_HZ / (16 * (this.timer + 1));
 		// from nesdev: f = fCPU / (16 * (t + 1))
 
 		const volume = this.registers.control.constantVolume
