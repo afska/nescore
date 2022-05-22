@@ -83,6 +83,8 @@ export default class APU {
 
 		this.channels.pulses[0].clock();
 		this.channels.pulses[1].clock();
+		// TODO: TRIANGLE, NOISE, DMC
+		// noise_lc.clock(noise_enable, noise_halt);
 	};
 
 	_onEnd = () => {
