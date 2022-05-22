@@ -1,3 +1,4 @@
+// TODO: MOVE TO HELPERS
 function approxsin(t) {
 	let j = t * 0.15915;
 	j = j - Math.floor(j);
@@ -5,9 +6,9 @@ function approxsin(t) {
 }
 
 export default class Oscillator {
-	constructor() {
-		this.amplitude = 1;
-		this.harmonics = 1;
+	constructor(amplitude = 1, harmonics = 1) {
+		this.amplitude = amplitude;
+		this.harmonics = harmonics;
 		this.dutyCycle = 0;
 		this.frequency = 0;
 	}
