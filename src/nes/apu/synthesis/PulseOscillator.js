@@ -1,10 +1,10 @@
-const AMPLITUDE = 0.15;
+const BASE_AMPLITUDE = 0.15;
 const HARMONICS = 20;
 
 /** A square wave generator. */
 export default class PulseOscillator {
 	constructor() {
-		this.amplitude = AMPLITUDE;
+		this.amplitude = 1;
 		this.harmonics = HARMONICS;
 		this.dutyCycle = 0;
 		this.frequency = 0;
@@ -22,7 +22,7 @@ export default class PulseOscillator {
 			y2 += _approxsin(pi2 * (this.frequency * time - this.dutyCycle) * n) / n;
 		}
 
-		return (y1 - y2) * this.amplitude;
+		return (y1 - y2) * BASE_AMPLITUDE * this.amplitude;
 	}
 }
 

@@ -1,4 +1,4 @@
-import { PulseOscillator, Counter } from "../synthesis";
+import { PulseOscillator, Counter, Envelope } from "../synthesis";
 import constants from "../../constants";
 import { WithContext, Byte } from "../../helpers";
 
@@ -18,6 +18,7 @@ export default class PulseChannel {
 
 		this.oscillator = new PulseOscillator();
 		this.lengthCounter = new Counter();
+		this.envelope = new Envelope();
 	}
 
 	/** Generates a new sample. */
@@ -30,21 +31,35 @@ export default class PulseChannel {
 			this.registers.timerLow.value
 		);
 
-		this.oscillator.dutyCycle = this.registers.control.dutyCycle;
-		this.oscillator.frequency = constants.FREQ_CPU_HZ / (16 * (timer + 1));
-		// from nesdev: f = fCPU / (16 * (t + 1))
-
 		if (timer < 8) {
 			// (if t < 8, the pulse channel is silenced)
 			return 0;
 		}
 
+		this.oscillator.dutyCycle = this.registers.control.dutyCycle;
+		this.oscillator.frequency = constants.FREQ_CPU_HZ / (16 * (timer + 1));
+		// from nesdev: f = fCPU / (16 * (t + 1))
+
+		const volume = this.registers.control.constantVolume
+			? this.registers.control.volumeOrEnvelopePeriod
+			: this.envelope.volume;
+		this.oscillator.amplitude = volume / constants.APU_MAX_VOLUME;
+
 		return !this.lengthCounter.didFinish ? this.oscillator.sample(apu.time) : 0;
+	}
+
+	/** Updates the envelope. */
+	fastClock() {
+		this.envelope.period = this.registers.control.volumeOrEnvelopePeriod;
+		this.envelope.clock(this.registers.control.envelopeLoopOrLengthCounterHalt);
 	}
 
 	/** Updates length counter and sweep values. */
 	clock() {
-		this.lengthCounter.clock(this.isEnabled, this.registers.control.halt);
+		this.lengthCounter.clock(
+			this.isEnabled,
+			this.registers.control.envelopeLoopOrLengthCounterHalt
+		);
 		// TODO: UPDATE SWEEP: pulse1_sweep.clock(pulse1_seq.reload, 0);
 	}
 

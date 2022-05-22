@@ -17,7 +17,8 @@ export default class PulseLCLTimerHigh extends WriteOnlyInMemoryRegister {
 	writeAt(__, byte) {
 		this.setValue(byte);
 
-		this.context.apu.channels.pulses[this.id].lengthCounter.counter =
-			lengthTable[this.lengthCounterLoad];
+		const channel = this.context.apu.channels.pulses[this.id];
+		channel.lengthCounter.counter = lengthTable[this.lengthCounterLoad];
+		channel.envelope.startFlag = true;
 	}
 }

@@ -78,9 +78,9 @@ export default class APU {
 	_onQuarter = () => {
 		// (quarter frame "beats" adjust the volume envelope)
 
-		// pulse1_env.clock(pulse1_halt);
-		// pulse2_env.clock(pulse2_halt);
-		this.channels.triangle.linearClock();
+		this.channels.pulses[0].fastClock();
+		this.channels.pulses[1].fastClock();
+		this.channels.triangle.fastClock();
 		// noise_env.clock(noise_halt);
 	};
 

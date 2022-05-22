@@ -1,10 +1,10 @@
-const AMPLITUDE = 3;
+const BASE_AMPLITUDE = 3;
 const HARMONICS = 10;
 
 /** A triangle wave generator. */
 export default class TriangleOscillator {
 	constructor() {
-		this.amplitude = AMPLITUDE;
+		this.amplitude = 1;
 		this.frequency = 0;
 		this.lut = [];
 		this._generateLookUpTable();
@@ -21,7 +21,7 @@ export default class TriangleOscillator {
 			y += this.lut[i] * _approxsin(pi2 * this.frequency * time * n);
 		}
 
-		return y * this.amplitude;
+		return y * BASE_AMPLITUDE * this.amplitude;
 	}
 
 	_generateLookUpTable() {

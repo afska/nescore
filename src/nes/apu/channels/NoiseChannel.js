@@ -23,7 +23,10 @@ export default class NoiseChannel {
 
 	/** Updates length counter and sweep values. */
 	clock() {
-		this.lengthCounter.clock(this.isEnabled, this.registers.control.halt);
+		this.lengthCounter.clock(
+			this.isEnabled,
+			this.registers.control.envelopeLoopOrLengthCounterHalt
+		);
 	}
 
 	/** Returns whether the channel is enabled or not. */

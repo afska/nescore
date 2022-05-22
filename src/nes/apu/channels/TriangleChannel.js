@@ -39,7 +39,7 @@ export default class TriangleChannel {
 	}
 
 	/** Updates linear length counter. */
-	linearClock() {
+	fastClock() {
 		this.linearLengthCounter.clock(
 			this.isEnabled,
 			this.registers.linearLCL.halt
