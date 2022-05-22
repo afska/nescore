@@ -1,4 +1,4 @@
-const BASE_AMPLITUDE = 2;
+const BASE_AMPLITUDE = 1.5;
 const HARMONICS = 10;
 
 /** A triangle wave generator. */

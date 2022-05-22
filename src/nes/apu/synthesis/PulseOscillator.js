@@ -1,4 +1,4 @@
-const BASE_AMPLITUDE = 0.25;
+const BASE_AMPLITUDE = 0.15;
 const HARMONICS = 20;
 
 /** A square wave generator. */
