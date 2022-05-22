@@ -1,4 +1,9 @@
-import { PulseOscillator, LengthCounter, Envelope } from "../synthesis";
+import {
+	PulseOscillator,
+	LengthCounter,
+	VolumeEnvelope,
+	FrequencySweeper
+} from "../synthesis";
 import constants from "../../constants";
 import { WithContext, Byte } from "../../helpers";
 
@@ -18,7 +23,8 @@ export default class PulseChannel {
 
 		this.oscillator = new PulseOscillator();
 		this.lengthCounter = new LengthCounter();
-		this.envelope = new Envelope();
+		this.volumeEnvelope = new VolumeEnvelope();
+		this.frequencySweeper = new FrequencySweeper();
 	}
 
 	/** Generates a new sample. */
@@ -42,7 +48,7 @@ export default class PulseChannel {
 
 		const volume = this.registers.control.constantVolume
 			? this.registers.control.volumeOrEnvelopePeriod
-			: this.envelope.volume;
+			: this.volumeEnvelope.volume;
 		this.oscillator.amplitude = volume / constants.APU_MAX_VOLUME;
 
 		return !this.lengthCounter.didFinish ? this.oscillator.sample(apu.time) : 0;
@@ -50,8 +56,10 @@ export default class PulseChannel {
 
 	/** Updates the envelope. */
 	fastClock() {
-		this.envelope.period = this.registers.control.volumeOrEnvelopePeriod;
-		this.envelope.clock(this.registers.control.envelopeLoopOrLengthCounterHalt);
+		this.volumeEnvelope.clock(
+			this.registers.control.volumeOrEnvelopePeriod,
+			this.registers.control.envelopeLoopOrLengthCounterHalt
+		);
 	}
 
 	/** Updates length counter and sweep values. */
