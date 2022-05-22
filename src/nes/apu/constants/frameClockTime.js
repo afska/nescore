@@ -1,6 +1,6 @@
 const QUARTERS = [3729, 7457, 11186, 14916];
 
-/** This detects in which part of the frame we are.  */
+/** The NES APU frame counter (or frame sequencer) generates low-frequency clocks for the channels. */
 export default {
 	measure(frameClockCounter, onQuarter, onHalf, onEnd) {
 		// TODO: 5-step sequencer?

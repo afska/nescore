@@ -1,8 +1,8 @@
 import { APURegisterSegment } from "./registers";
+import { PulseChannel, TriangleChannel } from "./channels";
 import { frameClockTime } from "./constants";
 import constants from "../constants";
 import { WithContext } from "../helpers";
-import PulseChannel from "./channels/PulseChannel";
 
 /** The Audio Processing Unit. It generates audio samples. */
 export default class APU {
@@ -21,7 +21,8 @@ export default class APU {
 			pulses: [
 				new PulseChannel(0, "enablePulse1"),
 				new PulseChannel(1, "enablePulse2")
-			]
+			],
+			triangle: new TriangleChannel()
 		};
 	}
 
@@ -31,6 +32,7 @@ export default class APU {
 
 		this.channels.pulses[0].loadContext(context);
 		this.channels.pulses[1].loadContext(context);
+		this.channels.triangle.loadContext(context);
 
 		this._reset();
 	}
@@ -59,9 +61,10 @@ export default class APU {
 			this._onEnd
 		);
 
-		const sample1 = this.channels.pulses[0].sample();
-		const sample2 = this.channels.pulses[1].sample();
-		this.sample = 0.5 * (sample1 + sample2);
+		const pulse1 = this.channels.pulses[0].sample();
+		const pulse2 = this.channels.pulses[1].sample();
+		const triangle = this.channels.triangle.sample();
+		this.sample = 0.5 * (pulse1 + pulse2 + triangle);
 
 		// if (pulse1_lc.counter > 0 && pulse1_seq.timer >= 8 && !pulse1_sweep.mute && pulse1_env.output > 2)
 		// 	pulse1_output += (pulse1_sample - pulse1_output) * 0.5;
@@ -72,9 +75,9 @@ export default class APU {
 	_onQuarter = () => {
 		// (quarter frame "beats" adjust the volume envelope)
 
-		this.__ = 2;
 		// pulse1_env.clock(pulse1_halt);
 		// pulse2_env.clock(pulse2_halt);
+		this.channels.triangle.linearClock();
 		// noise_env.clock(noise_halt);
 	};
 
@@ -83,6 +86,7 @@ export default class APU {
 
 		this.channels.pulses[0].clock();
 		this.channels.pulses[1].clock();
+		this.channels.triangle.clock();
 		// TODO: TRIANGLE, NOISE, DMC
 		// noise_lc.clock(noise_enable, noise_halt);
 	};

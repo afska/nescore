@@ -2,7 +2,7 @@ import PulseControl from "./PulseControl";
 import PulseSweep from "./PulseSweep";
 import PulseTimerLow from "./PulseTimerLow";
 import PulseLCLTimerHigh from "./PulseLCLTimerHigh";
-import TriangleControl from "./TriangleControl";
+import TriangleLinearLCL from "./TriangleLinearLCL";
 import TriangleTimerLow from "./TriangleTimerLow";
 import TriangleLCLTimerHigh from "./TriangleLCLTimerHigh";
 import NoiseControl1 from "./NoiseControl1";
@@ -27,7 +27,7 @@ class APURegisterSegment {
 		}));
 
 		this.triangle = {
-			control: new TriangleControl().loadContext(context), //          $4008
+			linearLCL: new TriangleLinearLCL().loadContext(context), //      $4008
 			timerLow: new TriangleTimerLow().loadContext(context), //        $400A
 			lclTimerHigh: new TriangleLCLTimerHigh().loadContext(context) // $400B
 		};
@@ -62,7 +62,7 @@ class APURegisterSegment {
 			this.pulses[1].timerLow,
 			this.pulses[1].lclTimerHigh,
 
-			this.triangle.control,
+			this.triangle.linearLCL,
 			new MemoryPadding(1),
 			this.triangle.timerLow,
 			this.triangle.lclTimerHigh,

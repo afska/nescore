@@ -2,7 +2,13 @@ import { PulseOscillator, Counter } from "../synthesis";
 import constants from "../../constants";
 import { WithContext, Byte } from "../../helpers";
 
-/** Square wave channel. It supports different duty cycles, and frequency sweeping. */
+/**
+ * Pulse wave channel. It supports:
+ *   - different duty cycles
+ *   - note lengths
+ *   - volume envelope / constant volume
+ *   - frequency sweeping
+ */
 export default class PulseChannel {
 	constructor(id, enableFlagName) {
 		WithContext.apply(this);
@@ -27,6 +33,11 @@ export default class PulseChannel {
 		this.oscillator.dutyCycle = this.registers.control.dutyCycle;
 		this.oscillator.frequency = constants.FREQ_CPU_HZ / (16 * (timer + 1));
 		// from nesdev: f = fCPU / (16 * (t + 1))
+
+		if (timer < 8) {
+			// (if t < 8, the pulse channel is silenced)
+			return 0;
+		}
 
 		return !this.lengthCounter.didFinish ? this.oscillator.sample(apu.time) : 0;
 	}
