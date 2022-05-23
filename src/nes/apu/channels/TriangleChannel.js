@@ -40,10 +40,9 @@ export default class TriangleChannel {
 
 	/** Updates linear length counter. */
 	fastClock() {
-		this.linearLengthCounter.clock(
-			this.isEnabled,
-			this.registers.linearLCL.halt
-		);
+		const halt = this.registers.linearLCL.halt;
+		this.linearLengthCounter.counter *= !halt; // (counter is reset when halt is on)
+		this.linearLengthCounter.clock(this.isEnabled, halt);
 	}
 
 	/** Updates length counter and sweep values. */
