@@ -14,7 +14,13 @@ export default class APUControl extends InMemoryRegister {
 
 	/** When a channel is disabled, it resets its length counters. */
 	writeAt(__, byte) {
-		const { enablePulse1, enablePulse2, enableTriangle, enableNoise } = this;
+		const {
+			enablePulse1,
+			enablePulse2,
+			enableTriangle,
+			enableNoise,
+			enableDMC
+		} = this;
 		const { channels } = this.context.apu;
 
 		this.setValue(byte);
@@ -29,5 +35,6 @@ export default class APUControl extends InMemoryRegister {
 		}
 		if (enableNoise && !this.enableNoise)
 			channels.noise.lengthCounter.counter = 0;
+		if (enableDMC && !this.enableDMC) channels.dmc.lengthCounter.counter = 0;
 	}
 }

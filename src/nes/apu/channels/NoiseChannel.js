@@ -36,7 +36,7 @@ export default class NoiseChannel {
 		);
 	}
 
-	/** Updates length counter and sweep values. */
+	/** Updates length counter. */
 	clock() {
 		this.lengthCounter.clock(
 			this.isEnabled,

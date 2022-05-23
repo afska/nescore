@@ -1,5 +1,10 @@
 import { APURegisterSegment } from "./registers";
-import { PulseChannel, TriangleChannel, NoiseChannel } from "./channels";
+import {
+	PulseChannel,
+	TriangleChannel,
+	NoiseChannel,
+	DMCChannel
+} from "./channels";
 import { frameClockTime } from "./constants";
 import constants from "../constants";
 import { WithContext } from "../helpers";
@@ -23,9 +28,9 @@ export default class APU {
 				new PulseChannel(1, "enablePulse2")
 			],
 			triangle: new TriangleChannel(),
-			noise: new NoiseChannel()
+			noise: new NoiseChannel(),
+			dmc: new DMCChannel()
 		};
-		// TODO: DMC CHANNEL
 	}
 
 	/** When a context is loaded. */
@@ -36,6 +41,7 @@ export default class APU {
 		this.channels.pulses[1].loadContext(context);
 		this.channels.triangle.loadContext(context);
 		this.channels.noise.loadContext(context);
+		this.channels.dmc.loadContext(context);
 
 		this._reset();
 	}
@@ -68,7 +74,8 @@ export default class APU {
 		const pulse2 = this.channels.pulses[1].sample();
 		const triangle = this.channels.triangle.sample();
 		const noise = this.channels.noise.sample();
-		this.sample = 0.5 * (pulse1 + pulse2 + triangle + noise);
+		const dmc = this.channels.dmc.sample();
+		this.sample = 0.5 * (pulse1 + pulse2 + triangle + noise + dmc);
 	};
 
 	_onQuarter = () => {
@@ -87,6 +94,7 @@ export default class APU {
 		this.channels.pulses[1].clock();
 		this.channels.triangle.clock();
 		this.channels.noise.clock();
+		this.channels.dmc.clock();
 	};
 
 	_onEnd = () => {
