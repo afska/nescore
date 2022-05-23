@@ -9,7 +9,6 @@ import {
 	OAM
 } from "./renderers/tables";
 import { MemoryChunk } from "../memory";
-import { getScanlineType } from "./constants";
 import constants from "../constants";
 import { WithContext } from "../helpers";
 
@@ -101,5 +100,18 @@ export default class PPU {
 			this.frameBuffer[i] = 0;
 			this.paletteIndexes[i] = 0;
 		}
+	}
+}
+
+/** Returns the type of `scanLine`. */
+function getScanlineType(scanLine) {
+	if (scanLine === -1) {
+		return "PRELINE";
+	} else if (scanLine < 240) {
+		return "VISIBLE";
+	} else if (scanLine === 241) {
+		return "VBLANK_START";
+	} else {
+		return "IDLE";
 	}
 }
