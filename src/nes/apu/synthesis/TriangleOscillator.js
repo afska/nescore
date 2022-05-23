@@ -1,5 +1,5 @@
 const BASE_AMPLITUDE = 1.5;
-const HARMONICS = 10;
+const HARMONICS = 5; // OPTIMIZATION (previous value: 10)
 
 /** A triangle wave generator. */
 export default class TriangleOscillator {

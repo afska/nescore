@@ -1,5 +1,5 @@
 const BASE_AMPLITUDE = 0.15;
-const HARMONICS = 20;
+const HARMONICS = 10; // OPTIMIZATION (previous value: 20)
 
 /** A square wave generator. */
 export default class PulseOscillator {
