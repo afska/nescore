@@ -94,7 +94,6 @@ export default class APU {
 		this.channels.pulses[1].clock();
 		this.channels.triangle.clock();
 		this.channels.noise.clock();
-		this.channels.dmc.clock();
 	};
 
 	_onEnd = () => {

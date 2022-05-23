@@ -7,6 +7,6 @@ export default class DMCControl extends WriteOnlyInMemoryRegister {
 
 		this.addReadOnlyField("dpcmRate", 0, 4)
 			.addReadOnlyField("loop", 6)
-			.addReadOnlyField("irqEnable", 7);
+			.addField("irqEnable", 7);
 	}
 }
