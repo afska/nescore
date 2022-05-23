@@ -10,4 +10,23 @@ export default class APUControl extends InMemoryRegister {
 			.addReadOnlyField("enableNoise", 3)
 			.addReadOnlyField("enableDMC", 4);
 	}
+
+	// /** TODO. */
+	writeAt(__, byte) {
+		const { enablePulse1, enablePulse2, enableTriangle, enableNoise } = this;
+		const { channels } = this.context.apu;
+
+		this.setValue(byte);
+
+		if (enablePulse1 && !this.enablePulse1)
+			channels.pulses[0].lengthCounter.counter = 0;
+		if (enablePulse2 && !this.enablePulse2)
+			channels.pulses[1].lengthCounter.counter = 0;
+		if (enableTriangle && !this.enableTriangle) {
+			channels.triangle.lengthCounter.counter = 0;
+			channels.triangle.linearLengthCounter.counter = 0;
+		}
+		if (enableNoise && !this.enableNoise)
+			channels.noise.lengthCounter.counter = 0;
+	}
 }
