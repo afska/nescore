@@ -1,6 +1,6 @@
 import { WriteOnlyInMemoryRegister } from "../../registers";
 
-/** Controls the sample address of the DMC channel. */
+/** Controls the sample address of the DMC channel when using DPCM mode. */
 export default class DMCSampleAddress extends WriteOnlyInMemoryRegister {
 	/** Returns the absolute address of the sample. */
 	get absoluteSampleAddress() {

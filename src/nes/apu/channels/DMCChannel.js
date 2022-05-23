@@ -1,5 +1,6 @@
-import { LengthCounter } from "../synthesis";
 import { WithContext } from "../../helpers";
+
+const BASE_VOLUME = 0.01;
 
 /**
  * The delta modulation channel (DMC) can output 1-bit delta-encoded samples or can
@@ -8,25 +9,19 @@ import { WithContext } from "../../helpers";
 export default class DMCChannel {
 	constructor() {
 		WithContext.apply(this);
-
-		this.lengthCounter = new LengthCounter(); // TODO: REMOVE USAGE IN APUControl?
 	}
 
 	/** Generates a new sample. */
 	sample() {
 		// if (!this.isEnabled) return 0;
+		// (the output level is sent to the mixer whether the channel is enabled or not)
 
-		return this.registers.load.directLoad * 0.01;
-
-		return !this.lengthCounter.didFinish ? 1 : 0;
+		return this.registers.load.directLoad * BASE_VOLUME;
 	}
 
-	/** Updates length counter. */
+	/** Updates the sample. */
 	clock() {
-		// this.lengthCounter.clock(
-		// 	this.isEnabled,
-		// 	this.registers.control.envelopeLoopOrLengthCounterHalt
-		// );
+		// TODO: DO SOMETHING?
 	}
 
 	/** Returns whether the channel is enabled or not. */

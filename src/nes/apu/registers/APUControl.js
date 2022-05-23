@@ -35,6 +35,5 @@ export default class APUControl extends InMemoryRegister {
 		}
 		if (enableNoise && !this.enableNoise)
 			channels.noise.lengthCounter.counter = 0;
-		if (enableDMC && !this.enableDMC) channels.dmc.lengthCounter.counter = 0;
 	}
 }

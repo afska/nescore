@@ -1,6 +1,6 @@
 import { WriteOnlyInMemoryRegister } from "../../registers";
 
-/** Controls the sample length of the DMC channel. */
+/** Controls the sample length of the DMC channel when using DPCM mode. */
 export default class DMCSampleLength extends WriteOnlyInMemoryRegister {
 	/** Returns the real sample length. */
 	get realSampleLength() {
