@@ -1,3 +1,4 @@
+import constants from "../../constants";
 import { WithContext, Byte } from "../../helpers";
 
 const BASE_VOLUME = 0.01;
@@ -18,8 +19,10 @@ export default class DMCChannel {
 		this.startFlag = false;
 		this.isUsingDPCM = false;
 		this.buffer = null;
-		this.cursorByte = -1;
+		this.cursorByte = 0;
 		this.cursorBit = 0;
+		this.cursorDelta = 0;
+		this.sampleLength = 0;
 		this.outputSample = 0;
 	}
 
@@ -28,18 +31,20 @@ export default class DMCChannel {
 		// (the output level is sent to the mixer whether the channel is enabled or not)
 
 		if (this.startFlag && this.buffer == null) {
+			this.startFlag = false;
 			this.isUsingDPCM = true;
 			this.cursorByte = -1;
 			this.cursorBit = 0;
+			this.cursorDelta = constants.APU_DMC_DPCM_STEPS - 1;
 			this.sampleLength = this.registers.sampleLength.lengthInBytes;
-			this.startFlag = false;
+			this.outputSample = 0;
 		}
 
-		if (this.isUsingDPCM) {
-			return this._processDPCM() * BASE_VOLUME;
-		} else {
-			return this.registers.load.directLoad * BASE_VOLUME;
-		}
+		return (
+			(this.isUsingDPCM
+				? this._processDPCM()
+				: this.registers.load.directLoad) * BASE_VOLUME
+		);
 	}
 
 	/** Starts auto-playing a sample from `DMCSampleAddress`. */
@@ -70,6 +75,10 @@ export default class DMCChannel {
 	}
 
 	_processDPCM() {
+		this.cursorDelta++;
+		if (this.cursorDelta === constants.APU_DMC_DPCM_STEPS) this.cursorDelta = 0;
+		else return this.outputSample;
+
 		if (this.buffer === null || this.cursorBit === 8) {
 			this.cursorByte++;
 			this.cursorBit = 0;
@@ -80,9 +89,13 @@ export default class DMCChannel {
 				return 0;
 			}
 
-			this.buffer = this.memory.readAt(
-				this.registers.sampleAddress.absoluteAddress + this.cursorByte
-			);
+			let address =
+				this.registers.sampleAddress.absoluteAddress + this.cursorByte;
+			if (address > 0xffff) {
+				// (if it exceeds $FFFF, it is wrapped around to $8000)
+				address = 0x8000 + (address % 0xffff);
+			}
+			this.buffer = this.memory.readAt(address);
 		}
 
 		const variation = Byte.getBit(this.buffer, this.cursorBit) ? 1 : -1;
