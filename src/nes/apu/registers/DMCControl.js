@@ -1,3 +1,12 @@
 import { WriteOnlyInMemoryRegister } from "../../registers";
 
-export default class DMCControl extends WriteOnlyInMemoryRegister {}
+/** Sets options for the DMC channel. */
+export default class DMCControl extends WriteOnlyInMemoryRegister {
+	constructor() {
+		super();
+
+		this.addReadOnlyField("sampleRate", 0, 4)
+			.addReadOnlyField("loop", 6)
+			.addReadOnlyField("irqEnable", 7);
+	}
+}
