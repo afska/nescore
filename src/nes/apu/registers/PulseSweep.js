@@ -1,5 +1,6 @@
 import { WriteOnlyInMemoryRegister } from "../../registers";
 
+/** Controls the frequency sweeper of a Pulse channel. */
 export default class PulseSweep extends WriteOnlyInMemoryRegister {
 	constructor(id) {
 		super();
@@ -11,7 +12,7 @@ export default class PulseSweep extends WriteOnlyInMemoryRegister {
 			.addReadOnlyField("enabledFlag", 7);
 	}
 
-	// /** TODO. */
+	/** Sets the start flag of the frequency sweeper. */
 	writeAt(__, byte) {
 		this.setValue(byte);
 

@@ -1,6 +1,7 @@
 import { WriteOnlyInMemoryRegister } from "../../registers";
 import { lengthTable } from "../constants";
 
+/** Sets the high 3 bits of the Triangle channel's timer and its length counter. */
 export default class TriangleLCLTimerHigh extends WriteOnlyInMemoryRegister {
 	constructor() {
 		super();
@@ -12,7 +13,7 @@ export default class TriangleLCLTimerHigh extends WriteOnlyInMemoryRegister {
 		);
 	}
 
-	// /** TODO. */
+	/** Updates the length counter. */
 	writeAt(__, byte) {
 		this.setValue(byte);
 

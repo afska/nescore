@@ -18,7 +18,6 @@ export default class NoiseChannel {
 
 	/** Generates a new sample. */
 	sample() {
-		// const { apu } = this.context;
 		if (!this.isEnabled) return 0;
 
 		const volume = this.registers.control.constantVolume

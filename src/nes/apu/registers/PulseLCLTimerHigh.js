@@ -1,6 +1,7 @@
 import { WriteOnlyInMemoryRegister } from "../../registers";
 import { lengthTable } from "../constants";
 
+/** Sets the high 3 bits of a Pulse channel's timer and its length counter. */
 export default class PulseLCLTimerHigh extends WriteOnlyInMemoryRegister {
 	constructor(id) {
 		super();
@@ -13,7 +14,7 @@ export default class PulseLCLTimerHigh extends WriteOnlyInMemoryRegister {
 		);
 	}
 
-	// /** TODO. */
+	/** Updates timer value, length counter, and volume envelope's start flag. */
 	writeAt(__, byte) {
 		this.setValue(byte);
 

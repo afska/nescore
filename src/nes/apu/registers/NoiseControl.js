@@ -1,5 +1,6 @@
 import { WriteOnlyInMemoryRegister } from "../../registers";
 
+/** Sets options for the Noise channel. */
 export default class NoiseControl extends WriteOnlyInMemoryRegister {
 	constructor() {
 		super();

@@ -1,5 +1,6 @@
 import { InMemoryRegister } from "../../registers";
 
+/** Enables or disables APU channels. */
 export default class APUControl extends InMemoryRegister {
 	constructor() {
 		super();
@@ -11,7 +12,7 @@ export default class APUControl extends InMemoryRegister {
 			.addReadOnlyField("enableDMC", 4);
 	}
 
-	// /** TODO. */
+	/** When a channel is disabled, it resets its length counters. */
 	writeAt(__, byte) {
 		const { enablePulse1, enablePulse2, enableTriangle, enableNoise } = this;
 		const { channels } = this.context.apu;

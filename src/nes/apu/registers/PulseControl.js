@@ -2,6 +2,7 @@ import { WriteOnlyInMemoryRegister } from "../../registers";
 
 const DUTY_CYCLES = [0.125, 0.25, 0.25, 0.75];
 
+/** Sets options for a Pulse channel. */
 export default class PulseControl extends WriteOnlyInMemoryRegister {
 	constructor() {
 		super();
