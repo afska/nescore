@@ -65,6 +65,7 @@ export default class APU {
 	_onNewCycle = () => {
 		frameClockTime.measure(
 			this.frameClockCounter,
+			this.registers.apuFrameCounter.use5StepSequencer,
 			this._onQuarter,
 			this._onHalf,
 			this._onEnd
