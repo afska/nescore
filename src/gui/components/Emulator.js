@@ -68,7 +68,9 @@ export default class Emulator extends Component {
 
 		this.stop();
 		this.inputInterval = setInterval(this.sendInput, INPUT_POLL_INTERVAL);
-		this.speaker = new Speaker();
+		this.speaker = new Speaker(/*(requestedSamples) => {
+			webWorker.syncToAudio(requestedSamples);
+		}*/);
 		this.speaker.start();
 
 		const bytes = new Uint8Array(rom);

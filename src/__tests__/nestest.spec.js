@@ -16,8 +16,8 @@ describe("NESTest", () => {
 		const logText = fs.readFileSync(LOG_FILE).toString();
 		const logLines = logText.split(/\n|\r\n|\r/).slice(0, FINAL_LINE);
 
-		const logger = new NESTestLogger();
-		const nes = new NES(logger);
+		const nes = new NES();
+		const logger = (nes.logger = new NESTestLogger());
 		nes.load(romBytes);
 		nes.cpu.pc.value = 0xc000;
 

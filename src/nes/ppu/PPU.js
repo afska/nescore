@@ -51,12 +51,15 @@ export default class PPU {
 		this._reset();
 	}
 
-	/** Executes the next step (1 step = 1 PPU cycle). Returns an interrupt or null. */
-	step() {
+	/**
+	 * Executes the next step (1 step = 1 PPU cycle). Returns an interrupt or null.
+	 * It calls `onFrame` when it generates a new frame.
+	 */
+	step(onFrame) {
 		const scanlineType = getScanlineType(this.scanline);
 		const interrupt = renderers[scanlineType](this.context);
 
-		this._incrementCounters();
+		this._incrementCounters(onFrame);
 
 		return interrupt;
 	}
@@ -78,7 +81,7 @@ export default class PPU {
 		return this.paletteIndexes[y * constants.SCREEN_WIDTH + x];
 	}
 
-	_incrementCounters() {
+	_incrementCounters(onFrame) {
 		this.cycle++;
 		if (this.cycle > constants.PPU_LAST_CYCLE) {
 			this.cycle = 0;
@@ -87,6 +90,7 @@ export default class PPU {
 			if (this.scanline > constants.PPU_LAST_SCANLINE) {
 				this.scanline = -1;
 				this.frame++;
+				onFrame(this.frameBuffer);
 			}
 		}
 	}

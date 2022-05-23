@@ -10,19 +10,19 @@ export default class WebWorker {
 	constructor(postMessage, onAudio) {
 		this.$postMessage = postMessage;
 
+		this._onAudio = onAudio;
+
 		this.isDebugging = false;
 		this.isDebugStepRequested = false;
 
-		this.nes = new NES();
+		this.nes = new NES(this.onFrame, this.onAudio);
 		this.frameTimer = new FrameTimer(
 			() => {
 				if (this.isDebugging && !this.isDebugStepRequested) return;
 				this.isDebugStepRequested = false;
 
 				try {
-					const frameBuffer = this.nes.frame(onAudio);
-					this.frameTimer.countNewFrame();
-					this.$postMessage(frameBuffer);
+					this.nes.frame();
 				} catch (error) {
 					this.$postMessage({ id: "error", error });
 				}
@@ -32,6 +32,19 @@ export default class WebWorker {
 			}
 		);
 	}
+
+	// syncToAudio = (requestedSamples) => {
+	// 	this.nes.samples(requestedSamples);
+	// };
+
+	onFrame = (frameBuffer) => {
+		this.frameTimer.countNewFrame();
+		this.$postMessage(frameBuffer);
+	};
+
+	onAudio = (sample) => {
+		this._onAudio(sample);
+	};
 
 	terminate = () => {
 		this.frameTimer.stop();

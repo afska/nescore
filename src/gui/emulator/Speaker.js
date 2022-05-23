@@ -6,8 +6,9 @@ const DEFAULT_SAMPLE_RATE = 44100;
 const CHANNELS = 2;
 
 export default class Speaker {
-	constructor() {
+	constructor(onProcess = () => {}) {
 		this._buffer = new RingBuffer(BUFFER_SIZE);
+		this._onProcess = onProcess;
 	}
 
 	start() {
@@ -64,6 +65,8 @@ export default class Speaker {
 		const left = event.outputBuffer.getChannelData(0);
 		const right = event.outputBuffer.getChannelData(1);
 		const size = left.length;
+
+		this._onProcess(size);
 
 		try {
 			const samples = this._buffer.deqN(size);

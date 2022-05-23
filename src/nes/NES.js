@@ -9,9 +9,11 @@ import { WithContext } from "./helpers";
 
 /** The NES Emulator. */
 export default class NES {
-	constructor(logger = null) {
+	constructor(onFrame = () => {}, onSample = () => {}, logger = null) {
 		WithContext.apply(this);
 
+		this.onFrame = onFrame;
+		this.onSample = onSample;
 		this.logger = logger;
 
 		this.cpu = new CPU();
@@ -57,20 +59,32 @@ export default class NES {
 		});
 	}
 
-	/** Executes a whole frame in the emulation. */
-	frame(onAudioSample) {
+	/** Runs the emulation for a whole video frame. */
+	frame() {
 		const currentFrame = this.ppu.frame;
-		while (this.ppu.frame === currentFrame) this.step(onAudioSample);
-		return this.ppu.frameBuffer;
+		while (this.ppu.frame === currentFrame)
+			this.step(this.onFrame, this.onSample);
+	}
+
+	/** Runs the emulation until the audio system generates `requestedSamples`. */
+	samples(requestedSamples) {
+		let samples = 0;
+
+		const onSample = (sample) => {
+			samples++;
+			this.onSample(sample);
+		};
+
+		while (samples < requestedSamples) this.step(this.onFrame, onSample);
 	}
 
 	/** Executes a step in the emulation (1 CPU instruction). */
-	step(onAudioSample = () => {}) {
+	step(onFrame = () => {}, onSample = () => {}) {
 		this.requireContext();
 
 		let cpuCycles = this.cpu.step();
-		cpuCycles = this._clockPPU(cpuCycles);
-		this._clockAPU(cpuCycles, onAudioSample);
+		cpuCycles = this._clockPPU(cpuCycles, onFrame);
+		this._clockAPU(cpuCycles, onSample);
 	}
 
 	/** Sets the `button` state of `player` to `isPressed`. */
@@ -99,10 +113,10 @@ export default class NES {
 		this.cpu.loadContext(context);
 	}
 
-	_clockPPU(cpuCycles) {
+	_clockPPU(cpuCycles, onFrame) {
 		let ppuCycles = cpuCycles * constants.PPU_CYCLES_PER_CPU_CYCLE;
 		while (ppuCycles > 0) {
-			const interrupt = this.ppu.step();
+			const interrupt = this.ppu.step(onFrame);
 			ppuCycles--;
 
 			if (interrupt) {
@@ -115,10 +129,10 @@ export default class NES {
 		return cpuCycles;
 	}
 
-	_clockAPU(cpuCycles, onAudioSample) {
+	_clockAPU(cpuCycles, onSample) {
 		let apuSteps = cpuCycles * constants.APU_STEPS_PER_CPU_CYCLE;
 		while (apuSteps > 0) {
-			this.apu.step(onAudioSample);
+			this.apu.step(onSample);
 			apuSteps--;
 		}
 	}

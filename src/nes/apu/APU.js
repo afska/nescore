@@ -42,9 +42,9 @@ export default class APU {
 
 	/**
 	 * Executes the next step (1 step = 1 PPU cycle = 0.16 APU cycles).
-	 * It calls `onAudioSample` when it generates a new sample.
+	 * It calls `onSample` when it generates a new sample.
 	 */
-	step(onAudioSample) {
+	step(onSample) {
 		if (this.clockCounter === 0) this._onNewCycle();
 
 		// (frequency sweepers change at high frequency)
@@ -53,7 +53,7 @@ export default class APU {
 
 		this._incrementCounters();
 
-		if (this.sampleCounter === 0) onAudioSample(this.sample);
+		if (this.sampleCounter === 0) onSample(this.sample);
 	}
 
 	_onNewCycle = () => {
