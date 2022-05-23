@@ -9,24 +9,24 @@ export default class DMCChannel {
 	constructor() {
 		WithContext.apply(this);
 
-		this.lengthCounter = new LengthCounter();
+		this.lengthCounter = new LengthCounter(); // TODO: REMOVE USAGE IN APUControl?
 	}
 
 	/** Generates a new sample. */
 	sample() {
-		if (!this.isEnabled) return 0;
+		// if (!this.isEnabled) return 0;
 
-		// TODO: IMPLEMENT
+		return this.registers.load.directLoad * 0.01;
 
 		return !this.lengthCounter.didFinish ? 1 : 0;
 	}
 
 	/** Updates length counter. */
 	clock() {
-		this.lengthCounter.clock(
-			this.isEnabled,
-			this.registers.control.envelopeLoopOrLengthCounterHalt
-		);
+		// this.lengthCounter.clock(
+		// 	this.isEnabled,
+		// 	this.registers.control.envelopeLoopOrLengthCounterHalt
+		// );
 	}
 
 	/** Returns whether the channel is enabled or not. */

@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import constants from "../../nes/constants";
 import styles from "./Screen.module.css";
 
 const SCREEN_WIDTH = 256;
@@ -23,6 +24,15 @@ export default class Screen extends Component {
 		for (let y = 0; y < SCREEN_HEIGHT; ++y) {
 			for (let x = 0; x < SCREEN_WIDTH; ++x) {
 				const i = y * SCREEN_WIDTH + x;
+
+				// mask borders
+				if (
+					x < constants.TILE_LENGTH ||
+					x > constants.SCREEN_WIDTH - 1 - constants.TILE_LENGTH ||
+					y < constants.TILE_LENGTH ||
+					y > constants.SCREEN_HEIGHT - 1 - constants.TILE_LENGTH
+				)
+					buffer[i] = 0;
 
 				// convert pixel from NES BGR to canvas ABGR
 				this.buf32[i] = FULL_ALPHA | buffer[i];
