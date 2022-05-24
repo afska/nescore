@@ -21,11 +21,11 @@ export default class WebWorker {
 				if (this.isDebugging && !this.isDebugStepRequested) return;
 				this.isDebugStepRequested = false;
 
-				// try {
-				// 	this.nes.frame();
-				// } catch (error) {
-				// 	this.$postMessage({ id: "error", error });
-				// }
+				try {
+					this.nes.frame();
+				} catch (error) {
+					this.$postMessage({ id: "error", error });
+				}
 			},
 			(fps) => {
 				this.$postMessage({ id: "fps", fps });
@@ -33,9 +33,9 @@ export default class WebWorker {
 		);
 	}
 
-	syncToAudio = (requestedSamples) => {
-		this.nes.samples(requestedSamples);
-	};
+	// syncToAudio = (requestedSamples) => {
+	// 	this.nes.samples(requestedSamples);
+	// };
 
 	onFrame = (frameBuffer) => {
 		this.frameTimer.countNewFrame();
