@@ -56,8 +56,12 @@ export default class APU {
 	step(onSample) {
 		let irq = null;
 		const onIRQ = (type) => {
-			irq = interrupts.IRQ;
-			if (type === "frame") this.frameIRQFlag = true;
+			if (type === "frame") {
+				if (!this.registers.apuFrameCounter.interruptInhibitFlag) {
+					this.frameIRQFlag = true;
+					irq = interrupts.IRQ;
+				}
+			} else irq = interrupts.IRQ;
 		};
 
 		if (this.clockCounter === 0) this._onNewCycle(onIRQ);
