@@ -15,7 +15,7 @@ export default class DMCChannel {
 	constructor() {
 		WithContext.apply(this);
 
-		// DPCM variables:
+		// DPCM:
 		this.startFlag = false;
 		this.isUsingDPCM = false;
 		this.buffer = null;
@@ -26,8 +26,8 @@ export default class DMCChannel {
 		this.outputSample = 0;
 	}
 
-	/** Generates a new sample. */
-	sample() {
+	/** Generates a new sample. It calls `onIRQ` when a DPCM sample finishes (if IRQ flag is on). */
+	sample(onIRQ) {
 		// (the output level is sent to the mixer whether the channel is enabled or not)
 
 		if (this.startFlag && this.buffer == null) {
@@ -42,7 +42,7 @@ export default class DMCChannel {
 
 		return (
 			(this.isUsingDPCM
-				? this._processDPCM()
+				? this._processDPCM(onIRQ)
 				: this.registers.load.directLoad) * BASE_VOLUME
 		);
 	}
@@ -74,7 +74,7 @@ export default class DMCChannel {
 		return this.context.memoryBus.cpu;
 	}
 
-	_processDPCM() {
+	_processDPCM(onIRQ) {
 		this.cursorDelta++;
 		if (this.cursorDelta === constants.APU_DMC_DPCM_STEPS) this.cursorDelta = 0;
 		else return this.outputSample;
@@ -86,6 +86,7 @@ export default class DMCChannel {
 			if (this.cursorByte === this.sampleLength) {
 				this.isUsingDPCM = false;
 				this.buffer = null;
+				if (this.registers.control.irqEnable) onIRQ();
 				return 0;
 			}
 

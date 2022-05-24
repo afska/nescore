@@ -6,6 +6,7 @@ import {
 	DMCChannel
 } from "./channels";
 import { frameClockTime } from "./constants";
+import { interrupts } from "../cpu/constants";
 import constants from "../constants";
 import { WithContext } from "../helpers";
 
@@ -48,10 +49,14 @@ export default class APU {
 
 	/**
 	 * Executes the next step (1 step = 1 PPU cycle = 0.16 APU cycles).
+	 * Returns an interrupt or null.
 	 * It calls `onSample` when it generates a new sample.
 	 */
 	step(onSample) {
-		if (this.clockCounter === 0) this._onNewCycle();
+		let irq = null;
+		const onIRQ = () => (irq = interrupts.IRQ);
+
+		if (this.clockCounter === 0) this._onNewCycle(onIRQ);
 
 		// (frequency sweepers change at high frequency)
 		this.channels.pulses[0].updateSweeper();
@@ -60,9 +65,11 @@ export default class APU {
 		this._incrementCounters();
 
 		if (this.sampleCounter === 0) onSample(this.sample);
+
+		return irq;
 	}
 
-	_onNewCycle = () => {
+	_onNewCycle = (onIRQ) => {
 		frameClockTime.measure(
 			this.frameClockCounter,
 			this.registers.apuFrameCounter.use5StepSequencer,
@@ -75,7 +82,7 @@ export default class APU {
 		const pulse2 = this.channels.pulses[1].sample();
 		const triangle = this.channels.triangle.sample();
 		const noise = this.channels.noise.sample();
-		const dmc = this.channels.dmc.sample();
+		const dmc = this.channels.dmc.sample(onIRQ);
 		this.sample = 0.5 * (pulse1 + pulse2 + triangle + noise + dmc);
 	};
 

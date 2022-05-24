@@ -83,8 +83,8 @@ export default class NES {
 		this.requireContext();
 
 		let cpuCycles = this.cpu.step();
-		cpuCycles = this._clockPPU(cpuCycles, onFrame);
-		this._clockAPU(cpuCycles, onSample);
+		cpuCycles = this._clock(this.ppu, cpuCycles, onFrame);
+		this._clock(this.apu, cpuCycles, onSample);
 	}
 
 	/** Sets the `button` state of `player` to `isPressed`. */
@@ -113,27 +113,19 @@ export default class NES {
 		this.cpu.loadContext(context);
 	}
 
-	_clockPPU(cpuCycles, onFrame) {
-		let ppuCycles = cpuCycles * constants.PPU_CYCLES_PER_CPU_CYCLE;
-		while (ppuCycles > 0) {
-			const interrupt = this.ppu.step(onFrame);
-			ppuCycles--;
+	_clock(unit, cpuCycles, onSomething) {
+		let unitCycles = cpuCycles * constants.UNIT_STEPS_PER_CPU_CYCLE;
+		while (unitCycles > 0) {
+			const interrupt = unit.step(onSomething);
+			unitCycles--;
 
-			if (interrupt) {
+			if (interrupt != null) {
 				const newCpuCycles = this.cpu.interrupt(interrupt);
 				cpuCycles += newCpuCycles;
-				ppuCycles += newCpuCycles * constants.PPU_CYCLES_PER_CPU_CYCLE;
+				unitCycles += newCpuCycles * constants.UNIT_STEPS_PER_CPU_CYCLE;
 			}
 		}
 
 		return cpuCycles;
-	}
-
-	_clockAPU(cpuCycles, onSample) {
-		let apuSteps = cpuCycles * constants.APU_STEPS_PER_CPU_CYCLE;
-		while (apuSteps > 0) {
-			this.apu.step(onSample);
-			apuSteps--;
-		}
 	}
 }
