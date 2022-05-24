@@ -1,10 +1,7 @@
 import NES from "../../nes";
 import FrameTimer from "./FrameTimer";
-
-const SYNC_TO_AUDIO = true;
-const BUFFER_LIMIT = 4096;
-const SAMPLE_RATE = 44100;
-const FPS = 60.098;
+import config from "../../nes/config";
+import constants from "../../nes/constants";
 
 /**
  * An emulator instance running inside a Web Worker.
@@ -27,9 +24,10 @@ export default class WebWorker {
 				this.isDebugStepRequested = false;
 
 				try {
-					if (SYNC_TO_AUDIO) {
-						const requestedSamples = SAMPLE_RATE / FPS;
-						if (this.availableSamples + requestedSamples <= BUFFER_LIMIT)
+					if (config.SYNC_TO_AUDIO) {
+						const requestedSamples = constants.APU_SAMPLES_PER_FRAME;
+						const newBufferSize = this.availableSamples + requestedSamples;
+						if (newBufferSize <= config.AUDIO_BUFFER_LIMIT)
 							this.nes.samples(requestedSamples);
 					} else {
 						this.nes.frame();

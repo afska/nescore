@@ -1,4 +1,4 @@
-const BASE_AMPLITUDE = 0.25;
+import config from "../../config";
 
 /** A noise random wave generator. */
 export default class TriangleOscillator {
@@ -8,6 +8,8 @@ export default class TriangleOscillator {
 
 	/** Generates a new sample. */
 	sample() {
-		return (Math.random() * 2 - 1) * BASE_AMPLITUDE * this.amplitude;
+		return (
+			(Math.random() * 2 - 1) * config.NOISE_CHANNEL_VOLUME * this.amplitude
+		);
 	}
 }

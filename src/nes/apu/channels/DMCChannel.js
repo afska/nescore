@@ -1,6 +1,5 @@
+import config from "../../config";
 import { WithContext, Byte } from "../../helpers";
-
-const BASE_VOLUME = 0.01;
 
 /**
  * The delta modulation channel (DMC) can output 1-bit delta-encoded samples (DPCM) or can
@@ -46,7 +45,7 @@ export default class DMCChannel {
 		return (
 			(this.isUsingDPCM
 				? this._processDPCM(onIRQ)
-				: this.registers.load.directLoad) * BASE_VOLUME
+				: this.registers.load.directLoad) * config.DMC_CHANNEL_VOLUME
 		);
 	}
 

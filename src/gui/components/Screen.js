@@ -1,9 +1,8 @@
 import React, { Component } from "react";
+import config from "../../nes/config";
 import constants from "../../nes/constants";
 import styles from "./Screen.module.css";
 
-const SCREEN_WIDTH = 256;
-const SCREEN_HEIGHT = 240;
 const FULL_ALPHA = 0xff000000;
 
 export default class Screen extends Component {
@@ -11,8 +10,8 @@ export default class Screen extends Component {
 		return (
 			<canvas
 				className={styles.screen}
-				width={SCREEN_WIDTH}
-				height={SCREEN_HEIGHT}
+				width={constants.SCREEN_WIDTH}
+				height={constants.SCREEN_HEIGHT}
 				ref={(canvas) => {
 					if (canvas) this._initCanvas(canvas);
 				}}
@@ -21,18 +20,20 @@ export default class Screen extends Component {
 	}
 
 	setBuffer = (buffer) => {
-		for (let y = 0; y < SCREEN_HEIGHT; ++y) {
-			for (let x = 0; x < SCREEN_WIDTH; ++x) {
-				const i = y * SCREEN_WIDTH + x;
+		for (let y = 0; y < constants.SCREEN_HEIGHT; ++y) {
+			for (let x = 0; x < constants.SCREEN_WIDTH; ++x) {
+				const i = y * constants.SCREEN_WIDTH + x;
 
 				// mask borders
-				if (
-					x < constants.TILE_LENGTH ||
-					x > constants.SCREEN_WIDTH - 1 - constants.TILE_LENGTH ||
-					y < constants.TILE_LENGTH ||
-					y > constants.SCREEN_HEIGHT - 1 - constants.TILE_LENGTH
-				)
-					buffer[i] = 0;
+				if (config.MASK_BORDERS) {
+					if (
+						x < constants.TILE_LENGTH ||
+						x > constants.SCREEN_WIDTH - 1 - constants.TILE_LENGTH ||
+						y < constants.TILE_LENGTH ||
+						y > constants.SCREEN_HEIGHT - 1 - constants.TILE_LENGTH
+					)
+						buffer[i] = 0;
+				}
 
 				// convert pixel from NES BGR to canvas ABGR
 				this.buf32[i] = FULL_ALPHA | buffer[i];
@@ -52,13 +53,18 @@ export default class Screen extends Component {
 		this.imageData = this.context.getImageData(
 			0,
 			0,
-			SCREEN_WIDTH,
-			SCREEN_HEIGHT
+			constants.SCREEN_WIDTH,
+			constants.SCREEN_HEIGHT
 		);
 
 		// set alpha to opaque
 		this.context.fillStyle = "black";
-		this.context.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+		this.context.fillRect(
+			0,
+			0,
+			constants.SCREEN_WIDTH,
+			constants.SCREEN_HEIGHT
+		);
 
 		// buffer to write on next animation frame
 		this.buf = new ArrayBuffer(this.imageData.data.length);

@@ -5,9 +5,8 @@ import Speaker from "../emulator/Speaker";
 import WebWorker from "../emulator/WebWorker";
 import WebWorkerRunner from "worker-loader!../emulator/webWorkerRunner";
 import debug from "../emulator/debug";
+import config from "../../nes/config";
 
-const DEBUG = false;
-const STATE_POLL_INTERVAL = 10;
 let webWorker = null;
 
 export default class Emulator extends Component {
@@ -70,14 +69,17 @@ export default class Emulator extends Component {
 		this.screen = screen;
 
 		this.stop();
-		this.stateInterval = setInterval(this.sendState, STATE_POLL_INTERVAL);
+		this.stateInterval = setInterval(
+			this.sendState,
+			config.STATE_POLL_INTERVAL
+		);
 		this.speaker = new Speaker();
 		this.speaker.start();
 
 		const bytes = new Uint8Array(rom);
 
 		// (web workers are hard to debug, a mock is used in development mode)
-		webWorker = DEBUG
+		webWorker = config.DEBUG
 			? new WebWorker(
 					(data) => this.onWorkerMessage({ data }),
 					this.speaker.writeSample,
@@ -85,7 +87,7 @@ export default class Emulator extends Component {
 			  )
 			: new WebWorkerRunner();
 
-		if (DEBUG) window.debug = debug(this, webWorker);
+		if (config.DEBUG) window.debug = debug(this, webWorker);
 
 		webWorker.postMessage(bytes);
 		webWorker.onmessage = this.onWorkerMessage;

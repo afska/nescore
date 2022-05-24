@@ -1,0 +1,20 @@
+/** Compile-time options that change the emulator's behavior. */
+export default {
+	DEBUG: false,
+	STATE_POLL_INTERVAL: 10,
+
+	SYNC_TO_AUDIO: true,
+	AUDIO_BUFFER_LIMIT: 4096,
+	AUDIO_BUFFER_SIZE: 8192,
+	MASK_BORDERS: true,
+	FPS: 60.098,
+
+	PULSE_CHANNEL_VOLUME: 0.15,
+	PULSE_CHANNEL_HARMONICS: 10,
+	TRIANGLE_CHANNEL_VOLUME: 1.5,
+	TRIANGLE_CHANNEL_HARMONICS: 5,
+	NOISE_CHANNEL_VOLUME: 0.25,
+	DMC_CHANNEL_VOLUME: 0.01,
+
+	NESTEST_PATH: "./public/testroms/nestest.nes"
+};

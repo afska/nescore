@@ -1,5 +1,4 @@
-const BASE_AMPLITUDE = 1.5;
-const HARMONICS = 5; // OPTIMIZATION (previous value: 10)
+import config from "../../config";
 
 /** A triangle wave generator. */
 export default class TriangleOscillator {
@@ -16,16 +15,16 @@ export default class TriangleOscillator {
 
 		const pi2 = Math.PI * 2;
 
-		for (let i = 1; i <= HARMONICS; i++) {
+		for (let i = 1; i <= config.TRIANGLE_CHANNEL_HARMONICS; i++) {
 			const n = 2 * i + 1;
 			y += this.lut[i] * _approxsin(pi2 * this.frequency * time * n);
 		}
 
-		return y * BASE_AMPLITUDE * this.amplitude;
+		return y * config.TRIANGLE_CHANNEL_VOLUME * this.amplitude;
 	}
 
 	_generateLookUpTable() {
-		for (let i = 1; i <= HARMONICS; i++) {
+		for (let i = 1; i <= config.TRIANGLE_CHANNEL_HARMONICS; i++) {
 			const n = 2 * i + 1;
 			this.lut[i] = Math.pow(-1, i) * Math.pow(n, -2);
 		}

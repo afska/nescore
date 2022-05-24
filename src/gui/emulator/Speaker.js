@@ -1,21 +1,21 @@
 import RingBuffer from "ringbufferjs";
+import config from "../../nes/config";
 
-const BUFFER_SIZE = 8192;
 const WEBAUDIO_BUFFER_SIZE = 1024;
 const DEFAULT_SAMPLE_RATE = 44100;
 const CHANNELS = 2;
 
 export default class Speaker {
 	constructor() {
-		this.buffer = new RingBuffer(BUFFER_SIZE);
+		this.buffer = new RingBuffer(config.AUDIO_BUFFER_SIZE);
 	}
 
 	start() {
 		if (this._audioCtx) return;
 		if (!window.AudioContext) return;
 
+		// TODO: REMOVE AND FIX SAMPLE RATE
 		console.log("SAMPLE RATE", this.getSampleRate());
-		// TODO: REMOVE
 
 		this._audioCtx = new window.AudioContext();
 		this._scriptNode = this._audioCtx.createScriptProcessor(
@@ -39,9 +39,9 @@ export default class Speaker {
 	}
 
 	writeSample = (sample) => {
-		if (this.buffer.size() >= BUFFER_SIZE) {
+		if (this.buffer.size() >= config.AUDIO_BUFFER_SIZE) {
 			// buffer overrun
-			this.buffer.deqN(BUFFER_SIZE);
+			this.buffer.deqN(config.AUDIO_BUFFER_SIZE);
 		}
 
 		this.buffer.enq(sample);
