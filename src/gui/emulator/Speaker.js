@@ -2,7 +2,6 @@ import RingBuffer from "ringbufferjs";
 import config from "../../nes/config";
 
 const WEBAUDIO_BUFFER_SIZE = 1024;
-const DEFAULT_SAMPLE_RATE = 44100;
 const CHANNELS = 2;
 
 export default class Speaker {
@@ -13,9 +12,6 @@ export default class Speaker {
 	start() {
 		if (this._audioCtx) return;
 		if (!window.AudioContext) return;
-
-		// TODO: REMOVE AND FIX SAMPLE RATE
-		console.log("SAMPLE RATE", this.getSampleRate());
 
 		this._audioCtx = new window.AudioContext();
 		this._scriptNode = this._audioCtx.createScriptProcessor(
@@ -29,7 +25,8 @@ export default class Speaker {
 	}
 
 	getSampleRate() {
-		if (!window.AudioContext) return DEFAULT_SAMPLE_RATE;
+		if (!window.AudioContext)
+			throw new Error("Audio context is not supported.");
 
 		const context = new window.AudioContext();
 		const sampleRate = context.sampleRate;

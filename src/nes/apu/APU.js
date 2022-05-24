@@ -117,9 +117,10 @@ export default class APU {
 		this.clockCounter++;
 
 		this.sampleCounter++;
-		if (this.sampleCounter === constants.APU_STEPS_PER_SAMPLE) {
+
+		if (this.sampleCounter === this._stepsPerSample) {
 			this.sampleCounter = 0;
-			this.time += 1 / constants.APU_SAMPLE_RATE;
+			this.time += 1 / this.context.nes.sampleRate;
 		}
 
 		if (this.clockCounter === constants.PPU_CYCLES_PER_APU_CYCLE) {
@@ -135,5 +136,11 @@ export default class APU {
 		this.frameClockCounter = 0;
 		this.sample = 0;
 		this.frameIRQFlag = false;
+	}
+
+	get _stepsPerSample() {
+		return Math.floor(
+			constants.FREQ_PPU_AND_APU_HZ / this.context.nes.sampleRate
+		);
 	}
 }
