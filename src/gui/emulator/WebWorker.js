@@ -1,15 +1,21 @@
 import NES from "../../nes";
 import FrameTimer from "./FrameTimer";
 
+const SYNC_TO_AUDIO = true;
+const BUFFER_LIMIT = 4096;
+const SAMPLE_RATE = 44100;
+const FPS = 60.098;
+
 /**
  * An emulator instance running inside a Web Worker.
  * This contains the communication logic between `Emulator` and `webWorkerRunner`.
  */
 export default class WebWorker {
 	// TODO: MOVE onAudio to message
-	constructor(postMessage, onAudio) {
+	constructor(postMessage, onAudio, speaker) {
 		this.$postMessage = postMessage;
 
+		this._speaker = speaker;
 		this._onAudio = onAudio;
 
 		this.isDebugging = false;
@@ -22,7 +28,13 @@ export default class WebWorker {
 				this.isDebugStepRequested = false;
 
 				try {
-					this.nes.frame();
+					if (SYNC_TO_AUDIO) {
+						const samples = SAMPLE_RATE / FPS;
+						if (speaker._buffer.size() + samples <= BUFFER_LIMIT)
+							this.nes.samples(samples);
+					} else {
+						this.nes.frame();
+					}
 				} catch (error) {
 					this.$postMessage({ id: "error", error });
 				}
@@ -32,10 +44,6 @@ export default class WebWorker {
 			}
 		);
 	}
-
-	// syncToAudio = (requestedSamples) => {
-	// 	this.nes.samples(requestedSamples);
-	// };
 
 	onFrame = (frameBuffer) => {
 		this.frameTimer.countNewFrame();
