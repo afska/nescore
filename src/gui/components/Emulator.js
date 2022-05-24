@@ -89,12 +89,12 @@ export default class Emulator extends Component {
 
 		if (config.DEBUG) window.debug = debug(this, webWorker);
 
+		webWorker.onmessage = this.onWorkerMessage;
 		webWorker.postMessage({
 			id: "sampleRate",
 			sampleRate: this.speaker.getSampleRate()
 		});
 		webWorker.postMessage(bytes);
-		webWorker.onmessage = this.onWorkerMessage;
 	}
 
 	_onError(e) {
