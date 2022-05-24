@@ -1,4 +1,4 @@
-/** The list of all DPCM rates. */
+/** A list of all DPCM rates. The `DMCControl` register uses it to assign rates. */
 export default [
 	428,
 	380,

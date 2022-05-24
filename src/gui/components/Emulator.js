@@ -45,8 +45,8 @@ export default class Emulator extends Component {
 	};
 
 	stop() {
-		clearInterval(this.inputInterval);
-		this.inputInterval = null;
+		clearInterval(this.stateInterval);
+		this.stateInterval = null;
 
 		if (this.speaker) this.speaker.stop();
 		this.speaker = null;
