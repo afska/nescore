@@ -28,18 +28,18 @@ export default class CPUMemoryMap {
 		const cpuTestModeRegisters = new MemoryPadding(0x0008);
 
 		this.defineChunks([
-			//                           Address range  Size     Device
-			ram, //                      $0000-$07FF    $0800    2KB internal RAM
-			ramMirror, //                $0800-$1FFF    $1800    Mirrors of $0000-$07FF
-			ppuRegisters, //             $2000-$2007    $0008    NES PPU registers
-			ppuRegistersMirror, //       $2008-$3FFF    $1FF8	   Mirrors of $2000-2007 (repeats every 8 bytes)
-			apuRegisters, //             $4000-$4013    $0014	   NES APU registers
-			ppu.registers.oamDma, //     $4014-$4014    $0001    PPU's OAM DMA register
-			apu.registers.apuControl, // $4015-$4015    $0001    APU control/status register
-			controllers[0].port, //      $4016-$4016    $0001    Controller port 1
-			port2AndFrameCounter, //     $4017-$4017    $0001    Controller port 2 and APU frame counter
-			cpuTestModeRegisters, //     $4018-$401F    $0008	   APU and I/O functionality that is normally disabled
-			mapper.segments.cpu //       $4020-$FFFF    $BFE0	   Cartridge space: PRG ROM, PRG RAM, and mapper registers
+			//                        Address range  Size     Device
+			ram, //                   $0000-$07FF    $0800    2KB internal RAM
+			ramMirror, //             $0800-$1FFF    $1800    Mirrors of $0000-$07FF
+			ppuRegisters, //          $2000-$2007    $0008    NES PPU registers
+			ppuRegistersMirror, //    $2008-$3FFF    $1FF8    Mirrors of $2000-2007 (repeats every 8 bytes)
+			apuRegisters, //          $4000-$4013    $0014    NES APU registers
+			ppu.registers.oamDma, //  $4014-$4014    $0001    PPU's OAM DMA register
+			apu.registers.apuMain, // $4015-$4015    $0001    APU status/control register
+			controllers[0].port, //   $4016-$4016    $0001    Controller port 1
+			port2AndFrameCounter, //  $4017-$4017    $0001    Controller port 2 and APU frame counter
+			cpuTestModeRegisters, //  $4018-$401F    $0008    APU and I/O functionality that is normally disabled
+			mapper.segments.cpu //    $4020-$FFFF    $BFE0    Cartridge space: PRG ROM, PRG RAM, and mapper registers
 		]);
 	}
 

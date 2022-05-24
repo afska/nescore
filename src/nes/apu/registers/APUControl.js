@@ -1,7 +1,7 @@
-import { InMemoryRegister } from "../../registers";
+import { WriteOnlyInMemoryRegister } from "../../registers";
 
 /** Enables or disables APU channels. */
-export default class APUControl extends InMemoryRegister {
+export default class APUControl extends WriteOnlyInMemoryRegister {
 	constructor() {
 		super();
 

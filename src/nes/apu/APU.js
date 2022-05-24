@@ -20,6 +20,7 @@ export default class APU {
 		this.sampleCounter = 0;
 		this.frameClockCounter = 0;
 		this.sample = 0;
+		this.frameIRQFlag = false;
 
 		this.registers = null;
 
@@ -54,7 +55,10 @@ export default class APU {
 	 */
 	step(onSample) {
 		let irq = null;
-		const onIRQ = () => (irq = interrupts.IRQ);
+		const onIRQ = (type) => {
+			irq = interrupts.IRQ;
+			if (type === "frame") this.frameIRQFlag = true;
+		};
 
 		if (this.clockCounter === 0) this._onNewCycle(onIRQ);
 
@@ -129,5 +133,6 @@ export default class APU {
 		this.sampleCounter = 0;
 		this.frameClockCounter = 0;
 		this.sample = 0;
+		this.frameIRQFlag = false;
 	}
 }

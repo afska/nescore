@@ -55,6 +55,13 @@ export default class DMCChannel {
 		this.startFlag = true;
 	}
 
+	/** Returns the remaining bytes of the current DPCM sample. */
+	get remainingBytes() {
+		if (!this.isUsingDPCM) return 0;
+
+		return this.sampleLength - this.cursorByte;
+	}
+
 	/** Returns whether the channel is enabled or not. */
 	get isEnabled() {
 		return this.context.apu.registers.apuControl.enableDMC;
@@ -82,7 +89,7 @@ export default class DMCChannel {
 			if (this.cursorByte === this.sampleLength) {
 				this.isUsingDPCM = false;
 				this.buffer = null;
-				if (this.registers.control.irqEnable) onIRQ();
+				if (this.registers.control.irqEnable) onIRQ("dmc");
 				return 0;
 			}
 

@@ -12,9 +12,11 @@ import DMCControl from "./DMCControl";
 import DMCLoad from "./DMCLoad";
 import DMCSampleAddress from "./DMCSampleAddress";
 import DMCSampleLength from "./DMCSampleLength";
+import APUStatus from "./APUStatus";
 import APUControl from "./APUControl";
 import APUFrameCounter from "./APUFrameCounter";
 import { WithCompositeMemory, MemoryPadding } from "../../memory";
+import { MixedInMemoryRegister } from "../../registers";
 
 /** A collection of all the CPU-mapped APU registers. */
 class APURegisterSegment {
@@ -45,8 +47,11 @@ class APURegisterSegment {
 			sampleLength: new DMCSampleLength().loadContext(context) //         $4013
 		};
 
-		this.apuControl = new APUControl().loadContext(context); //           $4015
+		this.apuStatus = new APUStatus().loadContext(context); //             $4015 (read)
+		this.apuControl = new APUControl().loadContext(context); //           $4015 (write)
 		this.apuFrameCounter = new APUFrameCounter().loadContext(context); // $4017
+
+		this.apuMain = new MixedInMemoryRegister(this.apuStatus, this.apuControl); // ($4015)
 	}
 
 	/** Creates a memory segment with the first 20 bytes ($4000-$4013). */
