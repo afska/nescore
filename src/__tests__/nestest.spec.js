@@ -1,6 +1,6 @@
 import NES from "../nes";
 import NESTestLogger from "../nes/loggers/NESTestLogger";
-import constants from "../nes/constants";
+import config from "../nes/config";
 import fs from "fs";
 const should = require("chai").Should();
 
@@ -12,12 +12,12 @@ const withoutPpu = (line) =>
 
 describe("NESTest", () => {
 	it("matches the golden log with all official instructions", () => {
-		const romBytes = fs.readFileSync(constants.NESTEST_PATH);
+		const romBytes = fs.readFileSync(config.NESTEST_PATH);
 		const logText = fs.readFileSync(LOG_FILE).toString();
 		const logLines = logText.split(/\n|\r\n|\r/).slice(0, FINAL_LINE);
 
-		const logger = new NESTestLogger();
-		const nes = new NES(logger);
+		const nes = new NES();
+		const logger = (nes.logger = new NESTestLogger());
 		nes.load(romBytes);
 		nes.cpu.pc.value = 0xc000;
 

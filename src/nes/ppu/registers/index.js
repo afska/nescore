@@ -39,16 +39,4 @@ class PPURegisterSegment {
 	}
 }
 
-export {
-	PPUCtrl,
-	PPUMask,
-	PPUStatus,
-	OAMAddr,
-	OAMData,
-	PPUScroll,
-	PPUAddr,
-	PPUData,
-	OAMDMA,
-	PPURegisterSegment,
-	LoopyRegister
-};
+export { PPURegisterSegment, LoopyRegister };

@@ -36,7 +36,6 @@ export default class PPUData extends InMemoryRegister {
 		const ppuAddress = this.context.ppu.registers.ppuAddr.address;
 		this.context.memoryBus.ppu.writeAt(ppuAddress, byte);
 		this._incrementAddress();
-		this._writeReadOnlyFields();
 	}
 
 	_incrementAddress() {

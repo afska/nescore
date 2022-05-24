@@ -1,4 +1,4 @@
-import { InMemoryRegister } from "../../registers";
+import { WriteOnlyInMemoryRegister } from "../../registers";
 import constants from "../../constants";
 
 /**
@@ -8,7 +8,7 @@ import constants from "../../constants";
  * (selected through `PPUCtrl`) should be at the top left corner of the rendered screen.
  * Connected to `LoopyRegister`.
  */
-export default class PPUScroll extends InMemoryRegister {
+export default class PPUScroll extends WriteOnlyInMemoryRegister {
 	/** Returns the scrolled X. */
 	scrolledX(x) {
 		const { vAddress, fineX } = this.context.ppu.loopy;
@@ -25,11 +25,6 @@ export default class PPUScroll extends InMemoryRegister {
 		const { vAddress } = this.context.ppu.loopy;
 
 		return vAddress.coarseY * constants.TILE_LENGTH + vAddress.fineY;
-	}
-
-	/** Reads nothing (write-only address). */
-	readAt() {
-		return 0;
 	}
 
 	/** Alternately writes the X and the Y coordinates of the scroll. */

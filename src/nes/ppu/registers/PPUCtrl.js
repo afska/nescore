@@ -1,4 +1,4 @@
-import { InMemoryRegister } from "../../registers";
+import { WriteOnlyInMemoryRegister } from "../../registers";
 
 /**
  * PPU Control Register (> write)
@@ -6,7 +6,7 @@ import { InMemoryRegister } from "../../registers";
  * Contains various flags controlling PPU operation.
  * Connected to `LoopyRegister`.
  */
-export default class PPUCtrl extends InMemoryRegister {
+export default class PPUCtrl extends WriteOnlyInMemoryRegister {
 	constructor() {
 		super();
 
@@ -15,11 +15,6 @@ export default class PPUCtrl extends InMemoryRegister {
 			.addReadOnlyField("patternTableAddressIdForBackground", 4)
 			.addReadOnlyField("spriteSizeId", 5)
 			.addReadOnlyField("generateNmiAtStartOfVBlank", 7);
-	}
-
-	/** Reads nothing (write-only address). */
-	readAt() {
-		return 0;
 	}
 
 	/** Sets the actual value and updates scrolling metadata. */

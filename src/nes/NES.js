@@ -1,5 +1,6 @@
 import CPU from "./cpu";
 import PPU from "./ppu";
+import APU from "./apu";
 import { CPUBus, PPUBus } from "./memory/Bus";
 import Cartridge from "./cartridge";
 import Controller from "./controller";
@@ -8,13 +9,22 @@ import { WithContext } from "./helpers";
 
 /** The NES Emulator. */
 export default class NES {
-	constructor(logger = null) {
+	constructor(
+		onFrame = () => {},
+		onSample = () => {},
+		sampleRate = constants.APU_SAMPLE_RATE,
+		logger = null
+	) {
 		WithContext.apply(this);
 
+		this.onFrame = onFrame;
+		this.onSample = onSample;
+		this.sampleRate = sampleRate;
 		this.logger = logger;
 
 		this.cpu = new CPU();
 		this.ppu = new PPU();
+		this.apu = new APU();
 	}
 
 	/** Loads a `rom` as the current cartridge. */
@@ -25,10 +35,12 @@ export default class NES {
 		const controllerPorts = Controller.createPorts();
 
 		this.loadContext({
+			nes: this,
 			logger: this.logger,
 
 			cpu: this.cpu,
 			ppu: this.ppu,
+			apu: this.apu,
 
 			memoryBus: {
 				cpu: new CPUBus(mapper),
@@ -54,28 +66,32 @@ export default class NES {
 		});
 	}
 
-	/** Executes a whole frame in the emulation. */
+	/** Runs the emulation for a whole video frame. */
 	frame() {
 		const currentFrame = this.ppu.frame;
-		while (this.ppu.frame === currentFrame) this.step();
-		return this.ppu.frameBuffer;
+		while (this.ppu.frame === currentFrame)
+			this.step(this.onFrame, this.onSample);
 	}
 
-	/** Executes a step in the emulation. */
-	step() {
+	/** Runs the emulation until the audio system generates `requestedSamples`. */
+	samples(requestedSamples) {
+		let samples = 0;
+
+		const onSample = (sample) => {
+			samples++;
+			this.onSample(sample);
+		};
+
+		while (samples < requestedSamples) this.step(this.onFrame, onSample);
+	}
+
+	/** Executes a step in the emulation (1 CPU instruction). */
+	step(onFrame = () => {}, onSample = () => {}) {
 		this.requireContext();
 
-		// (PPU clock is three times faster than CPU clock)
-		let ppuCycles = this.cpu.step() * constants.PPU_CYCLES_PER_CPU_CYCLE;
-
-		while (ppuCycles > 0) {
-			const interrupt = this.ppu.step();
-			ppuCycles--;
-
-			if (interrupt)
-				ppuCycles +=
-					this.cpu.interrupt(interrupt) * constants.PPU_CYCLES_PER_CPU_CYCLE;
-		}
+		let cpuCycles = this.cpu.step();
+		cpuCycles = this._clock(this.ppu, cpuCycles, onFrame);
+		this._clock(this.apu, cpuCycles, onSample);
 	}
 
 	/** Sets the `button` state of `player` to `isPressed`. */
@@ -100,6 +116,23 @@ export default class NES {
 	onLoad(context) {
 		context.mapper.loadContext(context);
 		this.ppu.loadContext(context);
+		this.apu.loadContext(context);
 		this.cpu.loadContext(context);
+	}
+
+	_clock(unit, cpuCycles, onSomething) {
+		let unitCycles = cpuCycles * constants.UNIT_STEPS_PER_CPU_CYCLE;
+		while (unitCycles > 0) {
+			const interrupt = unit.step(onSomething);
+			unitCycles--;
+
+			if (interrupt != null) {
+				const newCpuCycles = this.cpu.interrupt(interrupt);
+				cpuCycles += newCpuCycles;
+				unitCycles += newCpuCycles * constants.UNIT_STEPS_PER_CPU_CYCLE;
+			}
+		}
+
+		return cpuCycles;
 	}
 }

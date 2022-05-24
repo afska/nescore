@@ -1,11 +1,11 @@
-import { InMemoryRegister } from "../../registers";
+import { WriteOnlyInMemoryRegister } from "../../registers";
 
 /**
  * PPU Mask Register (> write)
  *
  * Controls the rendering of sprites and backgrounds, as well as colour effects.
  */
-export default class PPUMask extends InMemoryRegister {
+export default class PPUMask extends WriteOnlyInMemoryRegister {
 	constructor() {
 		super();
 
@@ -38,11 +38,6 @@ export default class PPUMask extends InMemoryRegister {
 		}
 
 		return (r << 0) | (g << 8) | (b << 16);
-	}
-
-	/** Reads nothing (write-only address). */
-	readAt() {
-		return 0;
 	}
 
 	/** Returns whether any color emphasis is active or not. */

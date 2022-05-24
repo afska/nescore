@@ -1,15 +1,13 @@
 import React, { Component } from "react";
-
-const SCREEN_WIDTH = 256;
-const SCREEN_HEIGHT = 240;
+import constants from "../../nes/constants";
 
 export default class TVNoise extends Component {
 	render() {
 		return (
 			<canvas
 				style={{ width: "100%", height: "100%", borderRadius: 8 }}
-				width={SCREEN_WIDTH}
-				height={SCREEN_HEIGHT}
+				width={constants.SCREEN_WIDTH}
+				height={constants.SCREEN_HEIGHT}
 				ref={(canvas) => {
 					if (canvas) this._initCanvas(canvas);
 				}}

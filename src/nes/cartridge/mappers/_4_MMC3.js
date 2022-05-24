@@ -1,6 +1,6 @@
 import Mapper from "./Mapper";
 import { interrupts } from "../../cpu/constants";
-import { MemoryChunk, MemoryPadding, WithCompositeMemory } from "../../memory";
+import { WithCompositeMemory, MemoryChunk, MemoryPadding } from "../../memory";
 import { InMemoryRegister } from "../../registers";
 import constants from "../../constants";
 

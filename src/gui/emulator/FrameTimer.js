@@ -1,8 +1,9 @@
-const FPS = 60.098;
+import config from "../../nes/config";
+
 const SECOND = 1000;
 
 export default class FrameTimer {
-	constructor(onFrame, onFps, fps = FPS) {
+	constructor(onFrame, onFps, fps = config.FPS) {
 		this.onFrame = onFrame;
 		this.onFps = onFps;
 

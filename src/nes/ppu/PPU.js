@@ -8,9 +8,8 @@ import {
 	FramePalette,
 	OAM
 } from "./renderers/tables";
-import { getScanlineType } from "./constants";
-import constants from "../constants";
 import { MemoryChunk } from "../memory";
+import constants from "../constants";
 import { WithContext } from "../helpers";
 
 /** The Picture Processing Unit. It generates a video signal of 256x240 pixels. */
@@ -52,12 +51,15 @@ export default class PPU {
 		this._reset();
 	}
 
-	/** Executes the next operation. */
-	step() {
+	/**
+	 * Executes the next step (1 step = 1 PPU cycle). Returns an interrupt or null.
+	 * It calls `onFrame` when it generates a new frame.
+	 */
+	step(onFrame) {
 		const scanlineType = getScanlineType(this.scanline);
 		const interrupt = renderers[scanlineType](this.context);
 
-		this._incrementCounters();
+		this._incrementCounters(onFrame);
 
 		return interrupt;
 	}
@@ -79,7 +81,7 @@ export default class PPU {
 		return this.paletteIndexes[y * constants.SCREEN_WIDTH + x];
 	}
 
-	_incrementCounters() {
+	_incrementCounters(onFrame) {
 		this.cycle++;
 		if (this.cycle > constants.PPU_LAST_CYCLE) {
 			this.cycle = 0;
@@ -88,6 +90,7 @@ export default class PPU {
 			if (this.scanline > constants.PPU_LAST_SCANLINE) {
 				this.scanline = -1;
 				this.frame++;
+				onFrame(this.frameBuffer);
 			}
 		}
 	}
@@ -101,5 +104,18 @@ export default class PPU {
 			this.frameBuffer[i] = 0;
 			this.paletteIndexes[i] = 0;
 		}
+	}
+}
+
+/** Returns the type of `scanLine`. */
+function getScanlineType(scanLine) {
+	if (scanLine === -1) {
+		return "PRELINE";
+	} else if (scanLine < 240) {
+		return "VISIBLE";
+	} else if (scanLine === 241) {
+		return "VBLANK_START";
+	} else {
+		return "IDLE";
 	}
 }

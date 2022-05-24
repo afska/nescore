@@ -1,5 +1,5 @@
 import Mapper from "./Mapper";
-import { MemoryMirror, MemoryPadding, WithCompositeMemory } from "../../memory";
+import { WithCompositeMemory, MemoryMirror, MemoryPadding } from "../../memory";
 
 /**
  * The simplest mapper (also called "mapper 0").

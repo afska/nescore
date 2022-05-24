@@ -1,4 +1,4 @@
-import Byte from "./Byte";
 import WithContext from "./WithContext";
+import Byte from "./Byte";
 
-export { Byte, WithContext };
+export { WithContext, Byte };

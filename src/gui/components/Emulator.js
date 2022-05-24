@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 import Screen from "./Screen";
 import gamepad from "../emulator/gamepad";
+import Speaker from "../emulator/Speaker";
 import WebWorker from "../emulator/WebWorker";
 import WebWorkerRunner from "worker-loader!../emulator/webWorkerRunner";
 import debug from "../emulator/debug";
+import config from "../../nes/config";
 
-const DEBUG = false;
-const INPUT_POLL_INTERVAL = 10;
 let webWorker = null;
 
 export default class Emulator extends Component {
@@ -20,8 +20,8 @@ export default class Emulator extends Component {
 		);
 	}
 
-	sendInput = () => {
-		webWorker.postMessage(gamepad.getInput());
+	sendState = () => {
+		webWorker.postMessage([...gamepad.getInput(), this.speaker.buffer.size()]);
 	};
 
 	setFps = (fps) => {
@@ -32,6 +32,9 @@ export default class Emulator extends Component {
 		if (data instanceof Uint32Array) {
 			// frame data
 			this.screen.setBuffer(data);
+		} else if (Array.isArray(data)) {
+			// audio samples
+			for (let sample of data) this.speaker.writeSample(sample);
 		} else if (data?.id === "fps") {
 			// fps report
 			this.setFps(data.fps);
@@ -42,11 +45,17 @@ export default class Emulator extends Component {
 	};
 
 	stop() {
-		clearInterval(this.interval);
+		clearInterval(this.stateInterval);
+		this.stateInterval = null;
+
+		if (this.speaker) this.speaker.stop();
+		this.speaker = null;
+
 		if (webWorker) {
 			webWorker.terminate();
 			webWorker = null;
 		}
+
 		this.setFps(0);
 	}
 
@@ -60,17 +69,30 @@ export default class Emulator extends Component {
 		this.screen = screen;
 
 		this.stop();
-		this.interval = setInterval(this.sendInput, INPUT_POLL_INTERVAL);
+		this.stateInterval = setInterval(
+			this.sendState,
+			config.STATE_POLL_INTERVAL
+		);
+		this.speaker = new Speaker();
+		this.speaker.start();
 
 		const bytes = new Uint8Array(rom);
 
 		// (web workers are hard to debug, a mock is used in development mode)
-		webWorker = DEBUG
-			? new WebWorker((data) => this.onWorkerMessage({ data }))
+		webWorker = config.DEBUG
+			? new WebWorker(
+					(data) => this.onWorkerMessage({ data }),
+					this.speaker.writeSample,
+					this.speaker
+			  )
 			: new WebWorkerRunner();
 
-		if (DEBUG) window.debug = debug(this, webWorker);
+		if (config.DEBUG) window.debug = debug(this, webWorker);
 
+		webWorker.postMessage({
+			id: "sampleRate",
+			sampleRate: this.speaker.getSampleRate()
+		});
 		webWorker.postMessage(bytes);
 		webWorker.onmessage = this.onWorkerMessage;
 	}

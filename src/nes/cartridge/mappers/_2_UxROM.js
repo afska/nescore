@@ -1,5 +1,5 @@
 import Mapper from "./Mapper";
-import { MemoryPadding, WithCompositeMemory } from "../../memory";
+import { WithCompositeMemory, MemoryPadding } from "../../memory";
 
 /**
  * It provide bank-switching capabilities, just by writing a byte to any address on PRG ROM space.

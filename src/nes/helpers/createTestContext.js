@@ -1,10 +1,10 @@
 import NES from "../NES";
-import constants from "../constants";
+import config from "../../nes/config";
 import fs from "fs";
 
 /** Creates an execution context for testing. */
 export default function createTestContext(initialize = () => {}) {
-	const romBytes = fs.readFileSync(constants.NESTEST_PATH);
+	const romBytes = fs.readFileSync(config.NESTEST_PATH);
 	const nes = new NES();
 	nes.load(romBytes);
 
