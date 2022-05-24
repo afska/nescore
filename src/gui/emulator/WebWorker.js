@@ -11,15 +11,14 @@ const FPS = 60.098;
  * This contains the communication logic between `Emulator` and `webWorkerRunner`.
  */
 export default class WebWorker {
-	// TODO: MOVE onAudio to message
-	constructor(postMessage, onAudio, speaker) {
+	constructor(postMessage) {
 		this.$postMessage = postMessage;
-
-		this._speaker = speaker;
-		this._onAudio = onAudio;
 
 		this.isDebugging = false;
 		this.isDebugStepRequested = false;
+
+		this.availableSamples = 0;
+		this.samples = [];
 
 		this.nes = new NES(this.onFrame, this.onAudio);
 		this.frameTimer = new FrameTimer(
@@ -29,12 +28,15 @@ export default class WebWorker {
 
 				try {
 					if (SYNC_TO_AUDIO) {
-						const samples = SAMPLE_RATE / FPS;
-						if (speaker._buffer.size() + samples <= BUFFER_LIMIT)
-							this.nes.samples(samples);
+						const requestedSamples = SAMPLE_RATE / FPS;
+						if (this.availableSamples + requestedSamples <= BUFFER_LIMIT)
+							this.nes.samples(requestedSamples);
 					} else {
 						this.nes.frame();
 					}
+
+					this.$postMessage(this.samples);
+					this.samples = [];
 				} catch (error) {
 					this.$postMessage({ id: "error", error });
 				}
@@ -51,7 +53,7 @@ export default class WebWorker {
 	};
 
 	onAudio = (sample) => {
-		this._onAudio(sample);
+		this.samples.push(sample);
 	};
 
 	terminate = () => {
@@ -69,6 +71,8 @@ export default class WebWorker {
 				this.nes.load(data);
 				this.frameTimer.start();
 			} else if (Array.isArray(data)) {
+				// state packet
+
 				// controller input
 				for (let i = 0; i < 2; i++) {
 					if (i === 0) {
@@ -81,6 +85,9 @@ export default class WebWorker {
 						if (button[0] !== "$")
 							this.nes.setButton(i + 1, button, data[i][button]);
 				}
+
+				// available samples
+				this.availableSamples = data[2];
 			}
 		} catch (error) {
 			this.$postMessage({ id: "error", error });

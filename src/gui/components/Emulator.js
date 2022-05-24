@@ -6,8 +6,8 @@ import WebWorker from "../emulator/WebWorker";
 import WebWorkerRunner from "worker-loader!../emulator/webWorkerRunner";
 import debug from "../emulator/debug";
 
-const DEBUG = true;
-const INPUT_POLL_INTERVAL = 10;
+const DEBUG = false;
+const STATE_POLL_INTERVAL = 10;
 let webWorker = null;
 
 export default class Emulator extends Component {
@@ -21,8 +21,8 @@ export default class Emulator extends Component {
 		);
 	}
 
-	sendInput = () => {
-		webWorker.postMessage(gamepad.getInput());
+	sendState = () => {
+		webWorker.postMessage([...gamepad.getInput(), this.speaker.buffer.size()]);
 	};
 
 	setFps = (fps) => {
@@ -33,6 +33,9 @@ export default class Emulator extends Component {
 		if (data instanceof Uint32Array) {
 			// frame data
 			this.screen.setBuffer(data);
+		} else if (Array.isArray(data)) {
+			// audio samples
+			for (let sample of data) this.speaker.writeSample(sample);
 		} else if (data?.id === "fps") {
 			// fps report
 			this.setFps(data.fps);
@@ -67,7 +70,7 @@ export default class Emulator extends Component {
 		this.screen = screen;
 
 		this.stop();
-		this.inputInterval = setInterval(this.sendInput, INPUT_POLL_INTERVAL);
+		this.stateInterval = setInterval(this.sendState, STATE_POLL_INTERVAL);
 		this.speaker = new Speaker();
 		this.speaker.start();
 

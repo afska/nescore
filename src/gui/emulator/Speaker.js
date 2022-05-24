@@ -7,7 +7,7 @@ const CHANNELS = 2;
 
 export default class Speaker {
 	constructor() {
-		this._buffer = new RingBuffer(BUFFER_SIZE);
+		this.buffer = new RingBuffer(BUFFER_SIZE);
 	}
 
 	start() {
@@ -39,13 +39,12 @@ export default class Speaker {
 	}
 
 	writeSample = (sample) => {
-		if (this._buffer.size() >= BUFFER_SIZE) {
+		if (this.buffer.size() >= BUFFER_SIZE) {
 			// buffer overrun
-			console.log("OVER"); // TODO: REMOVE
-			this._buffer.deqN(BUFFER_SIZE);
+			this.buffer.deqN(BUFFER_SIZE);
 		}
 
-		this._buffer.enq(sample);
+		this.buffer.enq(sample);
 	};
 
 	stop() {
@@ -66,19 +65,12 @@ export default class Speaker {
 		const size = left.length;
 
 		try {
-			const samples = this._buffer.deqN(size);
-
-			for (let i = 0; i < size; i++) {
-				left[i] = right[i] = samples[i];
-			}
+			const samples = this.buffer.deqN(size);
+			for (let i = 0; i < size; i++) left[i] = right[i] = samples[i];
 		} catch (e) {
-			// buffer underrun (needed {size}, got {this._buffer.size()})
+			// buffer underrun (needed {size}, got {this.buffer.size()})
 			// ignore empty buffers... assume audio has just stopped
-
-			console.log("UNDER"); // TODO: REMOVE
-			for (let i = 0; i < size; i++) {
-				left[i] = right[i] = 0;
-			}
+			for (let i = 0; i < size; i++) left[i] = right[i] = 0;
 		}
 	};
 }
