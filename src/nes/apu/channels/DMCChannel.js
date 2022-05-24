@@ -30,7 +30,7 @@ export default class DMCChannel {
 	sample(onIRQ) {
 		// (the output level is sent to the mixer whether the channel is enabled or not)
 
-		if (this.startFlag && this.buffer == null) {
+		if (this.startFlag) {
 			const sampleRate = this.registers.control.dpcmRate;
 
 			this.startFlag = false;
@@ -51,15 +51,8 @@ export default class DMCChannel {
 	}
 
 	/** Starts auto-playing a sample from `DMCSampleAddress`. */
-	startDPCMIfNeeded() {
-		if (this.remainingBytes === 0) this.startFlag = true;
-	}
-
-	/** Returns the remaining bytes of the current DPCM sample. */
-	get remainingBytes() {
-		if (!this.isUsingDPCM) return 0;
-
-		return this.sampleLength - this.cursorByte;
+	startDPCM() {
+		this.startFlag = true;
 	}
 
 	/** Returns whether the channel is enabled or not. */

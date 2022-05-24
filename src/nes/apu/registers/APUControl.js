@@ -35,7 +35,7 @@ export default class APUControl extends InMemoryRegister {
 		}
 		if (enableNoise && !this.enableNoise)
 			channels.noise.lengthCounter.counter = 0;
-		if (enableDMC && !this.enableDMC) channels.dmc.startDPCMIfNeeded();
+		if (enableDMC && !this.enableDMC) channels.dmc.startDPCM();
 
 		this.context.apu.registers.dmc.irqEnable = 0;
 	}
