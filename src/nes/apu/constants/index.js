@@ -1,4 +1,4 @@
 import lengthTable from "./lengthTable";
-import dpcmRates from "./dpcmRates";
+import dpcmPeriods from "./dpcmPeriods";
 
-export { lengthTable, dpcmRates };
+export { lengthTable, dpcmPeriods };

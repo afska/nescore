@@ -1,4 +1,4 @@
-/** A list of all DPCM rates. The `DMCControl` register uses it to assign rates. */
+/** A list of all DPCM periods. The `DMCControl` register uses it to assign sample rates. */
 export default [
 	428,
 	380,

@@ -20,7 +20,7 @@ export default class DMCChannel {
 		this.cursorByte = 0;
 		this.cursorBit = 0;
 		this.cursorDelta = 0;
-		this.sampleRate = 0;
+		this.samplePeriod = 0;
 		this.sampleLength = 0;
 		this.outputSample = 0;
 	}
@@ -30,14 +30,14 @@ export default class DMCChannel {
 		// (the output level is sent to the mixer whether the channel is enabled or not)
 
 		if (this.startFlag) {
-			const sampleRate = this.registers.control.dpcmRate;
+			const samplePeriod = this.registers.control.dpcmPeriod;
 
 			this.startFlag = false;
 			this.isUsingDPCM = true;
 			this.cursorByte = -1;
 			this.cursorBit = 0;
-			this.cursorDelta = sampleRate - 1;
-			this.sampleRate = sampleRate;
+			this.cursorDelta = samplePeriod - 1;
+			this.samplePeriod = samplePeriod;
 			this.sampleLength = this.registers.sampleLength.lengthInBytes;
 			this.outputSample = 0;
 		}
@@ -78,7 +78,7 @@ export default class DMCChannel {
 
 	_processDPCM(onIRQ) {
 		this.cursorDelta++;
-		if (this.cursorDelta === this.sampleRate) this.cursorDelta = 0;
+		if (this.cursorDelta === this.samplePeriod) this.cursorDelta = 0;
 		else return this.outputSample;
 
 		if (this.buffer === null || this.cursorBit === 8) {
