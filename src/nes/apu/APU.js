@@ -5,7 +5,7 @@ import {
 	NoiseChannel,
 	DMCChannel
 } from "./channels";
-import { frameClockTime } from "./constants";
+import frameClock from "./frameClock";
 import { interrupts } from "../cpu/constants";
 import constants from "../constants";
 import { WithContext } from "../helpers";
@@ -74,9 +74,10 @@ export default class APU {
 	}
 
 	_onNewCycle = (onIRQ) => {
-		frameClockTime.measure(
+		frameClock.measure(
 			this.frameClockCounter,
 			this.registers.apuFrameCounter.use5StepSequencer,
+			onIRQ,
 			this._onQuarter,
 			this._onHalf,
 			this._onEnd

@@ -3,7 +3,14 @@ const QUARTERS_5_STEP = [3729, 7457, 11186, 18641];
 
 /** The NES APU frame counter (or frame sequencer) generates low-frequency clocks for the channels. */
 export default {
-	measure(frameClockCounter, use5StepSequencer, onQuarter, onHalf, onEnd) {
+	measure(
+		frameClockCounter,
+		use5StepSequencer,
+		onIRQ,
+		onQuarter,
+		onHalf,
+		onEnd
+	) {
 		const quarters = use5StepSequencer ? QUARTERS_5_STEP : QUARTERS_4_STEP;
 
 		const isQuarter =
@@ -17,6 +24,9 @@ export default {
 
 		if (isQuarter) onQuarter();
 		if (isHalf) onHalf();
-		if (isEnd) onEnd();
+		if (isEnd) {
+			onEnd();
+			if (!use5StepSequencer) onIRQ("frame");
+		}
 	}
 };
