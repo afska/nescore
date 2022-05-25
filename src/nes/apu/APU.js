@@ -7,6 +7,7 @@ import {
 } from "./channels";
 import frameClock from "./frameClock";
 import { interrupts } from "../cpu/constants";
+import config from "../config";
 import constants from "../constants";
 import { WithContext } from "../helpers";
 
@@ -92,7 +93,8 @@ export default class APU {
 		const triangle = this.channels.triangle.sample();
 		const noise = this.channels.noise.sample();
 		const dmc = this.channels.dmc.sample(onIRQ);
-		this.sample = 0.5 * (pulse1 + pulse2 + triangle + noise + dmc);
+		this.sample =
+			config.BASE_VOLUME * (pulse1 + pulse2 + triangle + noise + dmc);
 	};
 
 	_onQuarter = () => {
