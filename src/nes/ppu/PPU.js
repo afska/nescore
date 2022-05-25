@@ -83,12 +83,9 @@ export default class PPU {
 
 	_incrementCounters(onFrame) {
 		this.cycle++;
-
 		if (this.cycle > constants.PPU_LAST_CYCLE) {
 			this.cycle = 0;
 			this.scanline++;
-
-			this._skipOddCycleIfNeeded();
 
 			if (this.scanline > constants.PPU_LAST_SCANLINE) {
 				this.scanline = -1;
@@ -96,16 +93,6 @@ export default class PPU {
 				onFrame(this.frameBuffer);
 			}
 		}
-	}
-
-	_skipOddCycleIfNeeded() {
-		// With rendering enabled, each odd PPU frame is one PPU clock shorter than normal.
-		// This is done by skipping the first idle tick on the first visible scanline.
-		const skipOddCycle =
-			this.scanline === 0 &&
-			this.frame % 2 === 1 &&
-			this.registers.ppuMask.showBackground;
-		if (skipOddCycle) this.cycle++;
 	}
 
 	_reset() {
