@@ -26,10 +26,8 @@ export default class TriangleChannel {
 			this.registers.timerLow.value
 		);
 
-		this.oscillator.frequency = constants.FREQ_CPU_HZ / (16 * (timer + 1));
+		this.oscillator.frequency = constants.FREQ_CPU_HZ / (16 * (timer + 1)) / 2;
 		// from nesdev: f = fCPU / (16 * (t + 1))
-
-		this.oscillator.frequency /= 2;
 		// (the pitch is one octave below the pulse channels with an equivalent timer value)
 		// (i.e. use the formula above but divide the resulting frequency by two).
 

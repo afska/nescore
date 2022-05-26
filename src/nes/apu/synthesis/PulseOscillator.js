@@ -16,7 +16,7 @@ export default class PulseOscillator {
 		let y2 = 0;
 
 		const pi2 = Math.PI * 2;
-		const { amplitude, harmonics, frequency, dutyCycle } = this;
+		const { amplitude, harmonics, dutyCycle, _frequency: frequency } = this;
 
 		for (let n = 1; n <= harmonics; n++) {
 			y1 += _approxsin(pi2 * frequency * time * n) / n;
@@ -26,12 +26,7 @@ export default class PulseOscillator {
 		return (y1 - y2) * config.PULSE_CHANNEL_VOLUME * amplitude;
 	}
 
-	/** Returns the frequency. */
-	get frequency() {
-		return this._frequency;
-	}
-
-	/** Sets the frequency, only if `value` is above a minimum value. */
+	/** Sets the frequency, but only if `value` is above a minimum value. */
 	set frequency(value) {
 		if (Math.abs(this._frequency - value) > config.MIN_FREQUENCY_CHANGE)
 			this._frequency = value;

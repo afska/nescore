@@ -16,7 +16,7 @@ export default class TriangleOscillator {
 		let y = 0;
 
 		const pi2 = Math.PI * 2;
-		const { frequency, amplitude, lut } = this;
+		const { amplitude, lut, _frequency: frequency } = this;
 
 		for (let i = 1; i <= config.TRIANGLE_CHANNEL_HARMONICS; i++) {
 			const n = 2 * i + 1;
@@ -33,12 +33,7 @@ export default class TriangleOscillator {
 		}
 	}
 
-	/** Returns the frequency. */
-	get frequency() {
-		return this._frequency;
-	}
-
-	/** Sets the frequency, only if `value` is above a minimum value. */
+	/** Sets the frequency, but only if `value` is above a minimum value. */
 	set frequency(value) {
 		if (Math.abs(this._frequency - value) > config.MIN_FREQUENCY_CHANGE)
 			this._frequency = value;
