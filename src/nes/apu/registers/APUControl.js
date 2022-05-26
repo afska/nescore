@@ -25,18 +25,19 @@ export default class APUControl extends WriteOnlyInMemoryRegister {
 
 		this.setValue(byte);
 
-		if (enablePulse1 && !this.enablePulse1)
+		if (!this.enablePulse1 && enablePulse1)
 			channels.pulses[0].lengthCounter.counter = 0;
-		if (enablePulse2 && !this.enablePulse2)
+		if (!this.enablePulse2 && enablePulse2)
 			channels.pulses[1].lengthCounter.counter = 0;
-		if (enableTriangle && !this.enableTriangle) {
+		if (!this.enableTriangle && enableTriangle) {
 			channels.triangle.lengthCounter.counter = 0;
 			channels.triangle.linearLengthCounter.counter = 0;
 		}
-		if (enableNoise && !this.enableNoise)
+		if (!this.enableNoise && enableNoise)
 			channels.noise.lengthCounter.counter = 0;
-		if (enableDMC && !this.enableDMC) channels.dmc.startDPCM();
+		if (!this.enableDMC && enableDMC) channels.dmc.startDPCM();
 
+		channels.dmc.directLoadSample = 0;
 		this.context.apu.registers.dmc.irqEnable = 0;
 	}
 }

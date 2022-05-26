@@ -13,6 +13,9 @@ export default class DMCChannel {
 	constructor() {
 		WithContext.apply(this);
 
+		// Direct Load:
+		this.directLoadSample = 0;
+
 		// DPCM:
 		this.startFlag = false;
 		this.isUsingDPCM = false;
@@ -43,9 +46,8 @@ export default class DMCChannel {
 		}
 
 		return (
-			(this.isUsingDPCM
-				? this._processDPCM(onIRQ)
-				: this.registers.load.directLoad) * config.DMC_CHANNEL_VOLUME
+			(this.isUsingDPCM ? this._processDPCM(onIRQ) : this.directLoadSample) *
+			config.DMC_CHANNEL_VOLUME
 		);
 	}
 
