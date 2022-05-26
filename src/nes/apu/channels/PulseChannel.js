@@ -61,7 +61,7 @@ export default class PulseChannel {
 	}
 
 	/** Updates the envelope. */
-	fastClock() {
+	quarterBeat() {
 		this.volumeEnvelope.clock(
 			this.registers.control.volumeOrEnvelopePeriod,
 			this.registers.control.envelopeLoopOrLengthCounterHalt
@@ -69,7 +69,7 @@ export default class PulseChannel {
 	}
 
 	/** Updates length counter and sweep values. */
-	clock() {
+	halfBeat() {
 		this.lengthCounter.clock(
 			this.isEnabled,
 			this.registers.control.envelopeLoopOrLengthCounterHalt

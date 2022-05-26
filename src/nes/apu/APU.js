@@ -100,19 +100,19 @@ export default class APU {
 	_onQuarter = () => {
 		// (quarter frame "beats" adjust the volume envelope)
 
-		this.channels.pulses[0].fastClock();
-		this.channels.pulses[1].fastClock();
-		this.channels.triangle.fastClock();
-		this.channels.noise.fastClock();
+		this.channels.pulses[0].quarterBeat();
+		this.channels.pulses[1].quarterBeat();
+		this.channels.triangle.quarterBeat();
+		this.channels.noise.quarterBeat();
 	};
 
 	_onHalf = () => {
 		// (half frame "beats" adjust the note length and frequency sweepers)
 
-		this.channels.pulses[0].clock();
-		this.channels.pulses[1].clock();
-		this.channels.triangle.clock();
-		this.channels.noise.clock();
+		this.channels.pulses[0].halfBeat();
+		this.channels.pulses[1].halfBeat();
+		this.channels.triangle.halfBeat();
+		this.channels.noise.halfBeat();
 	};
 
 	_onEnd = () => {

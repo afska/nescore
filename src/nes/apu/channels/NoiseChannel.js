@@ -29,7 +29,7 @@ export default class NoiseChannel {
 	}
 
 	/** Updates the envelope. */
-	fastClock() {
+	quarterBeat() {
 		this.volumeEnvelope.clock(
 			this.registers.control.volumeOrEnvelopePeriod,
 			this.registers.control.envelopeLoopOrLengthCounterHalt
@@ -37,7 +37,7 @@ export default class NoiseChannel {
 	}
 
 	/** Updates length counter. */
-	clock() {
+	halfBeat() {
 		this.lengthCounter.clock(
 			this.isEnabled,
 			this.registers.control.envelopeLoopOrLengthCounterHalt

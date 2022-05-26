@@ -39,7 +39,7 @@ export default class TriangleChannel {
 	}
 
 	/** Updates linear length counter. */
-	fastClock() {
+	quarterBeat() {
 		this.linearLengthCounter.clock(
 			this.isEnabled,
 			this.registers.linearLCL.halt
@@ -47,7 +47,7 @@ export default class TriangleChannel {
 	}
 
 	/** Updates length counter. */
-	clock() {
+	halfBeat() {
 		this.lengthCounter.clock(this.isEnabled, this.registers.linearLCL.halt);
 	}
 
