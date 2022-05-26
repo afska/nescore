@@ -79,6 +79,9 @@ export default class APU {
 	}
 
 	_onNewCycle = (onIRQ) => {
+		this.channels.pulses[0].clock();
+		this.channels.pulses[1].clock();
+
 		frameClock.measure(
 			this.frameClockCounter,
 			this.registers.apuFrameCounter.use5StepSequencer,
@@ -98,7 +101,7 @@ export default class APU {
 	};
 
 	_onQuarter = () => {
-		// (quarter frame "beats" adjust the volume envelope)
+		// (quarter frame "beats" adjust the volume envelope and triangle's linear length counter)
 
 		this.channels.pulses[0].quarterBeat();
 		this.channels.pulses[1].quarterBeat();

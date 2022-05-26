@@ -24,11 +24,7 @@ export default class FrequencySweeper {
 	/** Clocks the sweeper and returns an updated frequency. */
 	clock(channel) {
 		const register = channel.registers.sweep;
-
-		if (!register.enabledFlag) {
-			channel.updateTimer();
-			return;
-		}
+		if (!register.enabledFlag) return;
 
 		/**
 		 * The sweep unit continuously calculates each channel's target period in this way:
