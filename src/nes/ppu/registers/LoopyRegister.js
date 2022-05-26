@@ -88,8 +88,7 @@ export default class LoopyRegister {
 		 * During dots 280 to 304 of the pre-render scanline (end of vblank)
 		 * If rendering is enabled, at the end of vblank, shortly after the horizontal bits are copied
 		 * from t to v at dot 257, the PPU will repeatedly copy the vertical bits from t to v from
-		 * dots 280 to 304, completing the full initialization of v from t:
-		 * v: GHIA.BC DEF..... <- t: GHIA.BC DEF.....
+		 * dots 280 to 304, completing the full initialization of v from t.
 		 */
 		if (cycle >= 280 && cycle <= 304) this._copyY();
 	}
@@ -120,8 +119,7 @@ export default class LoopyRegister {
 
 		/**
 		 * At dot 257 of each scanline
-		 * If rendering is enabled, the PPU copies all bits related to horizontal position from t to v:
-		 * v: ....A.. ...BCDEF <- t: ....A.. ...BCDEF
+		 * If rendering is enabled, the PPU copies all bits related to horizontal position from t to v.
 		 */
 		if (cycle === 257) this._copyX();
 	}
@@ -130,13 +128,17 @@ export default class LoopyRegister {
 		// (copies all bits related to horizontal position from `t` to `v`)
 		const v = this.vAddress.toNumber();
 		const t = this.tAddress.toNumber();
-		this.vAddress.update((v & 0xfbe0) | (t & 0x041f));
+
+		// v: ....A.. ...BCDEF <- t: ....A.. ...BCDEF
+		this.vAddress.update((v & 0b111101111100000) | (t & 0b000010000011111));
 	}
 
 	_copyY() {
 		// (copies all bits related to vertical position from `t` to `v`)
 		const v = this.vAddress.toNumber();
 		const t = this.tAddress.toNumber();
-		this.vAddress.update((v & 0x841f) | (t & 0x7be0));
+
+		// v: GHIA.BC DEF..... <- t: GHIA.BC DEF.....
+		this.vAddress.update((v & 0b000010000011111) | (t & 0b111101111100000));
 	}
 }
