@@ -47,13 +47,6 @@ export default class PulseChannel {
 			: 0;
 	}
 
-	/** Updates the timer (if sweep is not active). */
-	clock() {
-		if (this.registers.sweep.enabledFlag) return;
-
-		this.updateTimer();
-	}
-
 	/** Updates the full timer value from the registers. */
 	updateTimer() {
 		this.timer = Byte.to16Bit(
@@ -63,8 +56,15 @@ export default class PulseChannel {
 	}
 
 	/** Updates the sweeper. */
-	updateSweeper() {
+	step() {
 		this.frequencySweeper.track(this);
+	}
+
+	/** Updates the timer (if sweep is not active). */
+	cycle() {
+		if (this.registers.sweep.enabledFlag) return;
+
+		this.updateTimer();
 	}
 
 	/** Updates the envelope. */

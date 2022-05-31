@@ -68,8 +68,8 @@ export default class APU {
 		if (this.clockCounter === 0) this._onNewCycle(onIRQ);
 
 		// (frequency sweepers change at high frequency)
-		this.channels.pulses[0].updateSweeper();
-		this.channels.pulses[1].updateSweeper();
+		this.channels.pulses[0].step();
+		this.channels.pulses[1].step();
 
 		this._incrementCounters();
 
@@ -79,8 +79,8 @@ export default class APU {
 	}
 
 	_onNewCycle = (onIRQ) => {
-		this.channels.pulses[0].clock();
-		this.channels.pulses[1].clock();
+		this.channels.pulses[0].cycle();
+		this.channels.pulses[1].cycle();
 
 		frameClock.measure(
 			this.frameClockCounter,
