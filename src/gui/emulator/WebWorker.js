@@ -11,7 +11,8 @@ export default class WebWorker {
 		this.$postMessage = postMessage;
 
 		this.isDebugging = false;
-		this.isDebugStepRequested = false;
+		this.isDebugStepFrameRequested = false;
+		this.isDebugStepScanlineRequested = false;
 
 		this.sampleRate = 0;
 		this.availableSamples = 0;
@@ -20,11 +21,21 @@ export default class WebWorker {
 		this.nes = new NES(this.onFrame, this.onAudio);
 		this.frameTimer = new FrameTimer(
 			() => {
-				if (this.isDebugging && !this.isDebugStepRequested) return;
-				this.isDebugStepRequested = false;
+				if (
+					this.isDebugging &&
+					!this.isDebugStepFrameRequested &&
+					!this.isDebugScanlineRequested
+				)
+					return;
+
+				const isDebugScanlineRequested = this.isDebugScanlineRequested;
+				this.isDebugStepFrameRequested = false;
+				this.isDebugScanlineRequested = false;
 
 				try {
-					if (config.SYNC_TO_AUDIO) {
+					if (isDebugScanlineRequested) {
+						this.nes.scanline();
+					} else if (config.SYNC_TO_AUDIO) {
 						const requestedSamples = this.sampleRate / config.FPS;
 						const newBufferSize = this.availableSamples + requestedSamples;
 						if (newBufferSize <= config.AUDIO_BUFFER_LIMIT)
@@ -77,7 +88,9 @@ export default class WebWorker {
 					if (i === 0) {
 						if (data[i].$startDebugging) this.isDebugging = true;
 						if (data[i].$stopDebugging) this.isDebugging = false;
-						if (data[i].$debugStep) this.isDebugStepRequested = true;
+						if (data[i].$debugStepFrame) this.isDebugStepFrameRequested = true;
+						if (data[i].$debugStepScanline)
+							this.isDebugScanlineRequested = true;
 					}
 
 					for (let button in data[i])

@@ -85,6 +85,14 @@ export default class NES {
 		while (samples < requestedSamples) this.step(this.onFrame, onSample);
 	}
 
+	/** Runs the emulation until the next scanline. */
+	scanline() {
+		const currentScanline = this.ppu.scanline;
+		while (this.ppu.scanline === currentScanline)
+			this.step(this.onFrame, this.onSample);
+		this.onFrame(this.ppu.frameBuffer);
+	}
+
 	/** Executes a step in the emulation (1 CPU instruction). */
 	step(onFrame = () => {}, onSample = () => {}) {
 		this.requireContext();

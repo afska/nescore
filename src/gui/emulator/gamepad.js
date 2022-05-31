@@ -24,7 +24,8 @@ export default {
 
 		input.$startDebugging = gamepad.buttons[4].pressed;
 		input.$stopDebugging = gamepad.buttons[6].pressed;
-		input.$debugStep = gamepad.buttons[5].pressed;
+		input.$debugStepFrame = gamepad.buttons[5].pressed;
+		input.$debugStepScanline = gamepad.buttons[7].pressed;
 	},
 
 	_createInput() {
@@ -40,7 +41,8 @@ export default {
 
 			$startDebugging: false,
 			$stopDebugging: false,
-			$debugStep: false
+			$debugStepFrame: false,
+			$debugStepScanline: false
 		};
 	}
 };
