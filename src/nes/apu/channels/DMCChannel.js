@@ -78,13 +78,14 @@ export default class DMCChannel {
 		if (this.cursorDelta === this.samplePeriod) this.cursorDelta = 0;
 		else return this.outputSample;
 
-		const hasFinished = this.cursorByte === this.sampleLength;
+		const hasSampleFinished = this.cursorByte === this.sampleLength;
+		const hasByteFinished = this.cursorBit === 8;
 
-		if (this.buffer === null || this.cursorBit === 8) {
+		if (this.buffer === null || hasByteFinished) {
 			this.cursorByte++;
 			this.cursorBit = 0;
 
-			if (hasFinished) {
+			if (hasSampleFinished) {
 				this.isUsingDPCM = false;
 				this.buffer = null;
 				if (this.registers.control.irqEnable) onIRQ("dmc");
@@ -104,7 +105,8 @@ export default class DMCChannel {
 		this.outputSample += variation;
 
 		this.cursorBit++;
-		if (hasFinished && this.registers.control.loop) this.startDPCM();
+		if (hasSampleFinished && hasByteFinished && this.registers.control.loop)
+			this.startDPCM();
 
 		return this.outputSample;
 	}
