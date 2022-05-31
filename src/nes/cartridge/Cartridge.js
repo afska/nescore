@@ -56,11 +56,11 @@ export default class Cartridge {
 					? "VERTICAL"
 					: "HORIZONTAL",
 			hasTrainerBeforeProgram: !!Byte.getBit(flags6, 2),
-			mapperId: Byte.setSubNumber(
-				Byte.getSubNumber(flags6, 4, 4),
+			mapperId: Byte.setBits(
+				Byte.getBits(flags6, 4, 4),
 				4,
 				4,
-				Byte.getSubNumber(flags7, 4, 4)
+				Byte.getBits(flags7, 4, 4)
 			)
 		});
 	}

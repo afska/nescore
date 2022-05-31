@@ -14,11 +14,11 @@ export default class InMemoryRegister {
 	addField(name, startPosition, size = 1) {
 		Object.defineProperty(this, name, {
 			get() {
-				return Byte.getSubNumber(this.value, startPosition, size);
+				return Byte.getBits(this.value, startPosition, size);
 			},
 			set(value) {
 				this.value = Byte.force8Bit(
-					Byte.setSubNumber(this.value, startPosition, size, value)
+					Byte.setBits(this.value, startPosition, size, value)
 				);
 			}
 		});
@@ -53,6 +53,6 @@ export default class InMemoryRegister {
 
 	_writeReadOnlyFields() {
 		for (let { name, startPosition, size } of this._readOnlyFields)
-			this[name] = Byte.getSubNumber(this.value, startPosition, size);
+			this[name] = Byte.getBits(this.value, startPosition, size);
 	}
 }

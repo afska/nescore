@@ -41,7 +41,7 @@ export default class AttributeTable {
 
 		return (
 			constants.PALETTE_BACKGROUND_START +
-			Byte.getSubNumber(
+			Byte.getBits(
 				block,
 				regionIndex * constants.ATTRIBUTE_TABLE_REGION_SIZE_BITS,
 				constants.ATTRIBUTE_TABLE_REGION_SIZE_BITS

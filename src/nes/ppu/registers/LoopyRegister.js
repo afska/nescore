@@ -20,7 +20,7 @@ export default class LoopyRegister {
 		// $2000 write
 		// t: ...GH.. ........ <- d: ......GH
 		//    <used elsewhere> <- d: ABCDEF..
-		this.tAddress.nameTableId = Byte.getSubNumber(byte, 0, 2);
+		this.tAddress.nameTableId = Byte.getBits(byte, 0, 2);
 	}
 
 	/** Executed on `PPUStatus` reads (resets `latch`). */
@@ -38,15 +38,15 @@ export default class LoopyRegister {
 			// x:              FGH <- d: .....FGH
 			// w:                  <- 1
 
-			this.tAddress.coarseX = Byte.getSubNumber(byte, 3, 5);
-			this.fineX = Byte.getSubNumber(byte, 0, 3);
+			this.tAddress.coarseX = Byte.getBits(byte, 3, 5);
+			this.fineX = Byte.getBits(byte, 0, 3);
 		} else {
 			// $2005 second write (w is 1)
 			// t: FGH..AB CDE..... <- d: ABCDEFGH
 			// w:                  <- 0
 
-			this.tAddress.coarseY = Byte.getSubNumber(byte, 3, 5);
-			this.tAddress.fineY = Byte.getSubNumber(byte, 0, 3);
+			this.tAddress.coarseY = Byte.getBits(byte, 3, 5);
+			this.tAddress.fineY = Byte.getBits(byte, 0, 3);
 		}
 
 		this.latch = !this.latch;
@@ -63,8 +63,8 @@ export default class LoopyRegister {
 
 			let number = this.tAddress.toNumber();
 			let high = Byte.highPartOf(number);
-			high = Byte.setSubNumber(high, 0, 6, Byte.getSubNumber(byte, 0, 6));
-			high = Byte.setSubNumber(high, 6, 1, 0);
+			high = Byte.setBits(high, 0, 6, Byte.getBits(byte, 0, 6));
+			high = Byte.setBits(high, 6, 1, 0);
 			number = Byte.to16Bit(high, Byte.lowPartOf(number));
 			this.tAddress.update(number);
 		} else {

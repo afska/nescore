@@ -40,7 +40,7 @@ export default class Sprite {
 	get paletteId() {
 		return (
 			constants.PALETTE_FOREGROUND_START +
-			Byte.getSubNumber(
+			Byte.getBits(
 				this.attributes,
 				constants.SPRITE_ATTR_PALETTE_BITS_START,
 				constants.SPRITE_ATTR_PALETTE_BITS_SIZE
