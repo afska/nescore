@@ -64,7 +64,7 @@ export default class LoopyRegister {
 			let number = this.tAddress.toNumber();
 			let high = Byte.highPartOf(number);
 			high = Byte.setSubNumber(high, 0, 6, Byte.getSubNumber(byte, 0, 6));
-			high = Byte.setSubNumber(high, 7, 1, 0);
+			high = Byte.setSubNumber(high, 6, 1, 0);
 			number = Byte.to16Bit(high, Byte.lowPartOf(number));
 			this.tAddress.update(number);
 		} else {
