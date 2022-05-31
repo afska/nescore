@@ -22,12 +22,7 @@ export default function renderBackground({ ppu }) {
 		}
 
 		// background coordinates based on scroll
-		const baseNameTableId = registers.ppuCtrl.baseNameTableId;
-		const nameTableId =
-			baseNameTableId +
-			Math.floor(scrolledX / constants.SCREEN_WIDTH) +
-			Math.floor(scrolledY / constants.SCREEN_HEIGHT) *
-				constants.NAME_TABLE_MATRIX_LENGTH;
+		const nameTableId = registers.ppuCtrl.baseNameTableId;
 		const nameTableX = scrolledX % constants.SCREEN_WIDTH;
 		const nameTableY = scrolledY % constants.SCREEN_HEIGHT;
 
