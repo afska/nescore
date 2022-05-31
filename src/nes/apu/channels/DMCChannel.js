@@ -24,6 +24,7 @@ export default class DMCChannel {
 		this.cursorBit = 0;
 		this.cursorDelta = 0;
 		this.samplePeriod = 0;
+		this.sampleAddress = 0;
 		this.sampleLength = 0;
 		this.outputSample = 0;
 	}
@@ -41,6 +42,7 @@ export default class DMCChannel {
 			this.cursorBit = 0;
 			this.cursorDelta = samplePeriod - 1;
 			this.samplePeriod = samplePeriod;
+			this.sampleAddress = this.registers.sampleAddress.absoluteAddress;
 			this.sampleLength = this.registers.sampleLength.lengthInBytes;
 			this.outputSample = 0;
 		}
@@ -92,8 +94,7 @@ export default class DMCChannel {
 				return 0;
 			}
 
-			let address =
-				this.registers.sampleAddress.absoluteAddress + this.cursorByte;
+			let address = this.sampleAddress + this.cursorByte;
 			if (address > 0xffff) {
 				// (if it exceeds $FFFF, it is wrapped around to $8000)
 				address = 0x8000 + (address % 0xffff);

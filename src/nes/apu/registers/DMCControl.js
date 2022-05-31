@@ -13,9 +13,6 @@ export default class DMCControl extends WriteOnlyInMemoryRegister {
 
 	/** Returns the DPCM period. */
 	get dpcmPeriod() {
-		return dpcmPeriods[this.dpcmPeriodId] / 2;
-		//                                    ^^^
-		// These periods are all even numbers because there are 2 CPU cycles in an APU cycle.
-		// A rate of 428 means the output level changes every 214 APU cycles.
+		return dpcmPeriods[this.dpcmPeriodId];
 	}
 }
