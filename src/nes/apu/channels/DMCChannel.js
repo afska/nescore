@@ -73,11 +73,6 @@ export default class DMCChannel {
 		return this.context.apu.registers.dmc;
 	}
 
-	/** Returns the CPU memory bus. */
-	get memory() {
-		return this.context.memoryBus.cpu;
-	}
-
 	_processDPCM(onIRQ) {
 		this.cursorDelta++;
 		if (this.cursorDelta === this.samplePeriod) this.cursorDelta = 0;
@@ -102,7 +97,7 @@ export default class DMCChannel {
 				// (if it exceeds $FFFF, it is wrapped around to $8000)
 				address = 0x8000 + (address % 0xffff);
 			}
-			this.buffer = this.memory.readAt(address);
+			this.buffer = this._memoryBus.readAt(address);
 		}
 
 		const variation = Byte.getBit(this.buffer, this.cursorBit) ? 1 : -1;
@@ -112,5 +107,9 @@ export default class DMCChannel {
 		if (hasFinished && this.registers.control.loop) this.startDPCM();
 
 		return this.outputSample;
+	}
+
+	get _memoryBus() {
+		return this.context.memoryBus.cpu;
 	}
 }
