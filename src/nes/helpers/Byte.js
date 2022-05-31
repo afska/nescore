@@ -62,7 +62,7 @@ export default {
 	setSubNumber(byte, startPosition, size, value) {
 		let newByte = byte;
 		for (let i = startPosition; i < startPosition + size; i++)
-			newByte &= this.negate(1 << i) - 1;
+			newByte &= ~(1 << i);
 		return newByte | (value << startPosition);
 	},
 
