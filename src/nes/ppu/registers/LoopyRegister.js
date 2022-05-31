@@ -15,12 +15,12 @@ export default class LoopyRegister {
 		this.latch = false; //                 w (first or second write toggle)
 	}
 
-	/** Executed on `PPUCtrl` writes (updates `baseNameTableId` of `t`). */
+	/** Executed on `PPUCtrl` writes (updates `nameTableId` of `t`). */
 	onPPUCtrlWrite(byte) {
 		// $2000 write
 		// t: ...GH.. ........ <- d: ......GH
 		//    <used elsewhere> <- d: ABCDEF..
-		this.tAddress.baseNameTableId = Byte.getSubNumber(byte, 0, 2);
+		this.tAddress.nameTableId = Byte.getSubNumber(byte, 0, 2);
 	}
 
 	/** Executed on `PPUStatus` reads (resets `latch`). */

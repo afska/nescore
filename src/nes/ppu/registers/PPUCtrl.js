@@ -24,9 +24,9 @@ export default class PPUCtrl extends WriteOnlyInMemoryRegister {
 		this.context.ppu.loopy.onPPUCtrlWrite(byte);
 	}
 
-	/** Returns the base Name table id. */
-	get baseNameTableId() {
-		return this.context.ppu.loopy.vAddress.baseNameTableId;
+	/** Returns the Name table id. */
+	get nameTableId() {
+		return this.context.ppu.loopy.vAddress.nameTableId;
 	}
 
 	/** Returns the `PPUAddr` increment per CPU read/write of `PPUData`. */

@@ -12,7 +12,7 @@ export default class LoopyAddress {
 	constructor() {
 		this.coarseX = 0;
 		this.coarseY = 0;
-		this.baseNameTableId = 0;
+		this.nameTableId = 0;
 		this.fineY = 0;
 	}
 
@@ -58,7 +58,7 @@ export default class LoopyAddress {
 		return (
 			(this.coarseX << constants.LOOPY_ADDR_COARSE_X_OFFSET) |
 			(this.coarseY << constants.LOOPY_ADDR_COARSE_Y_OFFSET) |
-			(this.baseNameTableId << constants.LOOPY_ADDR_BASE_NAME_TABLE_ID_OFFSET) |
+			(this.nameTableId << constants.LOOPY_ADDR_BASE_NAME_TABLE_ID_OFFSET) |
 			(this.fineY << constants.LOOPY_ADDR_FINE_Y_OFFSET)
 		);
 	}
@@ -71,7 +71,7 @@ export default class LoopyAddress {
 		this.coarseY =
 			(number >> constants.LOOPY_ADDR_COARSE_Y_OFFSET) &
 			constants.LOOPY_ADDR_COARSE_Y_MASK;
-		this.baseNameTableId =
+		this.nameTableId =
 			(number >> constants.LOOPY_ADDR_BASE_NAME_TABLE_ID_OFFSET) &
 			constants.LOOPY_ADDR_BASE_NAME_TABLE_ID_MASK;
 		this.fineY =
@@ -80,10 +80,10 @@ export default class LoopyAddress {
 	}
 
 	_switchHorizontalNameTable() {
-		this.baseNameTableId = this.baseNameTableId ^ 0b1;
+		this.nameTableId = this.nameTableId ^ 0b1;
 	}
 
 	_switchVerticalNameTable() {
-		this.baseNameTableId = this.baseNameTableId ^ 0b10;
+		this.nameTableId = this.nameTableId ^ 0b10;
 	}
 }
