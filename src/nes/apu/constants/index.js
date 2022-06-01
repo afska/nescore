@@ -1,4 +1,5 @@
 import lengthTable from "./lengthTable";
+import noisePeriods from "./noisePeriods";
 import dpcmPeriods from "./dpcmPeriods";
 
-export { lengthTable, dpcmPeriods };
+export { lengthTable, noisePeriods, dpcmPeriods };

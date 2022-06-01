@@ -22,7 +22,7 @@ export default class DMCChannel {
 		this.buffer = null;
 		this.cursorByte = 0;
 		this.cursorBit = 0;
-		this.cursorDelta = 0;
+		this.dividerCount = 0;
 		this.samplePeriod = 0;
 		this.sampleAddress = 0;
 		this.sampleLength = 0;
@@ -40,7 +40,7 @@ export default class DMCChannel {
 			this.isUsingDPCM = true;
 			this.cursorByte = -1;
 			this.cursorBit = 0;
-			this.cursorDelta = samplePeriod - 1;
+			this.dividerCount = samplePeriod - 1;
 			this.samplePeriod = samplePeriod;
 			this.sampleAddress = this.registers.sampleAddress.absoluteAddress;
 			this.sampleLength = this.registers.sampleLength.lengthInBytes;
@@ -76,8 +76,8 @@ export default class DMCChannel {
 	}
 
 	_processDPCM(onIRQ) {
-		this.cursorDelta++;
-		if (this.cursorDelta === this.samplePeriod) this.cursorDelta = 0;
+		this.dividerCount++;
+		if (this.dividerCount >= this.samplePeriod) this.dividerCount = 0;
 		else return this.outputSample;
 
 		const hasSampleFinished = this.cursorByte === this.sampleLength;

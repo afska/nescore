@@ -249,7 +249,7 @@ export default class MMC3 extends Mapper {
  * |                                $8000-$9FFF fixed to second-last bank)
  * +--------- CHR A12 inversion (0: two 2 KB banks at $0000-$0FFF,
                                  four 1 KB banks at $1000-$1FFF;
-                              1: two 2 KB banks at $1000-$1FFF,
+                                 1: two 2 KB banks at $1000-$1FFF,
                                  four 1 KB banks at $0000-$0FFF)
  */
 class BankSelectRegister extends InMemoryRegister {
