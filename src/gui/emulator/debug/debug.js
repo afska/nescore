@@ -1,5 +1,6 @@
 import DebugNameTable from "./DebugNameTable";
 import DebugPatternTable from "./DebugPatternTable";
+import config from "../../../nes/config";
 
 const SCREEN_WIDTH = 256;
 const SCREEN_HEIGHT = 240;
@@ -14,6 +15,7 @@ const TILES_PER_PATTERN_TABLE = 256;
 // debug.resume();
 export default function debug(emulator, webWorker) {
 	return {
+		config,
 		emulator,
 		webWorker,
 		nes: webWorker.nes,
