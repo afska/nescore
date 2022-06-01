@@ -37,7 +37,6 @@ export default class APUControl extends WriteOnlyInMemoryRegister {
 			channels.noise.lengthCounter.counter = 0;
 		if (!this.enableDMC && enableDMC) channels.dmc.startDPCM();
 
-		channels.dmc.directLoadSample = 0;
 		this.context.apu.registers.dmc.irqEnable = 0;
 	}
 }

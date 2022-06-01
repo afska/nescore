@@ -13,8 +13,7 @@ export default class DMCChannel {
 	constructor() {
 		WithContext.apply(this);
 
-		// Direct Load:
-		this.directLoadSample = 0;
+		this.outputSample = 0;
 
 		// DPCM:
 		this.startFlag = false;
@@ -26,7 +25,6 @@ export default class DMCChannel {
 		this.samplePeriod = 0;
 		this.sampleAddress = 0;
 		this.sampleLength = 0;
-		this.outputSample = 0;
 	}
 
 	/** Generates a new sample. It calls `onIRQ` when a DPCM sample finishes (if IRQ flag is on). */
@@ -48,7 +46,7 @@ export default class DMCChannel {
 		}
 
 		return (
-			(this.isUsingDPCM ? this._processDPCM(onIRQ) : this.directLoadSample) *
+			(this.isUsingDPCM ? this._processDPCM(onIRQ) : this.outputSample) *
 			config.DMC_CHANNEL_VOLUME
 		);
 	}

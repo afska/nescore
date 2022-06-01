@@ -13,6 +13,6 @@ export default class DMCLoad extends WriteOnlyInMemoryRegister {
 		this.setValue(byte);
 
 		const { apu } = this.context;
-		apu.channels.dmc.directLoadSample = this.directLoad;
+		apu.channels.dmc.outputSample = this.directLoad;
 	}
 }
