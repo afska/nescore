@@ -8,11 +8,11 @@ export default class DMCLoad extends WriteOnlyInMemoryRegister {
 		this.addReadOnlyField("directLoad", 0, 7);
 	}
 
-	/** Writes the DMC output sample if the channel is active. */
+	/** Writes the DMC Direct Load sample if the channel is active. */
 	writeAt(__, byte) {
 		this.setValue(byte);
 
 		const { apu } = this.context;
-		apu.channels.dmc.outputSample = this.directLoad;
+		apu.channels.dmc.directLoadSample = this.directLoad;
 	}
 }
