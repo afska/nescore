@@ -13,8 +13,7 @@ export default class DMCChannel {
 	constructor() {
 		WithContext.apply(this);
 
-		// Direct Load:
-		this.directLoadSample = 0;
+		this.outputSample = 0;
 
 		// DPCM:
 		this.startFlag = false;
@@ -26,31 +25,16 @@ export default class DMCChannel {
 		this.samplePeriod = 0;
 		this.sampleAddress = 0;
 		this.sampleLength = 0;
-		this.outputSample = 0;
 	}
 
 	/** Generates a new sample. It calls `onIRQ` when a DPCM sample finishes (if IRQ flag is on). */
 	sample(onIRQ) {
 		// (the output level is sent to the mixer whether the channel is enabled or not)
 
-		if (this.startFlag) {
-			const samplePeriod = this.registers.control.dpcmPeriod;
+		this._startDPCMIfNeeded();
+		if (this.isUsingDPCM) this._processDPCM(onIRQ);
 
-			this.startFlag = false;
-			this.isUsingDPCM = true;
-			this.cursorByte = -1;
-			this.cursorBit = 0;
-			this.cursorDelta = samplePeriod - 1;
-			this.samplePeriod = samplePeriod;
-			this.sampleAddress = this.registers.sampleAddress.absoluteAddress;
-			this.sampleLength = this.registers.sampleLength.lengthInBytes;
-			this.outputSample = 0;
-		}
-
-		return (
-			(this.isUsingDPCM ? this._processDPCM(onIRQ) : this.directLoadSample) *
-			config.DMC_CHANNEL_VOLUME
-		);
+		return this.outputSample * config.DMC_CHANNEL_VOLUME;
 	}
 
 	/** Starts auto-playing a sample from `DMCSampleAddress`. */
@@ -75,15 +59,30 @@ export default class DMCChannel {
 		return this.context.apu.registers.dmc;
 	}
 
+	_startDPCMIfNeeded() {
+		if (this.startFlag) {
+			const samplePeriod = this.registers.control.dpcmPeriod;
+
+			this.startFlag = false;
+			this.isUsingDPCM = true;
+			this.cursorByte = -1;
+			this.cursorBit = 0;
+			this.cursorDelta = samplePeriod - 1;
+			this.samplePeriod = samplePeriod;
+			this.sampleAddress = this.registers.sampleAddress.absoluteAddress;
+			this.sampleLength = this.registers.sampleLength.lengthInBytes;
+			this.outputSample = 0;
+		}
+	}
+
 	_processDPCM(onIRQ) {
 		this.cursorDelta++;
 		if (this.cursorDelta === this.samplePeriod) this.cursorDelta = 0;
 		else return this.outputSample;
 
 		const hasSampleFinished = this.cursorByte === this.sampleLength;
-		const hasByteFinished = this.cursorBit === 8;
 
-		if (this.buffer === null || hasByteFinished) {
+		if (this.buffer === null || this.cursorBit === 8) {
 			this.cursorByte++;
 			this.cursorBit = 0;
 
@@ -104,9 +103,12 @@ export default class DMCChannel {
 
 		const variation = Byte.getBit(this.buffer, this.cursorBit) ? 1 : -1;
 		this.outputSample += variation;
-
 		this.cursorBit++;
-		if (hasSampleFinished && hasByteFinished && this.registers.control.loop)
+		if (
+			hasSampleFinished &&
+			this.cursorBit === 8 &&
+			this.registers.control.loop
+		)
 			this.startDPCM();
 
 		return this.outputSample;
