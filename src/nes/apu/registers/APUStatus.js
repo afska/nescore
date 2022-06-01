@@ -26,7 +26,7 @@ export default class APUStatus extends InMemoryRegister {
 		this.frameIRQFlag = apu.frameIRQFlag;
 		this.dmcIRQFlag = apu.registers.dmc.control.irqEnable;
 
-		apu.frameIRQFlag = false;
+		if (!this.context.isDebugging) apu.frameIRQFlag = false;
 
 		return this.value;
 	}
