@@ -1,3 +1,4 @@
+import mirroring from "../mirroring";
 import constants from "../../constants";
 
 /** Renders the background from the Name tables. */
@@ -22,7 +23,11 @@ export default function renderBackground({ ppu }) {
 		}
 
 		// background coordinates based on scroll
-		const nameTableId = registers.ppuCtrl.nameTableId;
+		const nameTableOffset = +(
+			scrolledX === constants.SCREEN_WIDTH &&
+			ppu.memory.nameTables.mapping === mirroring.VERTICAL
+		);
+		const nameTableId = registers.ppuCtrl.nameTableId + nameTableOffset;
 		const nameTableX = scrolledX % constants.SCREEN_WIDTH;
 		const nameTableY = scrolledY % constants.SCREEN_HEIGHT;
 

@@ -13,6 +13,7 @@ export default class Speaker {
 		if (this._audioCtx) return;
 		if (!window.AudioContext) return;
 
+		// HACK: createScriptProcessor is deprecated, but there's no easy replacement
 		this._audioCtx = new window.AudioContext();
 		this._scriptNode = this._audioCtx.createScriptProcessor(
 			WEBAUDIO_BUFFER_SIZE,
