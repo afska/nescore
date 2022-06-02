@@ -5,18 +5,16 @@ import constants from "../../constants";
 /** Runs for each visible scanline. Renders the image. */
 export default function visibleLines(context) {
 	const { ppu, mapper } = context;
-	if (!ppu.registers.ppuMask.isRenderingEnabled) return null;
+	const { ppuMask } = ppu.registers;
+	if (!ppuMask.isRenderingEnabled) return null;
 
 	if (
 		ppu.cycle === constants.PPU_CYCLE_RENDER_BACKGROUND &&
-		ppu.registers.ppuMask.showBackground
+		ppuMask.showBackground
 	)
 		renderBackground(context);
 
-	if (
-		ppu.cycle === constants.PPU_CYCLE_RENDER_SPRITES &&
-		ppu.registers.ppuMask.showSprites
-	)
+	if (ppu.cycle === constants.PPU_CYCLE_RENDER_SPRITES && ppuMask.showSprites)
 		renderSprites(context);
 
 	ppu.loopy.onLine(ppu.cycle);

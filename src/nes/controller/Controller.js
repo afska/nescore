@@ -1,17 +1,6 @@
 import PrimaryControllerPort from "./PrimaryControllerPort";
 import SecondaryControllerPort from "./SecondaryControllerPort";
 
-const BITS = [
-	0b00000001,
-	0b00000010,
-	0b00000100,
-	0b00001000,
-	0b00010000,
-	0b00100000,
-	0b01000000,
-	0b10000000
-];
-
 /** An NES controller, which updates a `ControllerPort`. */
 export default class Controller {
 	constructor(port) {
@@ -53,14 +42,14 @@ export default class Controller {
 	/** Returns a binary representation of the current state. */
 	toByte() {
 		return (
-			(this.buttons.BUTTON_A && BITS[0]) |
-			(this.buttons.BUTTON_B && BITS[1]) |
-			(this.buttons.BUTTON_SELECT && BITS[2]) |
-			(this.buttons.BUTTON_START && BITS[3]) |
-			(this.buttons.BUTTON_UP && BITS[4]) |
-			(this.buttons.BUTTON_DOWN && BITS[5]) |
-			(this.buttons.BUTTON_LEFT && BITS[6]) |
-			(this.buttons.BUTTON_RIGHT && BITS[7])
+			(this.buttons.BUTTON_A && 1 << 0) |
+			(this.buttons.BUTTON_B && 1 << 1) |
+			(this.buttons.BUTTON_SELECT && 1 << 2) |
+			(this.buttons.BUTTON_START && 1 << 3) |
+			(this.buttons.BUTTON_UP && 1 << 4) |
+			(this.buttons.BUTTON_DOWN && 1 << 5) |
+			(this.buttons.BUTTON_LEFT && 1 << 6) |
+			(this.buttons.BUTTON_RIGHT && 1 << 7)
 		);
 	}
 }

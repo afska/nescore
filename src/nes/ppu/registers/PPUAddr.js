@@ -22,7 +22,7 @@ export default class PPUAddr extends WriteOnlyInMemoryRegister {
 		this.context.ppu.loopy.vAddress.update(value);
 	}
 
-	/** Write latch. */
+	/** Returns the write latch. */
 	get latch() {
 		return this.context.ppu.loopy.latch;
 	}

@@ -22,7 +22,7 @@ export default {
 	/** Defines the `chunks` of the memory map. */
 	defineChunks(chunks) {
 		this.chunks = chunks;
-		this.lut = {};
+		this.lut = [];
 
 		let startAddress = 0;
 		for (let chunk of this.chunks) {
@@ -37,15 +37,15 @@ export default {
 
 	/** Reads a byte from `address`, using the correct `chunk`. */
 	readAt(address) {
-		const chunk = this.lut[address] || this._throwUnreachable(address);
-		const offset = this._toRelativeAddress(address, chunk);
+		const chunk = this.lut[address * 2] || this._throwUnreachable(address);
+		const offset = this.lut[address * 2 + 1];
 		return chunk.readAt(offset);
 	},
 
 	/** Writes a `byte` to `address`, using the correct `chunk`. */
 	writeAt(address, byte) {
-		const chunk = this.lut[address] || this._throwUnreachable(address);
-		const offset = this._toRelativeAddress(address, chunk);
+		const chunk = this.lut[address * 2] || this._throwUnreachable(address);
+		const offset = this.lut[address * 2 + 1];
 		chunk.writeAt(offset, byte);
 	},
 
@@ -54,7 +54,12 @@ export default {
 	},
 
 	_generateLookUpTable(finalAddress) {
-		for (let i = 0; i < finalAddress; i++) this.lut[i] = this._getChunkFor(i);
+		for (let i = 0; i < finalAddress; i++) {
+			const chunk = this._getChunkFor(i);
+			const offset = this._toRelativeAddress(i, chunk);
+			this.lut[i * 2] = chunk;
+			this.lut[i * 2 + 1] = offset;
+		}
 	},
 
 	_getChunkFor(address) {
