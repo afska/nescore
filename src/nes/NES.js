@@ -99,7 +99,7 @@ export default class NES {
 
 		let cpuCycles = this.cpu.step();
 		cpuCycles = this._clock(this.ppu, cpuCycles, onFrame);
-		this._clock(this.apu, cpuCycles, onSample);
+		// this._clock(this.apu, cpuCycles, onSample);
 	}
 
 	/** Sets the `button` state of `player` to `isPressed`. */

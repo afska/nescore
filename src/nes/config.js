@@ -1,12 +1,12 @@
 /** Compile-time options that change the emulator's behavior. */
 export default {
-	DEBUG: false,
+	DEBUG: true,
 	STATE_POLL_INTERVAL: 10,
 
-	SYNC_TO_AUDIO: true,
+	SYNC_TO_AUDIO: false,
 	AUDIO_BUFFER_LIMIT: 4096,
 	AUDIO_BUFFER_SIZE: 8192,
-	FPS: 60.098,
+	FPS: 144, //60.098,
 	MASK_BORDERS: false,
 
 	BASE_VOLUME: 0.5,
