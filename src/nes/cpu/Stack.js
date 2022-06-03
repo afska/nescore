@@ -1,6 +1,5 @@
+import constants from "../constants";
 import { WithContext, Byte } from "../helpers";
-
-const START_ADDRESS = 0x0100;
 
 /** An in-memory stack, controlled by the CPU. */
 export default class Stack {
@@ -36,13 +35,8 @@ export default class Stack {
 		return Byte.to16Bit(high, low);
 	}
 
-	/** Returns the start address of the stack. */
-	get startAddress() {
-		return START_ADDRESS;
-	}
-
 	/** Returns the current address of the stack. */
 	get currentAddress() {
-		return this.startAddress + this.context.cpu.sp.value;
+		return constants.CPU_STACK_START_ADDRESS + this.context.cpu.sp.value;
 	}
 }

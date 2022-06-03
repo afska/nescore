@@ -1,5 +1,6 @@
-import mirroring from "../mirroring";
 import constants from "../../constants";
+
+const NAME_TABLE_OFFSETS = [1, -1, 1, -1]; // (for `scrolledX` overflow)
 
 /** Renders the background from the Name tables. */
 export default function renderBackground({ ppu }) {
@@ -23,11 +24,12 @@ export default function renderBackground({ ppu }) {
 		}
 
 		// background coordinates based on scroll
-		const nameTableOffset = +(
-			scrolledX === constants.SCREEN_WIDTH &&
-			ppu.memory.nameTables.mapping === mirroring.VERTICAL
-		);
-		const nameTableId = registers.ppuCtrl.nameTableId + nameTableOffset;
+		const baseNameTableId = registers.ppuCtrl.nameTableId;
+		const nameTableOffset = // (switch horizontal Name table if scrolledX has overflowed)
+			scrolledX >= constants.SCREEN_WIDTH
+				? NAME_TABLE_OFFSETS[baseNameTableId]
+				: 0;
+		const nameTableId = baseNameTableId + nameTableOffset;
 		const nameTableX = scrolledX % constants.SCREEN_WIDTH;
 		const nameTableY = scrolledY % constants.SCREEN_HEIGHT;
 

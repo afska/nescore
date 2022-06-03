@@ -9,7 +9,10 @@ import constants from "../../constants";
  * Connected to `LoopyRegister`.
  */
 export default class PPUScroll extends WriteOnlyInMemoryRegister {
-	/** Returns the scrolled X. */
+	/**
+	 * Returns the scrolled X in Name table coordinates ([0..262]).
+	 * If this value overflows (> 255), switch the horizontal Name table.
+	 */
 	scrolledX(x) {
 		const { vAddress, fineX } = this.context.ppu.loopy;
 
@@ -20,7 +23,7 @@ export default class PPUScroll extends WriteOnlyInMemoryRegister {
 		);
 	}
 
-	/** Returns the scrolled Y. */
+	/** Returns the scrolled X in Name table coordinates ([0..255]). */
 	scrolledY() {
 		const { vAddress } = this.context.ppu.loopy;
 

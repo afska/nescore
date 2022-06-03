@@ -1,4 +1,5 @@
 import Stack from "./Stack";
+import constants from "../constants";
 import createTestContext from "../helpers/createTestContext";
 const should = require("chai").Should();
 
@@ -31,13 +32,13 @@ describe("Stack", () => {
 
 	it("updates the memory and sp on push", () => {
 		stack.push(23);
-		memory.readAt(stack.startAddress + 0xff).should.equal(23);
+		memory.readAt(constants.CPU_STACK_START_ADDRESS + 0xff).should.equal(23);
 		cpu.sp.value.should.equal(0xfe);
 	});
 
 	it("reads from the memory and updates sp on pop", () => {
 		stack.push(23);
-		memory.writeAt(stack.startAddress + 0xff, 30);
+		memory.writeAt(constants.CPU_STACK_START_ADDRESS + 0xff, 30);
 		stack.pop().should.equal(30);
 		cpu.sp.value.should.equal(0xff);
 	});
