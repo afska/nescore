@@ -39,6 +39,7 @@ export default class MMC3 extends Mapper {
 		const prgRomBank2 = this._newPrgBank();
 		const prgRomBank3 = this._newPrgBank(this.prgPages.length - 1);
 
+		this.prgRam = prgRam;
 		this._prgRomBank0 = prgRomBank0;
 		this._prgRomBank1 = prgRomBank1;
 		this._prgRomBank2 = prgRomBank2;

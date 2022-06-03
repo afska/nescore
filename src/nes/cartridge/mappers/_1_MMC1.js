@@ -25,13 +25,11 @@ export default class MMC1 extends Mapper {
 	/** Creates a memory segment for CPU range $4020-$FFFF. */
 	createCPUSegment() {
 		const unused = new MemoryPadding(0x1fe0);
-		const disabledPrgRam = new MemoryPadding(0x2000);
-		const enabledPrgRam = new MemoryChunk(0x2000);
+		const prgRam = new MemoryChunk(0x2000);
 		const prgRomBank0 = this._newPrgBank();
 		const prgRomBank1 = this._newPrgBank(this.prgPages.length - 1);
 
-		this._disabledPrgRam = disabledPrgRam;
-		this._enabledPrgRam = enabledPrgRam;
+		this.prgRam = prgRam;
 		this._prgRomBank0 = prgRomBank0;
 		this._prgRomBank1 = prgRomBank1;
 		this._state = {
@@ -45,7 +43,7 @@ export default class MMC1 extends Mapper {
 		return WithCompositeMemory.createSegment([
 			//                Address range   Size      Description
 			unused, //        $4020-$5FFF     $1FE0     Unused space
-			enabledPrgRam, // $6000-$7FFF     $2000     PRG RAM (optional)
+			prgRam, //        $6000-$7FFF     $2000     PRG RAM (optional)
 			prgRomBank0, //   $8000-$BFFF     $4000     PRG ROM (switchable or fixed to first bank)
 			prgRomBank1 //    $C000-$FFFF     $4000     PRG ROM (switchable or fixed to last bank)
 		]);
@@ -85,9 +83,6 @@ export default class MMC1 extends Mapper {
 			} else {
 				// PRG bank
 				this._state.prgBank.setValue(value);
-				this._prgRam = this._state.prgBank.prgRamEnable
-					? this._enabledPrgRam
-					: this._disabledPrgRam;
 			}
 
 			this._loadBanks();
@@ -127,14 +122,6 @@ export default class MMC1 extends Mapper {
 			this._chrRomBank0.bytes = this._getChrPage(chrBank0.value);
 			this._chrRomBank1.bytes = this._getChrPage(chrBank1.value);
 		}
-	}
-
-	get _prgRam() {
-		return this.segments.cpu.chunks[1];
-	}
-
-	set _prgRam(value) {
-		this.segments.cpu.chunks[1] = value;
 	}
 }
 
@@ -259,15 +246,12 @@ class CHRBank1Register extends InMemoryRegister {}
  * RPPPP
  * |||||
  * |++++- Select 16 KB PRG ROM bank (low bit ignored in 32 KB mode)
- * +----- PRG RAM chip enable (0: enabled; 1: disabled)
+ * +----- PRG RAM chip enable (0: enabled; 1: disabled) (unused on this emulator)
  */
 class PRGBankRegister extends InMemoryRegister {
 	constructor() {
 		super();
 
-		this.addReadOnlyField("prgRomBankId", 0, 4).addReadOnlyField(
-			"prgRamEnable",
-			4
-		);
+		this.addReadOnlyField("prgRomBankId", 0, 4);
 	}
 }

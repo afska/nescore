@@ -28,7 +28,7 @@ export default class NES {
 	}
 
 	/** Loads a `rom` as the current cartridge. */
-	load(rom) {
+	load(rom, saveFileBytes = []) {
 		const cartridge = new Cartridge(rom);
 		const mapper = cartridge.createMapper();
 
@@ -64,6 +64,8 @@ export default class NES {
 				}
 			}
 		});
+
+		this._setSaveFile(saveFileBytes);
 	}
 
 	/** Runs the emulation for a whole video frame. */
@@ -120,6 +122,18 @@ export default class NES {
 		this.context.controllers[player - 1].clear();
 	}
 
+	/** Returns the PRG RAM bytes, or null. */
+	getSaveFile() {
+		this.requireContext();
+		const { prgRam } = this.context.mapper;
+		if (!prgRam) return null;
+
+		const bytes = new Uint8Array(prgRam.memorySize);
+		for (let i = 0; i < prgRam.memorySize; i++) bytes[i] = prgRam.readAt(i);
+
+		return bytes;
+	}
+
 	/** When a context is loaded. */
 	onLoad(context) {
 		context.mapper.loadContext(context);
@@ -142,5 +156,13 @@ export default class NES {
 		}
 
 		return cpuCycles;
+	}
+
+	_setSaveFile(prgRamBytes) {
+		const { prgRam } = this.context.mapper;
+		if (!prgRam) return;
+
+		for (let i = 0; i < prgRamBytes.length; i++)
+			prgRam.writeAt(i, prgRamBytes[i]);
 	}
 }
