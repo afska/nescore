@@ -110,11 +110,12 @@ export default class MMC1 extends Mapper {
 		super.setSaveState(saveState);
 
 		this._state.load.shiftRegister = saveState.loadShiftRegister;
-		this._state.load.writeCounter = saveState.loadWriteRegister;
+		this._state.load.writeCounter = saveState.loadWriteCounter;
 		this._state.control.setValue(saveState.control);
 		this._state.chrBank0.setValue(saveState.chrBank0);
 		this._state.chrBank1.setValue(saveState.chrBank1);
 		this._state.prgBank.setValue(saveState.prgBank);
+		this._loadBanks();
 	}
 
 	_loadBanks() {
