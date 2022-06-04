@@ -161,6 +161,7 @@ export default class MMC3 extends Mapper {
 	/** Returns a snapshot of the current state. */
 	getSaveState() {
 		return {
+			...super.getSaveState(),
 			bankSelect: this._state.bankSelect.value,
 			bankData: Array.from(this._state.bankData),
 			irqEnabled: this._state.irqEnabled,
@@ -171,6 +172,8 @@ export default class MMC3 extends Mapper {
 
 	/** Restores state from a snapshot. */
 	setSaveState(saveState) {
+		super.setSaveState(saveState);
+
 		this._state.bankSelect.setValue(saveState.bankSelect);
 		this._state.bankData = saveState.bankData;
 		this._state.irqEnabled = saveState.irqEnabled;

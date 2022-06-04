@@ -5,7 +5,6 @@ import {
 	MemoryPadding
 } from "../memory";
 import { MixedInMemoryRegister } from "../registers";
-import constants from "../constants";
 import { WithContext } from "../helpers";
 
 /** The CPU memory map. Addess space size: 64KB. */

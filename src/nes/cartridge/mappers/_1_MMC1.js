@@ -95,6 +95,7 @@ export default class MMC1 extends Mapper {
 	/** Returns a snapshot of the current state. */
 	getSaveState() {
 		return {
+			...super.getSaveState(),
 			loadShiftRegister: this._state.load.shiftRegister,
 			loadWriteCounter: this._state.load.writeCounter,
 			control: this._state.control.value,
@@ -106,6 +107,8 @@ export default class MMC1 extends Mapper {
 
 	/** Restores state from a snapshot. */
 	setSaveState(saveState) {
+		super.setSaveState(saveState);
+
 		this._state.load.shiftRegister = saveState.loadShiftRegister;
 		this._state.load.writeCounter = saveState.loadWriteRegister;
 		this._state.control.setValue(saveState.control);

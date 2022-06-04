@@ -48,11 +48,13 @@ export default class UxROM extends Mapper {
 
 	/** Returns a snapshot of the current state. */
 	getSaveState() {
-		return { page: this._state.page };
+		return { ...super.getSaveState(), page: this._state.page };
 	}
 
 	/** Restores state from a snapshot. */
 	setSaveState(saveState) {
+		super.setSaveState(saveState);
+
 		this._state.page = saveState.page;
 		this._loadBanks();
 	}
