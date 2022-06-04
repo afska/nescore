@@ -92,6 +92,31 @@ export default class MMC1 extends Mapper {
 		this.context.cpu.memory.writeAt(address, byte);
 	}
 
+	/** Returns a snapshot of the current state. */
+	getSaveState() {
+		return {
+			...super.getSaveState(),
+			loadShiftRegister: this._state.load.shiftRegister,
+			loadWriteCounter: this._state.load.writeCounter,
+			control: this._state.control.value,
+			chrBank0: this._state.chrBank0.value,
+			chrBank1: this._state.chrBank1.value,
+			prgBank: this._state.prgBank.value
+		};
+	}
+
+	/** Restores state from a snapshot. */
+	setSaveState(saveState) {
+		super.setSaveState(saveState);
+
+		this._state.load.shiftRegister = saveState.loadShiftRegister;
+		this._state.load.writeCounter = saveState.loadWriteRegister;
+		this._state.control.setValue(saveState.control);
+		this._state.chrBank0.setValue(saveState.chrBank0);
+		this._state.chrBank1.setValue(saveState.chrBank1);
+		this._state.prgBank.setValue(saveState.prgBank);
+	}
+
 	_loadBanks() {
 		const { control, chrBank0, chrBank1, prgBank } = this._state;
 
@@ -134,29 +159,29 @@ export default class MMC1 extends Mapper {
  */
 class LoadRegister {
 	constructor() {
-		this._shiftRegister = 0;
-		this._writeCounter = 0;
+		this.shiftRegister = 0;
+		this.writeCounter = 0;
 	}
 
 	/** Writes a bit. Returns null 4 times, then the full value. */
 	write(byte) {
 		if (byte & 0b10000000) {
 			// reset
-			this._shiftRegister = 0b10000;
-			this._writeCounter = 0;
+			this.shiftRegister = 0b10000;
+			this.writeCounter = 0;
 
 			return null;
 		} else {
 			// shift 4 times, writing on the 5th
 
 			const bit = byte & 1;
-			this._shiftRegister = ((this._shiftRegister >> 1) | (bit << 4)) & 0b11111;
-			this._writeCounter++;
+			this.shiftRegister = ((this.shiftRegister >> 1) | (bit << 4)) & 0b11111;
+			this.writeCounter++;
 
-			if (this._writeCounter === 5) {
-				const value = this._shiftRegister;
-				this._shiftRegister = 0;
-				this._writeCounter = 0;
+			if (this.writeCounter === 5) {
+				const value = this.shiftRegister;
+				this.shiftRegister = 0;
+				this.writeCounter = 0;
 				return value;
 			}
 

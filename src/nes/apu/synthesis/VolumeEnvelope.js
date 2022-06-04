@@ -31,4 +31,20 @@ export default class VolumeEnvelope {
 			this.dividerCount = period;
 		}
 	}
+
+	/** Returns a snapshot of the current state. */
+	getSaveState() {
+		return {
+			startFlag: this.startFlag,
+			dividerCount: this.dividerCount,
+			volume: this.volume
+		};
+	}
+
+	/** Restores state from a snapshot. */
+	setSaveState(saveState) {
+		this.startFlag = saveState.startFlag;
+		this.dividerCount = saveState.dividerCount;
+		this.volume = saveState.volume;
+	}
 }

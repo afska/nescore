@@ -22,6 +22,8 @@ export default {
 		input.BUTTON_LEFT = gamepad.buttons[14].pressed;
 		input.BUTTON_RIGHT = gamepad.buttons[15].pressed;
 
+		input.$saveState = gamepad.buttons[2].pressed;
+		input.$loadState = gamepad.buttons[3].pressed;
 		input.$startDebugging = gamepad.buttons[4].pressed;
 		input.$stopDebugging = gamepad.buttons[6].pressed;
 		input.$debugStepFrame = gamepad.buttons[5].pressed;
@@ -39,6 +41,8 @@ export default {
 			BUTTON_LEFT: false,
 			BUTTON_RIGHT: false,
 
+			$saveState: false,
+			$loadState: false,
 			$startDebugging: false,
 			$stopDebugging: false,
 			$debugStepFrame: false,

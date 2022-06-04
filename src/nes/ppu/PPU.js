@@ -26,13 +26,14 @@ export default class PPU {
 		this.registers = null;
 		this.loopy = null;
 
-		this.frameBuffer = new Uint32Array(constants.TOTAL_PIXELS);
-		this.paletteIndexes = new Uint8Array(constants.TOTAL_PIXELS);
 		this.nameTable = new NameTable();
 		this.attributeTable = new AttributeTable();
 		this.patternTable = new PatternTable();
 		this.framePalette = new FramePalette();
 		this.oam = new OAM();
+
+		this.frameBuffer = new Uint32Array(constants.TOTAL_PIXELS);
+		this.paletteIndexes = new Uint8Array(constants.TOTAL_PIXELS);
 	}
 
 	/** When a context is loaded. */
@@ -79,6 +80,28 @@ export default class PPU {
 	/** Returns the palette index of pixel (`x`, `y`). Used for sprite drawing. */
 	paletteIndexOf(x, y) {
 		return this.paletteIndexes[y * constants.SCREEN_WIDTH + x];
+	}
+
+	/** Returns a snapshot of the current state. */
+	getSaveState() {
+		return {
+			frame: this.frame,
+			scanline: this.scanline,
+			cycle: this.cycle,
+			memory: this.memory.getSaveState(),
+			oamRam: Array.from(this.oamRam.bytes),
+			loopy: this.loopy.getSaveState()
+		};
+	}
+
+	/** Restores state from a snapshot. */
+	setSaveState(saveState) {
+		this.frame = saveState.frame;
+		this.scanline = saveState.scanline;
+		this.cycle = saveState.scanline;
+		this.memory.setSaveState(saveState.memory);
+		this.oamRam.bytes.set(saveState.oamRam);
+		this.loopy.setSaveState(saveState.loopy);
 	}
 
 	_incrementCounters(onFrame) {

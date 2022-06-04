@@ -158,6 +158,31 @@ export default class MMC3 extends Mapper {
 		return null;
 	}
 
+	/** Returns a snapshot of the current state. */
+	getSaveState() {
+		return {
+			...super.getSaveState(),
+			bankSelect: this._state.bankSelect.value,
+			bankData: Array.from(this._state.bankData),
+			irqEnabled: this._state.irqEnabled,
+			irqLatch: this._state.irqLatch,
+			irqCountdown: this._state.irqCountdown
+		};
+	}
+
+	/** Restores state from a snapshot. */
+	setSaveState(saveState) {
+		super.setSaveState(saveState);
+
+		this._state.bankSelect.setValue(saveState.bankSelect);
+		this._state.bankData = saveState.bankData;
+		this._state.irqEnabled = saveState.irqEnabled;
+		this._state.irqLatch = saveState.irqLatch;
+		this._state.irqCountdown = saveState.irqCountdown;
+		this._loadPRGBanks();
+		this._loadCHRBanks();
+	}
+
 	_loadPRGBanks() {
 		const { bankSelect, bankData } = this._state;
 

@@ -56,6 +56,24 @@ export default class NoiseChannel {
 		);
 	}
 
+	/** Returns a snapshot of the current state. */
+	getSaveState() {
+		return {
+			lengthCounter: this.lengthCounter.getSaveState(),
+			volumeEnvelope: this.volumeEnvelope.getSaveState(),
+			shift: this.shift,
+			dividerCount: this.dividerCount
+		};
+	}
+
+	/** Restores state from a snapshot. */
+	setSaveState(saveState) {
+		this.lengthCounter.setSaveState(saveState.lengthCounter);
+		this.volumeEnvelope.setSaveState(saveState.volumeEnvelope);
+		this.shift = saveState.shift;
+		this.dividerCount = saveState.dividerCount;
+	}
+
 	/** Returns whether the channel is enabled or not. */
 	get isEnabled() {
 		return this.context.apu.registers.apuControl.enableNoise;

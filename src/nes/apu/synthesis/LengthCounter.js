@@ -10,6 +10,16 @@ export default class LengthCounter {
 		else if (this.counter > 0 && !isHalted) this.counter--;
 	}
 
+	/** Returns a snapshot of the current state. */
+	getSaveState() {
+		return { counter: this.counter };
+	}
+
+	/** Restores state from a snapshot. */
+	setSaveState(saveState) {
+		this.counter = saveState.counter;
+	}
+
 	/** Returns whether it finished counting or not. */
 	get didFinish() {
 		return this.counter === 0;

@@ -36,19 +36,22 @@ export default class Mapper {
 	}
 
 	/** When a context is loaded. */
-	onLoad(context) {
+	onLoad(context, chrRam = null) {
 		const { cartridge } = context;
 
-		const prg = cartridge.prgRom;
-		const chr = cartridge.chrRom;
-		const prgPages = Math.floor(prg.length / this.prgRomPageSize);
-		const chrPages = Math.floor(chr.length / this.chrRomPageSize);
+		this.prg = cartridge.prgRom;
+		this.chr = cartridge.header.usesChrRam
+			? chrRam || cartridge.chrRom
+			: cartridge.chrRom;
+
+		const prgPages = Math.floor(this.prg.length / this.prgRomPageSize);
+		const chrPages = Math.floor(this.chr.length / this.chrRomPageSize);
 
 		this.prgPages = _.range(0, prgPages).map((page) =>
-			this._getPage(prg, this.prgRomPageSize, page)
+			this._getPage(this.prg, this.prgRomPageSize, page)
 		);
 		this.chrPages = _.range(0, chrPages).map((page) =>
-			this._getPage(chr, this.chrRomPageSize, page)
+			this._getPage(this.chr, this.chrRomPageSize, page)
 		);
 
 		this.segments = {
@@ -80,6 +83,21 @@ export default class Mapper {
 	/** Runs at cycle 260 of every scanline (including preline). Returns a CPU interrupt or null. */
 	tick() {
 		return null;
+	}
+
+	/** Returns a snapshot of the current state. */
+	getSaveState() {
+		return {
+			chrRam: this.context.cartridge.header.usesChrRam
+				? Array.from(this.chr)
+				: null
+		};
+	}
+
+	/** Restores state from a snapshot. */
+	setSaveState(saveState) {
+		if (saveState.chrRam != null)
+			this.onLoad(this.context, new Uint8Array(saveState.chrRam));
 	}
 
 	_newPrgBank(id = 0) {

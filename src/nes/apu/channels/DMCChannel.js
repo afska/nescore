@@ -63,6 +63,36 @@ export default class DMCChannel {
 		return this.sampleLength - this.cursorByte;
 	}
 
+	/** Returns a snapshot of the current state. */
+	getSaveState() {
+		return {
+			outputSample: this.outputSample,
+			startFlag: this.startFlag,
+			isUsingDPCM: this.isUsingDPCM,
+			buffer: this.buffer,
+			cursorByte: this.cursorByte,
+			cursorBit: this.cursorBit,
+			dividerCount: this.dividerCount,
+			samplePeriod: this.samplePeriod,
+			sampleAddress: this.sampleAddress,
+			sampleLength: this.sampleLength
+		};
+	}
+
+	/** Restores state from a snapshot. */
+	setSaveState(saveState) {
+		this.outputSample = saveState.outputSample;
+		this.startFlag = saveState.startFlag;
+		this.isUsingDPCM = saveState.isUsingDPCM;
+		this.buffer = saveState.buffer;
+		this.cursorByte = saveState.cursorByte;
+		this.cursorBit = saveState.cursorBit;
+		this.dividerCount = saveState.dividerCount;
+		this.samplePeriod = saveState.samplePeriod;
+		this.sampleAddress = saveState.sampleAddress;
+		this.sampleLength = saveState.sampleLength;
+	}
+
 	/** Returns whether the channel is enabled or not. */
 	get isEnabled() {
 		return this.context.apu.registers.apuControl.enableDMC;

@@ -44,6 +44,24 @@ export default class FrequencySweeper {
 		this._setMute(channel);
 	}
 
+	/** Returns a snapshot of the current state. */
+	getSaveState() {
+		return {
+			startFlag: this.startFlag,
+			dividerCount: this.dividerCount,
+			change: this.change,
+			mute: this.mute
+		};
+	}
+
+	/** Restores state from a snapshot. */
+	setSaveState(saveState) {
+		this.startFlag = saveState.startFlag;
+		this.dividerCount = saveState.dividerCount;
+		this.change = saveState.change;
+		this.mute = saveState.mute;
+	}
+
 	_setMute(channel) {
 		this.mute =
 			channel.timer < constants.APU_MIN_TIMER ||
