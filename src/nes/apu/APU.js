@@ -78,28 +78,6 @@ export default class APU {
 		return irq;
 	}
 
-	_onNewCycle = (onIRQ) => {
-		this.channels.pulses[0].cycle();
-		this.channels.pulses[1].cycle();
-
-		frameClock.measure(
-			this.frameClockCounter,
-			this.registers.apuFrameCounter.use5StepSequencer,
-			onIRQ,
-			this._onQuarter,
-			this._onHalf,
-			this._onEnd
-		);
-
-		const pulse1 = this.channels.pulses[0].sample();
-		const pulse2 = this.channels.pulses[1].sample();
-		const triangle = this.channels.triangle.sample();
-		const noise = this.channels.noise.sample();
-		const dmc = this.channels.dmc.sample(onIRQ);
-		this.sample =
-			config.BASE_VOLUME * (pulse1 + pulse2 + triangle + noise + dmc);
-	};
-
 	/** Returns a snapshot of the current state. */
 	getSaveState() {
 		return {
@@ -130,6 +108,28 @@ export default class APU {
 		this.channels.triangle.setSaveState(saveState.triangle);
 		this.channels.noise.setSaveState(saveState.noise);
 		this.channels.dmc.setSaveState(saveState.dmc);
+	}
+
+	_onNewCycle(onIRQ) {
+		this.channels.pulses[0].cycle();
+		this.channels.pulses[1].cycle();
+
+		frameClock.measure(
+			this.frameClockCounter,
+			this.registers.apuFrameCounter.use5StepSequencer,
+			onIRQ,
+			this._onQuarter,
+			this._onHalf,
+			this._onEnd
+		);
+
+		const pulse1 = this.channels.pulses[0].sample();
+		const pulse2 = this.channels.pulses[1].sample();
+		const triangle = this.channels.triangle.sample();
+		const noise = this.channels.noise.sample();
+		const dmc = this.channels.dmc.sample(onIRQ);
+		this.sample =
+			config.BASE_VOLUME * (pulse1 + pulse2 + triangle + noise + dmc);
 	}
 
 	_onQuarter = () => {
