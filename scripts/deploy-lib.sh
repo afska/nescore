@@ -13,5 +13,6 @@ function try {
 rm -rf build/
 try npm run build-lib
 try cp package-lib.json build/lib/package.json
+try cp README.md build/lib/README.md
 try cd build/lib
 npm publish
