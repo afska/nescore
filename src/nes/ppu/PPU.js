@@ -81,6 +81,28 @@ export default class PPU {
 		return this.paletteIndexes[y * constants.SCREEN_WIDTH + x];
 	}
 
+	/** Returns a snapshot of the current state. */
+	getSaveState() {
+		return {
+			frame: this.frame,
+			scanline: this.scanline,
+			cycle: this.cycle,
+			memory: this.memory.getSaveState(),
+			oamRam: Array.from(this.oamRam.bytes),
+			loopy: this.loopy.getSaveState()
+		};
+	}
+
+	/** Restores state from a snapshot. */
+	setSaveState(saveState) {
+		this.frame = saveState.frame;
+		this.scanline = saveState.scanline;
+		this.cycle = saveState.scanline;
+		this.memory.setSaveState(saveState.memory);
+		this.oamRam.bytes.set(saveState.oamRam);
+		this.loopy.setSaveState(saveState.loopy);
+	}
+
 	_incrementCounters(onFrame) {
 		this.cycle++;
 		if (this.cycle > constants.PPU_LAST_CYCLE) {

@@ -134,6 +134,26 @@ export default class NES {
 		return bytes;
 	}
 
+	/** Returns a snapshot of the current state. */
+	getSaveState() {
+		this.requireContext();
+
+		return {
+			cpu: this.cpu.getSaveState(),
+			ppu: this.ppu.getSaveState(),
+			mapper: this.context.mapper.getSaveState()
+		};
+	}
+
+	/** Restores state from a snapshot. */
+	setSaveState(saveState) {
+		this.requireContext();
+
+		this.cpu.setSaveState(saveState.cpu);
+		this.ppu.setSaveState(saveState.ppu);
+		this.context.mapper.setSaveState(saveState.mapper);
+	}
+
 	/** When a context is loaded. */
 	onLoad(context) {
 		context.mapper.loadContext(context);

@@ -10,6 +10,9 @@ export default class WebWorker {
 	constructor(postMessage) {
 		this.$postMessage = postMessage;
 
+		this.saveState = null;
+		this.isSaveStateRequested = false;
+		this.isLoadStateRequested = false;
 		this.isDebugging = false;
 		this.isDebugStepFrameRequested = false;
 		this.isDebugStepScanlineRequested = false;
@@ -31,6 +34,15 @@ export default class WebWorker {
 				const isDebugScanlineRequested = this.isDebugScanlineRequested;
 				this.isDebugStepFrameRequested = false;
 				this.isDebugScanlineRequested = false;
+
+				if (this.isSaveStateRequested) {
+					this.saveState = this.nes.getSaveState();
+					this.isSaveStateRequested = false;
+				}
+				if (this.isLoadStateRequested && this.saveState != null) {
+					this.nes.setSaveState(this.saveState);
+					this.isLoadStateRequested = false;
+				}
 
 				try {
 					if (isDebugScanlineRequested) {
@@ -86,6 +98,8 @@ export default class WebWorker {
 				// -> controller input
 				for (let i = 0; i < 2; i++) {
 					if (i === 0) {
+						if (data[i].$saveState) this.isSaveStateRequested = true;
+						if (data[i].$loadState) this.isLoadStateRequested = true;
 						if (data[i].$startDebugging) this.isDebugging = true;
 						if (data[i].$stopDebugging) this.isDebugging = false;
 						if (data[i].$debugStepFrame) this.isDebugStepFrameRequested = true;

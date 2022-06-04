@@ -82,6 +82,32 @@ export default class CPU {
 		this.stack.push(this.flags.toByte() | (withB2Flag && 0b00010000));
 	}
 
+	/** Returns a snapshot of the current state. */
+	getSaveState() {
+		return {
+			pc: this.pc.value,
+			sp: this.sp.value,
+			flags: this.flags.toByte(),
+			cycle: this.cycle,
+			a: this.registers.a.value,
+			x: this.registers.x.value,
+			y: this.registers.y.value,
+			memory: this.memory.getSaveState()
+		};
+	}
+
+	/** Restores state from a snapshot. */
+	setSaveState(saveState) {
+		this.pc.value = saveState.pc;
+		this.sp.value = saveState.sp;
+		this.flags.load(saveState.flags);
+		this.cycle = saveState.cycle;
+		this.registers.a.value = saveState.a;
+		this.registers.x.value = saveState.x;
+		this.registers.y.value = saveState.y;
+		this.memory.setSaveState(saveState.memory);
+	}
+
 	_reset() {
 		this.pc.reset();
 		this.sp.reset();

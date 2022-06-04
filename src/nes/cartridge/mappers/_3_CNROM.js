@@ -47,6 +47,17 @@ export default class CNROM extends Mapper {
 		this.context.cpu.memory.writeAt(address, byte);
 	}
 
+	/** Returns a snapshot of the current state. */
+	getSaveState() {
+		return { page: this._state.page };
+	}
+
+	/** Restores state from a snapshot. */
+	setSaveState(saveState) {
+		this._state.page = saveState.page;
+		this._loadBanks();
+	}
+
 	_loadBanks() {
 		this.segments.ppu.bytes = this._getChrPage(this._state.page);
 	}

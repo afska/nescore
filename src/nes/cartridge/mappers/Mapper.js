@@ -82,6 +82,14 @@ export default class Mapper {
 		return null;
 	}
 
+	/** Returns a snapshot of the current state. */
+	getSaveState() {
+		return {};
+	}
+
+	/** Restores state from a snapshot. */
+	setSaveState(saveState) {}
+
 	_newPrgBank(id = 0) {
 		return new MemoryChunk(this.prgPages[id]).asReadOnly();
 	}

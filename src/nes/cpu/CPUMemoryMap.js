@@ -55,4 +55,27 @@ export default class CPUMemoryMap {
 		if (address.value != null) address.value = byte;
 		else WithCompositeMemory.writeAt.call(this, address, byte);
 	}
+
+	/** Returns a snapshot of the current state. */
+	getSaveState() {
+		const bytes = [];
+
+		for (let i = 0; i < 0x4018; i++) {
+			const chunk = this.lut[i];
+			bytes.push(chunk.value != null ? chunk.value : this.readAt(i));
+		}
+
+		return { bytes };
+	}
+
+	/** Restores state from a snapshot. */
+	setSaveState(saveState) {
+		for (let i = 0; i < 0x4018; i++) {
+			const chunk = this.lut[i];
+			const byte = saveState.bytes[i];
+
+			if (chunk.setValue) chunk.setValue(byte);
+			else this.writeAt(i, byte);
+		}
+	}
 }

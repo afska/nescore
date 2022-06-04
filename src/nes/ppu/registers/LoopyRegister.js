@@ -124,6 +124,24 @@ export default class LoopyRegister {
 		if (cycle === 257) this._copyX();
 	}
 
+	/** Returns a snapshot of the current state. */
+	getSaveState() {
+		return {
+			v: this.vAddress.toNumber(),
+			t: this.tAddress.toNumber(),
+			x: this.fineX,
+			latch: this.latch
+		};
+	}
+
+	/** Restores state from a snapshot. */
+	setSaveState(saveState) {
+		this.vAddress.update(saveState.v);
+		this.tAddress.update(saveState.t);
+		this.fineX = saveState.x;
+		this.latch = saveState.latch;
+	}
+
 	_copyX() {
 		// (copies all bits related to horizontal position from `t` to `v`)
 		const v = this.vAddress.toNumber();
