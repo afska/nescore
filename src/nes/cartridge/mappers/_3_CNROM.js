@@ -2,15 +2,14 @@ import Mapper from "./Mapper";
 import { WithCompositeMemory, MemoryMirror, MemoryPadding } from "../../memory";
 
 /**
- * The simplest mapper (also called "mapper 0").
- * It can have either one or two PRG ROM of 16KB, that are mapped
- * at ranges $8000-$BFFF and $C000-$FFFF of the CPU memory.
- * It also has CHR ROM which contains the tile and sprite data.
- * This CHR ROM is mapped to the PPU memory at addresses $0000-$1FFF.
+ * It provides bank-switching for CHR ROM only.
+ * CPU $8000-$BFFF: 16 KB PRG ROM, fixed to the first page
+ * CPU $C000-$FFFF: 16 KB PRG ROM, fixed to the second page (or mirror)
+ * PPU $0000-$1FFF: 8 KB switchable CHR bank
  */
-export default class NROM extends Mapper {
+export default class CNROM extends Mapper {
 	static get id() {
-		return 0;
+		return 3;
 	}
 
 	/** Creates a memory segment for CPU range $4020-$FFFF. */
@@ -21,6 +20,8 @@ export default class NROM extends Mapper {
 			cartridge.header.prgRomPages === 2
 				? this._newPrgBank(1)
 				: new MemoryMirror(prgRomFirstPage, 0x4000);
+
+		this._state = { page: 0 };
 
 		return WithCompositeMemory.createSegment([
 			//                  Address range   Size      Description
@@ -33,5 +34,20 @@ export default class NROM extends Mapper {
 	/** Creates a memory segment for PPU range $0000-$1FFF. */
 	createPPUSegment({ cartridge }) {
 		return this._newChrBank(cartridge);
+	}
+
+	/** Maps a CPU write operation. */
+	cpuWriteAt(address, byte) {
+		if (address >= 0x8000) {
+			this._state.page = byte;
+			this._loadBanks();
+			return;
+		}
+
+		this.context.cpu.memory.writeAt(address, byte);
+	}
+
+	_loadBanks() {
+		this.segments.ppu.bytes = this._getChrPage(this._state.page);
 	}
 }
