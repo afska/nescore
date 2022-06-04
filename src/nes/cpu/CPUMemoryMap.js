@@ -17,8 +17,8 @@ export default class CPUMemoryMap {
 
 	/** When a context is loaded. */
 	onLoad({ ppu, apu, mapper, controllers }) {
-		const ram = new MemoryChunk(0x0800);
-		const ramMirror = new MemoryMirror(ram, 0x1800);
+		this.ram = new MemoryChunk(0x0800);
+		const ramMirror = new MemoryMirror(this.ram, 0x1800);
 		const ppuRegisters = ppu.registers.toMemory();
 		const ppuRegistersMirror = new MemoryMirror(ppuRegisters, 0x1ff8);
 		const apuRegisters = apu.registers.toMemory();
@@ -30,7 +30,7 @@ export default class CPUMemoryMap {
 
 		this.defineChunks([
 			//                        Address range  Size     Device
-			ram, //                   $0000-$07FF    $0800    2KB internal RAM
+			this.ram, //              $0000-$07FF    $0800    2KB internal RAM
 			ramMirror, //             $0800-$1FFF    $1800    Mirrors of $0000-$07FF
 			ppuRegisters, //          $2000-$2007    $0008    NES PPU registers
 			ppuRegistersMirror, //    $2008-$3FFF    $1FF8    Mirrors of $2000-2007 (repeats every 8 bytes)
@@ -59,24 +59,29 @@ export default class CPUMemoryMap {
 
 	/** Returns a snapshot of the current state. */
 	getSaveState() {
-		const bytes = [];
+		const { ppu, apu } = this.context;
 
-		for (let i = 0; i < constants.CPU_MAPPER_START_ADDRESS; i++) {
-			const chunk = this.lut[i];
-			bytes.push(chunk.value != null ? chunk.value : this.readAt(i));
-		}
-
-		return { bytes };
+		return {
+			ram: Array.from(this.ram.bytes),
+			ppuRegisters: ppu.registers.toMemory().chunks.map((it) => it.value),
+			apuRegisters: apu.registers.toMemory().chunks.map((it) => it.value),
+			apuControl: apu.registers.apuControl.value,
+			apuFrameCounter: apu.registers.apuFrameCounter.value
+		};
 	}
 
 	/** Restores state from a snapshot. */
 	setSaveState(saveState) {
-		for (let i = 0; i < constants.CPU_MAPPER_START_ADDRESS; i++) {
-			const chunk = this.lut[i];
-			const byte = saveState.bytes[i];
+		const { ppu, apu } = this.context;
 
-			if (chunk.setValue) chunk.setValue(byte);
-			else this.writeAt(i, byte);
-		}
+		this.ram.bytes.set(saveState.ram);
+		ppu.registers.toMemory().chunks.forEach((chunk, i) => {
+			chunk.setValue && chunk.setValue(saveState.ppuRegisters[i]);
+		});
+		apu.registers.toMemory().chunks.forEach((chunk, i) => {
+			chunk.setValue && chunk.setValue(saveState.apuRegisters[i]);
+		});
+		apu.registers.apuControl.setValue(saveState.apuControl);
+		apu.registers.apuFrameCounter.setValue(saveState.apuFrameCounter);
 	}
 }
