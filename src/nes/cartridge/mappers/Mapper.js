@@ -36,22 +36,20 @@ export default class Mapper {
 	}
 
 	/** When a context is loaded. */
-	onLoad(context, chrRam = null) {
+	onLoad(context) {
 		const { cartridge } = context;
 
-		this.prg = cartridge.prgRom;
-		this.chr = cartridge.header.usesChrRam
-			? chrRam || cartridge.chrRom
-			: cartridge.chrRom;
+		const prg = cartridge.prgRom;
+		const chr = cartridge.chrRom;
 
-		const prgPages = Math.floor(this.prg.length / this.prgRomPageSize);
-		const chrPages = Math.floor(this.chr.length / this.chrRomPageSize);
+		const totalPrgPages = Math.floor(prg.length / this.prgRomPageSize);
+		const totalChrPages = Math.floor(chr.length / this.chrRomPageSize);
 
-		this.prgPages = _.range(0, prgPages).map((page) =>
-			this._getPage(this.prg, this.prgRomPageSize, page)
+		this.prgPages = _.range(0, totalPrgPages).map((page) =>
+			this._getPage(prg, this.prgRomPageSize, page)
 		);
-		this.chrPages = _.range(0, chrPages).map((page) =>
-			this._getPage(this.chr, this.chrRomPageSize, page)
+		this.chrPages = _.range(0, totalChrPages).map((page) =>
+			this._getPage(chr, this.chrRomPageSize, page)
 		);
 
 		this.segments = {
@@ -88,16 +86,16 @@ export default class Mapper {
 	/** Returns a snapshot of the current state. */
 	getSaveState() {
 		return {
-			chrRam: this.context.cartridge.header.usesChrRam
-				? Array.from(this.chr)
+			chrPages: this.context.cartridge.header.usesChrRam
+				? this.chrPages.map((it) => Array.from(it))
 				: null
 		};
 	}
 
 	/** Restores state from a snapshot. */
 	setSaveState(saveState) {
-		if (saveState.chrRam != null)
-			this.onLoad(this.context, new Uint8Array(saveState.chrRam));
+		if (saveState.chrPages != null)
+			this.chrPages = saveState.chrPages.map((it) => new Uint8Array(it));
 	}
 
 	_newPrgBank(id = 0) {
