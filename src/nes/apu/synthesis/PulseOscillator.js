@@ -26,6 +26,24 @@ export default class PulseOscillator {
 		return (y1 - y2) * config.PULSE_CHANNEL_VOLUME * amplitude;
 	}
 
+	/** Returns a snapshot of the current state. */
+	getSaveState() {
+		return {
+			amplitude: this.amplitude,
+			harmonics: this.harmonics,
+			dutyCycle: this.dutyCycle,
+			frequency: this._frequency
+		};
+	}
+
+	/** Restores state from a snapshot. */
+	setSaveState(saveState) {
+		this.amplitude = saveState.amplitude;
+		this.harmonics = saveState.harmonics;
+		this.dutyCycle = saveState.dutyCycle;
+		this.frequency = saveState.frequency;
+	}
+
 	/** Sets the frequency, but only if `value` is above a minimum value. */
 	set frequency(value) {
 		if (Math.abs(this._frequency - value) > config.MIN_FREQUENCY_CHANGE)

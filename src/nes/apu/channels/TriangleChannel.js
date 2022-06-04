@@ -49,6 +49,22 @@ export default class TriangleChannel {
 		this.lengthCounter.clock(this.isEnabled, this.registers.linearLCL.halt);
 	}
 
+	/** Returns a snapshot of the current state. */
+	getSaveState() {
+		return {
+			oscillator: this.oscillator.getSaveState(),
+			lengthCounter: this.lengthCounter.getSaveState(),
+			linearLengthCounter: this.linearLengthCounter.getSaveState()
+		};
+	}
+
+	/** Restores state from a snapshot. */
+	setSaveState(saveState) {
+		this.oscillator.setSaveState(saveState.oscillator);
+		this.lengthCounter.setSaveState(saveState.lengthCounter);
+		this.linearLengthCounter.setSaveState(saveState.linearLengthCounter);
+	}
+
 	/** Returns whether the channel is enabled or not. */
 	get isEnabled() {
 		return this.context.apu.registers.apuControl.enableTriangle;

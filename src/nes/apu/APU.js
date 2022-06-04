@@ -100,6 +100,38 @@ export default class APU {
 			config.BASE_VOLUME * (pulse1 + pulse2 + triangle + noise + dmc);
 	};
 
+	/** Returns a snapshot of the current state. */
+	getSaveState() {
+		return {
+			time: this.time,
+			clockCounter: this.clockCounter,
+			sampleCounter: this.sampleCounter,
+			frameClockCounter: this.frameClockCounter,
+			sample: this.sample,
+			frameIRQFlag: this.frameIRQFlag,
+			pulse1: this.channels.pulses[0].getSaveState(),
+			pulse2: this.channels.pulses[1].getSaveState(),
+			triangle: this.channels.triangle.getSaveState(),
+			noise: this.channels.noise.getSaveState(),
+			dmc: this.channels.dmc.getSaveState()
+		};
+	}
+
+	/** Restores state from a snapshot. */
+	setSaveState(saveState) {
+		this.time = saveState.time;
+		this.clockCounter = saveState.clockCounter;
+		this.sampleCounter = saveState.sampleCounter;
+		this.frameClockCounter = saveState.frameClockCounter;
+		this.sample = saveState.sample;
+		this.frameIRQFlag = saveState.frameIRQFlag;
+		this.channels.pulses[0].setSaveState(saveState.pulse1);
+		this.channels.pulses[1].setSaveState(saveState.pulse2);
+		this.channels.triangle.setSaveState(saveState.triangle);
+		this.channels.noise.setSaveState(saveState.noise);
+		this.channels.dmc.setSaveState(saveState.dmc);
+	}
+
 	_onQuarter = () => {
 		// (quarter frame "beats" adjust the volume envelope and triangle's linear length counter)
 

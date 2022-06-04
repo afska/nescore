@@ -141,6 +141,7 @@ export default class NES {
 		return {
 			cpu: this.cpu.getSaveState(),
 			ppu: this.ppu.getSaveState(),
+			apu: this.apu.getSaveState(),
 			mapper: this.context.mapper.getSaveState()
 		};
 	}
@@ -151,6 +152,7 @@ export default class NES {
 
 		this.cpu.setSaveState(saveState.cpu);
 		this.ppu.setSaveState(saveState.ppu);
+		this.apu.setSaveState(saveState.apu);
 		this.context.mapper.setSaveState(saveState.mapper);
 	}
 

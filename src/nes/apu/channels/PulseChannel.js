@@ -84,6 +84,26 @@ export default class PulseChannel {
 		this.frequencySweeper.clock(this);
 	}
 
+	/** Returns a snapshot of the current state. */
+	getSaveState() {
+		return {
+			oscillator: this.oscillator.getSaveState(),
+			lengthCounter: this.lengthCounter.getSaveState(),
+			volumeEnvelope: this.volumeEnvelope.getSaveState(),
+			frequencySweeper: this.frequencySweeper.getSaveState(),
+			timer: this.timer
+		};
+	}
+
+	/** Restores state from a snapshot. */
+	setSaveState(saveState) {
+		this.oscillator.setSaveState(saveState.oscillator);
+		this.lengthCounter.setSaveState(saveState.lengthCounter);
+		this.volumeEnvelope.setSaveState(saveState.volumeEnvelope);
+		this.frequencySweeper.setSaveState(saveState.frequencySweeper);
+		this.timer = saveState.timer;
+	}
+
 	/** Returns whether the channel is enabled or not. */
 	get isEnabled() {
 		return this.context.apu.registers.apuControl[this.enableFlagName];
