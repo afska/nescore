@@ -128,7 +128,7 @@ export default class NES {
 		const { prgRam } = this.context.mapper;
 		if (!prgRam) return null;
 
-		const bytes = new Uint8Array(prgRam.memorySize);
+		const bytes = [];
 		for (let i = 0; i < prgRam.memorySize; i++) bytes[i] = prgRam.readAt(i);
 
 		return bytes;
@@ -142,7 +142,8 @@ export default class NES {
 			cpu: this.cpu.getSaveState(),
 			ppu: this.ppu.getSaveState(),
 			apu: this.apu.getSaveState(),
-			mapper: this.context.mapper.getSaveState()
+			mapper: this.context.mapper.getSaveState(),
+			saveFile: this.getSaveFile()
 		};
 	}
 
@@ -154,6 +155,7 @@ export default class NES {
 		this.ppu.setSaveState(saveState.ppu);
 		this.apu.setSaveState(saveState.apu);
 		this.context.mapper.setSaveState(saveState.mapper);
+		this._setSaveFile(saveState.saveFile);
 	}
 
 	/** When a context is loaded. */
