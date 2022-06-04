@@ -26,13 +26,14 @@ export default class PPU {
 		this.registers = null;
 		this.loopy = null;
 
-		this.frameBuffer = new Uint32Array(constants.TOTAL_PIXELS);
-		this.paletteIndexes = new Uint8Array(constants.TOTAL_PIXELS);
 		this.nameTable = new NameTable();
 		this.attributeTable = new AttributeTable();
 		this.patternTable = new PatternTable();
 		this.framePalette = new FramePalette();
 		this.oam = new OAM();
+
+		this.frameBuffer = new Uint32Array(constants.TOTAL_PIXELS);
+		this.paletteIndexes = new Uint8Array(constants.TOTAL_PIXELS);
 	}
 
 	/** When a context is loaded. */

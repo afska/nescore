@@ -5,6 +5,7 @@ import {
 	MemoryPadding
 } from "../memory";
 import { MixedInMemoryRegister } from "../registers";
+import constants from "../constants";
 import { WithContext } from "../helpers";
 
 /** The CPU memory map. Addess space size: 64KB. */
@@ -60,7 +61,7 @@ export default class CPUMemoryMap {
 	getSaveState() {
 		const bytes = [];
 
-		for (let i = 0; i < 0x4018; i++) {
+		for (let i = 0; i < constants.CPU_MAPPER_START_ADDRESS; i++) {
 			const chunk = this.lut[i];
 			bytes.push(chunk.value != null ? chunk.value : this.readAt(i));
 		}
@@ -70,7 +71,7 @@ export default class CPUMemoryMap {
 
 	/** Restores state from a snapshot. */
 	setSaveState(saveState) {
-		for (let i = 0; i < 0x4018; i++) {
+		for (let i = 0; i < constants.CPU_MAPPER_START_ADDRESS; i++) {
 			const chunk = this.lut[i];
 			const byte = saveState.bytes[i];
 

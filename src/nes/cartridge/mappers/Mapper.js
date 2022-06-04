@@ -84,7 +84,7 @@ export default class Mapper {
 
 	/** Returns a snapshot of the current state. */
 	getSaveState() {
-		return {};
+		return {}; // TODO: SUPPORT CHR RAM SERIALIZATION, FIX BUGS
 	}
 
 	/** Restores state from a snapshot. */

@@ -1,10 +1,10 @@
 import { Register8Bit } from "./registers";
+import constants from "../constants";
 import createTestContext from "../helpers/createTestContext";
 import _ from "lodash";
 const should = require("chai").Should();
 
 const RAM_MIRROR_ADDRESS = 0x0800;
-const MAPPER_START_ADDRESS = 0x4020;
 const MAPPER_SIZE = 0xbfe0;
 const KB = 1024;
 
@@ -18,7 +18,7 @@ describe("memory", () => {
 
 		it("stores the start address of each chunk", () => {
 			_.last(memory.chunks).$memoryStartAddress.should.equal(
-				MAPPER_START_ADDRESS
+				constants.CPU_MAPPER_START_ADDRESS
 			);
 		});
 
@@ -64,9 +64,10 @@ describe("memory", () => {
 		});
 
 		it("throws an exception when the address is out of bounds", () => {
-			(() => memory.readAt(MAPPER_START_ADDRESS + MAPPER_SIZE)).should.throw(
-				"Unreachable address: 0x10000."
-			);
+			(() =>
+				memory.readAt(
+					constants.CPU_MAPPER_START_ADDRESS + MAPPER_SIZE
+				)).should.throw("Unreachable address: 0x10000.");
 		});
 	});
 });

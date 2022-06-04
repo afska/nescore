@@ -130,7 +130,7 @@ export default class LoopyRegister {
 			v: this.vAddress.toNumber(),
 			t: this.tAddress.toNumber(),
 			x: this.fineX,
-			latch: this.latch
+			w: this.latch
 		};
 	}
 
@@ -139,7 +139,7 @@ export default class LoopyRegister {
 		this.vAddress.update(saveState.v);
 		this.tAddress.update(saveState.t);
 		this.fineX = saveState.x;
-		this.latch = saveState.latch;
+		this.latch = saveState.w;
 	}
 
 	_copyX() {

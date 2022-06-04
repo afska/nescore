@@ -1,6 +1,6 @@
 /** Compile-time options that change the emulator's behavior. */
 export default {
-	DEBUG: true,
+	DEBUG: false,
 	STATE_POLL_INTERVAL: 10,
 
 	SYNC_TO_AUDIO: true,
