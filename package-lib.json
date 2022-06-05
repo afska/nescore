@@ -1,11 +1,21 @@
 {
 	"name": "nes-emu",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"main": "index.js",
 	"description": "A NES emulator",
 	"author": "[r]labs",
 	"license": "MIT",
 	"dependencies": {
 		"lodash": "^4.17.21"
-	}
+	},
+	"keywords": [
+		"nes",
+		"emulator",
+		"core",
+		"cpu",
+		"ppu",
+		"apu",
+		"mapper",
+		"cartridge"
+	]
 }
