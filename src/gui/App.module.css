@@ -3,6 +3,10 @@
 	text-align: center;
 }
 
+.subtitle {
+	color: #c7c7c7;
+}
+
 .gameContainer {
 	height: 75vh;
 	padding: 0 !important;
