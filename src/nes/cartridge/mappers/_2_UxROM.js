@@ -1,5 +1,6 @@
 import Mapper from "./Mapper";
 import { WithCompositeMemory, MemoryPadding } from "../../memory";
+import _ from "lodash";
 
 /**
  * It provide bank-switching capabilities, just by writing a byte to any address on PRG ROM space.
@@ -48,7 +49,7 @@ export default class UxROM extends Mapper {
 
 	/** Returns a snapshot of the current state. */
 	getSaveState() {
-		return { ...super.getSaveState(), page: this._state.page };
+		return _.assign(super.getSaveState(), { page: this._state.page });
 	}
 
 	/** Restores state from a snapshot. */

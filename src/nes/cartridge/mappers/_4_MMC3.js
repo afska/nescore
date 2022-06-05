@@ -3,6 +3,7 @@ import { interrupts } from "../../cpu/constants";
 import { WithCompositeMemory, MemoryChunk, MemoryPadding } from "../../memory";
 import { InMemoryRegister } from "../../registers";
 import constants from "../../constants";
+import _ from "lodash";
 
 /**
  * It provides bank-switching for PRG and CHR ROM.
@@ -160,14 +161,13 @@ export default class MMC3 extends Mapper {
 
 	/** Returns a snapshot of the current state. */
 	getSaveState() {
-		return {
-			...super.getSaveState(),
+		return _.assign(super.getSaveState(), {
 			bankSelect: this._state.bankSelect.value,
 			bankData: Array.from(this._state.bankData),
 			irqEnabled: this._state.irqEnabled,
 			irqLatch: this._state.irqLatch,
 			irqCountdown: this._state.irqCountdown
-		};
+		});
 	}
 
 	/** Restores state from a snapshot. */

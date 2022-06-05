@@ -2,6 +2,7 @@ import Mapper from "./Mapper";
 import { WithCompositeMemory, MemoryChunk, MemoryPadding } from "../../memory";
 import { InMemoryRegister } from "../../registers";
 import constants from "../../constants";
+import _ from "lodash";
 
 /**
  * It provides bank-switching for PRG and CHR ROM.
@@ -94,15 +95,14 @@ export default class MMC1 extends Mapper {
 
 	/** Returns a snapshot of the current state. */
 	getSaveState() {
-		return {
-			...super.getSaveState(),
+		return _.assign(super.getSaveState(), {
 			loadShiftRegister: this._state.load.shiftRegister,
 			loadWriteCounter: this._state.load.writeCounter,
 			control: this._state.control.value,
 			chrBank0: this._state.chrBank0.value,
 			chrBank1: this._state.chrBank1.value,
 			prgBank: this._state.prgBank.value
-		};
+		});
 	}
 
 	/** Restores state from a snapshot. */

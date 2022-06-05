@@ -24,3 +24,5 @@ yarn-error.log*
 
 # app
 public/rom.nes
+scripts/benchmark/node_modules
+scripts/benchmark/rom.nes

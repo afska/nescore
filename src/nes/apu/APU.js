@@ -34,6 +34,10 @@ export default class APU {
 			noise: new NoiseChannel(),
 			dmc: new DMCChannel()
 		};
+
+		this._onQuarter = this._onQuarter.bind(this);
+		this._onHalf = this._onHalf.bind(this);
+		this._onEnd = this._onEnd.bind(this);
 	}
 
 	/** When a context is loaded. */
@@ -132,27 +136,27 @@ export default class APU {
 			config.BASE_VOLUME * (pulse1 + pulse2 + triangle + noise + dmc);
 	}
 
-	_onQuarter = () => {
+	_onQuarter() {
 		// (quarter frame "beats" adjust the volume envelope and triangle's linear length counter)
 
 		this.channels.pulses[0].quarterBeat();
 		this.channels.pulses[1].quarterBeat();
 		this.channels.triangle.quarterBeat();
 		this.channels.noise.quarterBeat();
-	};
+	}
 
-	_onHalf = () => {
+	_onHalf() {
 		// (half frame "beats" adjust the note length and frequency sweepers)
 
 		this.channels.pulses[0].halfBeat();
 		this.channels.pulses[1].halfBeat();
 		this.channels.triangle.halfBeat();
 		this.channels.noise.halfBeat();
-	};
+	}
 
-	_onEnd = () => {
+	_onEnd() {
 		this.frameClockCounter = 0;
-	};
+	}
 
 	_incrementCounters() {
 		this.clockCounter++;

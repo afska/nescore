@@ -1,5 +1,5 @@
+const NES = require("nes-emu").default;
 const fs = require("fs");
-const NES = require("./index").default;
 const { performance } = require("perf_hooks");
 const _ = require("lodash");
 
@@ -9,7 +9,7 @@ if (!file) {
 	process.exit(1);
 }
 
-const rom = fs.readFileSync(__dirname + "/" + process.argv[2]);
+const rom = fs.readFileSync(process.argv[2]);
 const nes = new NES();
 
 nes.load(rom);

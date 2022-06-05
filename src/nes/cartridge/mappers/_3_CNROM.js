@@ -1,5 +1,6 @@
 import Mapper from "./Mapper";
 import { WithCompositeMemory, MemoryMirror, MemoryPadding } from "../../memory";
+import _ from "lodash";
 
 /**
  * It provides bank-switching for CHR ROM only.
@@ -49,7 +50,7 @@ export default class CNROM extends Mapper {
 
 	/** Returns a snapshot of the current state. */
 	getSaveState() {
-		return { ...super.getSaveState(), page: this._state.page };
+		return _.assign(super.getSaveState(), { page: this._state.page });
 	}
 
 	/** Restores state from a snapshot. */
