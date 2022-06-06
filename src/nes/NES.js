@@ -113,7 +113,7 @@ export default class NES {
 		this.context.controllers[player - 1].update(button, isPressed);
 	}
 
-	/** Sets all buttons of `player` to a not pressed state. */
+	/** Sets all buttons of `player` to a non-pressed state. */
 	clearButtons(player) {
 		this.requireContext();
 		if (player !== 1 && player !== 2)

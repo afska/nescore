@@ -8,7 +8,7 @@ It's main objective is to reflect the NES internals as simply as possible by usi
 
 ## Features
 
-- 👾 It emulates a **NES**
+- 👾 It emulates the **NES**
 - 👨‍🔧 It plays [Super Mario Bros. 3](https://en.wikipedia.org/wiki/Super_Mario_Bros._3)!
 - 💻 **CPU**
   - All **official instructions** are implemented
@@ -69,7 +69,7 @@ nes.setSaveState(saveState);
 | `samples`       | `requestedSamples`                                | Runs the emulation until the audio system generates `requestedSamples`.                                                                                                                                |
 | `scanline`      |                                                   | Runs the emulation until the next scanline.                                                                                                                                                            |
 | `setButton`     | `player`, `button`, `isPressed`                   | Sets the `button` state of `player` to `isPressed`. The `button` can be one of: `["BUTTON_A", "BUTTON_B", "BUTTON_SELECT", "BUTTON_START", "BUTTON_UP", "BUTTON_DOWN", "BUTTON_LEFT", "BUTTON_RIGHT"]` |
-| `clearButtons`  | `player`                                          | Sets all buttons of `player` to a not pressed state.                                                                                                                                                   |
+| `clearButtons`  | `player`                                          | Sets all buttons of `player` to a non-pressed state.                                                                                                                                                   |
 | `getSaveFile`   |                                                   | Returns an array with the SRAM bytes, or null.                                                                                                                                                         |
 | `getSaveState`  |                                                   | Returns an object with a snapshot of the current state.                                                                                                                                                |
 | `setSaveState`  | `saveState`                                       | Restores a `saveState`.                                                                                                                                                                                |
