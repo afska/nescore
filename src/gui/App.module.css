@@ -3,6 +3,12 @@
 	text-align: center;
 }
 
+.sourceCode {
+	position: absolute;
+	top: 8px;
+	right: 8px;
+}
+
 .subtitle {
 	color: #c7c7c7;
 }

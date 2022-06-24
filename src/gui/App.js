@@ -14,6 +14,11 @@ export default class App extends Component {
 		return (
 			<div className={styles.app}>
 				<h3>NesCore</h3>
+				<h6 className={styles.sourceCode}>
+					<a href="https://github.com/rodri042/nescore" target="_blank">
+						Fork me on GitHub!
+					</a>
+				</h6>
 				<h6 className={styles.subtitle}>
 					Drag a NES ROM here and use a gamepad.
 				</h6>
