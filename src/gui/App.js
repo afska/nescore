@@ -15,7 +15,11 @@ export default class App extends Component {
 			<div className={styles.app}>
 				<h3>NesCore</h3>
 				<h6 className={styles.sourceCode}>
-					<a href="https://github.com/rodri042/nescore" target="_blank">
+					<a
+						href="https://github.com/rodri042/nescore"
+						target="_blank"
+						rel="noreferrer"
+					>
 						Fork me on GitHub!
 					</a>
 				</h6>
