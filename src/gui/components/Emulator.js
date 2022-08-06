@@ -7,6 +7,7 @@ import WebWorkerRunner from "worker-loader!../emulator/webWorkerRunner";
 import debug from "../emulator/debug";
 import config from "../../nes/config";
 
+const DEBUG_MODE = config.debug || window.location.search === "?debug";
 let webWorker = null;
 
 export default class Emulator extends Component {
@@ -79,7 +80,7 @@ export default class Emulator extends Component {
 		const bytes = new Uint8Array(rom);
 
 		// (web workers are hard to debug, a mock is used in development mode)
-		webWorker = config.DEBUG
+		webWorker = DEBUG_MODE
 			? new WebWorker(
 					(data) => this.onWorkerMessage({ data }),
 					this.speaker.writeSample,
@@ -87,7 +88,7 @@ export default class Emulator extends Component {
 			  )
 			: new WebWorkerRunner();
 
-		if (config.DEBUG) window.debug = debug(this, webWorker);
+		if (DEBUG_MODE) window.debug = debug(this, webWorker);
 
 		webWorker.onmessage = this.onWorkerMessage;
 		webWorker.postMessage({

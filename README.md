@@ -57,7 +57,7 @@ const saveState = nes.getSaveState();
 nes.setSaveState(saveState);
 ```
 
-👀 Have a look at the [demo implementation](https://github.com/rodri042/nescore/tree/master/src/gui) for more details.
+👀 Have a look at the [demo implementation](https://github.com/rodri042/nescore/tree/master/src/gui) for more details. When running the demo (`npm start`) you can add `?debug` to the URL to enable a global `window.debug` object.
 
 ## Full API
 
