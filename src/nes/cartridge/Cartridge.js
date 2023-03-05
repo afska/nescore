@@ -50,7 +50,7 @@ export default class Cartridge {
 			chrRomPages: chrRomPages || constants.CHR_RAM_PAGES,
 			usesChrRam: chrRomPages === 0,
 			mirroring:
-				Byte.getBit(flags6, 4) === 1
+				Byte.getBit(flags6, 3) === 1
 					? "FOUR_SCREENS"
 					: Byte.getBit(flags6, 0) === 1
 					? "VERTICAL"
