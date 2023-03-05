@@ -9,8 +9,8 @@ import getValue from "./_getValue";
  * address, and the following byte gives the most significant byte.
  *
  * This addressing mode has a bug:
- * If `address` falls on a page boundary ($xxFF), it fetches the least significative byte from
- * $xxFF as expected, but takes the most significative byte from $xx00.
+ * If `address` falls on a page boundary ($xxFF), it fetches the least significant byte from
+ * $xxFF as expected, but takes the most significant byte from $xx00.
  */
 export default {
 	id: "INDIRECT",
