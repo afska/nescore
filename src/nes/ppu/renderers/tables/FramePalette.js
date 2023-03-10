@@ -18,7 +18,7 @@ export default class FramePalette {
 			constants.PPU_ADDRESSED_PALETTE_RAM_START_ADDRESS +
 			paletteId * constants.PALETTE_SIZE;
 
-		const colorIndex = this.context.memoryBus.ppu.readAt(
+		const colorIndex = this.context.ppu.memory.readAt(
 			startAddress + paletteIndex
 		);
 		return palette[colorIndex];

@@ -4,27 +4,26 @@ const NAME_TABLE_OFFSETS = [1, -1, 1, -1]; // (for `scrolledX` overflow)
 
 /** Renders the background from the Name tables. */
 export default function renderBackground({ ppu }) {
-	if (ppu.cycle === 0) return ppu.loopy.onVisibleLine(0);
-
-	const { registers } = ppu;
+	const { registers, loopy } = ppu;
 	const y = ppu.scanline;
+
+	const scrolledY = registers.ppuScroll.scrolledY();
+	const transparentColor = ppu.framePalette.getColorOf(0, 0);
 
 	for (let x = 0; x < constants.SCREEN_WIDTH; x++) {
 		const cycle = x + 1;
 		const scrolledX = registers.ppuScroll.scrolledX(x);
-		const scrolledY = registers.ppuScroll.scrolledY();
 
 		// skip masked pixels
 		if (!registers.ppuMask.showBackgroundInLeftmost8PixelsOfScreen && x < 8) {
-			const color = ppu.framePalette.getColorOf(0, 0);
-			ppu.plot(x, y, color);
+			ppu.plot(x, y, transparentColor);
 			ppu.savePaletteIndex(x, y, 0);
-			ppu.loopy.onVisibleLine(cycle);
+			loopy.onVisibleLine(cycle);
 			continue;
 		}
 
 		// background coordinates based on scroll
-		const baseNameTableId = registers.ppuCtrl.nameTableId;
+		const baseNameTableId = loopy.vAddress.nameTableId;
 		const nameTableOffset = // (switch horizontal Name table if scrolledX has overflowed)
 			scrolledX >= constants.SCREEN_WIDTH
 				? NAME_TABLE_OFFSETS[baseNameTableId]
@@ -33,7 +32,7 @@ export default function renderBackground({ ppu }) {
 		const nameTableX = scrolledX % constants.SCREEN_WIDTH;
 		const nameTableY = scrolledY % constants.SCREEN_HEIGHT;
 
-		// tile id and palette id
+		// tile id and palette fetch
 		const tileId = ppu.nameTable.getTileIdOf(
 			nameTableId,
 			nameTableX,
@@ -44,6 +43,12 @@ export default function renderBackground({ ppu }) {
 			nameTableX,
 			nameTableY
 		);
+		const paletteColors = [
+			ppu.framePalette.getColorOf(paletteId, 0),
+			ppu.framePalette.getColorOf(paletteId, 1),
+			ppu.framePalette.getColorOf(paletteId, 2),
+			ppu.framePalette.getColorOf(paletteId, 3)
+		];
 
 		// tile row fetch
 		const patternTableId = registers.ppuCtrl.patternTableAddressIdForBackground;
@@ -75,12 +80,12 @@ export default function renderBackground({ ppu }) {
 
 			const color =
 				paletteIndex !== constants.COLOR_TRANSPARENT
-					? ppu.framePalette.getColorOf(paletteId, paletteIndex)
-					: ppu.framePalette.getColorOf(0, 0);
+					? paletteColors[paletteIndex]
+					: transparentColor;
 
 			ppu.plot(x + i, y, color);
 			ppu.savePaletteIndex(x + i, y, paletteIndex);
-			ppu.loopy.onVisibleLine(cycle + i);
+			loopy.onVisibleLine(cycle + i);
 		}
 
 		// (the x++ of the for loop will do the last increment)

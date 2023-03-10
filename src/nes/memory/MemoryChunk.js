@@ -14,14 +14,14 @@ export default class MemoryChunk {
 
 	/** Reads a byte from `address`. */
 	readAt(address) {
-		this._assertValidAddress(address);
+		// this._assertValidAddress(address);
 
 		return this.bytes[address];
 	}
 
 	/** Writes a `byte` to `address`. */
 	writeAt(address, byte) {
-		this._assertValidAddress(address);
+		// this._assertValidAddress(address);
 		if (this.readOnly) return;
 
 		this.bytes[address] = byte;

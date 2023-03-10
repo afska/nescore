@@ -37,7 +37,7 @@ export default class AttributeTable {
 		const regionIndex =
 			regionY * constants.ATTRIBUTE_TABLE_TOTAL_REGIONS_X + regionX;
 
-		const block = this.context.memoryBus.ppu.readAt(startAddress + blockIndex);
+		const block = this.context.ppu.memory.readAt(startAddress + blockIndex);
 
 		return (
 			constants.PALETTE_BACKGROUND_START +

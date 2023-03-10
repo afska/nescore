@@ -19,7 +19,7 @@ export default class PPUData extends InMemoryRegister {
 		let data = this.buffer;
 
 		const ppuAddress = this.context.ppu.registers.ppuAddr.address;
-		this.buffer = this.context.memoryBus.ppu.readAt(ppuAddress);
+		this.buffer = this.context.ppu.memory.readAt(ppuAddress);
 
 		// (if the PPUAddr is inside Palette RAM area, skip the buffer)
 		if (ppuAddress > constants.PPU_ADDRESSED_PALETTE_RAM_START_ADDRESS)
@@ -34,7 +34,7 @@ export default class PPUData extends InMemoryRegister {
 	/** Writes a `byte` to PPU address space and increments `PPUAddr`. */
 	writeAt(__, byte) {
 		const ppuAddress = this.context.ppu.registers.ppuAddr.address;
-		this.context.memoryBus.ppu.writeAt(ppuAddress, byte);
+		this.context.ppu.memory.writeAt(ppuAddress, byte);
 		this._incrementAddress();
 	}
 

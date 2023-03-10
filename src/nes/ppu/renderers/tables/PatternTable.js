@@ -30,7 +30,7 @@ export default class PatternTable {
 		const startAddress = this._getStartAddress(patternTableId);
 		const firstPlane = tileId * constants.TILE_SIZE;
 
-		return this.context.memoryBus.ppu.readAt(startAddress + firstPlane + y);
+		return this.context.ppu.memory.readAt(startAddress + firstPlane + y);
 	}
 
 	/** Get second plane's `y`th byte from tile `tileId` of `patternTableId`. */
@@ -39,7 +39,7 @@ export default class PatternTable {
 		const firstPlane = tileId * constants.TILE_SIZE;
 		const secondPlane = firstPlane + constants.TILE_SIZE / 2;
 
-		return this.context.memoryBus.ppu.readAt(startAddress + secondPlane + y);
+		return this.context.ppu.memory.readAt(startAddress + secondPlane + y);
 	}
 
 	/** Builds a palette index from `lowByte` and `highByte` (bit 7-`x`). */

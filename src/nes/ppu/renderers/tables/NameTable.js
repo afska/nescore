@@ -22,6 +22,6 @@ export default class NameTable {
 		const tileY = Math.floor(y / constants.TILE_LENGTH);
 		const tileIndex = tileY * constants.NAME_TABLE_TOTAL_TILES_X + tileX;
 
-		return this.context.memoryBus.ppu.readAt(startAddress + tileIndex);
+		return this.context.ppu.memory.readAt(startAddress + tileIndex);
 	}
 }
