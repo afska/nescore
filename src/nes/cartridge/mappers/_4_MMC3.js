@@ -31,6 +31,14 @@ export default class MMC3 extends Mapper {
 		super(8 * constants.KB, 1 * constants.KB);
 	}
 
+	/** When a context is loaded. */
+	onLoad(context) {
+		super.onLoad(context);
+
+		this._loadPRGBanks();
+		this._loadCHRBanks();
+	}
+
 	/** Creates a memory segment for CPU range $4020-$FFFF. */
 	createCPUSegment() {
 		const unused = new MemoryPadding(0x1fe0);
