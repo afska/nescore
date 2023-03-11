@@ -27,6 +27,12 @@ export default class DMCChannel {
 		this.sampleLength = 0;
 	}
 
+	/** When a context is loaded. */
+	onLoad(context) {
+		this.registers = context.apu.registers.dmc;
+		this._memoryBus = context.memoryBus.cpu;
+	}
+
 	/** Generates a new sample. It calls `onIRQ` when a DPCM sample finishes (if IRQ flag is on). */
 	sample(onIRQ) {
 		// (the output level is sent to the mixer whether the channel is enabled or not)
@@ -98,11 +104,6 @@ export default class DMCChannel {
 		return this.context.apu.registers.apuControl.enableDMC;
 	}
 
-	/** Returns the channel's register set. */
-	get registers() {
-		return this.context.apu.registers.dmc;
-	}
-
 	_processDPCM(onIRQ) {
 		this.dividerCount++;
 		if (this.dividerCount >= this.samplePeriod) this.dividerCount = 0;
@@ -138,9 +139,5 @@ export default class DMCChannel {
 			this.startDPCM();
 
 		return this.outputSample;
-	}
-
-	get _memoryBus() {
-		return this.context.memoryBus.cpu;
 	}
 }

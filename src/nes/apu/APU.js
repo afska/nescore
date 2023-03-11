@@ -41,6 +41,12 @@ export default class APU {
 
 	/** When a context is loaded. */
 	onLoad(context) {
+		this._stepsPerSample = Math.floor(
+			constants.FREQ_PPU_HZ /
+				constants.APU_HIGH_FREQUENCY_CYCLES /
+				context.nes.sampleRate
+		);
+
 		this.registers = new APURegisterSegment(context);
 
 		this.channels.pulses[0].loadContext(context);
@@ -181,13 +187,5 @@ export default class APU {
 		this.frameClockCounter = 0;
 		this.sample = 0;
 		this.frameIRQFlag = false;
-	}
-
-	get _stepsPerSample() {
-		return Math.floor(
-			constants.FREQ_PPU_HZ /
-				constants.APU_HIGH_FREQUENCY_CYCLES /
-				this.context.nes.sampleRate
-		);
 	}
 }

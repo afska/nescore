@@ -16,6 +16,11 @@ export default class TriangleChannel {
 		this.linearLengthCounter = new LengthCounter();
 	}
 
+	/** When a context is loaded. */
+	onLoad(context) {
+		this.registers = context.apu.registers.triangle;
+	}
+
 	/** Generates a new sample. */
 	sample() {
 		const { apu } = this.context;
@@ -68,10 +73,5 @@ export default class TriangleChannel {
 	/** Returns whether the channel is enabled or not. */
 	get isEnabled() {
 		return this.context.apu.registers.apuControl.enableTriangle;
-	}
-
-	/** Returns the channel's register set. */
-	get registers() {
-		return this.context.apu.registers.triangle;
 	}
 }

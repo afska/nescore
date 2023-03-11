@@ -19,6 +19,11 @@ export default class NoiseChannel {
 		this.dividerCount = 0;
 	}
 
+	/** When a context is loaded. */
+	onLoad(context) {
+		this.registers = context.apu.registers.noise;
+	}
+
 	/** Generates a new sample. */
 	sample() {
 		if (!this.isEnabled) return 0;
@@ -76,11 +81,6 @@ export default class NoiseChannel {
 	/** Returns whether the channel is enabled or not. */
 	get isEnabled() {
 		return this.context.apu.registers.apuControl.enableNoise;
-	}
-
-	/** Returns the channel's register set. */
-	get registers() {
-		return this.context.apu.registers.noise;
 	}
 
 	_processNoise() {

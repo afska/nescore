@@ -28,6 +28,11 @@ export default class PulseChannel {
 		this.timer = 0;
 	}
 
+	/** When a context is loaded. */
+	onLoad(context) {
+		this.registers = context.apu.registers.pulses[this.id];
+	}
+
 	/** Generates a new sample. */
 	sample() {
 		const { apu } = this.context;
@@ -107,10 +112,5 @@ export default class PulseChannel {
 	/** Returns whether the channel is enabled or not. */
 	get isEnabled() {
 		return this.context.apu.registers.apuControl[this.enableFlagName];
-	}
-
-	/** Returns the channel's register set. */
-	get registers() {
-		return this.context.apu.registers.pulses[this.id];
 	}
 }

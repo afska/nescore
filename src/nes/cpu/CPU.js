@@ -31,6 +31,8 @@ export default class CPU {
 
 	/** When a context is loaded. */
 	onLoad(context) {
+		this._memoryBus = context.memoryBus.cpu;
+
 		this.memory.loadContext(context);
 		this.stack.loadContext(context);
 		this._reset();
@@ -147,10 +149,6 @@ export default class CPU {
 
 	_jumpToInterruptHandler(interrupt) {
 		this.pc.value = this._memoryBus.read2BytesAt(interrupt.vector);
-	}
-
-	get _memoryBus() {
-		return this.context.memoryBus.cpu;
 	}
 
 	get _areInterruptsEnabled() {
