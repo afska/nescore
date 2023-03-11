@@ -61,7 +61,7 @@ export default class CPU {
 
 	/** Pushes the context to the stack and jumps to the interrupt handler. */
 	interrupt(interrupt, withB2Flag) {
-		if (interrupt.id === "IRQ" && !this._areInterruptsEnabled) return;
+		if (interrupt.id === "IRQ" && !this._areInterruptsEnabled) return 0;
 
 		this.stack.push2Bytes(this.pc.value);
 		this.pushFlags(withB2Flag);
