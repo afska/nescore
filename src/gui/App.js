@@ -13,7 +13,7 @@ export default class App extends Component {
 
 		return (
 			<div className={styles.app}>
-				<h3>NesCore</h3>
+				<h4>NesCore</h4>
 				<h6 className={styles.sourceCode}>
 					<a
 						href="https://github.com/rodri042/nescore"
@@ -26,6 +26,9 @@ export default class App extends Component {
 				<h6 className={styles.subtitle}>
 					Drag a NES ROM here and use a gamepad.
 				</h6>
+				<p className={styles.subsubtitle}>
+					(or: D, [space], arrows, [enter] & [*])
+				</p>
 				<br />
 
 				<div
