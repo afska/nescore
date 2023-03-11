@@ -10,6 +10,19 @@ import config from "../../nes/config";
 const DEBUG_MODE = config.debug || window.location.search === "?debug";
 let webWorker = null;
 
+const KEY_MAP = {
+	" ": "BUTTON_A",
+	d: "BUTTON_B",
+	Delete: "BUTTON_SELECT",
+	Enter: "BUTTON_START",
+	ArrowUp: "BUTTON_UP",
+	ArrowDown: "BUTTON_DOWN",
+	ArrowLeft: "BUTTON_LEFT",
+	ArrowRight: "BUTTON_RIGHT",
+	"1": "$loadState",
+	"9": "$saveState"
+};
+
 export default class Emulator extends Component {
 	render() {
 		return (
@@ -22,7 +35,10 @@ export default class Emulator extends Component {
 	}
 
 	sendState = () => {
-		webWorker.postMessage([...gamepad.getInput(), this.speaker.buffer.size()]);
+		const gamepadInput = gamepad.getInput();
+		const input = gamepadInput || this.keyboardInput;
+
+		webWorker.postMessage([...input, this.speaker.buffer.size()]);
 	};
 
 	setFps = (fps) => {
@@ -58,6 +74,9 @@ export default class Emulator extends Component {
 		}
 
 		this.setFps(0);
+
+		window.removeEventListener("keydown", this._onKeyDown);
+		window.removeEventListener("keyup", this._onKeyUp);
 	}
 
 	componentWillUnmount() {
@@ -96,10 +115,28 @@ export default class Emulator extends Component {
 			sampleRate: this.speaker.getSampleRate()
 		});
 		webWorker.postMessage(bytes);
+
+		this.keyboardInput = [gamepad.createInput(), gamepad.createInput()];
+		window.addEventListener("keydown", this._onKeyDown);
+		window.addEventListener("keyup", this._onKeyUp);
 	}
 
 	_onError(e) {
 		this.props.onError(e);
 		this.stop();
 	}
+
+	_onKeyDown = (e) => {
+		const button = KEY_MAP[e.key];
+		if (!button) return;
+
+		this.keyboardInput[0][button] = true;
+	};
+
+	_onKeyUp = (e) => {
+		const button = KEY_MAP[e.key];
+		if (!button) return;
+
+		this.keyboardInput[0][button] = false;
+	};
 }

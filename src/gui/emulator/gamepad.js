@@ -4,12 +4,33 @@ export default {
 			.getGamepads()
 			.filter((it) => it && it.mapping === "standard");
 
-		const input = [this._createInput(), this._createInput()];
+		const input = [this.createInput(), this.createInput()];
 
+		if (gamepads.length === 0) return null;
 		if (gamepads.length > 0) this._setButtons(input[0], gamepads[0]);
 		if (gamepads.length > 1) this._setButtons(input[1], gamepads[1]);
 
 		return input;
+	},
+
+	createInput() {
+		return {
+			BUTTON_A: false,
+			BUTTON_B: false,
+			BUTTON_SELECT: false,
+			BUTTON_START: false,
+			BUTTON_UP: false,
+			BUTTON_DOWN: false,
+			BUTTON_LEFT: false,
+			BUTTON_RIGHT: false,
+
+			$saveState: false,
+			$loadState: false,
+			$startDebugging: false,
+			$stopDebugging: false,
+			$debugStepFrame: false,
+			$debugStepScanline: false
+		};
 	},
 
 	_setButtons(input, gamepad) {
@@ -28,25 +49,5 @@ export default {
 		input.$stopDebugging = gamepad.buttons[6].pressed;
 		input.$debugStepFrame = gamepad.buttons[5].pressed;
 		input.$debugStepScanline = gamepad.buttons[7].pressed;
-	},
-
-	_createInput() {
-		return {
-			BUTTON_A: false,
-			BUTTON_B: false,
-			BUTTON_SELECT: false,
-			BUTTON_START: false,
-			BUTTON_UP: false,
-			BUTTON_DOWN: false,
-			BUTTON_LEFT: false,
-			BUTTON_RIGHT: false,
-
-			$saveState: false,
-			$loadState: false,
-			$startDebugging: false,
-			$stopDebugging: false,
-			$debugStepFrame: false,
-			$debugStepScanline: false
-		};
 	}
 };
