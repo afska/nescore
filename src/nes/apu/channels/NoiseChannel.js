@@ -26,7 +26,6 @@ export default class NoiseChannel {
 		const volume = this.registers.control.constantVolume
 			? this.registers.control.volumeOrEnvelopePeriod
 			: this.volumeEnvelope.volume;
-		const amplitude = volume / constants.APU_MAX_VOLUME;
 
 		this._processNoise();
 
@@ -36,7 +35,7 @@ export default class NoiseChannel {
 		 *   - The length counter is zero
 		 */
 		return !this.lengthCounter.didFinish && !Byte.getBit(this.shift, 0)
-			? amplitude * config.NOISE_CHANNEL_VOLUME
+			? volume * config.NOISE_CHANNEL_VOLUME
 			: 0;
 	}
 
