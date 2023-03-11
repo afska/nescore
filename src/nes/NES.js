@@ -30,7 +30,8 @@ export default class NES {
 		this.apu = new APU();
 
 		this.sampleCount = 0;
-		this.pendingCycles = 0;
+		this.pendingPPUCycles = 0;
+		this.pendingAPUCycles = 0;
 	}
 
 	/** Loads a `rom` as the current cartridge. */
@@ -163,6 +164,9 @@ export default class NES {
 
 	/** When a context is loaded. */
 	onLoad(context) {
+		this.pendingPPUCycles = 0;
+		this.pendingAPUCycles = 0;
+
 		context.mapper.loadContext(context);
 		this.ppu.loadContext(context);
 		this.apu.loadContext(context);
@@ -170,16 +174,18 @@ export default class NES {
 	}
 
 	_clockPPU(cpuCycles) {
-		let unitCycles = cpuCycles * constants.PPU_STEPS_PER_CPU_CYCLE;
+		let unitCycles =
+			this.pendingPPUCycles + cpuCycles * constants.PPU_STEPS_PER_CPU_CYCLE;
+		this.pendingPPUCycles = 0;
 
 		while (unitCycles > 0) {
 			const interrupt = this.ppu.step(this.onFrame);
 			unitCycles--;
 
 			if (interrupt != null) {
-				const newCpuCycles = this.cpu.interrupt(interrupt);
-				cpuCycles += newCpuCycles;
-				unitCycles += newCpuCycles * constants.PPU_STEPS_PER_CPU_CYCLE;
+				const newCPUCycles = this.cpu.interrupt(interrupt);
+				cpuCycles += newCPUCycles;
+				unitCycles += newCPUCycles * constants.PPU_STEPS_PER_CPU_CYCLE;
 			}
 		}
 
@@ -188,19 +194,21 @@ export default class NES {
 
 	_clockAPU(cpuCycles) {
 		let unitCycles =
-			this.pendingCycles + cpuCycles * constants.APU_STEPS_PER_CPU_CYCLE;
+			this.pendingAPUCycles + cpuCycles * constants.APU_STEPS_PER_CPU_CYCLE;
 
 		while (unitCycles >= 1) {
 			const interrupt = this.apu.step(this.onSample);
 			unitCycles--;
 
 			if (interrupt != null) {
-				const newCpuCycles = this.cpu.interrupt(interrupt);
-				unitCycles += newCpuCycles * constants.APU_STEPS_PER_CPU_CYCLE;
+				const newCPUCycles = this.cpu.interrupt(interrupt);
+				unitCycles += newCPUCycles * constants.APU_STEPS_PER_CPU_CYCLE;
+				this.pendingPPUCycles +=
+					newCPUCycles * constants.PPU_STEPS_PER_CPU_CYCLE;
 			}
 		}
 
-		this.pendingCycles = unitCycles;
+		this.pendingAPUCycles = unitCycles;
 	}
 
 	_setSaveFile(prgRamBytes) {
