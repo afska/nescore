@@ -1,9 +1,6 @@
 import React, { Component } from "react";
-import config from "../../nes/config";
 import constants from "../../nes/constants";
 import styles from "./Screen.module.css";
-
-const FULL_ALPHA = 0xff000000;
 
 export default class Screen extends Component {
 	render() {
@@ -20,33 +17,10 @@ export default class Screen extends Component {
 	}
 
 	setBuffer = (buffer) => {
-		for (let y = 0; y < constants.SCREEN_HEIGHT; ++y) {
-			for (let x = 0; x < constants.SCREEN_WIDTH; ++x) {
-				const i = y * constants.SCREEN_WIDTH + x;
-
-				// mask borders
-				if (config.MASK_BORDERS) {
-					if (
-						x < constants.TILE_LENGTH ||
-						x > constants.SCREEN_WIDTH - 1 - constants.TILE_LENGTH ||
-						y < constants.TILE_LENGTH ||
-						y > constants.SCREEN_HEIGHT - 1 - constants.TILE_LENGTH
-					)
-						buffer[i] = 0;
-				}
-
-				// convert pixel from NES BGR to canvas ABGR
-				this.buf32[i] = FULL_ALPHA | buffer[i];
-			}
-		}
-
-		this._writeBuffer();
-	};
-
-	_writeBuffer() {
+		this.buf32.set(buffer);
 		this.imageData.data.set(this.buf8);
 		this.context.putImageData(this.imageData, 0, 0);
-	}
+	};
 
 	_initCanvas(canvas) {
 		this.context = canvas.getContext("2d");
@@ -72,8 +46,5 @@ export default class Screen extends Component {
 		// get the canvas buffer in 8bit and 32bit
 		this.buf8 = new Uint8ClampedArray(this.buf);
 		this.buf32 = new Uint32Array(this.buf);
-
-		// set alpha
-		for (let i = 0; i < this.buf32.length; ++i) this.buf32[i] = FULL_ALPHA;
 	}
 }

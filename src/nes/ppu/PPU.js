@@ -12,6 +12,8 @@ import { MemoryChunk } from "../memory";
 import constants from "../constants";
 import { WithContext } from "../helpers";
 
+const FULL_ALPHA = 0xff000000;
+
 /** The Picture Processing Unit. It generates a video signal of 256x240 pixels. */
 export default class PPU {
 	constructor() {
@@ -66,11 +68,10 @@ export default class PPU {
 		return interrupt;
 	}
 
-	/** Draws a pixel in (`x`, `y`) using BGR `color`. */
+	/** Draws a pixel (ABGR) in (`x`, `y`) using BGR `color`. */
 	plot(x, y, color) {
-		this.frameBuffer[
-			y * constants.SCREEN_WIDTH + x
-		] = this.registers.ppuMask.transform(color);
+		this.frameBuffer[y * constants.SCREEN_WIDTH + x] =
+			FULL_ALPHA | this.registers.ppuMask.transform(color);
 	}
 
 	/** Saves the `paletteIndex` of (`x`, `y`). */
