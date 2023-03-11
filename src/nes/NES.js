@@ -18,13 +18,19 @@ export default class NES {
 		WithContext.apply(this);
 
 		this.onFrame = onFrame;
-		this.onSample = onSample;
+		this.onSample = (sample) => {
+			this.sampleCount++;
+			onSample(sample);
+		};
 		this.sampleRate = sampleRate;
 		this.logger = logger;
 
 		this.cpu = new CPU();
 		this.ppu = new PPU();
 		this.apu = new APU();
+
+		this.sampleCount = 0;
+		this.pendingCycles = 0;
 	}
 
 	/** Loads a `rom` as the current cartridge. */
@@ -70,38 +76,35 @@ export default class NES {
 
 	/** Runs the emulation for a whole video frame. */
 	frame() {
+		this.requireContext();
+
 		const currentFrame = this.ppu.frame;
-		while (this.ppu.frame === currentFrame)
-			this.step(this.onFrame, this.onSample);
+		while (this.ppu.frame === currentFrame) this.step();
 	}
 
 	/** Runs the emulation until the audio system generates `requestedSamples`. */
 	samples(requestedSamples) {
-		let samples = 0;
+		this.requireContext();
 
-		const onSample = (sample) => {
-			samples++;
-			this.onSample(sample);
-		};
+		this.sampleCount = 0;
 
-		while (samples < requestedSamples) this.step(this.onFrame, onSample);
+		while (this.sampleCount < requestedSamples) this.step();
 	}
 
 	/** Runs the emulation until the next scanline. */
 	scanline() {
+		this.requireContext();
+
 		const currentScanline = this.ppu.scanline;
-		while (this.ppu.scanline === currentScanline)
-			this.step(this.onFrame, this.onSample);
+		while (this.ppu.scanline === currentScanline) this.step();
 		this.onFrame(this.ppu.frameBuffer);
 	}
 
 	/** Executes a step in the emulation (1 CPU instruction). */
-	step(onFrame = () => {}, onSample = () => {}) {
-		this.requireContext();
-
+	step() {
 		let cpuCycles = this.cpu.step();
-		cpuCycles = this._clock(this.ppu, cpuCycles, onFrame);
-		this._clock(this.apu, cpuCycles, onSample);
+		cpuCycles = this._clockPPU(cpuCycles);
+		this._clockAPU(cpuCycles);
 	}
 
 	/** Sets the `button` state of `player` to `isPressed`. */
@@ -166,20 +169,38 @@ export default class NES {
 		this.cpu.loadContext(context);
 	}
 
-	_clock(unit, cpuCycles, onSomething) {
-		let unitCycles = cpuCycles * constants.UNIT_STEPS_PER_CPU_CYCLE;
+	_clockPPU(cpuCycles) {
+		let unitCycles = cpuCycles * constants.PPU_STEPS_PER_CPU_CYCLE;
+
 		while (unitCycles > 0) {
-			const interrupt = unit.step(onSomething);
+			const interrupt = this.ppu.step(this.onFrame);
 			unitCycles--;
 
 			if (interrupt != null) {
 				const newCpuCycles = this.cpu.interrupt(interrupt);
 				cpuCycles += newCpuCycles;
-				unitCycles += newCpuCycles * constants.UNIT_STEPS_PER_CPU_CYCLE;
+				unitCycles += newCpuCycles * constants.PPU_STEPS_PER_CPU_CYCLE;
 			}
 		}
 
 		return cpuCycles;
+	}
+
+	_clockAPU(cpuCycles) {
+		let unitCycles =
+			this.pendingCycles + cpuCycles * constants.APU_STEPS_PER_CPU_CYCLE;
+
+		while (unitCycles >= 1) {
+			const interrupt = this.apu.step(this.onSample);
+			unitCycles--;
+
+			if (interrupt != null) {
+				const newCpuCycles = this.cpu.interrupt(interrupt);
+				unitCycles += newCpuCycles * constants.APU_STEPS_PER_CPU_CYCLE;
+			}
+		}
+
+		this.pendingCycles = unitCycles;
 	}
 
 	_setSaveFile(prgRamBytes) {

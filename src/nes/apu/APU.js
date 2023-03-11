@@ -17,7 +17,6 @@ export default class APU {
 		WithContext.apply(this);
 
 		this.time = 0;
-		this.clockCounter = 0;
 		this.sampleCounter = 0;
 		this.frameClockCounter = 0;
 		this.sample = 0;
@@ -54,7 +53,7 @@ export default class APU {
 	}
 
 	/**
-	 * Executes the next step (1 step = 1 PPU cycle = 0.16 APU cycles).
+	 * Executes the next step (1 step = 1 APU cycle).
 	 * Returns an interrupt or null.
 	 * It calls `onSample` when it generates a new sample.
 	 */
@@ -69,11 +68,13 @@ export default class APU {
 			} else irq = interrupts.IRQ;
 		};
 
-		if (this.clockCounter === 0) this._onNewCycle(onIRQ);
+		this._onNewCycle(onIRQ);
 
 		// (frequency sweepers change at high frequency)
-		this.channels.pulses[0].step();
-		this.channels.pulses[1].step();
+		for (let i = 0; i < constants.APU_HIGH_FREQUENCY_CYCLES; i++) {
+			this.channels.pulses[0].step();
+			this.channels.pulses[1].step();
+		}
 
 		this._incrementCounters();
 
@@ -86,7 +87,6 @@ export default class APU {
 	getSaveState() {
 		return {
 			time: this.time,
-			clockCounter: this.clockCounter,
 			sampleCounter: this.sampleCounter,
 			frameClockCounter: this.frameClockCounter,
 			sample: this.sample,
@@ -102,7 +102,6 @@ export default class APU {
 	/** Restores state from a snapshot. */
 	setSaveState(saveState) {
 		this.time = saveState.time;
-		this.clockCounter = saveState.clockCounter;
 		this.sampleCounter = saveState.sampleCounter;
 		this.frameClockCounter = saveState.frameClockCounter;
 		this.sample = saveState.sample;
@@ -159,24 +158,17 @@ export default class APU {
 	}
 
 	_incrementCounters() {
-		this.clockCounter++;
-
 		this.sampleCounter++;
+		this.frameClockCounter++;
 
 		if (this.sampleCounter === this._stepsPerSample) {
 			this.sampleCounter = 0;
 			this.time += 1 / this.context.nes.sampleRate;
 		}
-
-		if (this.clockCounter === constants.PPU_CYCLES_PER_APU_CYCLE) {
-			this.clockCounter = 0;
-			this.frameClockCounter++;
-		}
 	}
 
 	_reset() {
 		this.time = 0;
-		this.clockCounter = 0;
 		this.sampleCounter = 0;
 		this.frameClockCounter = 0;
 		this.sample = 0;
@@ -185,7 +177,9 @@ export default class APU {
 
 	get _stepsPerSample() {
 		return Math.floor(
-			constants.FREQ_PPU_AND_APU_HZ / this.context.nes.sampleRate
+			constants.FREQ_PPU_HZ /
+				constants.APU_HIGH_FREQUENCY_CYCLES /
+				this.context.nes.sampleRate
 		);
 	}
 }
