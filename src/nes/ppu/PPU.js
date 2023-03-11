@@ -53,7 +53,8 @@ export default class PPU {
 	}
 
 	/**
-	 * Executes the next step (1 step = 1 PPU cycle). Returns an interrupt or null.
+	 * Executes the next step (1 step = 1 PPU cycle).
+	 * Returns an interrupt or null.
 	 * It calls `onFrame` when it generates a new frame.
 	 */
 	step(onFrame) {

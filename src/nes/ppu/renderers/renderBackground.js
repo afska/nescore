@@ -18,7 +18,6 @@ export default function renderBackground({ ppu }) {
 		if (!registers.ppuMask.showBackgroundInLeftmost8PixelsOfScreen && x < 8) {
 			ppu.plot(x, y, transparentColor);
 			ppu.savePaletteIndex(x, y, 0);
-			loopy.onVisibleLine(cycle);
 			continue;
 		}
 
