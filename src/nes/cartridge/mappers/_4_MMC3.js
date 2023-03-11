@@ -102,10 +102,10 @@ export default class MMC3 extends Mapper {
 			} else {
 				// Writes the page of the bank that was select with the even write before
 				this._state.bankData[bankSelect.bankRegister] = byte;
+				this._loadPRGBanks();
+				this._loadCHRBanks();
 			}
 
-			this._loadPRGBanks();
-			this._loadCHRBanks();
 			return;
 		} else if (address >= 0xa000 && address < 0xbfff) {
 			if (isEven) {
