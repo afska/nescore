@@ -11,19 +11,16 @@ export default class PulseOscillator {
 	}
 
 	/** Generates a new sample. */
+
 	sample(time) {
-		let y1 = 0;
-		let y2 = 0;
+		const period = 1 / this._frequency;
+		const phase = time % period;
 
-		const pi2 = Math.PI * 2;
-		const { amplitude, harmonics, dutyCycle, _frequency: frequency } = this;
-
-		for (let n = 1; n <= harmonics; n++) {
-			y1 += _approxsin(pi2 * frequency * time * n) / n;
-			y2 += _approxsin(pi2 * (frequency * time - dutyCycle) * n) / n;
-		}
-
-		return (y1 - y2) * config.PULSE_CHANNEL_VOLUME * amplitude;
+		return (
+			(phase < this.dutyCycle * period ? 1 : -1) *
+			config.PULSE_CHANNEL_VOLUME *
+			this.amplitude
+		);
 	}
 
 	/** Returns a snapshot of the current state. */
@@ -49,10 +46,4 @@ export default class PulseOscillator {
 		if (Math.abs(this._frequency - value) > config.MIN_FREQUENCY_CHANGE)
 			this._frequency = value;
 	}
-}
-
-function _approxsin(t) {
-	let j = t * 0.15915;
-	j = j - Math.floor(j);
-	return 20.785 * j * (j - 0.5) * (j - 1);
 }
