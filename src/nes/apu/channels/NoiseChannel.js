@@ -1,6 +1,5 @@
 import { LengthCounter, VolumeEnvelope } from "../synthesis";
 import config from "../../config";
-import constants from "../../constants";
 import { WithContext, Byte } from "../../helpers";
 
 /**
