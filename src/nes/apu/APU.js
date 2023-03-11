@@ -11,6 +11,12 @@ import config from "../config";
 import constants from "../constants";
 import { WithContext } from "../helpers";
 
+const STEPS_PER_SAMPLE = Math.floor(
+	constants.FREQ_PPU_HZ /
+		constants.APU_HIGH_FREQUENCY_CYCLES /
+		constants.APU_SAMPLE_RATE
+);
+
 /** The Audio Processing Unit. It generates audio samples. */
 export default class APU {
 	constructor() {
@@ -41,12 +47,6 @@ export default class APU {
 
 	/** When a context is loaded. */
 	onLoad(context) {
-		this._stepsPerSample = Math.floor(
-			constants.FREQ_PPU_HZ /
-				constants.APU_HIGH_FREQUENCY_CYCLES /
-				context.nes.sampleRate
-		);
-
 		this.registers = new APURegisterSegment(context);
 
 		this.channels.pulses[0].loadContext(context);
@@ -175,9 +175,9 @@ export default class APU {
 		this.sampleCounter++;
 		this.frameClockCounter++;
 
-		if (this.sampleCounter === this._stepsPerSample) {
+		if (this.sampleCounter === STEPS_PER_SAMPLE) {
 			this.sampleCounter = 0;
-			this.time += 1 / this.context.nes.sampleRate;
+			this.time += 1 / constants.APU_SAMPLE_RATE;
 		}
 	}
 

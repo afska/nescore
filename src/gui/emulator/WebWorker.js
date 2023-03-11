@@ -1,6 +1,7 @@
 import NES from "../../nes";
 import FrameTimer from "./FrameTimer";
 import config from "../../nes/config";
+import constants from "../../nes/constants";
 
 /**
  * An emulator instance running inside a Web Worker.
@@ -17,7 +18,6 @@ export default class WebWorker {
 		this.isDebugStepFrameRequested = false;
 		this.isDebugStepScanlineRequested = false;
 
-		this.sampleRate = 0;
 		this.availableSamples = 0;
 		this.samples = [];
 
@@ -48,7 +48,7 @@ export default class WebWorker {
 					if (isDebugScanlineRequested) {
 						this.nes.scanline();
 					} else if (config.SYNC_TO_AUDIO) {
-						const requestedSamples = this.sampleRate / config.FPS;
+						const requestedSamples = constants.APU_SAMPLE_RATE / config.FPS;
 						const newBufferSize = this.availableSamples + requestedSamples;
 						if (newBufferSize <= config.AUDIO_BUFFER_LIMIT)
 							this.nes.samples(requestedSamples);
@@ -89,7 +89,6 @@ export default class WebWorker {
 		try {
 			if (data instanceof Uint8Array) {
 				// rom bytes
-				this.nes.sampleRate = this.sampleRate;
 				this.nes.load(data);
 				this.frameTimer.start();
 			} else if (Array.isArray(data)) {
@@ -114,8 +113,6 @@ export default class WebWorker {
 
 				// -> available samples
 				this.availableSamples = data[2];
-			} else if (data?.id === "sampleRate") {
-				this.sampleRate = data.sampleRate;
 			}
 		} catch (error) {
 			this.$postMessage({ id: "error", error });

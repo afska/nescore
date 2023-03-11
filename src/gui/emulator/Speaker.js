@@ -1,5 +1,6 @@
 import RingBuffer from "ringbufferjs";
 import config from "../../nes/config";
+import constants from "../../nes/constants";
 
 const WEBAUDIO_BUFFER_SIZE = 1024;
 const CHANNELS = 2;
@@ -14,7 +15,9 @@ export default class Speaker {
 		if (!window.AudioContext) return;
 
 		// HACK: createScriptProcessor is deprecated, but there's no easy replacement
-		this._audioCtx = new window.AudioContext();
+		this._audioCtx = new window.AudioContext({
+			sampleRate: constants.APU_SAMPLE_RATE
+		});
 		this._scriptNode = this._audioCtx.createScriptProcessor(
 			WEBAUDIO_BUFFER_SIZE,
 			0,
@@ -23,17 +26,6 @@ export default class Speaker {
 
 		this._scriptNode.onaudioprocess = this._onAudioProcess;
 		this._scriptNode.connect(this._audioCtx.destination);
-	}
-
-	getSampleRate() {
-		if (!window.AudioContext)
-			throw new Error("Audio context is not supported.");
-
-		const context = new window.AudioContext();
-		const sampleRate = context.sampleRate;
-		context.close();
-
-		return sampleRate;
 	}
 
 	writeSample = (sample) => {

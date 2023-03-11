@@ -9,12 +9,7 @@ import { WithContext } from "./helpers";
 
 /** The NES Emulator. */
 export default class NES {
-	constructor(
-		onFrame = () => {},
-		onSample = () => {},
-		sampleRate = constants.APU_SAMPLE_RATE,
-		logger = null
-	) {
+	constructor(onFrame = () => {}, onSample = () => {}, logger = null) {
 		WithContext.apply(this);
 
 		this.onFrame = onFrame;
@@ -22,7 +17,6 @@ export default class NES {
 			this.sampleCount++;
 			onSample(sample);
 		};
-		this.sampleRate = sampleRate;
 		this.logger = logger;
 
 		this.cpu = new CPU();

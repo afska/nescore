@@ -110,10 +110,6 @@ export default class Emulator extends Component {
 		if (DEBUG_MODE) window.debug = debug(this, webWorker);
 
 		webWorker.onmessage = this.onWorkerMessage;
-		webWorker.postMessage({
-			id: "sampleRate",
-			sampleRate: this.speaker.getSampleRate()
-		});
 		webWorker.postMessage(bytes);
 
 		this.keyboardInput = [gamepad.createInput(), gamepad.createInput()];

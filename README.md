@@ -36,10 +36,9 @@ const onFrame = (frameBuffer) => {
 const onSample = (sample) => {
   // write `sample` (a number) to audio buffer...
 };
-const sampleRate = 48000; // set this to system's sample rate
 
 // create an instance:
-const nes = new NES(onFrame, onSample, sampleRate);
+const nes = new NES(onFrame, onSample);
 
 // load a game:
 nes.load(rom); // rom = Uint8Array
@@ -63,7 +62,7 @@ nes.setSaveState(saveState);
 
 | Method          | Parameters                                        | Description                                                                                                                                                                                            |
 | --------------- | ------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **constructor** | `onFrame`, `onSample`, _`sampleRate`_, _`logger`_ | Creates an emulator's instance. All properties can be set at any time (e.g. `nes.sampleRate = newSampleRate`).                                                                                         |
+| **constructor** | `onFrame`, `onSample`, _`logger`_ | Creates an emulator's instance. All properties can be set at any time.                                                                                         |
 | `load`          | `rom`, _`saveFileBytes`_                          | Loads a ROM. If a `saveFileBytes` array is provided, it sets the SRAM content.                                                                                                                         |
 | `frame`         |                                                   | Runs the emulation for a whole video frame.                                                                                                                                                            |
 | `samples`       | `requestedSamples`                                | Runs the emulation until the audio system generates `requestedSamples`.                                                                                                                                |
