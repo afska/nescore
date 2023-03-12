@@ -1,5 +1,4 @@
 import constants from "../../constants";
-import _ from "lodash";
 
 /** Renders the sprites from OAM. */
 export default function renderSprites(context) {
@@ -19,14 +18,17 @@ const evaluateSprites = ({ ppu }) => {
 			sprite.shouldRenderInScanline(ppu.scanline) &&
 			sprites.length < constants.MAX_SPRITES_PER_SCANLINE + 1
 		) {
-			if (sprites.length < constants.MAX_SPRITES_PER_SCANLINE)
+			if (sprites.length < constants.MAX_SPRITES_PER_SCANLINE) {
 				sprites.push(sprite);
-			else ppu.registers.ppuStatus.spriteOverflow = 1;
+			} else {
+				ppu.registers.ppuStatus.spriteOverflow = 1;
+				break;
+			}
 		}
 	}
 
 	// (sprites on lower addresses have greater priority)
-	return _.orderBy(sprites, ["id"], ["desc"]);
+	return sprites.reverse();
 };
 
 /** Draws a list of `sprites` into a buffer. */
