@@ -24,7 +24,7 @@ const instructions = () => [
 	{
 		id: "ASL",
 		execute: ({ cpu, memoryBus }, address) => {
-			const value = memoryBus.cpu.readAt(address);
+			const value = cpu.memory.readAt(address);
 			const result = value << 1;
 			const newValue = Byte.force8Bit(result);
 
@@ -42,7 +42,7 @@ const instructions = () => [
 	{
 		id: "DEC",
 		execute: ({ cpu, memoryBus }, address) => {
-			const value = memoryBus.cpu.readAt(address);
+			const value = cpu.memory.readAt(address);
 			const newValue = Byte.force8Bit(value - 1);
 
 			cpu.flags.updateZeroAndNegative(newValue);
@@ -78,7 +78,7 @@ const instructions = () => [
 	{
 		id: "INC",
 		execute: ({ cpu, memoryBus }, address) => {
-			const value = memoryBus.cpu.readAt(address);
+			const value = cpu.memory.readAt(address);
 			const newValue = Byte.force8Bit(value + 1);
 
 			cpu.flags.updateZeroAndNegative(newValue);
@@ -116,7 +116,7 @@ const instructions = () => [
 	{
 		id: "LSR",
 		execute: ({ cpu, memoryBus }, address) => {
-			const value = memoryBus.cpu.readAt(address);
+			const value = cpu.memory.readAt(address);
 			const result = value >> 1;
 			const newValue = Byte.force8Bit(result);
 
@@ -136,7 +136,7 @@ const instructions = () => [
 	{
 		id: "ROL",
 		execute: ({ cpu, memoryBus }, address) => {
-			const value = memoryBus.cpu.readAt(address);
+			const value = cpu.memory.readAt(address);
 			const result = (value << 1) | +cpu.flags.c;
 			const newValue = Byte.force8Bit(result);
 
@@ -156,7 +156,7 @@ const instructions = () => [
 	{
 		id: "ROR",
 		execute: ({ cpu, memoryBus }, address) => {
-			const value = memoryBus.cpu.readAt(address);
+			const value = cpu.memory.readAt(address);
 			const result = (value >> 1) | (+cpu.flags.c << 7);
 			const newValue = Byte.force8Bit(result);
 

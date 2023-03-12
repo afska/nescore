@@ -30,7 +30,6 @@ export default class DMCChannel {
 	/** When a context is loaded. */
 	onLoad(context) {
 		this.registers = context.apu.registers.dmc;
-		this._memoryBus = context.memoryBus.cpu;
 	}
 
 	/** Generates a new sample. It calls `onIRQ` when a DPCM sample finishes (if IRQ flag is on). */
@@ -128,7 +127,7 @@ export default class DMCChannel {
 				// (if it exceeds $FFFF, it is wrapped around to $8000)
 				address = 0x8000 + (address % 0xffff);
 			}
-			this.buffer = this._memoryBus.readAt(address);
+			this.buffer = this.context.cpu.memory.readAt(address);
 		}
 
 		const variation = Byte.getBit(this.buffer, this.cursorBit) ? 1 : -1;

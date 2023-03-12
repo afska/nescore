@@ -58,24 +58,9 @@ export default class Mapper {
 		};
 	}
 
-	/** Maps a CPU read operation. */
-	cpuReadAt(address) {
-		return this.context.cpu.memory.readAt(address);
-	}
-
 	/** Maps a CPU write operation. */
 	cpuWriteAt(address, byte) {
 		this.context.cpu.memory.writeAt(address, byte);
-	}
-
-	/** Maps a PPU read operation. */
-	ppuReadAt(address) {
-		return this.context.ppu.memory.readAt(address);
-	}
-
-	/** Maps a PPU write operation. */
-	ppuWriteAt(address, byte) {
-		this.context.ppu.memory.writeAt(address, byte);
 	}
 
 	/** Runs at cycle 260 of every scanline (including preline). Returns a CPU interrupt or null. */

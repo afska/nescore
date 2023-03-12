@@ -11,28 +11,10 @@ class Bus {
 
 /** The CPU bus. */
 class CPUBus extends Bus {
-	/** Reads a byte from `address`, using the mapper. */
-	readAt(address) {
-		return this.mapper.cpuReadAt(address);
-	}
-
 	/** Writes a `byte` to `address`, using the mapper. */
 	writeAt(address, byte) {
 		this.mapper.cpuWriteAt(address, byte);
 	}
 }
 
-/** The PPU bus. */
-class PPUBus extends Bus {
-	/** Reads a byte from `address`, using the mapper. */
-	readAt(address) {
-		return this.mapper.ppuReadAt(address);
-	}
-
-	/** Writes a `byte` to `address`, using the mapper. */
-	writeAt(address, byte) {
-		this.mapper.ppuWriteAt(address, byte);
-	}
-}
-
-export { CPUBus, PPUBus };
+export { CPUBus };

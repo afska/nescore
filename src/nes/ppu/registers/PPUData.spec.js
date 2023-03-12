@@ -5,45 +5,45 @@ const ADDRESS = 0x2007;
 
 describe("CPU/PPU registers interaction", () => {
 	describe("PPUData", () => {
-		let ppu, memoryBus, register;
+		let cpu, ppu, memoryBus, register;
 
 		beforeEach(() => {
-			({ ppu, memoryBus } = createTestContext());
+			({ cpu, ppu, memoryBus } = createTestContext());
 			register = ppu.registers.ppuData;
 		});
 
 		it("can write VRAM", () => {
 			ppu.registers.ppuAddr.address = 0x2016;
 			memoryBus.cpu.writeAt(ADDRESS, 24);
-			memoryBus.ppu.readAt(0x2016).should.equal(24);
+			ppu.memory.readAt(0x2016).should.equal(24);
 		});
 
 		it("can read VRAM, delayed by 1", () => {
-			memoryBus.ppu.writeAt(0x2016, 84);
+			ppu.memory.writeAt(0x2016, 84);
 
 			ppu.registers.ppuAddr.address = 0x2016;
-			memoryBus.cpu.readAt(ADDRESS).should.equal(0);
+			cpu.memory.readAt(ADDRESS).should.equal(0);
 
-			memoryBus.ppu.writeAt(0x2016, 92);
-
-			ppu.registers.ppuAddr.address = 0x2016;
-			memoryBus.cpu.readAt(ADDRESS).should.equal(84);
+			ppu.memory.writeAt(0x2016, 92);
 
 			ppu.registers.ppuAddr.address = 0x2016;
-			memoryBus.cpu.readAt(ADDRESS).should.equal(92);
+			cpu.memory.readAt(ADDRESS).should.equal(84);
+
+			ppu.registers.ppuAddr.address = 0x2016;
+			cpu.memory.readAt(ADDRESS).should.equal(92);
 		});
 
 		it("can read Palette RAM without delays", () => {
-			memoryBus.ppu.writeAt(0x3f10, 123);
+			ppu.memory.writeAt(0x3f10, 123);
 
 			ppu.registers.ppuAddr.address = 0x3f10;
-			memoryBus.cpu.readAt(ADDRESS).should.equal(123);
+			cpu.memory.readAt(ADDRESS).should.equal(123);
 		});
 
 		describe("PPUAddr increment", () => {
 			const run = (operation) => {
 				if (operation === "write") memoryBus.cpu.writeAt(ADDRESS, 24);
-				else memoryBus.cpu.readAt(ADDRESS);
+				else cpu.memory.readAt(ADDRESS);
 			};
 
 			["write", "read"].forEach((operation) => {

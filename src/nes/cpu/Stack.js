@@ -16,7 +16,7 @@ export default class Stack {
 	/** Pulls a value from the stack. */
 	pop() {
 		this.context.cpu.sp.increment();
-		return this.context.memoryBus.cpu.readAt(this.currentAddress);
+		return this.context.cpu.memory.readAt(this.currentAddress);
 	}
 
 	/** Pushes a 16-bit `value` into the stack. */

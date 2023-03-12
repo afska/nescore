@@ -17,8 +17,8 @@ export default class NESTestLogger {
 
 		try {
 			context.inDebugMode(() => {
-				const { cpu, memoryBus } = context;
-				const memory = memoryBus.cpu;
+				const { cpu } = context;
+				const memory = cpu.memory;
 
 				const cycle = (value, length) => _.padStart(value.toString(), length);
 				const section = (string, length) =>

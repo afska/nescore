@@ -15,11 +15,11 @@ import getValue from "./_getValue";
 export default {
 	id: "INDIRECT",
 	parameterSize: 2,
-	getAddress: ({ memoryBus }, address) => {
+	getAddress: ({ cpu }, address) => {
 		const msb = Byte.highPartOf(address);
 		const lsb = Byte.lowPartOf(address);
-		const low = memoryBus.cpu.readAt(address);
-		const high = memoryBus.cpu.readAt(
+		const low = cpu.memory.readAt(address);
+		const high = cpu.memory.readAt(
 			lsb === 0xff ? Byte.to16Bit(msb, 0x00) : address + 1
 		);
 
@@ -28,11 +28,11 @@ export default {
 	getValue
 };
 
-export const getIndirectAddress = ({ memoryBus }, address) => {
+export const getIndirectAddress = ({ cpu }, address) => {
 	const start = Byte.force8Bit(address);
 	const end = Byte.force8Bit(start + 1);
-	const low = memoryBus.cpu.readAt(start);
-	const high = memoryBus.cpu.readAt(end);
+	const low = cpu.memory.readAt(start);
+	const high = cpu.memory.readAt(end);
 
 	return Byte.to16Bit(high, low);
 };

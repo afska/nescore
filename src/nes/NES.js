@@ -44,8 +44,7 @@ export default class NES {
 			apu: this.apu,
 
 			memoryBus: {
-				cpu: new CPUBus(mapper),
-				ppu: new PPUBus(mapper)
+				cpu: new CPUBus(mapper)
 			},
 
 			cartridge,

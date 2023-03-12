@@ -21,7 +21,7 @@ export default class DebugPatternTable {
 
 		this.context.inDebugMode(() => {
 			const startAddress = START_ADDRESS + patternTableId * PATTERN_TABLE_SIZE;
-			const memory = this.context.memoryBus.ppu;
+			const memory = this.context.ppu.memory;
 			const firstPlane = id * TILE_SIZE;
 			const secondPlane = firstPlane + TILE_SIZE / 2;
 

@@ -24,7 +24,7 @@ export default class DebugNameTable {
 			for (let i = 0; i < NAME_TABLE_SIZE; i++) {
 				const x = i % TOTAL_TILES_X;
 				const y = Math.floor(i / TOTAL_TILES_X);
-				const byte = this.context.memoryBus.ppu.readAt(startAddress + i);
+				const byte = this.context.ppu.memory.readAt(startAddress + i);
 
 				new DebugPatternTable()
 					.loadContext(this.context)
