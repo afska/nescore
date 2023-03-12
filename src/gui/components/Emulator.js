@@ -40,7 +40,7 @@ export default class Emulator extends Component {
 		const gamepadInput = gamepad.getInput();
 		const input = gamepadInput || this.keyboardInput;
 
-		webWorker.postMessage([...input, this.speaker.buffer.size()]);
+		webWorker.postMessage([...input, this.speaker.bufferSize]);
 	};
 
 	setFps = (fps) => {
@@ -53,7 +53,7 @@ export default class Emulator extends Component {
 			this.screen.setBuffer(data);
 		} else if (Array.isArray(data)) {
 			// audio samples
-			for (let sample of data) this.speaker.writeSample(sample);
+			this.speaker.writeSamples(data);
 		} else if (data?.id === "fps") {
 			// fps report
 			this.setFps(data.fps);

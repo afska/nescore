@@ -1,66 +1,55 @@
-import RingBuffer from "ringbufferjs";
-import config from "../../nes/config";
+import audioWorklet from "worklet-loader!./audioWorklet.js";
 import constants from "../../nes/constants";
 
+const WORKLET_NAME = "player-worklet";
 const WEBAUDIO_BUFFER_SIZE = 1024;
-const CHANNELS = 2;
+const CHANNELS = 1;
 
 export default class Speaker {
-	constructor() {
-		this.buffer = new RingBuffer(config.AUDIO_BUFFER_SIZE);
-	}
-
-	start() {
+	async start() {
 		if (this._audioCtx) return;
 		if (!window.AudioContext) return;
 
-		// HACK: createScriptProcessor is deprecated, but there's no easy replacement
+		this.bufferSize = 0;
+
 		this._audioCtx = new window.AudioContext({
 			sampleRate: constants.APU_SAMPLE_RATE
 		});
-		this._scriptNode = this._audioCtx.createScriptProcessor(
-			WEBAUDIO_BUFFER_SIZE,
-			0,
-			CHANNELS
-		);
 
-		this._scriptNode.onaudioprocess = this._onAudioProcess;
-		this._scriptNode.connect(this._audioCtx.destination);
-	}
-
-	writeSample = (sample) => {
-		if (this.buffer.size() >= config.AUDIO_BUFFER_SIZE) {
-			// buffer overrun
-			this.buffer.deqN(config.AUDIO_BUFFER_SIZE);
+		await this._audioCtx.audioWorklet.addModule(audioWorklet);
+		if (this._audioCtx == null) {
+			this.stop();
+			return;
 		}
 
-		this.buffer.enq(sample);
+		this.playerWorklet = new AudioWorkletNode(this._audioCtx, WORKLET_NAME, {
+			outputChannelCount: [CHANNELS],
+			processorOptions: {
+				bufferSize: WEBAUDIO_BUFFER_SIZE
+			}
+		});
+		this.playerWorklet.connect(this._audioCtx.destination);
+		this.playerWorklet.port.onmessage = (event) => {
+			this.bufferSize = event.data;
+		};
+	}
+
+	writeSamples = (samples) => {
+		if (!this.playerWorklet) return;
+
+		this.playerWorklet.port.postMessage(samples);
 	};
 
 	stop() {
+		if (this.playerWorklet) {
+			this.playerWorklet.port.close();
+			this.playerWorklet.disconnect();
+			this.playerWorklet = null;
+		}
+
 		if (this._audioCtx) {
 			this._audioCtx.close().catch(console.error);
 			this._audioCtx = null;
 		}
-
-		if (this._scriptNode) {
-			this._scriptNode.onaudioprocess = null;
-			this._scriptNode = null;
-		}
 	}
-
-	_onAudioProcess = (event) => {
-		const left = event.outputBuffer.getChannelData(0);
-		const right = event.outputBuffer.getChannelData(1);
-		const size = left.length;
-
-		try {
-			const samples = this.buffer.deqN(size);
-			for (let i = 0; i < size; i++) left[i] = right[i] = samples[i];
-		} catch (e) {
-			// buffer underrun (needed {size}, got {this.buffer.size()})
-			// ignore empty buffers... assume audio has just stopped
-			for (let i = 0; i < size; i++) left[i] = right[i] = 0;
-		}
-	};
 }
