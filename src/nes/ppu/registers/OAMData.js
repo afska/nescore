@@ -12,7 +12,7 @@ export default class OAMData extends InMemoryRegister {
 		const { ppu } = this.context;
 
 		const oamAddress = ppu.registers.oamAddr.value;
-		return ppu.oamRam.readAt(oamAddress);
+		return ppu.oamRam[oamAddress];
 	}
 
 	/** Writes a `byte` to PPU's internal OAM and increments `OAMAddr`. */
@@ -20,7 +20,7 @@ export default class OAMData extends InMemoryRegister {
 		const { ppu } = this.context;
 
 		const oamAddress = ppu.registers.oamAddr.value;
-		ppu.oamRam.writeAt(oamAddress, byte);
+		ppu.oamRam[oamAddress] = byte;
 		this._incrementAddress();
 	}
 

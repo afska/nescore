@@ -41,7 +41,7 @@ export default class PPU {
 	/** When a context is loaded. */
 	onLoad(context) {
 		this.memory.loadContext(context);
-		this.oamRam = new MemoryChunk(constants.PPU_OAM_SIZE);
+		this.oamRam = new Uint8Array(constants.PPU_OAM_SIZE);
 		this.registers = new PPURegisterSegment(context);
 		this.loopy = new LoopyRegister();
 
@@ -91,7 +91,7 @@ export default class PPU {
 			scanline: this.scanline,
 			cycle: this.cycle,
 			memory: this.memory.getSaveState(),
-			oamRam: Array.from(this.oamRam.bytes),
+			oamRam: Array.from(this.oamRam),
 			loopy: this.loopy.getSaveState()
 		};
 	}
@@ -102,7 +102,7 @@ export default class PPU {
 		this.scanline = saveState.scanline;
 		this.cycle = saveState.scanline;
 		this.memory.setSaveState(saveState.memory);
-		this.oamRam.bytes.set(saveState.oamRam);
+		this.oamRam = new Uint8Array(saveState.oamRam);
 		this.loopy.setSaveState(saveState.loopy);
 	}
 

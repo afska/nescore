@@ -16,7 +16,7 @@ export default class OAMDMA extends WriteOnlyInMemoryRegister {
 		for (let i = 0; i < 256; i++) {
 			const address = Byte.to16Bit(byte, i);
 			const value = cpu.memory.readAt(address);
-			ppu.oamRam.writeAt(i, value);
+			ppu.oamRam[i] = value;
 		}
 
 		cpu.extraCycles += constants.OAMDMA_CPU_CYCLES + (cpu.cycle % 2 === 1);

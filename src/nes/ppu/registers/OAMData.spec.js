@@ -17,12 +17,12 @@ describe("CPU/PPU registers interaction", () => {
 
 			memory.writeAt(ADDRESS, 24);
 
-			ppu.oamRam.readAt(3).should.equal(24);
+			ppu.oamRam[3].should.equal(24);
 			ppu.registers.oamAddr.value.should.equal(4);
 		});
 
 		it("can read OAM", () => {
-			ppu.oamRam.writeAt(3, 84);
+			ppu.oamRam[3] = 84;
 
 			ppu.registers.oamAddr.setValue(3);
 			memory.readAt(ADDRESS).should.equal(84);

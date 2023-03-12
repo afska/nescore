@@ -24,7 +24,7 @@ describe("CPU/PPU registers interaction", () => {
 
 			memory.writeAt(ADDRESS, 0x06);
 
-			for (let i = 0; i < 256; i++) ppu.oamRam.readAt(i).should.equal(255 - i);
+			for (let i = 0; i < 256; i++) ppu.oamRam[i].should.equal(255 - i);
 			cpu.extraCycles.should.equal(514);
 		});
 	});
