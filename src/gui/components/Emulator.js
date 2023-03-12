@@ -3,9 +3,11 @@ import Screen from "./Screen";
 import gamepad from "../emulator/gamepad";
 import Speaker from "../emulator/Speaker";
 import WebWorker from "../emulator/WebWorker";
-import WebWorkerRunner from "worker-loader!../emulator/webWorkerRunner";
 import debug from "../emulator/debug";
 import config from "../../nes/config";
+
+const NEW_WEB_WORKER = () =>
+	new Worker(new URL("../emulator/webWorkerRunner.js", import.meta.url));
 
 const DEBUG_MODE = config.debug || window.location.search === "?debug";
 let webWorker = null;
@@ -105,7 +107,7 @@ export default class Emulator extends Component {
 					this.speaker.writeSample,
 					this.speaker
 			  )
-			: new WebWorkerRunner();
+			: NEW_WEB_WORKER();
 
 		if (DEBUG_MODE) window.debug = debug(this, webWorker);
 
