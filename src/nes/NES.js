@@ -1,7 +1,7 @@
 import CPU from "./cpu";
 import PPU from "./ppu";
 import APU from "./apu";
-import { CPUBus, PPUBus } from "./memory/Bus";
+import { CPUBus } from "./memory/Bus";
 import Cartridge from "./cartridge";
 import Controller from "./controller";
 import constants from "./constants";
