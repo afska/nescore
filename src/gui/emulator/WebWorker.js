@@ -40,6 +40,8 @@ export default class WebWorker {
 				if (this.isSaveStateRequested && !this.wasSaveStateRequested) {
 					this.saveState = this.nes.getSaveState();
 					this.wasSaveStateRequested = true;
+
+					this.$postMessage({ id: "saveState", saveState: this.saveState });
 				}
 				if (
 					this.isLoadStateRequested &&
@@ -121,6 +123,9 @@ export default class WebWorker {
 
 				// -> available samples
 				this.availableSamples = data[2];
+			} else {
+				// metadata
+				if (data.id === "saveState") this.saveState = data.saveState;
 			}
 		} catch (error) {
 			this.$postMessage({ id: "error", error });

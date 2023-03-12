@@ -10,6 +10,7 @@ const NEW_WEB_WORKER = () =>
 	new Worker(new URL("../emulator/webWorkerRunner.js", import.meta.url));
 
 const DEBUG_MODE = window.location.search === "?debug";
+const SAVESTATE_KEY = "nescore-savestate";
 const KEY_MAP = {
 	" ": "BUTTON_A",
 	d: "BUTTON_B",
@@ -57,6 +58,9 @@ export default class Emulator extends Component {
 		} else if (data?.id === "fps") {
 			// fps report
 			this.setFps(data.fps);
+		} else if (data?.id === "saveState") {
+			// save state
+			this._setSaveState(data.saveState);
 		} else if (data?.id === "error") {
 			// error
 			this._onError(data.error);
@@ -113,10 +117,26 @@ export default class Emulator extends Component {
 
 		webWorker.onmessage = this.onWorkerMessage;
 		webWorker.postMessage(bytes);
+		webWorker.postMessage({
+			id: "saveState",
+			saveState: this._getSaveState()
+		});
 
 		this.keyboardInput = [gamepad.createInput(), gamepad.createInput()];
 		window.addEventListener("keydown", this._onKeyDown);
 		window.addEventListener("keyup", this._onKeyUp);
+	}
+
+	_getSaveState() {
+		try {
+			return JSON.parse(localStorage.getItem(SAVESTATE_KEY));
+		} catch (e) {
+			return null;
+		}
+	}
+
+	_setSaveState(saveState) {
+		localStorage.setItem(SAVESTATE_KEY, JSON.stringify(saveState));
 	}
 
 	_onError(e) {
