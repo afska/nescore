@@ -8,7 +8,6 @@ import {
 	FramePalette,
 	OAM
 } from "./renderers/tables";
-import { MemoryChunk } from "../memory";
 import constants from "../constants";
 import { WithContext } from "../helpers";
 
@@ -55,28 +54,36 @@ export default class PPU {
 	}
 
 	/**
-	 * Executes the next step (1 step = 1 PPU cycle).
-	 * Returns an interrupt or null.
+	 * Executes a number of `cycles`.
 	 * It calls `onFrame` when it generates a new frame.
+	 * It calls `onIntr` on interrupts;
 	 */
-	step(onFrame) {
-		const scanlineType = getScanlineType(this.scanline);
-		const interrupt = renderers[scanlineType](this.context);
+	step(cycles, onFrame, onIntr) {
+		for (let i = 0; i < cycles; i++) {
+			// <optimization>
+			if (this.cycle > 1 && this.cycle < 256) {
+				i += this._skip(256, cycles, i);
+				continue;
+			} else if (this.cycle > 260 && this.cycle < 304) {
+				i += this._skip(304, cycles, i);
+				continue;
+			} else if (this.cycle > 304 && this.cycle < 340) {
+				i += this._skip(340, cycles, i);
+				continue;
+			}
+			// </optimization>
 
-		this._incrementCounters(onFrame);
-
-		return interrupt;
+			const scanlineType = getScanlineType(this.scanline);
+			const interrupt = renderers[scanlineType](this.context);
+			if (interrupt) onIntr(interrupt);
+			this._incrementCounters(onFrame);
+		}
 	}
 
 	/** Draws a pixel (ABGR) in (`x`, `y`) using BGR `color`. */
 	plot(x, y, color) {
 		this.frameBuffer[y * constants.SCREEN_WIDTH + x] =
 			FULL_ALPHA | this.registers.ppuMask.transform(color);
-	}
-
-	/** Saves the `paletteIndex` of (`x`, `y`). */
-	savePaletteIndex(x, y, paletteIndex) {
-		this.paletteIndexes[y * constants.SCREEN_WIDTH + x] = paletteIndex;
 	}
 
 	/** Returns the palette index of pixel (`x`, `y`). Used for sprite drawing. */
@@ -104,6 +111,12 @@ export default class PPU {
 		this.memory.setSaveState(saveState.memory);
 		this.oamRam = new Uint8Array(saveState.oamRam);
 		this.loopy.setSaveState(saveState.loopy);
+	}
+
+	_skip(destinationCycle, cycles, i) {
+		const skippedCycles = Math.min(destinationCycle - this.cycle, cycles - i);
+		this.cycle += skippedCycles;
+		return skippedCycles - 1;
 	}
 
 	_incrementCounters(onFrame) {

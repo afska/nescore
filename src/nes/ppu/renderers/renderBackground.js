@@ -1,6 +1,7 @@
 import constants from "../../constants";
 
 const NAME_TABLE_OFFSETS = [1, -1, 1, -1]; // (for `scrolledX` overflow)
+const FULL_ALPHA = 0xff000000;
 
 /** Renders the background from the Name tables. */
 export default function renderBackground({ ppu }) {
@@ -16,8 +17,9 @@ export default function renderBackground({ ppu }) {
 
 		// skip masked pixels
 		if (!registers.ppuMask.showBackgroundInLeftmost8PixelsOfScreen && x < 8) {
-			ppu.plot(x, y, transparentColor);
-			ppu.savePaletteIndex(x, y, 0);
+			ppu.frameBuffer[y * constants.SCREEN_WIDTH + x] =
+				FULL_ALPHA | registers.ppuMask.transform(transparentColor);
+			ppu.paletteIndexes[y * constants.SCREEN_WIDTH + x] = 0;
 			loopy.onVisibleLine(cycle);
 			continue;
 		}
@@ -83,8 +85,9 @@ export default function renderBackground({ ppu }) {
 					? paletteColors[paletteIndex]
 					: transparentColor;
 
-			ppu.plot(x + i, y, color);
-			ppu.savePaletteIndex(x + i, y, paletteIndex);
+			ppu.frameBuffer[y * constants.SCREEN_WIDTH + x + i] =
+				FULL_ALPHA | registers.ppuMask.transform(color);
+			ppu.paletteIndexes[y * constants.SCREEN_WIDTH + x + i] = paletteIndex;
 			loopy.onVisibleLine(cycle + i);
 		}
 

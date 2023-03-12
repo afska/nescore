@@ -171,16 +171,11 @@ export default class NES {
 			this.pendingPPUCycles + cpuCycles * constants.PPU_STEPS_PER_CPU_CYCLE;
 		this.pendingPPUCycles = 0;
 
-		while (unitCycles > 0) {
-			const interrupt = this.ppu.step(this.onFrame);
-			unitCycles--;
-
-			if (interrupt != null) {
-				const newCPUCycles = this.cpu.interrupt(interrupt);
-				cpuCycles += newCPUCycles;
-				unitCycles += newCPUCycles * constants.PPU_STEPS_PER_CPU_CYCLE;
-			}
-		}
+		this.ppu.step(unitCycles, this.onFrame, (interrupt) => {
+			const newCPUCycles = this.cpu.interrupt(interrupt);
+			cpuCycles += newCPUCycles;
+			this.pendingPPUCycles += newCPUCycles * constants.PPU_STEPS_PER_CPU_CYCLE;
+		});
 
 		return cpuCycles;
 	}
