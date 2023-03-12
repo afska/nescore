@@ -9,9 +9,7 @@ import config from "../../nes/config";
 const NEW_WEB_WORKER = () =>
 	new Worker(new URL("../emulator/webWorkerRunner.js", import.meta.url));
 
-const DEBUG_MODE = config.debug || window.location.search === "?debug";
-let webWorker = null;
-
+const DEBUG_MODE = window.location.search === "?debug";
 const KEY_MAP = {
 	" ": "BUTTON_A",
 	d: "BUTTON_B",
@@ -21,9 +19,11 @@ const KEY_MAP = {
 	ArrowDown: "BUTTON_DOWN",
 	ArrowLeft: "BUTTON_LEFT",
 	ArrowRight: "BUTTON_RIGHT",
-	"1": "$loadState",
-	"9": "$saveState"
+	"-": "$loadState",
+	"+": "$saveState"
 };
+
+let webWorker = null;
 
 export default class Emulator extends Component {
 	render() {

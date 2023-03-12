@@ -1,3 +1,5 @@
+const DEBUG_MODE = window.location.search === "?debug";
+
 export default {
 	getInput() {
 		const gamepads = navigator
@@ -45,9 +47,9 @@ export default {
 
 		input.$saveState = gamepad.buttons[2].pressed;
 		input.$loadState = gamepad.buttons[3].pressed;
-		input.$startDebugging = gamepad.buttons[4].pressed;
-		input.$stopDebugging = gamepad.buttons[6].pressed;
-		input.$debugStepFrame = gamepad.buttons[5].pressed;
-		input.$debugStepScanline = gamepad.buttons[7].pressed;
+		input.$startDebugging = DEBUG_MODE && gamepad.buttons[4].pressed;
+		input.$stopDebugging = DEBUG_MODE && gamepad.buttons[6].pressed;
+		input.$debugStepFrame = DEBUG_MODE && gamepad.buttons[5].pressed;
+		input.$debugStepScanline = DEBUG_MODE && gamepad.buttons[7].pressed;
 	}
 };

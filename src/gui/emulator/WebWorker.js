@@ -14,6 +14,8 @@ export default class WebWorker {
 		this.saveState = null;
 		this.isSaveStateRequested = false;
 		this.isLoadStateRequested = false;
+		this.wasSaveStateRequested = false;
+		this.wasLoadStateRequested = false;
 		this.isDebugging = false;
 		this.isDebugStepFrameRequested = false;
 		this.isDebugStepScanlineRequested = false;
@@ -35,13 +37,17 @@ export default class WebWorker {
 				this.isDebugStepFrameRequested = false;
 				this.isDebugScanlineRequested = false;
 
-				if (this.isSaveStateRequested) {
+				if (this.isSaveStateRequested && !this.wasSaveStateRequested) {
 					this.saveState = this.nes.getSaveState();
-					this.isSaveStateRequested = false;
+					this.wasSaveStateRequested = true;
 				}
-				if (this.isLoadStateRequested && this.saveState != null) {
+				if (
+					this.isLoadStateRequested &&
+					!this.wasLoadStateRequested &&
+					this.saveState != null
+				) {
 					this.nes.setSaveState(this.saveState);
-					this.isLoadStateRequested = false;
+					this.wasLoadStateRequested = true;
 				}
 
 				try {
@@ -97,8 +103,10 @@ export default class WebWorker {
 				// -> controller input
 				for (let i = 0; i < 2; i++) {
 					if (i === 0) {
-						if (data[i].$saveState) this.isSaveStateRequested = true;
-						if (data[i].$loadState) this.isLoadStateRequested = true;
+						this.isSaveStateRequested = data[i].$saveState;
+						this.isLoadStateRequested = data[i].$loadState;
+						if (!data[i].$saveState) this.wasSaveStateRequested = false;
+						if (!data[i].$loadState) this.wasLoadStateRequested = false;
 						if (data[i].$startDebugging) this.isDebugging = true;
 						if (data[i].$stopDebugging) this.isDebugging = false;
 						if (data[i].$debugStepFrame) this.isDebugStepFrameRequested = true;

@@ -27,7 +27,8 @@ export default class App extends Component {
 					Drag a NES ROM here and use a gamepad.
 				</h6>
 				<p className={styles.subsubtitle}>
-					(or: D, [space], arrows, [enter] & [supr])
+					(or: D, [space], arrows, [enter] & [supr]) &#123;savestates: + and
+					-&#125;
 				</p>
 				<br />
 
