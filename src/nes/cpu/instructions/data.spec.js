@@ -83,7 +83,7 @@ describe("instructions", () => {
 		});
 
 		describe("PLP", () => {
-			it("pushes the right value into the stack", () => {
+			it("sets the flags with a value from the stack", () => {
 				cpu.stack.push(0b01000101);
 				instructions.PLP.execute(context);
 				cpu.flags.should.include({
