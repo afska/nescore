@@ -55,7 +55,7 @@ export default class MMC3 extends Mapper {
 
 		this._state = {
 			bankSelect: new BankSelectRegister(),
-			bankData: [0, 0, 0, 0, 0, 0, 0],
+			bankData: [0, 0, 0, 0, 0, 0, 0, 0],
 			irqEnabled: false,
 			irqLatch: 0,
 			irqCountdown: 0
