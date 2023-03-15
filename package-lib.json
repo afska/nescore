@@ -1,6 +1,6 @@
 {
 	"name": "nes-emu",
-	"version": "1.0.13",
+	"version": "1.0.14",
 	"main": "index.js",
 	"description": "A NES emulator",
 	"author": "[r]labs",
