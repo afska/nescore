@@ -3,7 +3,7 @@ import { WithCompositeMemory, MemoryPadding } from "../../memory";
 import _ from "lodash";
 
 /**
- * It provide bank-switching capabilities, just by writing a byte to any address on PRG ROM space.
+ * It provides bank-switching capabilities, just by writing a byte to any address on PRG ROM space.
  * CPU $8000-$BFFF: 16 KB switchable PRG ROM bank
  * CPU $C000-$FFFF: 16 KB PRG ROM bank, fixed to the last page
  * The CHR memory is usually RAM, mapped at PPU addresses $0000-$1FFF.

@@ -8,7 +8,7 @@ import _ from "lodash";
  * It has two memory segments:
  * - One mapped at CPU $4020-$FFFF (for PRG ROM, PRG RAM, and mapper registers)
  * - One mapped at PPU $0000-$1FFF (for CHR ROM / Pattern tables)
- * It intercepts all CPU/PPU memory read/write operations.
+ * It intercepts all CPU write operations.
  */
 export default class Mapper {
 	static get id() {

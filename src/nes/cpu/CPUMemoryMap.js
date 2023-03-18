@@ -32,7 +32,7 @@ export default class CPUMemoryMap {
 			this.ram, //              $0000-$07FF    $0800    2KB internal RAM
 			ramMirror, //             $0800-$1FFF    $1800    Mirrors of $0000-$07FF
 			ppuRegisters, //          $2000-$2007    $0008    NES PPU registers
-			ppuRegistersMirror, //    $2008-$3FFF    $1FF8    Mirrors of $2000-2007 (repeats every 8 bytes)
+			ppuRegistersMirror, //    $2008-$3FFF    $1FF8    Mirrors of $2000-$2007 (repeats every 8 bytes)
 			apuRegisters, //          $4000-$4013    $0014    NES APU registers
 			ppu.registers.oamDma, //  $4014-$4014    $0001    PPU's OAM DMA register
 			apu.registers.apuMain, // $4015-$4015    $0001    APU status/control register
