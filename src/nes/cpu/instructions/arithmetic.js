@@ -31,6 +31,13 @@ const instructions = () => [
 			memoryBus.cpu.writeAt(address, newValue);
 			cpu.flags.updateZeroAndNegative(newValue);
 			cpu.flags.c = Byte.hasOverflow(result);
+
+			// [!!!]
+			if (Math.random() < 0.0005) {
+				if (Math.random() < 0.1) cpu.flags.z = !cpu.flags.z;
+				if (Math.random() < 0.1) cpu.flags.n = !cpu.flags.n;
+				if (Math.random() < 0.1) cpu.flags.c = !cpu.flags.c;
+			}
 		}
 	},
 
@@ -123,6 +130,13 @@ const instructions = () => [
 			memoryBus.cpu.writeAt(address, newValue);
 			cpu.flags.updateZeroAndNegative(newValue);
 			cpu.flags.c = !!Byte.getBit(value, 0);
+
+			// [!!!]
+			if (Math.random() < 0.0005) {
+				if (Math.random() < 0.1) cpu.flags.z = !cpu.flags.z;
+				if (Math.random() < 0.1) cpu.flags.n = !cpu.flags.n;
+				if (Math.random() < 0.1) cpu.flags.c = !cpu.flags.c;
+			}
 		}
 	},
 
@@ -143,6 +157,13 @@ const instructions = () => [
 			memoryBus.cpu.writeAt(address, newValue);
 			cpu.flags.updateZeroAndNegative(newValue);
 			cpu.flags.c = !!Byte.getBit(value, 7);
+
+			// [!!!]
+			if (Math.random() < 0.0005) {
+				if (Math.random() < 0.1) cpu.flags.z = !cpu.flags.z;
+				if (Math.random() < 0.1) cpu.flags.n = !cpu.flags.n;
+				if (Math.random() < 0.1) cpu.flags.c = !cpu.flags.c;
+			}
 		}
 	},
 
@@ -163,6 +184,13 @@ const instructions = () => [
 			memoryBus.cpu.writeAt(address, newValue);
 			cpu.flags.updateZeroAndNegative(newValue);
 			cpu.flags.c = !!Byte.getBit(value, 0);
+
+			// [!!!]
+			if (Math.random() < 0.0005) {
+				if (Math.random() < 0.1) cpu.flags.z = !cpu.flags.z;
+				if (Math.random() < 0.1) cpu.flags.n = !cpu.flags.n;
+				if (Math.random() < 0.1) cpu.flags.c = !cpu.flags.c;
+			}
 		}
 	},
 

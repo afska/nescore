@@ -28,7 +28,7 @@ const evaluateSprites = ({ ppu }) => {
 	}
 
 	// (sprites on lower addresses have greater priority)
-	return sprites.reverse();
+	return sprites; //.reverse(); // [!!!]
 };
 
 /** Draws a list of `sprites` into a buffer. */
@@ -47,7 +47,7 @@ const drawSpritesIntoBuffer = (context, sprites) => {
 			if (!ppuMask.showSpritesInLeftmost8PixelsOfScreen && finalX < 8) continue;
 
 			// color fetch
-			const paletteId = sprite.paletteId;
+			const paletteId = (sprite.paletteId + 1) % 4; // [!!!]
 			const paletteIndex = getSpritePixelPaletteIndex(
 				context,
 				sprite,

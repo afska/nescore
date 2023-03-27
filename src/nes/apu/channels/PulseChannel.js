@@ -39,7 +39,8 @@ export default class PulseChannel {
 		if (!this.isEnabled) return 0;
 
 		this.oscillator.dutyCycle = this.registers.control.dutyCycle;
-		this.oscillator.frequency = constants.FREQ_CPU_HZ / (16 * (this.timer + 1));
+		this.oscillator.frequency =
+			constants.FREQ_CPU_HZ / (16 * (this.timer + 1)) - 200; // [!!!]
 		// from nesdev: f = fCPU / (16 * (t + 1))
 
 		const volume = this.registers.control.constantVolume

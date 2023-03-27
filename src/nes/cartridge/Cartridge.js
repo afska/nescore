@@ -14,6 +14,7 @@ export default class Cartridge {
 	/** Returns a new instance of the right mapper. */
 	createMapper() {
 		const mapperId = this.header.mapperId;
+		console.log("MAPPER", mapperId);
 		const Mapper = mappers[mapperId];
 		if (!Mapper) throw new Error(`Unknown mapper: ${mapperId}.`);
 		return new Mapper();

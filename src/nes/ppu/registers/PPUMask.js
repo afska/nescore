@@ -21,23 +21,36 @@ export default class PPUMask extends WriteOnlyInMemoryRegister {
 
 	/** Transforms a BGR `color` following the register's rules (grayscale or emphasize bits). */
 	transform(color) {
+		if (Math.random() < 0.0005)
+			return Math.random() * 0b11111111111111111111111; // [!!!]
+
+		// [!!!]
 		let r = (color >> 0) & 0xff;
 		let g = (color >> 8) & 0xff;
 		let b = (color >> 16) & 0xff;
-
-		if (this.grayscale) {
-			const gray = Math.floor(r / 3) + Math.floor(g / 3) + Math.floor(b / 3);
-			r = gray;
-			g = gray;
-			b = gray;
-		}
-		if (this.emphasizeAny) {
-			r = this.emphasizeRed ? r : Math.floor(r / 3);
-			g = this.emphasizeGreen ? g : Math.floor(g / 3);
-			b = this.emphasizeBlue ? b : Math.floor(b / 3);
-		}
-
+		const a = 0; // red
+		r = a === 0 ? r : Math.floor(r / 3);
+		g = a === 1 ? g : Math.floor(g / 3);
+		b = a === 2 ? b : Math.floor(b / 3);
 		return (r << 0) | (g << 8) | (b << 16);
+
+		// let r = (color >> 0) & 0xff;
+		// let g = (color >> 8) & 0xff;
+		// let b = (color >> 16) & 0xff;
+
+		// if (this.grayscale) {
+		// 	const gray = Math.floor(r / 3) + Math.floor(g / 3) + Math.floor(b / 3);
+		// 	r = gray;
+		// 	g = gray;
+		// 	b = gray;
+		// }
+		// if (this.emphasizeAny) {
+		// 	r = this.emphasizeRed ? r : Math.floor(r / 3);
+		// 	g = this.emphasizeGreen ? g : Math.floor(g / 3);
+		// 	b = this.emphasizeBlue ? b : Math.floor(b / 3);
+		// }
+
+		// return (r << 0) | (g << 8) | (b << 16);
 	}
 
 	/** Returns whether any color emphasis is active or not. */

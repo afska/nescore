@@ -3,17 +3,31 @@ import constants from "../../constants";
 const NAME_TABLE_OFFSETS = [1, -1, 1, -1]; // (for `scrolledX` overflow)
 const FULL_ALPHA = 0xff000000;
 
+function xxx(time, period, radius) {
+	return radius + Math.round(radius * Math.cos((2 * Math.PI * time) / period));
+}
+
+function yyy(time, period, radius) {
+	return radius + Math.round(radius * Math.sin((2 * Math.PI * time) / period));
+}
+
+const PERIOD = 60;
+const RADIUS = 6;
+
 /** Renders the background from the Name tables. */
 export default function renderBackground({ ppu }) {
 	const { registers, loopy } = ppu;
 	const y = ppu.scanline;
 
-	const scrolledY = registers.ppuScroll.scrolledY();
-	const transparentColor = ppu.framePalette.getColorOf(0, 0);
+	const scrolledY =
+		(registers.ppuScroll.scrolledY() + yyy(ppu.frame, PERIOD, RADIUS)) % 240; // [!!!];
+
+	const transparentColor = ppu.framePalette.getColorOf(1, 0); // [!!!]
 
 	for (let x = 0; x < constants.SCREEN_WIDTH; x++) {
 		const cycle = x + 1;
-		const scrolledX = registers.ppuScroll.scrolledX(x);
+		const scrolledX =
+			(registers.ppuScroll.scrolledX(x) + xxx(ppu.frame, PERIOD, RADIUS)) % 256; // [!!!]
 
 		// skip masked pixels
 		if (!registers.ppuMask.showBackgroundInLeftmost8PixelsOfScreen && x < 8) {
@@ -58,12 +72,12 @@ export default function renderBackground({ ppu }) {
 		const tileStartY = nameTableY % constants.TILE_LENGTH;
 		const patternLowByte = ppu.patternTable.getLowByteOf(
 			patternTableId,
-			tileId,
+			tileId + (Math.random() < 0.01 ? 1 : 0), // [!!!]
 			tileStartY
 		);
 		const patternHighByte = ppu.patternTable.getHighByteOf(
 			patternTableId,
-			tileId,
+			tileId + (Math.random() < 0.01 ? 1 : 0), // [!!!],
 			tileStartY
 		);
 

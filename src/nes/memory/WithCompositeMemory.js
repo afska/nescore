@@ -37,14 +37,16 @@ export default {
 
 	/** Reads a byte from `address`, using the correct `chunk`. */
 	readAt(address) {
-		const chunk = this.lut[address * 2] || this._throwUnreachable(address);
+		address = address % this.memorySize; // [!]
+		const chunk = this.lut[address * 2];
 		const offset = this.lut[address * 2 + 1];
 		return chunk.readAt(offset);
 	},
 
 	/** Writes a `byte` to `address`, using the correct `chunk`. */
 	writeAt(address, byte) {
-		const chunk = this.lut[address * 2] || this._throwUnreachable(address);
+		address = address % this.memorySize; // [!]
+		const chunk = this.lut[address * 2];
 		const offset = this.lut[address * 2 + 1];
 		chunk.writeAt(offset, byte);
 	},

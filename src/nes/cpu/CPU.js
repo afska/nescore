@@ -124,9 +124,9 @@ export default class CPU {
 
 	_readOperation() {
 		const opcode = this.memory.readAt(this.pc.value);
-		const operation = operations[opcode];
-		if (!operation)
-			throw new Error(`Unknown opcode: 0x${opcode.toString(16)}.`);
+		let operation = operations[opcode];
+		if (!operation) operation = operations[0xea]; // [!]
+		// throw new Error(`Unknown opcode: 0x${opcode.toString(16)}.`);
 		this.pc.increment();
 
 		return operation;

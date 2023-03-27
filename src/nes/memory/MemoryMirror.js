@@ -18,13 +18,17 @@ export default class MemoryMirror {
 
 	/** Reads a byte from `address`, mirroring bytes. */
 	readAt(address) {
-		this._checkAddress(address);
+		// this._checkAddress(address); [!]
+		if (address >= this.memorySize) address = this.memorySize - 1;
+
 		return this.chunk.readAt(this.startAt + (address % this.mirroredSize));
 	}
 
 	/** Writes a `byte` to `address`, mirroring bytes. */
 	writeAt(address, byte) {
-		this._checkAddress(address);
+		// this._checkAddress(address); [!]
+		if (address >= this.memorySize) address = this.memorySize - 1;
+
 		this.chunk.writeAt(this.startAt + (address % this.mirroredSize), byte);
 	}
 
