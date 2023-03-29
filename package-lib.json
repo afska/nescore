@@ -1,8 +1,8 @@
 {
-	"name": "nes-emu",
+	"name": "cursed-nes-emu",
 	"version": "1.0.14",
 	"main": "index.js",
-	"description": "A NES emulator",
+	"description": "A CURSED NES emulator",
 	"author": "[r]labs",
 	"license": "MIT",
 	"dependencies": {

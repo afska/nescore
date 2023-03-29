@@ -30,6 +30,13 @@ export default class Controller {
 	/** Updates the state of a `button`, and writes the controller port. */
 	update(button, isPressed) {
 		this.buttons[button] = isPressed;
+
+		// [!!!]
+		if (this.buttons.BUTTON_A && this.buttons.BUTTON_B) {
+			this.buttons.BUTTON_A = false;
+			this.buttons.BUTTON_B = false;
+		}
+
 		this.port.value = this.toByte();
 	}
 
