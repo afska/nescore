@@ -47,7 +47,7 @@ const drawSpritesIntoBuffer = (context, sprites) => {
 			if (!ppuMask.showSpritesInLeftmost8PixelsOfScreen && finalX < 8) continue;
 
 			// color fetch
-			const paletteId = (sprite.paletteId + 1) % 4; // [!!!]
+			const paletteId = sprite.paletteId;
 			const paletteIndex = getSpritePixelPaletteIndex(
 				context,
 				sprite,
