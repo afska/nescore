@@ -22,7 +22,7 @@ export default function renderBackground({ ppu }) {
 	const scrolledY =
 		(registers.ppuScroll.scrolledY() + yyy(ppu.frame, PERIOD, RADIUS)) % 240; // [!!!];
 
-	const transparentColor = ppu.framePalette.getColorOf(1, 0); // [!!!]
+	const transparentColor = ppu.framePalette.getColorOf(0, 0);
 
 	for (let x = 0; x < constants.SCREEN_WIDTH; x++) {
 		const cycle = x + 1;

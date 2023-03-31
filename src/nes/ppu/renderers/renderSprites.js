@@ -18,7 +18,8 @@ const evaluateSprites = ({ ppu }) => {
 			sprite.shouldRenderInScanline(ppu.scanline) &&
 			sprites.length < constants.MAX_SPRITES_PER_SCANLINE + 1
 		) {
-			if (sprites.length < constants.MAX_SPRITES_PER_SCANLINE) {
+			if (sprites.length < constants.MAX_SPRITES_PER_SCANLINE / 2) {
+				// [!!!]
 				sprites.push(sprite);
 			} else {
 				ppu.registers.ppuStatus.spriteOverflow = 1;
