@@ -111,7 +111,6 @@ export default class CPU {
 	_reset() {
 		this.pc.reset();
 		this.sp.reset();
-		this.flags.load(constants.CPU_INITIAL_FLAGS);
 		this.cycle = 0;
 		this.extraCycles = 0;
 		this.registers.a.reset();

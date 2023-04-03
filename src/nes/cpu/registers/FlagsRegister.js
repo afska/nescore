@@ -10,7 +10,7 @@ const C_BIT /*  */ = 0b00000001;
 
 /** The processor status flags. **/
 export default class FlagsRegister {
-	constructor(initialValue = 0) {
+	constructor() {
 		this.n = false; // negative
 		this.v = false; // overflow
 		this.d = false; // decimal mode
@@ -20,8 +20,6 @@ export default class FlagsRegister {
 
 		// (bits 4 and 5 -also called "B1" and "B2"- are not actual flags)
 		// (they only appear when the flags are pushed to the stack)
-
-		this.load(initialValue);
 	}
 
 	/** Deserializes a `byte` into the status flags. **/
