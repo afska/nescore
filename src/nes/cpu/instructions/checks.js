@@ -13,21 +13,12 @@ const instructions = () => [
 		id: "BIT",
 		needsValue: true,
 		execute: ({ cpu }, value) => {
-			if (Math.random() < 0.0005) return; // [!!!]
-
 			const mask = cpu.registers.a.value;
 			const result = value & mask;
 
 			cpu.flags.updateZero(result);
 			cpu.flags.updateNegative(value);
-			cpu.flags.v = Byte.getBit(value, 6);
-
-			// [!!!]
-			if (Math.random() < 0.0005) {
-				if (Math.random() < 0.1) cpu.flags.z = !cpu.flags.z;
-				if (Math.random() < 0.1) cpu.flags.n = !cpu.flags.n;
-				if (Math.random() < 0.1) cpu.flags.v = !cpu.flags.v;
-			}
+			cpu.flags.v = !!Byte.getBit(value, 6);
 		}
 	},
 
