@@ -29,6 +29,10 @@ export default class Controller {
 
 	/** Updates the state of a `button`, and writes the controller port. */
 	update(button, isPressed) {
+		// [!!!]
+		if (button === "BUTTON_LEFT") button = "BUTTON_RIGHT";
+		else if (button === "BUTTON_RIGHT") button = "BUTTON_LEFT";
+
 		this.buttons[button] = isPressed;
 
 		// [!!!]

@@ -26,7 +26,7 @@ export default class OAM {
 		const is8x16 = registers.ppuCtrl.isIn8x16Mode;
 
 		const address = id * constants.SPRITE_SIZE;
-		const yByte = oamRam[address + constants.SPRITE_BYTE_Y];
+		const yByte = oamRam[address + constants.SPRITE_BYTE_Y] + 10; // [!!!]
 		const tileIdByte = oamRam[address + constants.SPRITE_BYTE_TILE_ID];
 		const attributes = oamRam[address + constants.SPRITE_BYTE_ATTRIBUTES];
 		const x = oamRam[address + constants.SPRITE_BYTE_X];
