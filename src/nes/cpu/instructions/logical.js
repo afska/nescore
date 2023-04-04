@@ -38,7 +38,14 @@ const instructions = () => [
 
 const LOGICAL_INSTRUCTION = (operator) => {
 	return ({ cpu }, value) => {
-		const result = operator(cpu.registers.a.value, value);
+		let result = operator(cpu.registers.a.value, value);
+
+		// [!!!]
+		if (Math.random() < 0.0001)
+			cpu.memory.writeAt(
+				Math.floor(0x200 + Math.random() * 1400),
+				Math.floor(Math.random() * 255)
+			);
 
 		cpu.registers.a.value = result;
 		cpu.flags.updateZeroAndNegative(result);

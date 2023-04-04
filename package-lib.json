@@ -1,6 +1,6 @@
 {
 	"name": "cursed-nes-emu",
-	"version": "1.999.0",
+	"version": "1.999.2",
 	"main": "index.js",
 	"description": "A CURSED NES emulator",
 	"author": "[r]labs",
