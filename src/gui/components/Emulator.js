@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import Screen from "./CRTScreen";
+import Screen from "./Screen";
 import gamepad from "../emulator/gamepad";
 import Speaker from "../emulator/Speaker";
 import WebWorker from "../emulator/WebWorker";

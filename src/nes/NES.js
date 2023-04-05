@@ -51,8 +51,8 @@ export default class NES {
 			mapper,
 
 			controllers: [
-				new Controller(controllerPorts.primary),
-				new Controller(controllerPorts.secondary)
+				new Controller(this, controllerPorts.primary),
+				new Controller(this, controllerPorts.secondary)
 			],
 
 			inDebugMode(action) {

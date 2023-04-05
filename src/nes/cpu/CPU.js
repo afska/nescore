@@ -72,6 +72,15 @@ export default class CPU {
 		this.flags.i = true; // (to make sure handler doesn't get interrupted)
 		this._jumpToInterruptHandler(interrupt);
 
+		if (this.context.apu) {
+			// [!!!]
+			this.context.apu.channels.pulses[0].random =
+				(this.context.apu.channels.pulses[0].random + 1) % 200;
+			this.context.apu.channels.pulses[1].random =
+				(this.context.apu.channels.pulses[0].random + 1) % 200;
+			this.context.apu.channels.triangle.random =
+				(this.context.apu.channels.triangle.random + 1) % 200;
+		}
 		return constants.CPU_INTERRUPT_CYCLES;
 	}
 

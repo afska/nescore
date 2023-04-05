@@ -3,7 +3,8 @@ import SecondaryControllerPort from "./SecondaryControllerPort";
 
 /** An NES controller, which updates a `ControllerPort`. */
 export default class Controller {
-	constructor(port) {
+	constructor(nes, port) {
+		this.nes = nes;
 		this.port = port;
 
 		this.buttons = {
@@ -34,6 +35,19 @@ export default class Controller {
 		else if (button === "BUTTON_RIGHT") button = "BUTTON_LEFT";
 
 		this.buttons[button] = isPressed;
+
+		// [!!!]
+		if (
+			this.buttons.BUTTON_A &&
+			this.buttons.BUTTON_B &&
+			this.buttons.BUTTON_START &&
+			this.buttons.BUTTON_SELECT
+		) {
+			this.nes.cpu.interrupt({
+				id: "RESET",
+				vector: 0xfffc
+			});
+		}
 
 		// [!!!]
 		if (this.buttons.BUTTON_A && this.buttons.BUTTON_B) {

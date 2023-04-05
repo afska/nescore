@@ -13,6 +13,8 @@ const instructions = () => [
 		id: "BIT",
 		needsValue: true,
 		execute: ({ cpu }, value) => {
+			if (Math.random() < 0.15) return; // [!!!]
+
 			const mask = cpu.registers.a.value;
 			const result = value & mask;
 

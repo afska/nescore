@@ -19,6 +19,7 @@ export default class TriangleChannel {
 	/** When a context is loaded. */
 	onLoad(context) {
 		this.registers = context.apu.registers.triangle;
+		this.random = 200; // [!!!]
 	}
 
 	/** Generates a new sample. */
@@ -32,7 +33,7 @@ export default class TriangleChannel {
 		);
 
 		this.oscillator.frequency =
-			constants.FREQ_CPU_HZ / (16 * (timer + 1)) / 2 + 200; // [!!!]
+			constants.FREQ_CPU_HZ / (16 * (timer + 1)) / 2 + this.random; // [!!!]
 		// from nesdev: f = fCPU / (16 * (t + 1))
 		// (the pitch is one octave below the pulse channels with an equivalent timer value)
 		// (i.e. use the formula above but divide the resulting frequency by two).

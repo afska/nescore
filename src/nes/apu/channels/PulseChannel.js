@@ -31,6 +31,7 @@ export default class PulseChannel {
 	/** When a context is loaded. */
 	onLoad(context) {
 		this.registers = context.apu.registers.pulses[this.id];
+		this.random = 200; // [!!!]
 	}
 
 	/** Generates a new sample. */
@@ -40,7 +41,7 @@ export default class PulseChannel {
 
 		this.oscillator.dutyCycle = this.registers.control.dutyCycle;
 		this.oscillator.frequency =
-			constants.FREQ_CPU_HZ / (16 * (this.timer + 1)) - 200; // [!!!]
+			constants.FREQ_CPU_HZ / (16 * (this.timer + 1)) - this.random; // [!!!]
 		// from nesdev: f = fCPU / (16 * (t + 1))
 
 		const volume = this.registers.control.constantVolume

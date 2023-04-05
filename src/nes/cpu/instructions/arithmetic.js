@@ -188,6 +188,7 @@ const ADC = ({ cpu }, value) => {
 	cpu.registers.a.value = newValue;
 	cpu.flags.updateZeroAndNegative(newValue);
 	cpu.flags.c = Byte.hasOverflow(result);
+
 	cpu.flags.v =
 		(Byte.isPositive(oldValue) &&
 			Byte.isPositive(value) &&
