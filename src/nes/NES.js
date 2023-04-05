@@ -29,8 +29,8 @@ export default class NES {
 	}
 
 	/** Loads a `rom` as the current cartridge. */
-	load(rom, saveFileBytes = []) {
-		const cartridge = new Cartridge(rom);
+	load(rom, saveFileBytes = [], Cart = Cartridge) {
+		const cartridge = new Cart(rom);
 		const mapper = cartridge.createMapper();
 
 		const controllerPorts = Controller.createPorts();

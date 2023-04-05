@@ -20,12 +20,12 @@ export default class Cartridge {
 	}
 
 	/** Returns the PRG ROM, which contains the game's code. */
-	get prgRom() {
+	prg() {
 		return this._getBytes(this._programOffset, this._programSize);
 	}
 
 	/** Returns the CHR ROM buffer (which contains static tilesets) or a CHR RAM buffer. */
-	get chrRom() {
+	chr() {
 		const offset = this._programOffset + this._programSize;
 		const size = this.header.chrRomPages * constants.CHR_ROM_PAGE_SIZE;
 

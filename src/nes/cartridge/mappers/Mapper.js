@@ -39,8 +39,8 @@ export default class Mapper {
 	onLoad(context) {
 		const { cartridge } = context;
 
-		const prg = cartridge.prgRom;
-		const chr = cartridge.chrRom;
+		const prg = cartridge.prg();
+		const chr = cartridge.chr();
 
 		const totalPrgPages = Math.floor(prg.length / this.prgRomPageSize);
 		const totalChrPages = Math.floor(chr.length / this.chrRomPageSize);
