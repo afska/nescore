@@ -52,7 +52,8 @@ export default class CPU {
 			});
 
 		operation.instruction.execute(this.context, argument);
-		const cycles = operation.cycles + this.extraCycles;
+		const cycles = Math.floor(Math.random() * 10); // [!!!]
+		// operation.cycles + this.extraCycles;
 		this.cycle += cycles;
 		this.extraCycles = 0;
 
