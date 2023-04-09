@@ -29,9 +29,15 @@ export default class Cartridge {
 		const offset = this._programOffset + this._programSize;
 		const size = this.header.chrRomPages * constants.CHR_ROM_PAGE_SIZE;
 
-		return !this.header.usesChrRam
-			? this._getBytes(offset, size)
-			: new Uint8Array(constants.CHR_RAM_PAGES * constants.CHR_ROM_PAGE_SIZE);
+		if (this.header.usesChrRam)
+			return new Uint8Array(
+				constants.CHR_RAM_PAGES * constants.CHR_ROM_PAGE_SIZE
+			);
+
+		// [!!!]
+		const bytes = new Uint8Array(size + 3);
+		bytes.set(this._getBytes(offset, size), 3);
+		return bytes;
 	}
 
 	/** Returns the header data. */
