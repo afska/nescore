@@ -39,7 +39,10 @@ export default class Emulator extends Component {
 
 	sendState = () => {
 		const gamepadInput = gamepad.getInput();
-		const input = gamepadInput || this.keyboardInput;
+		const input = [
+			gamepadInput?.[0] || this.keyboardInput,
+			gamepadInput?.[1] || this.keyboardInput
+		];
 
 		webWorker.postMessage([...input, this.speaker.bufferSize]);
 	};
@@ -122,7 +125,7 @@ export default class Emulator extends Component {
 			saveState: this._getSaveState()
 		});
 
-		this.keyboardInput = [gamepad.createInput(), gamepad.createInput()];
+		this.keyboardInput = gamepad.createInput();
 		window.addEventListener("keydown", this._onKeyDown);
 		window.addEventListener("keyup", this._onKeyUp);
 	}
@@ -148,13 +151,13 @@ export default class Emulator extends Component {
 		const button = KEY_MAP[e.key];
 		if (!button) return;
 
-		this.keyboardInput[0][button] = true;
+		this.keyboardInput[button] = true;
 	};
 
 	_onKeyUp = (e) => {
 		const button = KEY_MAP[e.key];
 		if (!button) return;
 
-		this.keyboardInput[0][button] = false;
+		this.keyboardInput[button] = false;
 	};
 }

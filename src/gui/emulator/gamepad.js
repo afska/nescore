@@ -6,11 +6,15 @@ export default {
 			.getGamepads()
 			.filter((it) => it && it.mapping === "standard");
 
-		const input = [this.createInput(), this.createInput()];
-
 		if (gamepads.length === 0) return null;
-		if (gamepads.length > 0) this._setButtons(input[0], gamepads[0]);
-		if (gamepads.length > 1) this._setButtons(input[1], gamepads[1]);
+
+		const input = [this.createInput()];
+		this._setButtons(input[0], gamepads[0]);
+
+		if (gamepads.length > 1) {
+			input.push(this.createInput());
+			this._setButtons(input[1], gamepads[1]);
+		}
 
 		return input;
 	},
