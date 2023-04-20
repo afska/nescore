@@ -58,6 +58,7 @@ export default class UxROM extends Mapper {
 
 		this._state.page = saveState.page;
 		this._loadBanks();
+		this.segments.ppu.bytes = this._getChrPage(0);
 	}
 
 	_loadBanks() {
