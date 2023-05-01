@@ -39,10 +39,10 @@ export default class Emulator extends Component {
 
 	sendState = () => {
 		const gamepadInput = gamepad.getInput();
-		const input = [
-			gamepadInput?.[0] || this.keyboardInput,
-			gamepadInput?.[1] || this.keyboardInput
-		];
+		const input =
+			gamepadInput?.[0] != null
+				? [gamepadInput?.[0], gamepadInput?.[1] || this.keyboardInput]
+				: [this.keyboardInput, gamepad.createInput()];
 
 		webWorker.postMessage([...input, this.speaker.bufferSize]);
 	};
