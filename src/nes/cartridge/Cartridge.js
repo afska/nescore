@@ -29,10 +29,28 @@ export default class Cartridge {
 		const offset = this._programOffset + this._programSize;
 		const size = this.header.chrRomPages * constants.CHR_ROM_PAGE_SIZE;
 
-		if (this.header.usesChrRam)
-			return new Uint8Array(
-				constants.CHR_RAM_PAGES * constants.CHR_ROM_PAGE_SIZE
+		if (this.header.usesChrRam) {
+			// [!!!]
+			const handler = {
+				get: function(target, property) {
+					if (property === "slice") {
+						return function(start, end) {
+							const slicedArray = target.slice(start, end);
+							return new Proxy(slicedArray, handler);
+						};
+					}
+					if (property === "length") return target.length;
+
+					return target[parseInt(property) + 3] || 0;
+				}
+			};
+
+			// [!!!]
+			return new Proxy(
+				new Uint8Array(constants.CHR_RAM_PAGES * constants.CHR_ROM_PAGE_SIZE),
+				handler
 			);
+		}
 
 		// [!!!]
 		const bytes = new Uint8Array(size + 3);
