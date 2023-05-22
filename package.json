@@ -18,6 +18,7 @@
     "eject": "react-scripts eject",
     "dev": "npm start",
     "testroms": "npm test src/__tests__",
+    "benchmark": "npm run build-lib && cp package-lib.json build/lib/package.json && cd scripts/benchmark && node benchmark.js rom.nes",
     "build-lib": "cross-env NODE_ENV=production babel src/nes --out-dir build/lib --copy-files"
   },
   "eslintConfig": {
