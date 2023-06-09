@@ -54,30 +54,26 @@ export default class PPU {
 	}
 
 	/**
-	 * Executes a number of `cycles`.
+	 * Executes the next step (1 step = 1 PPU cycle)
 	 * It calls `onFrame` when it generates a new frame.
 	 * It calls `onIntr` on interrupts;
 	 */
-	step(cycles, onFrame, onIntr) {
-		for (let i = 0; i < cycles; i++) {
-			// <optimization>
-			if (this.cycle > 1 && this.cycle < 256) {
-				i += this._skip(256, cycles, i);
-				continue;
-			} else if (this.cycle > 260 && this.cycle < 304) {
-				i += this._skip(304, cycles, i);
-				continue;
-			} else if (this.cycle > 304 && this.cycle < 340) {
-				i += this._skip(340, cycles, i);
-				continue;
-			}
-			// </optimization>
-
-			const scanlineType = getScanlineType(this.scanline);
-			const interrupt = renderers[scanlineType](this.context);
-			if (interrupt) onIntr(interrupt);
-			this._incrementCounters(onFrame);
+	step(onFrame, onIntr) {
+		// <optimization>
+		if (
+			(this.cycle > 1 && this.cycle < 256) ||
+			(this.cycle > 260 && this.cycle < 304) ||
+			(this.cycle > 304 && this.cycle < 340)
+		) {
+			this.cycle++;
+			return;
 		}
+		// </optimization>
+
+		const scanlineType = getScanlineType(this.scanline);
+		const interrupt = renderers[scanlineType](this.context);
+		if (interrupt) onIntr(interrupt);
+		this._incrementCounters(onFrame);
 	}
 
 	/** Draws a pixel (ABGR) in (`x`, `y`) using BGR `color`. */
