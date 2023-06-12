@@ -5,8 +5,6 @@ export default {
 	AUDIO_BUFFER_LIMIT: 4096,
 	AUDIO_BUFFER_SIZE: 8192,
 	FPS: 60.098,
-	MASK_BORDERS: false,
-	STATE_POLL_INTERVAL: 10,
 
 	// [emulator]
 	BASE_VOLUME: 1,
