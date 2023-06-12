@@ -22,7 +22,8 @@ export default class APUStatus extends InMemoryRegister {
 		this.lcPulse1 = +(channels.pulses[0].lengthCounter.counter > 0);
 		this.lcPulse2 = +(channels.pulses[1].lengthCounter.counter > 0);
 		this.lcTriangle = +(channels.triangle.lengthCounter.counter > 0);
-		this.remainingBytesDMC = channels.dmc.remainingBytes;
+		this.lcNoise = +(channels.noise.lengthCounter.counter > 0);
+		this.remainingBytesDMC = channels.dmc.remainingBytes > 0;
 		this.frameIRQFlag = apu.frameIRQFlag;
 		this.dmcIRQFlag = apu.registers.dmc.control.irqEnable;
 
