@@ -38,7 +38,7 @@ const instructions = () => [
 
 const LOGICAL_INSTRUCTION = (operator) => {
 	return ({ cpu }, value) => {
-		let result = operator(cpu.registers.a.value, value);
+		const result = operator(cpu.registers.a.value, value);
 
 		cpu.registers.a.value = result;
 		cpu.flags.updateZeroAndNegative(result);
