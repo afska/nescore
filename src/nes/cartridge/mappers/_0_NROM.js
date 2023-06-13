@@ -24,7 +24,7 @@ export default class NROM extends Mapper {
 
 		return WithCompositeMemory.createSegment([
 			//                  Address range   Size      Description
-			unused, //          $4020-$7999     $3FE0     Unused space
+			unused, //          $4020-$7FFF     $3FE0     Unused space
 			prgRomFirstPage, // $8000-$BFFF     $4000     PRG ROM (first 16KB of ROM)
 			prgRomLastPage //   $C000-$FFFF     $4000     PRG ROM (second 16KB of ROM or mirror)
 		]);

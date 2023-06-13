@@ -4,7 +4,6 @@ import gamepad from "../emulator/gamepad";
 import Speaker from "../emulator/Speaker";
 import WebWorker from "../emulator/WebWorker";
 import debug from "../emulator/debug";
-import config from "../../nes/config";
 
 const NEW_WEB_WORKER = () =>
 	new Worker(new URL("../emulator/webWorkerRunner.js", import.meta.url));
@@ -58,6 +57,7 @@ export default class Emulator extends Component {
 		} else if (Array.isArray(data)) {
 			// audio samples
 			this.speaker.writeSamples(data);
+			this.sendState();
 		} else if (data?.id === "fps") {
 			// fps report
 			this.setFps(data.fps);
@@ -71,9 +71,6 @@ export default class Emulator extends Component {
 	};
 
 	stop() {
-		clearInterval(this.stateInterval);
-		this.stateInterval = null;
-
 		if (this.speaker) this.speaker.stop();
 		this.speaker = null;
 
@@ -98,10 +95,6 @@ export default class Emulator extends Component {
 		this.screen = screen;
 
 		this.stop();
-		this.stateInterval = setInterval(
-			this.sendState,
-			config.STATE_POLL_INTERVAL
-		);
 		this.speaker = new Speaker();
 		this.speaker.start();
 
