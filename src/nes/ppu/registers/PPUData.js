@@ -22,7 +22,7 @@ export default class PPUData extends InMemoryRegister {
 		this.buffer = this.context.ppu.memory.readAt(ppuAddress);
 
 		// (if the PPUAddr is inside Palette RAM area, skip the buffer)
-		if (ppuAddress > constants.PPU_ADDRESSED_PALETTE_RAM_START_ADDRESS)
+		if (ppuAddress >= constants.PPU_ADDRESSED_PALETTE_RAM_START_ADDRESS)
 			data = this.buffer;
 
 		// (reading increments `PPUAddr` as a side effect)
