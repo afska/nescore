@@ -25,7 +25,7 @@ export default class UxROM extends Mapper {
 
 		return WithCompositeMemory.createSegment([
 			//                     Address range   Size      Description
-			unused, //             $4020-$7999     $3FE0     Unused space
+			unused, //             $4020-$7FFF     $3FE0     Unused space
 			prgRomSelectedPage, // $8000-$BFFF     $4000     PRG ROM (switchable)
 			prgRomLastPage //      $C000-$FFFF     $4000     PRG ROM (fixed to last bank)
 		]);

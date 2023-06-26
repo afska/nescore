@@ -3,8 +3,8 @@ import ControllerPort from "./ControllerPort";
 /**
  * Secondary Controller Port Register (< read)
  *
- * Writing a value here affects the "strobe" flag (bit 0).
- * Games usually write 1, then 0, and then perform 8 consecutive reads to get the state of all buttons.
+ * Writing a value here does nothing.
+ * Reads work using the Primary Controller Port's strobe flag.
  */
 export default class SecondaryControllerPort extends ControllerPort {
 	constructor(primary) {
