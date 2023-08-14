@@ -107,7 +107,7 @@ export default class PPU {
 	setSaveState(saveState) {
 		this.frame = saveState.frame;
 		this.scanline = saveState.scanline;
-		this.cycle = saveState.scanline;
+		this.cycle = saveState.cycle;
 		this.memory.setSaveState(saveState.memory);
 		this.oamRam = new Uint8Array(saveState.oamRam);
 		this.loopy.setSaveState(saveState.loopy);
