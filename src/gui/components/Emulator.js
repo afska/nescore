@@ -97,6 +97,9 @@ export default class Emulator extends Component {
 		this.stop();
 		this.speaker = new Speaker();
 		this.speaker.start();
+		this.keyboardInput = gamepad.createInput();
+		window.addEventListener("keydown", this._onKeyDown);
+		window.addEventListener("keyup", this._onKeyUp);
 
 		const bytes = new Uint8Array(rom);
 
@@ -117,10 +120,6 @@ export default class Emulator extends Component {
 			id: "saveState",
 			saveState: this._getSaveState()
 		});
-
-		this.keyboardInput = gamepad.createInput();
-		window.addEventListener("keydown", this._onKeyDown);
-		window.addEventListener("keyup", this._onKeyUp);
 	}
 
 	_getSaveState() {

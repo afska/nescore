@@ -91,6 +91,8 @@ export default class NES {
 
 		const currentScanline = this.ppu.scanline;
 		while (this.ppu.scanline === currentScanline) this.step();
+		for (let i = 0; i < 256; i++)
+			this.ppu.plot(i, this.ppu.scanline, 0xff0000ff);
 		this.onFrame(this.ppu.frameBuffer);
 	}
 

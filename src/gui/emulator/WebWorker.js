@@ -30,8 +30,10 @@ export default class WebWorker {
 					this.isDebugging &&
 					!this.isDebugStepFrameRequested &&
 					!this.isDebugScanlineRequested
-				)
+				) {
+					this.$postMessage(this.samples);
 					return;
+				}
 
 				const isDebugScanlineRequested = this.isDebugScanlineRequested;
 				this.isDebugStepFrameRequested = false;
