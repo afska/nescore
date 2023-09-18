@@ -21,7 +21,7 @@ export default class FrequencySweeper {
 			this.change = channel.timer >> register.shiftCount;
 	}
 
-	/** Clocks the sweeper and returns an updated frequency. */
+	/** Clocks the sweeper and updates channel's timer frequency. */
 	clock(channel) {
 		const register = channel.registers.sweep;
 		if (!register.enabledFlag) return;
