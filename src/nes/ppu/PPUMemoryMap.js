@@ -39,6 +39,9 @@ export default class PPUMemoryMap {
 	}
 
 	changeNameTablesMirroringTo(mirroringType) {
+		if (this.context.cartridge.header.mirroring === "FOUR_SCREENS")
+			mirroringType = "FOUR_SCREENS";
+
 		this.nameTables.$mirroringType = mirroringType;
 		this.nameTables.mapping = mirroring[mirroringType];
 	}
