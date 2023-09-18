@@ -4,7 +4,7 @@ const START_ADDRESS = 0x0000;
 const PATTERN_TABLE_SIZE = 0x1000;
 const TILE_LENGTH = 8;
 const TILE_SIZE = 16;
-const TEST_PALETTE = [0xffffff, 0xcecece, 0x686868, 0x000000];
+const TEST_PALETTE = [0xffffffff, 0xffcecece, 0xff686868, 0xff000000];
 
 /** Utility class to draw complete tiles from Pattern tables. */
 export default class DebugPatternTable {
