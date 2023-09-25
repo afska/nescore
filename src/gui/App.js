@@ -19,7 +19,7 @@ export default class App extends Component {
 				<h4>NesCore</h4>
 				<h6 className={styles.sourceCode}>
 					<a
-						href="https://github.com/rodri042/nescore"
+						href="https://github.com/afska/nescore"
 						target="_blank"
 						rel="noreferrer"
 					>

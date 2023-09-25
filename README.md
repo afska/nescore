@@ -1,6 +1,6 @@
 # NesCore
 
-A NES Emulator made in JavaScript for educational purposes. [Try it!](https://rodri042.github.io/nescore/)
+A NES Emulator made in JavaScript for educational purposes. [Try it!](https://afska.github.io/nescore/)
 
 It's main objective is to reflect the NES internals as simply as possible by using clean, object-oriented code. It doesn't have any complex bitwise operations, huge switch-case statements or files with lots of magic numbers.
 
@@ -12,7 +12,7 @@ It's main objective is to reflect the NES internals as simply as possible by usi
 - 👨‍🔧 It plays [Super Mario Bros. 3](https://en.wikipedia.org/wiki/Super_Mario_Bros._3)!
 - 💻 **CPU**
   - All **official instructions** are implemented
-  - [nestest](https://raw.githubusercontent.com/rodri042/nescore/master/public/testroms/nestest.txt) passes ✔️
+  - [nestest](https://raw.githubusercontent.com/afska/nescore/master/public/testroms/nestest.txt) passes ✔️
 - Fully functional 🖥️ **PPU** and 🔊 **APU**
 - 🔌 Supported **mappers**
   - Mapper **0**: [NROM](https://www.nesdev.org/wiki/NROM)
@@ -56,7 +56,7 @@ const saveState = nes.getSaveState();
 nes.setSaveState(saveState);
 ```
 
-👀 Have a look at the [demo implementation](https://github.com/rodri042/nescore/tree/master/src/gui) for more details. When running the demo (`npm start`) you can add `?debug` to the URL to enable a global `window.debug` object.
+👀 Have a look at the [demo implementation](https://github.com/afska/nescore/tree/master/src/gui) for more details. When running the demo (`npm start`) you can add `?debug` to the URL to enable a global `window.debug` object.
 
 ## Full API
 
@@ -75,16 +75,16 @@ nes.setSaveState(saveState);
 
 ## Screenshots
 
-![nestest screenshot](https://raw.githubusercontent.com/rodri042/nescore/master/img/capture-sm.png)
+![nestest screenshot](https://raw.githubusercontent.com/afska/nescore/master/img/capture-sm.png)
 
 ## Useful links
 
-- [NesDev](https://www.nesdev.org/) | [Mirror](https://rodri042.github.io/nes-docs-backup/nesdev-wiki.zip)
-- [NES Emulation Overview](https://ltriant.github.io/2019/11/22/nes-emulator.html) | [Mirror](https://rodri042.github.io/nes-docs-backup/nes-emulation-good-bad-tedious/)
-- [NES Ebook](https://bugzmanov.github.io/nes_ebook/chapter_1.html) | [Mirror](https://rodri042.github.io/nes-docs-backup/nes-emulator-rust/)
-- [Easy 6502](https://skilldrick.github.io/easy6502/) | [Mirror](https://rodri042.github.io/nes-docs-backup/easy6502)
-- [6502 Reference](https://web.archive.org/web/20210724004546/http://www.obelisk.me.uk/6502/reference.html) | [Mirror](https://rodri042.github.io/nes-docs-backup/6502-reference.zip)
-- [NES Rendering](https://austinmorlan.com/posts/nes_rendering_overview) | [Mirror](https://rodri042.github.io/nes-docs-backup/nes-rendering-overview/)
-- [NES Graphics Part 1](http://www.dustmop.io/blog/2015/04/28/nes-graphics-part-1/) | [Mirror](https://rodri042.github.io/nes-docs-backup/nes-graphics-part-1/)
-- [NES Graphics Part 2](http://www.dustmop.io/blog/2015/06/08/nes-graphics-part-2/) | [Mirror](https://rodri042.github.io/nes-docs-backup/nes-graphics-part-2/)
-- [NES Graphics Part 3](http://www.dustmop.io/blog/2015/12/18/nes-graphics-part-3/) | [Mirror](https://rodri042.github.io/nes-docs-backup/nes-graphics-part-3/)
+- [NesDev](https://www.nesdev.org/) | [Mirror](https://afska.github.io/nes-docs-backup/nesdev-wiki.zip)
+- [NES Emulation Overview](https://ltriant.github.io/2019/11/22/nes-emulator.html) | [Mirror](https://afska.github.io/nes-docs-backup/nes-emulation-good-bad-tedious/)
+- [NES Ebook](https://bugzmanov.github.io/nes_ebook/chapter_1.html) | [Mirror](https://afska.github.io/nes-docs-backup/nes-emulator-rust/)
+- [Easy 6502](https://skilldrick.github.io/easy6502/) | [Mirror](https://afska.github.io/nes-docs-backup/easy6502)
+- [6502 Reference](https://web.archive.org/web/20210724004546/http://www.obelisk.me.uk/6502/reference.html) | [Mirror](https://afska.github.io/nes-docs-backup/6502-reference.zip)
+- [NES Rendering](https://austinmorlan.com/posts/nes_rendering_overview) | [Mirror](https://afska.github.io/nes-docs-backup/nes-rendering-overview/)
+- [NES Graphics Part 1](http://www.dustmop.io/blog/2015/04/28/nes-graphics-part-1/) | [Mirror](https://afska.github.io/nes-docs-backup/nes-graphics-part-1/)
+- [NES Graphics Part 2](http://www.dustmop.io/blog/2015/06/08/nes-graphics-part-2/) | [Mirror](https://afska.github.io/nes-docs-backup/nes-graphics-part-2/)
+- [NES Graphics Part 3](http://www.dustmop.io/blog/2015/12/18/nes-graphics-part-3/) | [Mirror](https://afska.github.io/nes-docs-backup/nes-graphics-part-3/)
