@@ -2,9 +2,11 @@
 
 A NES Emulator made in JavaScript for educational purposes. [Try it!](https://afska.github.io/nescore/)
 
-It's main objective is to reflect the NES internals as simply as possible by using clean, object-oriented code. It doesn't have any complex bitwise operations, huge switch-case statements or files with lots of magic numbers.
+Its main objective is to reflect the NES internals as simply as possible by using clean, object-oriented code. It doesn't have any complex bitwise operations, huge switch-case statements or files with lots of magic numbers.
 
-> ⚠️ This is not a cycle-accurate emulator and performance is not the main concern ⚠️
+> <img alt="rlabs" width="16" height="16" src="https://user-images.githubusercontent.com/1631752/116227197-400d2380-a72a-11eb-9e7b-389aae76f13e.png" /> Created by [[r]labs](https://r-labs.io).
+
+> ⚠️ This is not a cycle-accurate emulator and performance is not the main concern.
 
 ## Features
 
