@@ -183,7 +183,7 @@ export default class MMC3 extends Mapper {
 		super.setSaveState(saveState);
 
 		this._state.bankSelect.setValue(saveState.bankSelect);
-		this._state.bankData = saveState.bankData;
+		this._state.bankData = Array.from(saveState.bankData);
 		this._state.irqEnabled = saveState.irqEnabled;
 		this._state.irqLatch = saveState.irqLatch;
 		this._state.irqCountdown = saveState.irqCountdown;
