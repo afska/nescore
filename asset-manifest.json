@@ -1,0 +1,18 @@
+{
+  "files": {
+    "main.css": "/nescore/static/css/main.89c035eb.css",
+    "main.js": "/nescore/static/js/main.62b414b4.js",
+    "static/js/517.b1368245.chunk.js": "/nescore/static/js/517.b1368245.chunk.js",
+    "static/js/64.40a37172.chunk.js": "/nescore/static/js/64.40a37172.chunk.js",
+    "worklet.js": "/nescore/d610b8861d3a4339b8ef.worklet.js",
+    "index.html": "/nescore/index.html",
+    "main.89c035eb.css.map": "/nescore/static/css/main.89c035eb.css.map",
+    "main.62b414b4.js.map": "/nescore/static/js/main.62b414b4.js.map",
+    "517.b1368245.chunk.js.map": "/nescore/static/js/517.b1368245.chunk.js.map",
+    "64.40a37172.chunk.js.map": "/nescore/static/js/64.40a37172.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.89c035eb.css",
+    "static/js/main.62b414b4.js"
+  ]
+}
