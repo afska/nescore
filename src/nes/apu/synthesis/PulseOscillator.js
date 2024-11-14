@@ -11,7 +11,6 @@ export default class PulseOscillator {
 	}
 
 	/** Generates a new sample. */
-
 	sample(time) {
 		const period = 1 / this._frequency;
 		const phase = time % period;
