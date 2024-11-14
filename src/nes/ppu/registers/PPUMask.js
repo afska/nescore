@@ -32,9 +32,10 @@ export default class PPUMask extends WriteOnlyInMemoryRegister {
 			b = gray;
 		}
 		if (this.emphasizeAny) {
-			r = this.emphasizeRed ? r : Math.floor(r / 3);
-			g = this.emphasizeGreen ? g : Math.floor(g / 3);
-			b = this.emphasizeBlue ? b : Math.floor(b / 3);
+			const all = this.emphasizeAll;
+			r = this.emphasizeRed && !all ? r : Math.floor(r / 3);
+			g = this.emphasizeGreen && !all ? g : Math.floor(g / 3);
+			b = this.emphasizeBlue && !all ? b : Math.floor(b / 3);
 		}
 
 		return (r << 0) | (g << 8) | (b << 16);
@@ -43,6 +44,11 @@ export default class PPUMask extends WriteOnlyInMemoryRegister {
 	/** Returns whether any color emphasis is active or not. */
 	get emphasizeAny() {
 		return this.emphasizeRed || this.emphasizeGreen || this.emphasizeBlue;
+	}
+
+	/** Returns whether all color emphasis bits are active or not. */
+	get emphasizeAll() {
+		return this.emphasizeRed && this.emphasizeGreen && this.emphasizeBlue;
 	}
 
 	/** Returns whether any rendering (background or sprites) is active or not. */
