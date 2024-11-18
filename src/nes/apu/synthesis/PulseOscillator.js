@@ -4,7 +4,6 @@ import config from "../../config";
 export default class PulseOscillator {
 	constructor() {
 		this.amplitude = 1;
-		this.harmonics = config.PULSE_CHANNEL_HARMONICS;
 		this.dutyCycle = 0;
 
 		this._frequency = 0;
@@ -26,7 +25,6 @@ export default class PulseOscillator {
 	getSaveState() {
 		return {
 			amplitude: this.amplitude,
-			harmonics: this.harmonics,
 			dutyCycle: this.dutyCycle,
 			frequency: this._frequency
 		};
@@ -35,7 +33,6 @@ export default class PulseOscillator {
 	/** Restores state from a snapshot. */
 	setSaveState(saveState) {
 		this.amplitude = saveState.amplitude;
-		this.harmonics = saveState.harmonics;
 		this.dutyCycle = saveState.dutyCycle;
 		this.frequency = saveState.frequency;
 	}
