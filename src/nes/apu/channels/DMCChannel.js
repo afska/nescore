@@ -56,9 +56,14 @@ export default class DMCChannel {
 		);
 	}
 
-	/** Starts auto-playing a sample from `DMCSampleAddress`. */
+	/** Starts auto-playing a sample from `DMCSampleAddress` in DPCM mode. */
 	startDPCM() {
 		this.startFlag = true;
+	}
+
+	/** Stops DPCM, finishing the 1-byte buffer first. */
+	stopDPCM() {
+		this.cursorByte = this.sampleLength;
 	}
 
 	/** Returns the remaining bytes of the current DPCM sample. */
