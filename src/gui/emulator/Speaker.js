@@ -1,4 +1,4 @@
-import audioWorklet from "worklet-loader!./audioWorklet.js";
+import audioWorklet from "./audioWorklet?worker&url";
 import constants from "../../nes/constants";
 
 const WORKLET_NAME = "player-worklet";

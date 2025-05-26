@@ -6,7 +6,9 @@ import WebWorker from "../emulator/WebWorker";
 import debug from "../emulator/debug";
 
 const NEW_WEB_WORKER = () =>
-	new Worker(new URL("../emulator/webWorkerRunner.js", import.meta.url));
+	new Worker(new URL("../emulator/webWorkerRunner.js", import.meta.url), {
+		type: "module"
+	});
 
 const DEBUG_MODE = window.location.search === "?debug";
 const SAVESTATE_KEY = "nescore-savestate";

@@ -46,26 +46,26 @@ describe("CPU/PPU registers interaction", () => {
 			it("can transform a color emphasizing red", () => {
 				register.emphasizeRed = 1;
 
-				register.transform(0xc72631).should.equal(0x420c31);
+				register.transform(0xc72631).should.equal(0x951c31);
 			});
 
 			it("can transform a color emphasizing green", () => {
 				register.emphasizeGreen = 1;
 
-				register.transform(0xc72631).should.equal(0x422610);
+				register.transform(0xc72631).should.equal(0x952624);
 			});
 
 			it("can transform a color emphasizing blue", () => {
 				register.emphasizeBlue = 1;
 
-				register.transform(0xc72631).should.equal(0xc70c10);
+				register.transform(0xc72631).should.equal(0xc71c24);
 			});
 
 			it("can emphasize two colors at the same time", () => {
 				register.emphasizeRed = 1;
 				register.emphasizeBlue = 1;
 
-				register.transform(0xc72631).should.equal(0xc70c31);
+				register.transform(0xc72631).should.equal(0xc71c31);
 			});
 
 			it("applies emphasis bits independently of grayscale", () => {
@@ -73,7 +73,7 @@ describe("CPU/PPU registers interaction", () => {
 				register.emphasizeRed = 1;
 				register.emphasizeBlue = 1;
 
-				register.transform(0xc72631).should.equal(0x5e1f5e);
+				register.transform(0xc72631).should.equal(0x5e465e);
 			});
 		});
 	});

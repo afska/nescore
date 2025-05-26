@@ -1,4 +1,5 @@
-const WebWorker = require("./WebWorker").default;
+import WebWorker from "./WebWorker";
+
 const webWorker = new WebWorker((msg) => postMessage(msg));
 
 onmessage = function(message) {
