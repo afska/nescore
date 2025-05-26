@@ -3,6 +3,7 @@ body {
 
 	background-color: #000000;
 	color: white;
+	user-select: none;
 }
 
 .nes-balloon {
