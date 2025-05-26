@@ -5,6 +5,8 @@ import Speaker from "../emulator/Speaker";
 import WebWorker from "../emulator/WebWorker";
 import debug from "../emulator/debug";
 
+const PRESS_KEY_TO_ENABLE_AUDIO = "Press any key to enable audio!";
+
 const NEW_WEB_WORKER = () =>
 	new Worker(new URL("../emulator/webWorkerRunner.js", import.meta.url), {
 		type: "module"
@@ -99,6 +101,8 @@ export default class Emulator extends Component {
 		this.stop();
 		this.speaker = new Speaker();
 		this.speaker.start();
+		if (this.speaker.state === "suspended") alert(PRESS_KEY_TO_ENABLE_AUDIO);
+
 		this.keyboardInput = gamepad.createInput();
 		window.addEventListener("keydown", this._onKeyDown);
 		window.addEventListener("keyup", this._onKeyUp);
@@ -142,6 +146,8 @@ export default class Emulator extends Component {
 	}
 
 	_onKeyDown = (e) => {
+		this.speaker?.resume();
+
 		const button = KEY_MAP[e.key?.toLowerCase()];
 		if (!button) return;
 

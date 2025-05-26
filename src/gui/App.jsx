@@ -5,9 +5,6 @@ import classNames from "classnames";
 import styles from "./App.module.css";
 import _ from "lodash";
 
-const isChromeOrChromium =
-	/Chrome/i.test(navigator.userAgent) || /Chromium/i.test(navigator.userAgent);
-
 export default class App extends Component {
 	state = { rom: null };
 
@@ -33,11 +30,6 @@ export default class App extends Component {
 					(or: D, [space], arrows, [enter] & [backspace]) &#123;savestates: O
 					and P&#125;
 				</p>
-				{!isChromeOrChromium && (
-					<p className={styles.warning}>
-						This works better on Chromium-based browsers!
-					</p>
-				)}
 
 				<div
 					className={classNames(
