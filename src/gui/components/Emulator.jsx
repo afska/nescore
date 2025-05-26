@@ -100,8 +100,9 @@ export default class Emulator extends Component {
 
 		this.stop();
 		this.speaker = new Speaker();
-		this.speaker.start();
-		if (this.speaker.state === "suspended") alert(PRESS_KEY_TO_ENABLE_AUDIO);
+		this.speaker.start().then(() => {
+			if (this.speaker.state === "suspended") alert(PRESS_KEY_TO_ENABLE_AUDIO);
+		});
 
 		this.keyboardInput = gamepad.createInput();
 		window.addEventListener("keydown", this._onKeyDown);
