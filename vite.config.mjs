@@ -19,6 +19,10 @@ export default defineConfig(({ mode }) => {
 		test: {
 			globals: true,
 			environment: "jsdom"
+		},
+		esbuild: {
+			keepNames: true,
+			minifyIdentifiers: false
 		}
 	};
 });
