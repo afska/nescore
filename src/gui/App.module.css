@@ -26,9 +26,28 @@
 }
 
 .gameContainer {
-	height: 75vh;
+	width: 100%;
+	max-width: 512px;
+	height: auto;
 	padding: 0 !important;
 	margin-left: auto !important;
 	margin-right: auto !important;
 	aspect-ratio: 256/240;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+@media (max-width: 768px) {
+	.gameContainer {
+		max-width: 100%;
+		transform: scale(0.9);
+		transform-origin: center;
+	}
+}
+
+@media (max-width: 480px) {
+	.gameContainer {
+		transform: scale(0.8);
+	}
 }
