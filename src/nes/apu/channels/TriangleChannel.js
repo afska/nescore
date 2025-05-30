@@ -31,6 +31,9 @@ export default class TriangleChannel {
 			this.registers.timerLow.value
 		);
 
+		// this channel only outputs a sample if the timer is between [2, 0x7ff]
+		if (!(timer >= 2 && timer <= 0x7ff)) return 0;
+
 		this.oscillator.frequency = constants.FREQ_CPU_HZ / (16 * (timer + 1)) / 2;
 		// from nesdev: f = fCPU / (16 * (t + 1))
 		// (the pitch is one octave below the pulse channels with an equivalent timer value)

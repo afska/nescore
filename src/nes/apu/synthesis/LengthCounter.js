@@ -4,7 +4,7 @@ export default class LengthCounter {
 		this.counter = 0;
 	}
 
-	/** Decreases the counter unless `isHalted`. Unless `isEnable`, it resets the counter to 0. */
+	/** Decreases the counter unless `isHalted`. Unless `isEnabled`, it resets the counter to 0. */
 	clock(isEnabled, isHalted) {
 		if (!isEnabled) this.counter = 0;
 		else if (this.counter > 0 && !isHalted) this.counter--;
