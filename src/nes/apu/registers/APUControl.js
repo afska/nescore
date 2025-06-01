@@ -31,6 +31,8 @@ export default class APUControl extends WriteOnlyInMemoryRegister {
 		if (!enableTriangle) {
 			channels.triangle.lengthCounter.counter = 0;
 			channels.triangle.linearLengthCounter.counter = 0;
+			channels.triangle.linearLengthCounter.reload = 0;
+			channels.triangle.linearLengthCounter.reloadFlag = false;
 		}
 		if (!enableNoise) channels.noise.lengthCounter.counter = 0;
 

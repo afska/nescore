@@ -12,10 +12,11 @@ export default class TriangleLinearLCL extends WriteOnlyInMemoryRegister {
 		);
 	}
 
-	/** Updates the linear length counter. */
+	/** Updates the linear length counter reload value. */
 	writeAt(__, byte) {
 		this.setValue(byte);
 
-		this.context.apu.channels.triangle.linearLengthCounter.counter = this.lengthCounterLoad;
+		const triangle = this.context.apu.channels.triangle;
+		triangle.linearLengthCounter.reload = this.lengthCounterLoad;
 	}
 }

@@ -13,11 +13,12 @@ export default class TriangleLCLTimerHigh extends WriteOnlyInMemoryRegister {
 		);
 	}
 
-	/** Updates the length counter. */
+	/** Updates the length counter and schedules a linear length counter update (next quarter beat). */
 	writeAt(__, byte) {
 		this.setValue(byte);
 
-		this.context.apu.channels.triangle.lengthCounter.counter =
-			lengthTable[this.lengthCounterLoad];
+		const triangle = this.context.apu.channels.triangle;
+		triangle.lengthCounter.counter = lengthTable[this.lengthCounterLoad];
+		triangle.linearLengthCounter.reloadFlag = true;
 	}
 }
