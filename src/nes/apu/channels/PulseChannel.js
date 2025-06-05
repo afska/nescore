@@ -60,16 +60,13 @@ export default class PulseChannel {
 		);
 	}
 
-	/** Updates the sweeper. */
-	step() {
-		this.frequencySweeper.track(this);
-	}
-
-	/** Updates the timer (if sweep is not active). */
+	/** Updates the timer and sweep if needed. */
 	cycle() {
-		if (this.registers.sweep.enabledFlag) return;
+		// (frequency sweepers change at a higher frequency)
+		for (let i = 0; i < constants.APU_HIGH_FREQUENCY_CYCLES; i++)
+			this.frequencySweeper.track(this);
 
-		this.updateTimer();
+		if (!this.registers.sweep.enabledFlag) this.updateTimer();
 	}
 
 	/** Updates the envelope. */

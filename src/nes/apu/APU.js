@@ -75,13 +75,6 @@ export default class APU {
 		};
 
 		this._onNewCycle(onIRQ);
-
-		// (frequency sweepers change at high frequency)
-		for (let i = 0; i < constants.APU_HIGH_FREQUENCY_CYCLES; i++) {
-			this.channels.pulses[0].step();
-			this.channels.pulses[1].step();
-		}
-
 		this._incrementCounters();
 
 		if (this.sampleCounter === 0) onSample(this.sample);
