@@ -1,9 +1,16 @@
 import config from "../../config";
 
+const DUTY_SEQUENCE = [
+	[0, 1, 0, 0, 0, 0, 0, 0],
+	[0, 1, 1, 0, 0, 0, 0, 0],
+	[0, 1, 1, 1, 1, 0, 0, 0],
+	[1, 0, 0, 1, 1, 1, 1, 1]
+];
+
 /** A square wave generator. */
 export default class PulseOscillator {
 	constructor() {
-		this.amplitude = 1;
+		this.volume = 1;
 		this.dutyCycle = 0;
 
 		this._frequency = 0;
@@ -13,18 +20,18 @@ export default class PulseOscillator {
 	sample(time) {
 		const period = 1 / this._frequency;
 		const phase = time % period;
+		const step = Math.floor(phase / (period / 8));
 
 		return (
-			(phase < this.dutyCycle * period ? 1 : -1) *
-			config.PULSE_CHANNEL_VOLUME *
-			this.amplitude
+			(DUTY_SEQUENCE[this.dutyCycle][step] ? this.volume : 0) *
+			config.PULSE_CHANNEL_VOLUME
 		);
 	}
 
 	/** Returns a snapshot of the current state. */
 	getSaveState() {
 		return {
-			amplitude: this.amplitude,
+			volume: this.volume,
 			dutyCycle: this.dutyCycle,
 			frequency: this._frequency
 		};
@@ -32,12 +39,12 @@ export default class PulseOscillator {
 
 	/** Restores state from a snapshot. */
 	setSaveState(saveState) {
-		this.amplitude = saveState.amplitude;
+		this.volume = saveState.volume;
 		this.dutyCycle = saveState.dutyCycle;
 		this.frequency = saveState.frequency;
 	}
 
-	/** Sets the frequency, but only if `value` is above a minimum value. */
+	/** Sets the frequency, but only if the change is above a minimum threshold (this sounds better). */
 	set frequency(value) {
 		if (Math.abs(this._frequency - value) > config.MIN_FREQUENCY_CHANGE)
 			this._frequency = value;

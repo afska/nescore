@@ -125,19 +125,15 @@ export default class APU {
 			this._onEnd
 		);
 
-		const pulse1 = this.channels.pulses[0].sample(); // -1 ~ 1
-		const pulse2 = this.channels.pulses[1].sample(); // -1 ~ 1
-		const triangle = this.channels.triangle.sample(); // -1 ~ 1
+		const pulse1 = this.channels.pulses[0].sample(); // 0 ~ 15
+		const pulse2 = this.channels.pulses[1].sample(); // 0 ~ 15
+		const triangle = this.channels.triangle.sample(); // 0 ~ 15
 		const noise = this.channels.noise.sample(); // 0 ~ 15
 		const dmc = this.channels.dmc.sample(onIRQ); // 0 ~ 127
 
 		// (APU mixer from nesdev)
-		const normalizedPulse1 = Math.floor((pulse1 + 1) * 7.5); // 0 ~ 15
-		const normalizedPulse2 = Math.floor((pulse2 + 1) * 7.5); // 0 ~ 15
-		const normalizedTriangle = Math.floor((triangle + 1) * 7.5); // 0 ~ 15
-		const pulseOut = 0.00752 * (normalizedPulse1 + normalizedPulse2);
-		const tndOut =
-			0.00851 * normalizedTriangle + 0.00494 * noise + 0.00335 * dmc;
+		const pulseOut = 0.00752 * (pulse1 + pulse2);
+		const tndOut = 0.00851 * triangle + 0.00494 * noise + 0.00335 * dmc;
 
 		this.sample = config.BASE_VOLUME * (pulseOut + tndOut);
 	}

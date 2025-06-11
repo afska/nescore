@@ -38,14 +38,13 @@ export default class PulseChannel {
 		const { apu } = this.context;
 		if (!this.isEnabled) return 0;
 
-		this.oscillator.dutyCycle = this.registers.control.dutyCycle;
+		this.oscillator.dutyCycle = this.registers.control.dutyCycleId;
 		this.oscillator.frequency = constants.FREQ_CPU_HZ / (16 * (this.timer + 1));
 		// from nesdev: f = fCPU / (16 * (t + 1))
 
-		const volume = this.registers.control.constantVolume
+		this.oscillator.volume = this.registers.control.constantVolume
 			? this.registers.control.volumeOrEnvelopePeriod
 			: this.volumeEnvelope.volume;
-		this.oscillator.amplitude = volume / constants.APU_MAX_VOLUME;
 
 		return !this.lengthCounter.didFinish && !this.frequencySweeper.mute
 			? this.oscillator.sample(apu.time)
