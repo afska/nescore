@@ -23,7 +23,8 @@ export default class PulseOscillator {
 		const step = Math.floor(phase / (period / 8));
 
 		return (
-			(DUTY_SEQUENCE[this.dutyCycle][step] ? this.volume : 0) *
+			DUTY_SEQUENCE[this.dutyCycle][step] *
+			this.volume *
 			config.PULSE_CHANNEL_VOLUME
 		);
 	}
