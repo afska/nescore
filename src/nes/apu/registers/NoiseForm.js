@@ -6,7 +6,7 @@ export default class NoiseForm extends WriteOnlyInMemoryRegister {
 	constructor() {
 		super();
 
-		this.addReadOnlyField("periodId", 0, 4).addReadOnlyField("loop", 7);
+		this.addReadOnlyField("periodId", 0, 4).addReadOnlyField("mode", 7);
 	}
 
 	/** Returns the noise period. */

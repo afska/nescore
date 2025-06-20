@@ -94,7 +94,7 @@ export default class NoiseChannel {
 		 *   3. Bit 14, the leftmost bit, is set to the feedback calculated earlier.
 		 */
 
-		const bitPosition = this.registers.form.loop ? 6 : 1;
+		const bitPosition = this.registers.form.mode ? 6 : 1;
 
 		const bit = Byte.getBit(this.shift, bitPosition);
 		const feedback = Byte.getBit(this.shift, 0) ^ bit;
