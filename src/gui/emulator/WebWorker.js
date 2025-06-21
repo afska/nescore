@@ -56,7 +56,7 @@ export default class WebWorker {
 
 				try {
 					if (isDebugScanlineRequested) {
-						this.nes.scanline();
+						this.nes.scanline(true);
 					} else if (config.SYNC_TO_AUDIO) {
 						const requestedSamples = constants.APU_SAMPLE_RATE / config.FPS;
 						const newBufferSize = this.availableSamples + requestedSamples;

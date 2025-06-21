@@ -86,14 +86,27 @@ export default class NES {
 	}
 
 	/** Runs the emulation until the next scanline. */
-	scanline() {
+	scanline(debug = false) {
 		this.requireContext();
 
 		const currentScanline = this.ppu.scanline;
 		while (this.ppu.scanline === currentScanline) this.step();
-		for (let i = 0; i < 256; i++)
-			this.ppu.plot(i, this.ppu.scanline, 0xff0000ff);
+
+		let oldFrameBuffer;
+		if (debug) {
+			oldFrameBuffer = new Uint32Array(this.ppu.frameBuffer.length);
+			for (let i = 0; i < this.ppu.frameBuffer.length; i++)
+				oldFrameBuffer[i] = this.ppu.frameBuffer[i];
+			for (let i = 0; i < constants.SCREEN_WIDTH; i++)
+				this.ppu.plot(i, this.ppu.scanline, 0xff0000ff);
+		}
+
 		this.onFrame(this.ppu.frameBuffer);
+
+		if (debug) {
+			for (let i = 0; i < this.ppu.frameBuffer.length; i++)
+				this.ppu.frameBuffer[i] = oldFrameBuffer[i];
+		}
 	}
 
 	/** Executes a step in the emulation (1 CPU instruction). */
