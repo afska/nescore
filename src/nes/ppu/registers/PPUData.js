@@ -16,6 +16,8 @@ export default class PPUData extends InMemoryRegister {
 
 	/** Reads a value from PPU address space, delayed by one read (except for the Palette RAM). */
 	readAt() {
+		if (this.context.isDebugging) return this.buffer;
+
 		let data = this.buffer;
 
 		const ppuAddress = this.context.ppu.registers.ppuAddr.address;
@@ -26,7 +28,7 @@ export default class PPUData extends InMemoryRegister {
 			data = this.buffer;
 
 		// (reading increments `PPUAddr` as a side effect)
-		if (!this.context.isDebugging) this._incrementAddress();
+		this._incrementAddress();
 
 		return data;
 	}
