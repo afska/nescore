@@ -29,15 +29,15 @@ export default class WebWorker {
 				if (
 					this.isDebugging &&
 					!this.isDebugStepFrameRequested &&
-					!this.isDebugScanlineRequested
+					!this.isDebugStepScanlineRequested
 				) {
 					this.$postMessage(this.samples);
 					return;
 				}
 
-				const isDebugScanlineRequested = this.isDebugScanlineRequested;
+				const isDebugStepScanlineRequested = this.isDebugStepScanlineRequested;
 				this.isDebugStepFrameRequested = false;
-				this.isDebugScanlineRequested = false;
+				this.isDebugStepScanlineRequested = false;
 
 				if (this.isSaveStateRequested && !this.wasSaveStateRequested) {
 					this.saveState = this.nes.getSaveState();
@@ -55,7 +55,7 @@ export default class WebWorker {
 				}
 
 				try {
-					if (isDebugScanlineRequested) {
+					if (isDebugStepScanlineRequested) {
 						this.nes.scanline(true);
 					} else if (config.SYNC_TO_AUDIO) {
 						const requestedSamples = constants.APU_SAMPLE_RATE / config.FPS;
@@ -115,7 +115,7 @@ export default class WebWorker {
 						if (data[i].$stopDebugging) this.isDebugging = false;
 						if (data[i].$debugStepFrame) this.isDebugStepFrameRequested = true;
 						if (data[i].$debugStepScanline)
-							this.isDebugScanlineRequested = true;
+							this.isDebugStepScanlineRequested = true;
 					}
 
 					for (let button in data[i])
