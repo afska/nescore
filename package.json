@@ -14,7 +14,7 @@
   "scripts": {
     "start": "vite",
     "build": "vite build",
-    "test": "vitest",
+    "test": "vitest src",
     "dev": "vite",
     "testroms": "npm test src/__tests__",
     "benchmark": "npm run build-lib && cp package-lib.json build/lib/package.json && cd scripts/benchmark && node benchmark.js rom.nes",

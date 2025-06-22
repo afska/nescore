@@ -55,8 +55,8 @@ export default class NESTestLogger {
 						"DEC"
 					];
 
-					const $initialArgument = hexArgument(initialArgument, 2);
-					const $finalArgument = hexArgument(finalArgument, 2);
+					const $initialArgument = hexArgument(initialArgument);
+					const $finalArgument = hexArgument(finalArgument);
 					let finalAddress = null;
 
 					try {

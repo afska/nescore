@@ -1,5 +1,5 @@
 import NES from "../NES";
-import config from "../../nes/config";
+import config from "../config";
 import fs from "fs";
 
 /** Creates an execution context for testing. */
