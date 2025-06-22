@@ -20,7 +20,7 @@ export default class LinearLengthCounter extends LengthCounter {
 		}
 
 		if (this.reloadFlag) this.counter = this.reload;
-		else super.clock(isEnabled, isHalted);
+		else super.clock(isEnabled, false);
 
 		if (!isHalted) this.reloadFlag = false;
 	}
