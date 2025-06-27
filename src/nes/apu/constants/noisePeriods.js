@@ -1,19 +1,19 @@
 /** A list of all noise periods. The `NoiseForm` register uses it to assign divider rates. */
 export default [
+	2,
 	4,
 	8,
 	16,
 	32,
+	48,
 	64,
-	96,
-	128,
-	160,
-	202,
+	80,
+	101,
+	127,
+	190,
 	254,
-	380,
+	381,
 	508,
-	762,
-	1016,
-	2034,
-	4068
+	1017,
+	2034
 ];
