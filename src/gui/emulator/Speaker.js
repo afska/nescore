@@ -4,7 +4,6 @@ import constants from "../../nes/constants";
 const WORKLET_NAME = "player-worklet";
 const WEBAUDIO_BUFFER_SIZE = 1024;
 const CHANNELS = 1;
-const FADE_DURATION = 0.05; // seconds
 
 export default class Speaker {
 	async start() {
@@ -22,29 +21,15 @@ export default class Speaker {
 			return;
 		}
 
-		// create gain node at 0
-		this.gainNode = this._audioCtx.createGain();
-		this.gainNode.gain.setValueAtTime(0, this._audioCtx.currentTime);
-
 		this.playerWorklet = new AudioWorkletNode(this._audioCtx, WORKLET_NAME, {
 			outputChannelCount: [CHANNELS],
 			processorOptions: { bufferSize: WEBAUDIO_BUFFER_SIZE }
 		});
 
-		// worklet -> gain -> destination
-		this.playerWorklet.connect(this.gainNode);
-		this.gainNode.connect(this._audioCtx.destination);
+		this.playerWorklet.connect(this._audioCtx.destination);
 
-		this._fadedIn = false;
 		this.playerWorklet.port.onmessage = (event) => {
 			this.bufferSize = event.data;
-			if (!this._fadedIn && this.bufferSize >= WEBAUDIO_BUFFER_SIZE) {
-				const now = this._audioCtx.currentTime;
-				this.gainNode.gain.cancelScheduledValues(now);
-				this.gainNode.gain.setValueAtTime(0, now);
-				this.gainNode.gain.linearRampToValueAtTime(1, now + FADE_DURATION);
-				this._fadedIn = true;
-			}
 		};
 	}
 
@@ -67,10 +52,6 @@ export default class Speaker {
 			this.playerWorklet.port.close();
 			this.playerWorklet.disconnect();
 			this.playerWorklet = null;
-		}
-		if (this.gainNode) {
-			this.gainNode.disconnect();
-			this.gainNode = null;
 		}
 		if (this._audioCtx) {
 			this._audioCtx.close().catch(console.error);
