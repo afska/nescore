@@ -26,6 +26,8 @@ export default class PulseChannel {
 		this.volumeEnvelope = new VolumeEnvelope();
 		this.frequencySweeper = new FrequencySweeper();
 		this.timer = 0;
+
+		this.outputSample = 0;
 	}
 
 	/** When a context is loaded. */
@@ -35,7 +37,7 @@ export default class PulseChannel {
 
 	/** Generates a new sample. */
 	sample(isNewSample) {
-		if (!this.isEnabled) return 0;
+		if (!this.isEnabled) return this.outputSample;
 
 		this.oscillator.dutyCycle = this.registers.control.dutyCycle;
 		this.oscillator.frequency = constants.FREQ_CPU_HZ / (16 * (this.timer + 1));
@@ -45,9 +47,11 @@ export default class PulseChannel {
 			? this.registers.control.volumeOrEnvelopePeriod
 			: this.volumeEnvelope.volume;
 
-		return !this.lengthCounter.didFinish && !this.frequencySweeper.mute
-			? this.oscillator.sample(isNewSample)
-			: 0;
+		const isActive =
+			!this.lengthCounter.didFinish && !this.frequencySweeper.mute;
+		if (isActive) this.outputSample = this.oscillator.sample(isNewSample);
+
+		return this.outputSample;
 	}
 
 	/** Updates the full timer value from the registers. */
@@ -87,6 +91,7 @@ export default class PulseChannel {
 	/** Returns a snapshot of the current state. */
 	getSaveState() {
 		return {
+			outputSample: this.outputSample,
 			oscillator: this.oscillator.getSaveState(),
 			lengthCounter: this.lengthCounter.getSaveState(),
 			volumeEnvelope: this.volumeEnvelope.getSaveState(),
@@ -97,6 +102,7 @@ export default class PulseChannel {
 
 	/** Restores state from a snapshot. */
 	setSaveState(saveState) {
+		this.outputSample = saveState.outputSample;
 		this.oscillator.setSaveState(saveState.oscillator);
 		this.lengthCounter.setSaveState(saveState.lengthCounter);
 		this.volumeEnvelope.setSaveState(saveState.volumeEnvelope);

@@ -18,6 +18,8 @@ export default class TriangleChannel {
 		this.oscillator = new TriangleOscillator();
 		this.lengthCounter = new LengthCounter();
 		this.linearLengthCounter = new LinearLengthCounter();
+
+		this.outputSample = 0;
 	}
 
 	/** When a context is loaded. */
@@ -27,7 +29,7 @@ export default class TriangleChannel {
 
 	/** Generates a new sample. */
 	sample(isNewSample) {
-		if (!this.isEnabled) return 0;
+		if (!this.isEnabled) return this.outputSample;
 
 		const timer = Byte.to16Bit(
 			this.registers.lclTimerHigh.timerHigh,
@@ -42,9 +44,11 @@ export default class TriangleChannel {
 		// (the pitch is one octave below the pulse channels with an equivalent timer value)
 		// (i.e. use the formula above but divide the resulting frequency by two).
 
-		return !this.lengthCounter.didFinish && !this.linearLengthCounter.didFinish
-			? this.oscillator.sample(isNewSample)
-			: 0;
+		const isActive =
+			!this.lengthCounter.didFinish && !this.linearLengthCounter.didFinish;
+		if (isActive) this.outputSample = this.oscillator.sample(isNewSample);
+
+		return this.outputSample;
 	}
 
 	/** Updates linear length counter. */
@@ -63,6 +67,7 @@ export default class TriangleChannel {
 	/** Returns a snapshot of the current state. */
 	getSaveState() {
 		return {
+			outputSample: this.outputSample,
 			oscillator: this.oscillator.getSaveState(),
 			lengthCounter: this.lengthCounter.getSaveState(),
 			linearLengthCounter: this.linearLengthCounter.getSaveState()
@@ -71,6 +76,7 @@ export default class TriangleChannel {
 
 	/** Restores state from a snapshot. */
 	setSaveState(saveState) {
+		this.outputSample = saveState.outputSample;
 		this.oscillator.setSaveState(saveState.oscillator);
 		this.lengthCounter.setSaveState(saveState.lengthCounter);
 		this.linearLengthCounter.setSaveState(saveState.linearLengthCounter);
