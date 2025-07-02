@@ -26,7 +26,10 @@ class PlayerWorklet extends AudioWorkletProcessor {
 		}
 
 		// request new samples
-		this.port.postMessage(size);
+		this.port.postMessage({
+			need: size,
+			have: this.buffer.size()
+		});
 
 		return true;
 	}
