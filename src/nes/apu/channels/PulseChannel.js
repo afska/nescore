@@ -34,11 +34,10 @@ export default class PulseChannel {
 	}
 
 	/** Generates a new sample. */
-	sample() {
-		const { apu } = this.context;
+	sample(isNewSample) {
 		if (!this.isEnabled) return 0;
 
-		this.oscillator.dutyCycle = this.registers.control.dutyCycleId;
+		this.oscillator.dutyCycle = this.registers.control.dutyCycle;
 		this.oscillator.frequency = constants.FREQ_CPU_HZ / (16 * (this.timer + 1));
 		// from nesdev: f = fCPU / (16 * (t + 1))
 
@@ -47,7 +46,7 @@ export default class PulseChannel {
 			: this.volumeEnvelope.volume;
 
 		return !this.lengthCounter.didFinish && !this.frequencySweeper.mute
-			? this.oscillator.sample(apu.time)
+			? this.oscillator.sample(isNewSample)
 			: 0;
 	}
 

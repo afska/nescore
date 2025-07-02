@@ -22,7 +22,6 @@ export default class APU {
 	constructor() {
 		WithContext.apply(this);
 
-		this.time = 0;
 		this.sampleCounter = 0;
 		this.frameClockCounter = 0;
 		this.sample = 0;
@@ -85,7 +84,6 @@ export default class APU {
 	/** Returns a snapshot of the current state. */
 	getSaveState() {
 		return {
-			time: this.time,
 			sampleCounter: this.sampleCounter,
 			frameClockCounter: this.frameClockCounter,
 			sample: this.sample,
@@ -100,7 +98,6 @@ export default class APU {
 
 	/** Restores state from a snapshot. */
 	setSaveState(saveState) {
-		this.time = saveState.time;
 		this.sampleCounter = saveState.sampleCounter;
 		this.frameClockCounter = saveState.frameClockCounter;
 		this.sample = saveState.sample;
@@ -125,9 +122,10 @@ export default class APU {
 			this._onEnd
 		);
 
-		const pulse1 = this.channels.pulses[0].sample(); // 0 ~ 15
-		const pulse2 = this.channels.pulses[1].sample(); // 0 ~ 15
-		const triangle = this.channels.triangle.sample(); // 0 ~ 15
+		const isNewSample = this.sampleCounter + 1 === STEPS_PER_SAMPLE;
+		const pulse1 = this.channels.pulses[0].sample(isNewSample); // 0 ~ 15
+		const pulse2 = this.channels.pulses[1].sample(isNewSample); // 0 ~ 15
+		const triangle = this.channels.triangle.sample(isNewSample); // 0 ~ 15
 		const noise = this.channels.noise.sample(); // 0 ~ 15
 		const dmc = this.channels.dmc.sample(onIRQ); // 0 ~ 127
 
@@ -164,14 +162,10 @@ export default class APU {
 		this.sampleCounter++;
 		this.frameClockCounter++;
 
-		if (this.sampleCounter === STEPS_PER_SAMPLE) {
-			this.sampleCounter = 0;
-			this.time += 1 / constants.APU_SAMPLE_RATE;
-		}
+		if (this.sampleCounter === STEPS_PER_SAMPLE) this.sampleCounter = 0;
 	}
 
 	_reset() {
-		this.time = 0;
 		this.sampleCounter = 0;
 		this.frameClockCounter = 0;
 		this.sample = 0;

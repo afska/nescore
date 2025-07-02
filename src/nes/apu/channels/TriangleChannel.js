@@ -26,8 +26,7 @@ export default class TriangleChannel {
 	}
 
 	/** Generates a new sample. */
-	sample() {
-		const { apu } = this.context;
+	sample(isNewSample) {
 		if (!this.isEnabled) return 0;
 
 		const timer = Byte.to16Bit(
@@ -44,7 +43,7 @@ export default class TriangleChannel {
 		// (i.e. use the formula above but divide the resulting frequency by two).
 
 		return !this.lengthCounter.didFinish && !this.linearLengthCounter.didFinish
-			? this.oscillator.sample(apu.time)
+			? this.oscillator.sample(isNewSample)
 			: 0;
 	}
 

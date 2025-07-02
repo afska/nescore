@@ -1,5 +1,6 @@
 import config from "../../config";
 
+const APU_SAMPLE_RATE = 44100;
 const TRIANGLE_SEQUENCE = [
 	15,
 	14,
@@ -38,15 +39,15 @@ const TRIANGLE_SEQUENCE = [
 /** A triangle wave generator. */
 export default class TriangleOscillator {
 	constructor() {
-		this.amplitude = 1;
-		this._frequency = 0;
+		this.frequency = 0;
+		this._phase = 0; // (0~1)
 	}
 
 	/** Generates a new sample. */
-	sample(time) {
-		const period = 1 / this._frequency;
-		const phase = time % period;
-		const step = Math.floor(phase / (period / 32));
+	sample(isNewSample) {
+		if (isNewSample)
+			this._phase = (this._phase + this.frequency / APU_SAMPLE_RATE) % 1;
+		const step = Math.floor(this._phase * TRIANGLE_SEQUENCE.length);
 
 		return TRIANGLE_SEQUENCE[step] * config.TRIANGLE_CHANNEL_VOLUME;
 	}
@@ -54,20 +55,14 @@ export default class TriangleOscillator {
 	/** Returns a snapshot of the current state. */
 	getSaveState() {
 		return {
-			amplitude: this.amplitude,
-			frequency: this._frequency
+			frequency: this.frequency,
+			phase: this._phase
 		};
 	}
 
 	/** Restores state from a snapshot. */
 	setSaveState(saveState) {
-		this.amplitude = saveState.amplitude;
 		this.frequency = saveState.frequency;
-	}
-
-	/** Sets the frequency, but only if the change is above a minimum threshold (this sounds better). */
-	set frequency(value) {
-		if (Math.abs(this._frequency - value) > config.MIN_FREQUENCY_CHANGE)
-			this._frequency = value;
+		this._phase = saveState.phase;
 	}
 }

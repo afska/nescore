@@ -1,30 +1,25 @@
 import config from "../../config";
+import constants from "../../constants";
 
-const DUTY_SEQUENCE = [
-	[0, 1, 0, 0, 0, 0, 0, 0],
-	[0, 1, 1, 0, 0, 0, 0, 0],
-	[0, 1, 1, 1, 1, 0, 0, 0],
-	[1, 0, 0, 1, 1, 1, 1, 1]
-];
+const APU_SAMPLE_RATE = 44100;
 
 /** A square wave generator. */
 export default class PulseOscillator {
 	constructor() {
-		this.volume = 1;
-		this.dutyCycle = 0;
+		this.volume = constants.APU_MAX_VOLUME;
+		this.dutyCycle = 0; // (0~1)
 
-		this._frequency = 0;
+		this.frequency = 0;
+		this._phase = 0; // (0~1)
 	}
 
 	/** Generates a new sample. */
-	sample(time) {
-		const period = 1 / this._frequency;
-		const phase = time % period;
-		const step = Math.floor(phase / (period / 8));
+	sample(isNewSample) {
+		if (isNewSample)
+			this._phase = (this._phase + this.frequency / APU_SAMPLE_RATE) % 1;
 
 		return (
-			DUTY_SEQUENCE[this.dutyCycle][step] *
-			this.volume *
+			(this._phase < this.dutyCycle ? this.volume : 0) *
 			config.PULSE_CHANNEL_VOLUME
 		);
 	}
@@ -34,7 +29,8 @@ export default class PulseOscillator {
 		return {
 			volume: this.volume,
 			dutyCycle: this.dutyCycle,
-			frequency: this._frequency
+			frequency: this.frequency,
+			phase: this._phase
 		};
 	}
 
@@ -43,11 +39,6 @@ export default class PulseOscillator {
 		this.volume = saveState.volume;
 		this.dutyCycle = saveState.dutyCycle;
 		this.frequency = saveState.frequency;
-	}
-
-	/** Sets the frequency, but only if the change is above a minimum threshold (this sounds better). */
-	set frequency(value) {
-		if (Math.abs(this._frequency - value) > config.MIN_FREQUENCY_CHANGE)
-			this._frequency = value;
+		this._phase = saveState.phase;
 	}
 }
