@@ -8,11 +8,6 @@ class PlayerWorklet extends AudioWorkletProcessor {
 		this.buffer = new RingBuffer(config.AUDIO_BUFFER_SIZE);
 
 		this.port.onmessage = (event) => {
-			if (this.buffer.size() >= config.AUDIO_BUFFER_SIZE) {
-				// buffer overrun
-				this.buffer.deqN(config.AUDIO_BUFFER_SIZE);
-			}
-
 			for (let sample of event.data) this.buffer.enq(sample);
 		};
 	}
@@ -30,7 +25,8 @@ class PlayerWorklet extends AudioWorkletProcessor {
 			for (let i = 0; i < size; i++) output[i] = 0;
 		}
 
-		this.port.postMessage(this.buffer.size());
+		// request new samples
+		this.port.postMessage(size);
 
 		return true;
 	}

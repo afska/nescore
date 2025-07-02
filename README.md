@@ -24,7 +24,7 @@ Its main objective is to reflect the NES internals as simply as possible by usin
   - Mapper **4**: [MMC3](https://www.nesdev.org/wiki/MMC3)
 - 🐏 **SRAM** support
 - 💾 **Save states** support
-- 🌎 **Web frontend** using [Web Workers](https://www.w3.org/TR/2021/NOTE-workers-20210128/) and [Gamepad API](https://www.w3.org/TR/gamepad/)
+- 🌎 **Web frontend** with Gamepad support
 
 ## Usage
 
@@ -58,7 +58,7 @@ const saveState = nes.getSaveState();
 nes.setSaveState(saveState);
 ```
 
-👀 Have a look at the [demo implementation](https://github.com/afska/nescore/tree/master/src/gui) for more details. When running the demo (`npm start`) you can add `?debug` to the URL to enable a global `window.debug` object.
+👀 Have a look at the [demo implementation](https://github.com/afska/nescore/tree/master/src/gui) for more details.
 
 ## Full API
 
@@ -78,6 +78,22 @@ nes.setSaveState(saveState);
 ## Screenshots
 
 ![nestest screenshot](https://raw.githubusercontent.com/afska/nescore/master/img/capture-sm.png)
+
+## Debugging
+
+You can inspect the emulator state by using the global `window.debug` object.
+
+Also, if you add `?debug` to the URL and use a gamepad, shoulder buttons will behave as follows:
+
+```
+2--4
+1--3
+
+1: Enter debug mode
+2: Exit debug mode
+3: Hold to run frame
+4: Hold to run scanline
+```
 
 ## Useful links
 

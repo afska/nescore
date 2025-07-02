@@ -1,18 +1,9 @@
 import React, { Component } from "react";
 import Screen from "./Screen";
 import gamepad from "../emulator/gamepad";
-import Speaker from "../emulator/Speaker";
-import WebWorker from "../emulator/WebWorker";
 import debug from "../emulator/debug";
+import Emulation from "../emulator/Emulation";
 
-const PRESS_KEY_TO_ENABLE_AUDIO = "Press any key to enable audio!";
-
-const NEW_WEB_WORKER = () =>
-	new Worker(new URL("../emulator/webWorkerRunner.js", import.meta.url), {
-		type: "module"
-	});
-
-const DEBUG_MODE = window.location.search === "?debug";
 const SAVESTATE_KEY = "nescore-savestate";
 const KEY_MAP = {
 	" ": "BUTTON_A",
@@ -27,7 +18,7 @@ const KEY_MAP = {
 	p: "$saveState"
 };
 
-let webWorker = null;
+let emulation = null;
 
 export default class Emulator extends Component {
 	render() {
@@ -40,110 +31,65 @@ export default class Emulator extends Component {
 		);
 	}
 
-	sendState = () => {
-		const gamepadInput = gamepad.getInput();
-		const input =
-			gamepadInput?.[0] != null
-				? [gamepadInput?.[0], gamepadInput?.[1] || this.keyboardInput]
-				: [this.keyboardInput, gamepad.createInput()];
-
-		webWorker.postMessage([...input, this.speaker.bufferSize]);
-	};
-
-	setFps = (fps) => {
-		document.querySelector("#fps").textContent = `(fps: ${fps})`;
-	};
-
-	onWorkerMessage = ({ data }) => {
-		if (data instanceof Uint32Array) {
-			// frame data
-			this.screen.setBuffer(data);
-		} else if (Array.isArray(data)) {
-			// audio samples
-			this.speaker.writeSamples(data);
-			this.sendState();
-		} else if (data?.id === "fps") {
-			// fps report
-			this.setFps(data.fps);
-		} else if (data?.id === "saveState") {
-			// save state
-			this._setSaveState(data.saveState);
-		} else if (data?.id === "error") {
-			// error
-			this._onError(data.error);
-		}
-	};
-
-	stop() {
-		if (this.speaker) this.speaker.stop();
-		this.speaker = null;
-
-		if (webWorker) {
-			webWorker.terminate();
-			webWorker = null;
-		}
-
-		this.setFps(0);
-
-		window.removeEventListener("keydown", this._onKeyDown);
-		window.removeEventListener("keyup", this._onKeyUp);
-	}
-
 	componentWillUnmount() {
-		this.stop();
+		this._stop();
 	}
 
 	_initialize(screen) {
 		const { rom } = this.props;
 		if (!rom) return;
-		this.screen = screen;
 
-		this.stop();
-		this.speaker = new Speaker();
-		this.speaker.start().then(() => {
-			if (this.speaker.state === "suspended") alert(PRESS_KEY_TO_ENABLE_AUDIO);
-		});
+		this._stop();
 
 		this.keyboardInput = gamepad.createInput();
 		window.addEventListener("keydown", this._onKeyDown);
 		window.addEventListener("keyup", this._onKeyUp);
 
 		const bytes = new Uint8Array(rom);
+		const saveState = this._getSaveState();
+		emulation = new Emulation(
+			bytes,
+			screen,
+			this._getInput,
+			this._setFps,
+			this._setError,
+			this._setSaveState,
+			saveState
+		);
 
-		// (web workers are hard to debug, a mock is used in development mode)
-		webWorker = DEBUG_MODE
-			? new WebWorker((data) => this.onWorkerMessage({ data }))
-			: NEW_WEB_WORKER();
-
-		if (DEBUG_MODE) window.debug = debug(this, webWorker);
-
-		webWorker.onmessage = this.onWorkerMessage;
-		webWorker.postMessage(bytes);
-		webWorker.postMessage({
-			id: "saveState",
-			saveState: this._getSaveState()
-		});
+		window.debug = debug(this, emulation);
 	}
 
-	_getSaveState() {
-		try {
-			return JSON.parse(localStorage.getItem(SAVESTATE_KEY));
-		} catch (e) {
-			return null;
+	_getInput = () => {
+		const gamepadInput = gamepad.getInput();
+		return gamepadInput?.[0] != null
+			? [gamepadInput?.[0], gamepadInput?.[1] || this.keyboardInput]
+			: [this.keyboardInput, gamepad.createInput()];
+	};
+
+	_setFps = (fps) => {
+		document.querySelector("#fps").textContent = `(fps: ${fps})`;
+	};
+
+	_setError = (error) => {
+		this.props.onError(error);
+		this._stop();
+	};
+
+	_stop() {
+		if (emulation) {
+			emulation.terminate();
+			emulation = null;
 		}
-	}
 
-	_setSaveState(saveState) {
-		localStorage.setItem(SAVESTATE_KEY, JSON.stringify(saveState));
-	}
+		this._setFps(0);
 
-	_onError(e) {
-		this.props.onError(e);
-		this.stop();
+		window.removeEventListener("keydown", this._onKeyDown);
+		window.removeEventListener("keyup", this._onKeyUp);
 	}
 
 	_onKeyDown = (e) => {
-		this.speaker?.resume();
+		emulation?.speaker?.resume();
 
 		const button = KEY_MAP[e.key?.toLowerCase()];
 		if (!button) return;
@@ -157,4 +103,16 @@ export default class Emulator extends Component {
 
 		this.keyboardInput[button] = false;
 	};
+
+	_getSaveState() {
+		try {
+			return JSON.parse(localStorage.getItem(SAVESTATE_KEY));
+		} catch (e) {
+			return null;
+		}
+	}
+
+	_setSaveState(saveState) {
+		localStorage.setItem(SAVESTATE_KEY, JSON.stringify(saveState));
+	}
 }

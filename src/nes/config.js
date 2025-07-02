@@ -2,8 +2,7 @@
 export default {
 	// [frontend]
 	SYNC_TO_AUDIO: true,
-	AUDIO_BUFFER_LIMIT: 4096,
-	AUDIO_BUFFER_SIZE: 8192,
+	AUDIO_BUFFER_SIZE: 4096,
 	FPS: 60.098,
 
 	// [emulator]

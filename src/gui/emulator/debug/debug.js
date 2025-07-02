@@ -13,20 +13,20 @@ const TILES_PER_PATTERN_TABLE = 256;
 // debug.background();
 // debug.stop();
 // debug.resume();
-export default function debug(emulator, webWorker) {
+export default function debug(emulator, emulation) {
 	return {
 		config,
 		emulator,
-		webWorker,
-		nes: webWorker.nes,
-		frameTimer: webWorker.frameTimer,
+		emulation,
+		nes: emulation.nes,
+		frameTimer: emulation.frameTimer,
 
 		stop() {
-			this.frameTimer.stop();
+			emulation.isDebugging = true;
 		},
 
 		resume() {
-			this.frameTimer.start();
+			emulation.isDebugging = false;
 		},
 
 		tiles(patternTableId = 0) {
@@ -75,7 +75,7 @@ export default function debug(emulator, webWorker) {
 
 			action(plot);
 
-			this.emulator.screen.setBuffer(frameBuffer);
+			this.emulation.screen.setBuffer(frameBuffer);
 		}
 	};
 }

@@ -6,11 +6,14 @@ const WEBAUDIO_BUFFER_SIZE = 1024;
 const CHANNELS = 1;
 
 export default class Speaker {
+	constructor(onAudioRequested = () => {}) {
+		this.onAudioRequested = onAudioRequested;
+	}
+
 	async start() {
 		if (this._audioCtx) return;
 		if (!window.AudioContext) return;
 
-		this.bufferSize = 0;
 		this._audioCtx = new window.AudioContext({
 			sampleRate: constants.APU_SAMPLE_RATE
 		});
@@ -25,11 +28,9 @@ export default class Speaker {
 			outputChannelCount: [CHANNELS],
 			processorOptions: { bufferSize: WEBAUDIO_BUFFER_SIZE }
 		});
-
 		this.playerWorklet.connect(this._audioCtx.destination);
-
 		this.playerWorklet.port.onmessage = (event) => {
-			this.bufferSize = event.data;
+			this.onAudioRequested(event.data);
 		};
 	}
 
