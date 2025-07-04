@@ -3,7 +3,7 @@ import constants from "../../constants";
 
 const APU_SAMPLE_RATE = 44100;
 
-/** A square wave generator. */
+/** A pulse wave generator. */
 export default class PulseOscillator {
 	constructor() {
 		this.volume = constants.APU_MAX_VOLUME;
