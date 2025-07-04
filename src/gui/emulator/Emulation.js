@@ -22,15 +22,19 @@ export default class Emulation {
 		this.samples = [];
 
 		this.speaker = new Speaker(({ need, have }) => {
-			if (this._canSyncToAudio()) {
-				const target = config.AUDIO_BUFFER_SIZE / 2;
+			try {
+				if (this._canSyncToAudio()) {
+					const target = config.AUDIO_BUFFER_SIZE / 2;
 
-				let n = need;
-				if (have > target + config.AUDIO_DRIFT_THRESHOLD) n--;
-				else if (have < target - config.AUDIO_DRIFT_THRESHOLD) n++;
+					let n = need;
+					if (have > target + config.AUDIO_DRIFT_THRESHOLD) n--;
+					else if (have < target - config.AUDIO_DRIFT_THRESHOLD) n++;
 
-				this.nes.samples(n);
-				this._updateSound();
+					this.nes.samples(n);
+					this._updateSound();
+				}
+			} catch (error) {
+				onError(error);
 			}
 		});
 		this.speaker.start();
