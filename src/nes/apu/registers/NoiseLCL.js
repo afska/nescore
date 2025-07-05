@@ -9,11 +9,12 @@ export default class NoiseLCL extends WriteOnlyInMemoryRegister {
 		this.addReadOnlyField("lengthCounterLoad", 3, 5);
 	}
 
-	/** Updates the length counter. */
+	/** Updates the length counter, and volume envelope's start flag. */
 	writeAt(__, byte) {
 		this.setValue(byte);
 
-		this.context.apu.channels.noise.lengthCounter.counter =
-			lengthTable[this.lengthCounterLoad];
+		const channel = this.context.apu.channels.noise;
+		channel.lengthCounter.counter = lengthTable[this.lengthCounterLoad];
+		channel.volumeEnvelope.startFlag = true;
 	}
 }
