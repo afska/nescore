@@ -10,7 +10,7 @@ export default class InMemoryRegister {
 		this._readOnlyFields = [];
 	}
 
-	/** Adds a field of `size` bits named `named`, starting at `startPosition`. */
+	/** Adds a field of `size` bits named `name`, starting at `startPosition`. */
 	addField(name, startPosition, size = 1) {
 		Object.defineProperty(this, name, {
 			get() {
@@ -26,7 +26,7 @@ export default class InMemoryRegister {
 		return this;
 	}
 
-	/** Adds a read-only field of `size` bits named `named`, starting at `startPosition`. */
+	/** Adds a read-only field of `size` bits named `name`, starting at `startPosition`. */
 	addReadOnlyField(name, startPosition, size = 1) {
 		// (this performs better than `addField`)
 		this._readOnlyFields.push({ name, startPosition, size });
