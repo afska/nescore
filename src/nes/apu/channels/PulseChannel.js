@@ -64,10 +64,6 @@ export default class PulseChannel {
 
 	/** Updates the timer and sweep if needed. */
 	cycle() {
-		// (frequency sweepers change at a higher frequency)
-		for (let i = 0; i < constants.APU_HIGH_FREQUENCY_CYCLES; i++)
-			this.frequencySweeper.track(this);
-
 		if (!this.registers.sweep.enabledFlag) this.updateTimer();
 	}
 

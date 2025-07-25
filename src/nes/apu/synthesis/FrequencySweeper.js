@@ -12,19 +12,9 @@ export default class FrequencySweeper {
 		this.mute = false;
 	}
 
-	/** Sets up the `change` and `mute` values. */
-	track(channel) {
-		const register = channel.registers.sweep;
-		this._setMute(channel);
-
-		if (register.enabledFlag)
-			this.change = channel.timer >> register.shiftCount;
-	}
-
 	/** Clocks the sweeper and updates channel's timer frequency. */
 	clock(channel) {
 		const register = channel.registers.sweep;
-		if (!register.enabledFlag) return;
 
 		/**
 		 * The sweep unit continuously calculates each channel's target period in this way:
@@ -33,8 +23,15 @@ export default class FrequencySweeper {
 		 * - The target period is the sum of the current period and the change amount.
 		 */
 
-		if (this.dividerCount === 0 && register.shiftCount > 0 && !this.mute)
-			channel.timer += this.change * (register.negateFlag ? -1 : 1);
+		if (
+			register.enabledFlag &&
+			register.shiftCount > 0 &&
+			this.dividerCount === 0 &&
+			!this.mute
+		) {
+			const sweepDelta = channel.timer >> register.shiftCount;
+			channel.timer += sweepDelta * (register.negateFlag ? -1 : 1);
+		}
 
 		if (this.dividerCount === 0 || this.startFlag) {
 			this.dividerCount = register.dividerPeriodMinusOne + 1;

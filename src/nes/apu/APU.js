@@ -12,9 +12,7 @@ import constants from "../constants";
 import { WithContext } from "../helpers";
 
 const STEPS_PER_SAMPLE = Math.floor(
-	constants.FREQ_PPU_HZ /
-		constants.APU_HIGH_FREQUENCY_CYCLES /
-		constants.APU_SAMPLE_RATE
+	constants.FREQ_APU_HZ / constants.APU_SAMPLE_RATE
 );
 
 /** The Audio Processing Unit. It generates audio samples. */
