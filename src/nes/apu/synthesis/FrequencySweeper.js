@@ -9,7 +9,7 @@ export default class FrequencySweeper {
 		// output
 		this.dividerCount = 0;
 		this.change = 0;
-		this.mute = 0;
+		this.mute = false;
 	}
 
 	/** Sets up the `change` and `mute` values. */
