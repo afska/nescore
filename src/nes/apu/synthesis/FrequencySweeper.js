@@ -37,8 +37,12 @@ export default class FrequencySweeper {
 			this.dividerCount = register.dividerPeriodMinusOne + 1;
 			this.startFlag = false;
 		} else this.dividerCount--;
+	}
 
-		this._setMute(channel);
+	muteIfNeeded(channel) {
+		this.mute =
+			channel.timer < constants.APU_MIN_TIMER ||
+			channel.timer > constants.APU_MAX_TIMER;
 	}
 
 	/** Returns a snapshot of the current state. */
@@ -57,11 +61,5 @@ export default class FrequencySweeper {
 		this.dividerCount = saveState.dividerCount;
 		this.change = saveState.change;
 		this.mute = saveState.mute;
-	}
-
-	_setMute(channel) {
-		this.mute =
-			channel.timer < constants.APU_MIN_TIMER ||
-			channel.timer > constants.APU_MAX_TIMER;
 	}
 }

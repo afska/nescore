@@ -64,6 +64,7 @@ export default class PulseChannel {
 
 	/** Updates the timer and sweep if needed. */
 	cycle() {
+		this.frequencySweeper.muteIfNeeded(this);
 		if (!this.registers.sweep.enabledFlag) this.updateTimer();
 	}
 
