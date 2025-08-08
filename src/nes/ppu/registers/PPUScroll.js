@@ -23,7 +23,7 @@ export default class PPUScroll extends WriteOnlyInMemoryRegister {
 		);
 	}
 
-	/** Returns the scrolled X in Name table coordinates ([0..255]). */
+	/** Returns the scrolled Y in Name table coordinates ([0..255]). */
 	scrolledY() {
 		const { vAddress } = this.context.ppu.loopy;
 
