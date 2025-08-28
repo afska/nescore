@@ -15,8 +15,9 @@ export default function renderBackground({ ppu }) {
 		const cycle = x + 1;
 		const scrolledX = registers.ppuScroll.scrolledX(x);
 
+		const showBackground = registers.ppuMask.showBackground;
 		const shouldSkip =
-			!registers.ppuMask.showBackground ||
+			!showBackground ||
 			(!registers.ppuMask.showBackgroundInLeftmost8PixelsOfScreen && x < 8);
 
 		// skip masked pixels
@@ -24,7 +25,7 @@ export default function renderBackground({ ppu }) {
 			ppu.frameBuffer[y * constants.SCREEN_WIDTH + x] =
 				FULL_ALPHA | registers.ppuMask.transform(transparentColor);
 			ppu.paletteIndexes[y * constants.SCREEN_WIDTH + x] = 0;
-			loopy.onVisibleLine(cycle);
+			if (showBackground) loopy.onVisibleLine(cycle);
 			continue;
 		}
 
