@@ -15,8 +15,12 @@ export default function renderBackground({ ppu }) {
 		const cycle = x + 1;
 		const scrolledX = registers.ppuScroll.scrolledX(x);
 
+		const shouldSkip =
+			!registers.ppuMask.showBackground ||
+			(!registers.ppuMask.showBackgroundInLeftmost8PixelsOfScreen && x < 8);
+
 		// skip masked pixels
-		if (!registers.ppuMask.showBackgroundInLeftmost8PixelsOfScreen && x < 8) {
+		if (shouldSkip) {
 			ppu.frameBuffer[y * constants.SCREEN_WIDTH + x] =
 				FULL_ALPHA | registers.ppuMask.transform(transparentColor);
 			ppu.paletteIndexes[y * constants.SCREEN_WIDTH + x] = 0;

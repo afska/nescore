@@ -6,13 +6,11 @@ import constants from "../../constants";
 export default function visibleLines(context) {
 	const { ppu, mapper } = context;
 	const { ppuMask } = ppu.registers;
-	if (!ppuMask.isRenderingEnabled) return null;
 
-	if (
-		ppu.cycle === constants.PPU_CYCLE_RENDER_BACKGROUND &&
-		ppuMask.showBackground
-	)
+	if (ppu.cycle === constants.PPU_CYCLE_RENDER_BACKGROUND)
 		renderBackground(context);
+
+	if (!ppuMask.isRenderingEnabled) return null;
 
 	if (ppu.cycle === constants.PPU_CYCLE_RENDER_SPRITES && ppuMask.showSprites)
 		renderSprites(context);
