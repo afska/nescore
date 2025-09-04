@@ -112,19 +112,19 @@ export default class DMCChannel {
 		if (this.dividerCount >= this.samplePeriod) this.dividerCount = 0;
 		else return this.outputSample;
 
-		const hasSampleFinished = this.cursorByte === this.sampleLength;
-		const hasByteFinished = this.cursorBit === 8;
+		const needFetch = this.buffer === null || this.cursorBit === 8;
+		if (needFetch) {
+			const nextByte = this.cursorByte + 1;
 
-		if (this.buffer === null || hasByteFinished) {
-			this.cursorByte++;
-			this.cursorBit = 0;
-
-			if (hasSampleFinished) {
-				this.isUsingDPCM = false;
+			if (nextByte >= this.sampleLength) {
+				this.isActive = false;
 				this.buffer = null;
-				if (this.registers.control.irqEnable) onIRQ("dmc");
+				if (this.registers.control.loop) this.start();
 				return this.outputSample;
 			}
+
+			this.cursorByte = nextByte;
+			this.cursorBit = 0;
 
 			let address = this.sampleAddress + this.cursorByte;
 			if (address > 0xffff) {
@@ -139,8 +139,6 @@ export default class DMCChannel {
 		if (newSample >= 0 && newSample <= 127) this.outputSample = newSample;
 
 		this.cursorBit++;
-		if (hasSampleFinished && hasByteFinished && this.registers.control.loop)
-			this.startDPCM();
 
 		return this.outputSample;
 	}
