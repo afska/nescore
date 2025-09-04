@@ -47,7 +47,6 @@ export default class DMCChannel {
 			this.samplePeriod = samplePeriod;
 			this.sampleAddress = this.registers.sampleAddress.absoluteAddress;
 			this.sampleLength = this.registers.sampleLength.lengthInBytes;
-			this.outputSample = 0;
 		}
 
 		return (
@@ -124,7 +123,7 @@ export default class DMCChannel {
 				this.isUsingDPCM = false;
 				this.buffer = null;
 				if (this.registers.control.irqEnable) onIRQ("dmc");
-				return 0;
+				return this.outputSample;
 			}
 
 			let address = this.sampleAddress + this.cursorByte;
@@ -135,8 +134,9 @@ export default class DMCChannel {
 			this.buffer = this.context.cpu.memory.readAt(address);
 		}
 
-		const variation = Byte.getBit(this.buffer, this.cursorBit) ? 1 : -1;
-		this.outputSample += variation;
+		const variation = Byte.getBit(this.buffer, this.cursorBit) ? 2 : -2;
+		const newSample = this.outputSample + variation;
+		if (newSample >= 0 && newSample <= 127) this.outputSample = newSample;
 
 		this.cursorBit++;
 		if (hasSampleFinished && hasByteFinished && this.registers.control.loop)
