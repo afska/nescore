@@ -66,6 +66,11 @@ export default class MMC1 extends Mapper {
 	cpuWriteAt(address, byte) {
 		if (address >= 0x8000) {
 			// Load
+			if (byte & 0b10000000) {
+				this._state.control.setValue(this._state.control.value | 0x0c);
+				this._loadBanks();
+				return;
+			}
 			const value = this._state.load.write(byte);
 			if (value == null) return;
 
