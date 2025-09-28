@@ -33,7 +33,7 @@ export default class Emulation {
 					this.nes.samples(n);
 				}
 
-				this._updateSound(need);
+				this._updateSound();
 			} catch (error) {
 				onError(error);
 			}
@@ -115,13 +115,9 @@ export default class Emulation {
 		this.samples.push(sample);
 	};
 
-	_updateSound(maxCount) {
-		const take = Math.min(maxCount, this.samples.length);
-
-		const out = this.samples.slice(0, take);
-		this.speaker.writeSamples(out);
-
-		this.samples = this.samples.slice(take);
+	_updateSound() {
+		this.speaker.writeSamples(this.samples);
+		this.samples = [];
 	}
 
 	_updateInput(input) {
