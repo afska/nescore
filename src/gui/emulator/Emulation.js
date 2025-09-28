@@ -2,8 +2,11 @@ import NES from "../../nes";
 import FrameTimer from "./FrameTimer";
 import Speaker from "./Speaker";
 import config from "../../nes/config";
+import constants from "../../nes/constants";
 
 const PRESS_KEY_TO_ENABLE_AUDIO = "Press any key to enable audio!";
+const SAMPLES_PER_FRAME =
+	Math.floor(constants.APU_SAMPLE_RATE / constants.PPU_FRAME_RATE) + 1;
 
 /**
  * An emulator runner instance.
@@ -31,9 +34,8 @@ export default class Emulation {
 					else if (have < target - config.AUDIO_DRIFT_THRESHOLD) n++;
 
 					this.nes.samples(n);
+					this._updateSound();
 				}
-
-				this._updateSound();
 			} catch (error) {
 				onError(error);
 			}
@@ -86,7 +88,10 @@ export default class Emulation {
 						this.nes.scanline(true);
 					} else {
 						this.nes.frame();
+						if (this.samples.length !== SAMPLES_PER_FRAME)
+							this.samples = this._resample(this.samples, SAMPLES_PER_FRAME);
 					}
+					this._updateSound();
 				}
 			} catch (error) {
 				onError(error);
@@ -118,6 +123,24 @@ export default class Emulation {
 	_updateSound() {
 		this.speaker.writeSamples(this.samples);
 		this.samples = [];
+	}
+
+	_resample(src, target) {
+		const n = src.length;
+		if (n === target) return src.slice();
+		if (n === 0) return new Array(target).fill(0);
+		if (n === 1) return new Array(target).fill(src[0]);
+
+		const out = new Array(target);
+		for (let i = 0; i < target; i++) {
+			const t = (i * (n - 1)) / (target - 1);
+			const k = Math.floor(t);
+			const a = src[k];
+			const b = src[k + 1] ?? a;
+			out[i] = a + (b - a) * (t - k);
+		}
+
+		return out;
 	}
 
 	_updateInput(input) {
