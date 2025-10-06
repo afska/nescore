@@ -2,7 +2,6 @@ import audioWorklet from "./audioWorklet?worker&url";
 import constants from "../../nes/constants";
 
 const WORKLET_NAME = "player-worklet";
-const WEBAUDIO_BUFFER_SIZE = 1024;
 const CHANNELS = 1;
 
 export default class Speaker {
@@ -25,8 +24,7 @@ export default class Speaker {
 		}
 
 		this.playerWorklet = new AudioWorkletNode(this._audioCtx, WORKLET_NAME, {
-			outputChannelCount: [CHANNELS],
-			processorOptions: { bufferSize: WEBAUDIO_BUFFER_SIZE }
+			outputChannelCount: [CHANNELS]
 		});
 		this.playerWorklet.connect(this._audioCtx.destination);
 		this.playerWorklet.port.onmessage = (event) => {
