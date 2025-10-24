@@ -119,7 +119,8 @@ export default class DMCChannel {
 			if (nextByte >= this.sampleLength) {
 				this.isActive = false;
 				this.buffer = null;
-				if (this.registers.control.loop) this.start();
+				if (this.registers.control.irqEnable) onIRQ("dmc");
+				if (this.registers.control.loop) this.startDPCM();
 				return this.outputSample;
 			}
 
