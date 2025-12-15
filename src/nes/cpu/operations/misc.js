@@ -6,7 +6,7 @@ export default [
 		id: 0x00,
 		instruction: instructions.BRK,
 		cycles: 0,
-		addressing: addressings.IMMEDIATE
+		addressing: addressings.IMPLICIT
 	},
 	{
 		id: 0xea,
