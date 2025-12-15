@@ -10,6 +10,7 @@ const instructions = () => [
 	 */
 	{
 		id: "BRK",
+		needsValue: true,
 		execute: ({ cpu }) => {
 			cpu.interrupt(interrupts.BRK, true);
 		}
