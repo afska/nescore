@@ -11,7 +11,7 @@ const instructions = () => [
 	{
 		id: "BRK",
 		execute: ({ cpu }) => {
-			cpu.interrupt(interrupts.IRQ, true);
+			cpu.interrupt(interrupts.BRK, true);
 		}
 	},
 
