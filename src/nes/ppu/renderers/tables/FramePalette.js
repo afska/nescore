@@ -21,6 +21,6 @@ export default class FramePalette {
 		const colorIndex = this.context.ppu.memory.readAt(
 			startAddress + paletteIndex
 		);
-		return palette[colorIndex];
+		return palette[colorIndex % 64];
 	}
 }
