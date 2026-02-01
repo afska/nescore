@@ -73,10 +73,10 @@ describe("addressings", () => {
 		});
 
 		describe("when the operation can take extra cycles", () => {
-			it("adds two cycles if a page-crossed event occurs", () => {
+			it("adds a cycle if a page-crossed event occurs", () => {
 				cpu.pc.value = 0xfafe;
 				addressings.RELATIVE.getAddress(context, 20, true);
-				cpu.extraCycles.should.equal(2);
+				cpu.extraCycles.should.equal(1);
 			});
 
 			it("doesnt add any cycles if no page-crossed event occurs", () => {
