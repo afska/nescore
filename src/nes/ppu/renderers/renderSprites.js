@@ -14,10 +14,7 @@ const evaluateSprites = ({ ppu }) => {
 	for (let spriteId = 0; spriteId < constants.MAX_SPRITES; spriteId++) {
 		const sprite = ppu.oam.createSprite(spriteId);
 
-		if (
-			sprite.shouldRenderInScanline(ppu.scanline) &&
-			sprites.length < constants.MAX_SPRITES_PER_SCANLINE + 1
-		) {
+		if (sprite.shouldRenderInScanline(ppu.scanline)) {
 			if (sprites.length < constants.MAX_SPRITES_PER_SCANLINE) {
 				sprites.push(sprite);
 			} else {
