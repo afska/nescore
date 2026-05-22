@@ -66,13 +66,14 @@ export default class MMC1 extends Mapper {
 	cpuWriteAt(address, byte) {
 		if (address >= 0x8000) {
 			// Load
-			if (byte & 0b10000000) {
-				this._state.control.setValue(this._state.control.value | 0x0c);
-				this._loadBanks();
+			const value = this._state.load.write(byte);
+			if (value == null) {
+				if (byte & 0b10000000) {
+					this._state.control.setValue(this._state.control.value | 0x0c);
+					this._loadBanks();
+				}
 				return;
 			}
-			const value = this._state.load.write(byte);
-			if (value == null) return;
 
 			if (address >= 0x8000 && address < 0xa000) {
 				// Control
@@ -165,16 +166,14 @@ export default class MMC1 extends Mapper {
  */
 class LoadRegister {
 	constructor() {
-		this.shiftRegister = 0;
-		this.writeCounter = 0;
+		this._reset();
 	}
 
 	/** Writes a bit. Returns null 4 times, then the full value. */
 	write(byte) {
 		if (byte & 0b10000000) {
 			// reset
-			this.shiftRegister = 0b10000;
-			this.writeCounter = 0;
+			this._reset();
 
 			return null;
 		} else {
@@ -186,13 +185,17 @@ class LoadRegister {
 
 			if (this.writeCounter === 5) {
 				const value = this.shiftRegister;
-				this.shiftRegister = 0;
-				this.writeCounter = 0;
+				this._reset();
 				return value;
 			}
 
 			return null;
 		}
+	}
+
+	_reset() {
+		this.shiftRegister = 0;
+		this.writeCounter = 0;
 	}
 }
 
