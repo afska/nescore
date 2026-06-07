@@ -72,11 +72,11 @@ export default function renderBackground({ ppu }) {
 			tileStartY
 		);
 
-		// partially draw tile (from `tileStartX` until its end or the end of the Name table)
-		const remainingNameTablePixels = constants.SCREEN_WIDTH - nameTableX;
+		// partially draw tile (from `tileStartX` until its end or the end of the screen)
+		const remainingPixels = constants.SCREEN_WIDTH - x;
 		const tilePixels = Math.min(
 			constants.TILE_LENGTH - tileStartX,
-			remainingNameTablePixels
+			remainingPixels
 		);
 		for (let i = 0; i < tilePixels; i++) {
 			const paletteIndex = ppu.patternTable.getPaletteIndexFromBytes(
