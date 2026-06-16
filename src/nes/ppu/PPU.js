@@ -56,9 +56,10 @@ export default class PPU {
 	/**
 	 * Executes a number of `cycles`.
 	 * It calls `onFrame` when it generates a new frame.
-	 * It calls `onIntr` on interrupts;
+	 * It calls `onIntr` on interrupts.
+	 * It calls `onBreak` to interrupt the batch.
 	 */
-	step(cycles, onFrame, onIntr) {
+	step(cycles, onFrame, onIntr, onBreak) {
 		for (let i = 0; i < cycles; i++) {
 			// <optimization>
 			if (this.cycle > 1 && this.cycle < 256) {
@@ -75,8 +76,12 @@ export default class PPU {
 
 			const scanlineType = getScanlineType(this.scanline);
 			const interrupt = renderers[scanlineType](this.context);
-			if (interrupt) onIntr(interrupt);
 			this._incrementCounters(onFrame);
+
+			if (interrupt != null) {
+				if (interrupt === constants.BREAK_FLAG) return onBreak(cycles - i - 1);
+				else onIntr(interrupt);
+			}
 		}
 	}
 
