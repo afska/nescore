@@ -12,7 +12,9 @@ const instructions = () => [
 		id: "BRK",
 		execute: ({ cpu }) => {
 			cpu.pc.value++;
-			cpu.interrupt(interrupts.BRK, true);
+			const cycles = cpu.interrupt(interrupts.BRK, true);
+			cpu.cycle -= cycles;
+			this.extraCycles += cycles;
 		}
 	},
 
