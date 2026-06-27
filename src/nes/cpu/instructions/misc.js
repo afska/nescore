@@ -14,7 +14,6 @@ const instructions = () => [
 			cpu.pc.value++;
 			const cycles = cpu.interrupt(interrupts.BRK, true);
 			cpu.cycle -= cycles;
-			this.extraCycles += cycles;
 		}
 	},
 
